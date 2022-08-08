@@ -24,9 +24,13 @@
 #include <json/jsonfuction.h>
 #include <TCP/TCPServer.h>
 #include <modbus.h>
+#include "fileout/E2proomData.h"
 
 namespace modbus
 {
+
+#define PARAMETER_REGEDIST_NUM            400
+#define als1_threshold_reg_add            0x0000
 
 /**
  * @brief Modbus protocal wrapped from libmodbus-dev.
@@ -65,6 +69,10 @@ public:
   //modbus register 400 sizeof u_int16_t  
   modbus_mapping_t *mb_mapping; 
 
+  modbus_t * ctx_parameterpotr;
+
+  modbus_mapping_t *parameterpotr_mapping; 
+
 
   //tcp client;
   pthread_t client[MAX_CLIENT];
@@ -87,9 +95,13 @@ public:
    */
   void _camera_power(bool);
 
+  void _task_numberset(u_int16_t num);
+
+  void _task_parameter(int ddr,u_int16_t num);
+
 private:
   
-
+  E2proomData e2proomdata;
   /**
    * @brief Control camera capture or not.
    *
@@ -101,6 +113,8 @@ private:
    *
    */
   void _json(int);
+
+  void _modbusparameterpotr(int);
 
 private:
   /**
@@ -115,6 +129,10 @@ private:
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_gpio;
 
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter;
+
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_laserimagepos;
+
  // OnSetParametersCallbackHandle::SharedPtr _handle;
 
   /**
@@ -128,6 +146,8 @@ private:
    *
    */
   std::thread _jsontcpthread;
+
+  std::thread _thread_parameterpotr;
 };
 
 void close_app(int s);

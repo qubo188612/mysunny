@@ -98,6 +98,33 @@ std::vector<float> center(
     }
   }
 
+  /*
+  cv::Mat imgtemp;
+  imgtemp=img.clone();
+  cv::cvtColor(imgtemp, imgtemp, cv::COLOR_GRAY2BGR);
+  for(int n=0;n<pnts.size();n++)
+  {
+    int y=n;
+    int x=pnts[n];
+    uchar *ptr = imgtemp.ptr<uchar>(y);
+    if(x>=0&&x<img.cols)
+    {
+        ptr[x*3]=0;
+        ptr[x*3+1]=0;
+        ptr[x*3+2]=255;
+    }
+    else
+    {
+        ptr[img.cols/2*3]=0;
+        ptr[img.cols/2*3+1]=0;
+        ptr[img.cols/2*3+2]=255;
+    }
+  }
+  cv::imwrite("/home/qubo/mysunny/src/camera_test/bmp/1.bmp",imgtemp);
+  */
+
+
+
   return pnts;
 }
 

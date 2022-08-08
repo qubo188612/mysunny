@@ -114,6 +114,8 @@ LaserLineCenter::LaserLineCenter(const rclcpp::NodeOptions & options)
 
   _declare_parameters();
 
+  pm = _update_parameters();
+
   _workers = workers(options);
   for (int i = 0; i < _workers; ++i) {
     _threads.push_back(std::thread(&LaserLineCenter::_worker, this));
@@ -160,6 +162,17 @@ LaserLineCenter::LaserLineCenter(const rclcpp::NodeOptions & options)
             return result;
           }
         }
+        else if (p.get_name() == "task_num") {
+          if (p.as_int() < 0) {
+            result.successful = false;
+            result.reason = "Failed to set task_num";
+            return result;
+          }
+          else
+          {
+            pm.task_num=p.as_int();
+          }
+        }
       }
       return result;
     }
@@ -190,16 +203,15 @@ LaserLineCenter::~LaserLineCenter()
 
 void LaserLineCenter::_declare_parameters()
 {
-  Params pm;
   this->declare_parameter("ksize", pm.ksize);
   this->declare_parameter("threshold", pm.threshold);
   this->declare_parameter("width_min", pm.width_min);
   this->declare_parameter("width_max", pm.width_max);
+  this->declare_parameter("task_num", pm.task_num);
 }
 
 Params LaserLineCenter::_update_parameters()
 {
-  Params pm;
   const auto & vp = this->get_parameters(KEYS);
   for (const auto & p : vp) {
     if (p.get_name() == "ksize") {
@@ -210,6 +222,8 @@ Params LaserLineCenter::_update_parameters()
       pm.width_min = p.as_double();
     } else if (p.get_name() == "width_max") {
       pm.width_max = p.as_double();
+    } else if (p.get_name() == "task_num") {
+      pm.task_num = p.as_int();
     }
   }
   return pm;
@@ -225,10 +239,12 @@ void LaserLineCenter::_worker()
       _images.pop_front();
       std::promise<PointCloud2::UniquePtr> prom;
       _push_back_future(prom.get_future());
-      auto pm = _update_parameters();
       lk.unlock();
-      auto line = execute(std::move(ptr), buf, pm);
-      prom.set_value(std::move(line));
+      if(pm.task_num==0)
+      {
+        auto line = execute(std::move(ptr), buf, pm);
+        prom.set_value(std::move(line));
+      }
     } else {
       _images_con.wait(lk);
     }
@@ -243,8 +259,11 @@ void LaserLineCenter::_manager()
       auto f = std::move(_futures.front());
       _futures.pop_front();
       lk.unlock();
-      auto ptr = f.get();
-      _pub->publish(std::move(ptr));
+      if(pm.task_num==0)
+      {
+        auto ptr = f.get();
+        _pub->publish(std::move(ptr));
+      }
     } else {
       _futures_con.wait(lk);
     }

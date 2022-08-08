@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.6)
-project(modbus)
+cmake_minimum_required(VERSION 3.8)
+project(laser_imagepos)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -19,19 +19,32 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
-find_package(rcl_interfaces REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus)
+find_package(sensor_msgs REQUIRED)
+find_package(OpenCV REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
 
-add_library(modbus SHARED src/modbus.cpp src/jsoncpp.cpp src/jsonfuction.cpp src/TCPClient.cpp src/TCPServer.cpp src/FileOut.cpp src/E2proomData.cpp)
+add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp src/myhalcv2.cpp)
 
-target_include_directories(modbus PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(modbus rclcpp rclcpp_components rcl_interfaces)
+ament_target_dependencies(${PROJECT_NAME}
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+)
 
-target_link_libraries(modbus PkgConfig::MODBUS)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
-rclcpp_components_register_node(modbus PLUGIN "modbus::Modbus" EXECUTABLE modbus_node)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "${PROJECT_NAME}::LaserImagePos"
+  EXECUTABLE ${PROJECT_NAME}_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -42,14 +55,14 @@ if(BUILD_TESTING)
   # uncomment the line when this package is not in a git repo
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
-  add_subdirectory(test)
 endif()
 
-install(TARGETS modbus EXPORT export_modbus DESTINATION lib)
-install(DIRECTORY include/ DESTINATION include)
+install(TARGETS ${PROJECT_NAME} EXPORT export_${PROJECT_NAME} DESTINATION lib)
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 
-ament_export_targets(export_modbus HAS_LIBRARY_TARGET)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 ament_package()
+

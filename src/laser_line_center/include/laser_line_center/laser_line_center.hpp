@@ -33,7 +33,7 @@ using sensor_msgs::msg::PointCloud2;
  * @brief List of parameter names.
  *
  */
-const std::vector<std::string> KEYS = {"ksize", "threshold", "width_min", "width_max"};
+const std::vector<std::string> KEYS = {"ksize", "threshold", "width_min", "width_max","task_num"};
 
 /**
  * @brief To zip related parameters together.
@@ -45,6 +45,7 @@ struct Params
   int threshold = 35;
   double width_min = 1.;
   double width_max = 30.;
+  int task_num = 0;
 };
 
 /**
@@ -77,6 +78,8 @@ public:
    * Throw no exception.
    */
   virtual ~LaserLineCenter();
+
+  Params pm;
 
 private:
   /**

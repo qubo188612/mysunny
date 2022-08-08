@@ -21,6 +21,9 @@
 #include <modbus.h>
 // #include <stdio.h>
 #include <unistd.h>
+#include <fileout/FileOut.h>
+#include <fileout/E2proomData.h>
+
 
 // #include <climits>
 #include <memory>
@@ -30,7 +33,6 @@
 // #include <utility>
 // #include <vector>
 // #include <iostream>
-
 
 namespace modbus
 {
@@ -43,11 +45,46 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
+  _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
+  _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
 
+
+  this->declare_parameter("parameterpotr", 1500);
+  auto parameterpotr = this->get_parameter("parameterpotr").as_int();
   this->declare_parameter("port", 1502);
   auto port = this->get_parameter("port").as_int(); 
   this->declare_parameter("jsonport", 11503);
   auto jsonport = this->get_parameter("jsonport").as_int();
+  
+  parameterpotr_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
+  if (!parameterpotr_mapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  parameterpotr_mapping->tab_registers[als1_threshold_reg_add]=e2proomdata.als1_threshold;
+  
+
+  static int oldtasknum[PARAMETER_REGEDIST_NUM]={INT_MAX};
+  for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
+  {
+    if(oldtasknum[i]!=parameterpotr_mapping->tab_registers[i])
+    {
+      oldtasknum[i]=parameterpotr_mapping->tab_registers[i];
+      _task_parameter(i,oldtasknum[i]);
+    }
+  }
+
+
+  ctx_parameterpotr = modbus_new_tcp(NULL, parameterpotr);
+  if (!ctx_parameterpotr) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+    rclcpp::shutdown();
+    return;
+  }
+  _thread_parameterpotr = std::thread(&Modbus::_modbusparameterpotr, this, parameterpotr);
+
 
   // _mb_mapping = modbus_mapping_new(MODBUS_MAX_READ_BITS, 0, MODBUS_MAX_READ_REGISTERS, 0);
   mb_mapping = modbus_mapping_new(0, 0, 400, 0);
@@ -111,10 +148,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 Modbus::~Modbus()
 {
   try {
+    _thread_parameterpotr.join();
     _thread.join();
     _jsontcpthread.join();
     _param_gpio.reset();
     _param_camera.reset();
+    _param_linecenter.reset();
 //   _handle.reset();
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -149,6 +188,26 @@ void Modbus::_camera_power(bool f)
     _param_camera->set_parameters({rclcpp::Parameter("power", true)});
   } else {
     _param_camera->set_parameters({rclcpp::Parameter("power", false)});
+  }
+}
+
+void Modbus::_task_numberset(u_int16_t num)
+{
+  _param_linecenter->set_parameters({rclcpp::Parameter("task_num", num)}); 
+  _param_laserimagepos->set_parameters({rclcpp::Parameter("task_num", num)}); 
+}
+
+
+void Modbus::_task_parameter(int ddr,u_int16_t num)
+{
+  switch(ddr)
+  {
+    case als1_threshold_reg_add:
+      e2proomdata.als1_threshold=num;
+      _param_laserimagepos->set_parameters({rclcpp::Parameter("als1_threshold", (int16_t)num)}); 
+    break;
+    default:
+    break;
   }
 }
 
@@ -269,6 +328,13 @@ void Modbus::_modbus(int port)
           // }
           ret = modbus_reply(ctx, query, ret, mb_mapping);
 
+          static int oldtasknum=INT_MAX;
+          if(oldtasknum!=mb_mapping->tab_registers[0x102])
+          {
+            oldtasknum=mb_mapping->tab_registers[0x102];
+            _task_numberset(oldtasknum);
+          }
+
           if (ret == -1) {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
@@ -281,6 +347,119 @@ void Modbus::_modbus(int port)
   close(sock);
   modbus_mapping_free(mb_mapping);
   modbus_free(ctx);
+  if (ret == -1) {
+    rclcpp::shutdown();
+  }
+  // std::ofstream ofile("/diff.txt");
+  // for(auto d : vvv) {
+  //   ofile << d << "\n";
+  // }
+  // ofile.close();
+}
+
+void Modbus::_modbusparameterpotr(int port)
+{
+  // int aaa = 0;
+  // auto nnn = std::chrono::system_clock::now();
+  // std::vector<double> vvv;
+  // vvv.resize(1800);
+  auto sock = modbus_tcp_listen(ctx_parameterpotr, 10);
+  if (sock == -1) {
+    modbus_mapping_free(parameterpotr_mapping);
+    modbus_free(ctx_parameterpotr);
+    RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  std::set<int> fds {sock};
+
+  fd_set refset;
+  FD_ZERO(&refset);
+  FD_SET(sock, &refset);
+
+  int fdmax = sock;
+  uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
+  int ret = 0;
+  while (rclcpp::ok() && ret != -1) {
+    auto rdset = refset;
+    timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
+    ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
+    if (ret == -1) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to select.");
+      continue;
+    } else if (ret == 0) {
+      // time out.
+      continue;
+    }
+
+    auto fds_bak = fds;
+    for (auto fd : fds_bak) {
+      if (!FD_ISSET(fd, &rdset)) {continue;}
+
+      if (fd == sock) {
+        // A client is asking a new connection
+        // struct sockaddr_in clientaddr;
+        // socklen_t addrlen = sizeof(clientaddr);
+        // memset(&clientaddr, 0, sizeof(clientaddr));
+        // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
+        ret = modbus_tcp_accept(ctx_parameterpotr, &sock);
+        if (ret != -1) {
+          FD_SET(ret, &refset);
+          fds.insert(fds.end(), ret);
+          fdmax = *fds.rbegin();
+        } else {
+          RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
+          break;
+        }
+      } else {
+        // A client is asking for reply
+        ret = modbus_set_socket(ctx_parameterpotr, fd);
+        if (ret == -1) {
+          RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
+          break;
+        }
+        ret = modbus_receive(ctx_parameterpotr, query);
+        if (ret == -1) {
+          // Connection closed by the client or error
+          close(fd);
+          FD_CLR(fd, &refset);
+          fds.erase(fd);
+          fdmax = *fds.rbegin();
+          ret = 0;
+        } else if (ret > 0) {
+          ret = modbus_reply(ctx_parameterpotr, query, ret, parameterpotr_mapping);
+
+          static int oldtasknum[PARAMETER_REGEDIST_NUM]={INT_MAX};
+          u_int8_t u8_temp=0;
+          for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
+          {
+            if(oldtasknum[i]!=parameterpotr_mapping->tab_registers[i])
+            {
+              oldtasknum[i]=parameterpotr_mapping->tab_registers[i];
+              u8_temp=1;
+              _task_parameter(i,oldtasknum[i]);
+            }
+          }
+          if(u8_temp==1)
+          {
+            e2proomdata.write();
+          }
+
+          if (ret == -1) {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  close(sock);
+  modbus_mapping_free(parameterpotr_mapping);
+  modbus_free(ctx_parameterpotr);
   if (ret == -1) {
     rclcpp::shutdown();
   }
@@ -436,6 +615,13 @@ void* received(void *m)
                                         int ID = atoi(s_tasknum.c_str());
                                         _p->mb_mapping->tab_registers[0x102]=ID;
                                         sent_root["tasknum"]=s_tasknum+" ok";
+                                        static int oldtasknum=INT_MAX;
+                                        if(oldtasknum!=_p->mb_mapping->tab_registers[0x102])
+                                        {
+                                          oldtasknum=_p->mb_mapping->tab_registers[0x102];
+                                          _p->_task_numberset(oldtasknum);
+                                        }
+                                        
                                     }
                                     break;
                                     default:
