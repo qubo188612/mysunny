@@ -1,0 +1,19 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  ros:
+    image: qubo188612/sunny-tis:deploy
+    command: ros2 launch pipeline_tis main.launch.py
+#   command: ros2 param load modbus_node /workspace/sunny/install/modbus/share/modbus/config/params.yaml
+    container_name: ros
+    network_mode: "host"
+    restart: unless-stopped
+    devices:
+      - "/dev/video0:/dev/video0"
+      - "/dev/gpiochip0:/dev/gpiochip0"
+    volumes:
+      - ros2_log:/root/.ros/log
+      - config_data:/workspace/sunny/install/config_tis/share/config_tis/config
+
+volumes:
+  ros2_log:
+  config_data:

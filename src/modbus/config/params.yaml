@@ -1,0 +1,4 @@
+modbus_node:
+  ros__parameters:
+    port: 1502                  # int
+    jsonport: 11503 
