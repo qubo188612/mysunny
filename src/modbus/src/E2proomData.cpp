@@ -1,13 +1,7 @@
 #include "fileout/E2proomData.h"
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <dirent.h>
-#include <sys/io.h>
-#include <stdio.h>   
-#include <iostream>  
-#include <utility>   
-#include <stdlib.h>  
-#include <sys/stat.h> 
+#include <dirent.h>  
 #include <unistd.h>
 
 E2proomData::E2proomData()
