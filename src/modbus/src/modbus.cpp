@@ -313,29 +313,31 @@ void Modbus::_modbus(int port)
           fdmax = *fds.rbegin();
           ret = 0;
         } else if (ret > 0) {
+          ret = modbus_reply(ctx, query, ret, mb_mapping);
           switch(e2proomdata.robot_mod)
           {
           case E2POOM_ROBOT_MOD_NULL:
           case E2POOM_ROBOT_MOD_ZHICHANG:
-              if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
-                if (query[14]) {
-                  _gpio_laser(true);
-                  _camera_power(true);
-                } else {
-                  _camera_power(false);
-                  _gpio_laser(false);
-                }
-              }
-              ret = modbus_reply(ctx, query, ret, mb_mapping);
-
-              static int oldtasknum=INT_MAX;
-              if(oldtasknum!=mb_mapping->tab_registers[0x102])
               {
-                oldtasknum=mb_mapping->tab_registers[0x102];
-                _task_numberset(oldtasknum);
+                if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
+                  if (query[14]) {
+                    _gpio_laser(true);
+                    _camera_power(true);
+                  } else {
+                    _camera_power(false);
+                    _gpio_laser(false);
+                  }
+                }
+                static int oldtasknum=INT_MAX;
+                if(oldtasknum!=mb_mapping->tab_registers[0x102])
+                {
+                  oldtasknum=mb_mapping->tab_registers[0x102];
+                  _task_numberset(oldtasknum);
+                }
               }
           break;
           case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+              
 
           break;
           }
