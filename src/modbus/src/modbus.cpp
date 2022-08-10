@@ -48,107 +48,113 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
 
+  this->declare_parameter("robotsetport", 1501);    //机器人型号设置及通信端口
+  auto robotsetport = this->get_parameter("robotsetport").as_int();
 
-  this->declare_parameter("parameterpotr", 1500);
-  auto parameterpotr = this->get_parameter("parameterpotr").as_int();
-  this->declare_parameter("port", 1502);
-  auto port = this->get_parameter("port").as_int(); 
-  this->declare_parameter("jsonport", 11503);
-  auto jsonport = this->get_parameter("jsonport").as_int();
+  this->declare_parameter("robot_mod", e2proomdata.robot_mod);
+
+  robot_mapping=modbus_mapping_new(0, 0, ROBOT_SET_REGEDIST_NUM, 0);
+  if (!robot_mapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusrobot registers.");
+    rclcpp::shutdown();
+    return;
+  }
+  robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=e2proomdata.robot_mod;
+  robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=e2proomdata.robot_port;
+  ctx_robot = modbus_new_tcp(NULL, robotsetport);
+  if (!ctx_robot) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create modbusrobot context.");
+    rclcpp::shutdown();
+    return;
+  }
+  _thread_robotset = std::thread(&Modbus::_modbusrobotset, this, robotsetport);
+
+  this->declare_parameter("parameterport", 1500);   //框架2参数设置端口
+  auto parameterport = this->get_parameter("parameterport").as_int();
   
-  parameterpotr_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
-  if (!parameterpotr_mapping) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
+  int port;
+  switch(e2proomdata.robot_mod)
+  {
+  case E2POOM_ROBOT_MOD_NULL:
+      this->declare_parameter("port", 1502);  //modbustcp协议端口
+      port = this->get_parameter("port").as_int(); 
+      break;
+  case E2POOM_ROBOT_MOD_ZHICHANG:
+  case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+      this->declare_parameter("port", e2proomdata.robot_port);  //modbustcp协议端口
+      port = this->get_parameter("port").as_int(); 
+      break;
+  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+      this->declare_parameter("port", e2proomdata.robot_port);//json协议端口
+      port = this->get_parameter("port").as_int();
+      break;
+  default:
+      break;
+  }
+
+  parameterport_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
+  if (!parameterport_mapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusparameter registers.");
     rclcpp::shutdown();
     return;
   }
 
-  parameterpotr_mapping->tab_registers[als1_threshold_reg_add]=e2proomdata.als1_threshold;
+  parameterport_mapping->tab_registers[ALS100_THRESHOLD_REG_ADD]=e2proomdata.als100_threshold;
   
-
-  static int oldtasknum[PARAMETER_REGEDIST_NUM]={INT_MAX};
+  static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
   {
-    if(oldtasknum[i]!=parameterpotr_mapping->tab_registers[i])
+    if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
     {
-      oldtasknum[i]=parameterpotr_mapping->tab_registers[i];
-      _task_parameter(i,oldtasknum[i]);
+      oldparameter[i]=parameterport_mapping->tab_registers[i];
+      _task_parameter(i,oldparameter[i]);
     }
   }
 
-
-  ctx_parameterpotr = modbus_new_tcp(NULL, parameterpotr);
-  if (!ctx_parameterpotr) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+  ctx_parameterport = modbus_new_tcp(NULL, parameterport);
+  if (!ctx_parameterport) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create modbusparameter context.");
     rclcpp::shutdown();
     return;
   }
-  _thread_parameterpotr = std::thread(&Modbus::_modbusparameterpotr, this, parameterpotr);
+  _thread_parameterport = std::thread(&Modbus::_modbusparameterport, this, parameterport);
 
-
-  // _mb_mapping = modbus_mapping_new(MODBUS_MAX_READ_BITS, 0, MODBUS_MAX_READ_REGISTERS, 0);
-  mb_mapping = modbus_mapping_new(0, 0, 400, 0);
-  if (!mb_mapping) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
-    rclcpp::shutdown();
-    return;
-  }
-  mb_mapping->tab_registers[1] = 0xff;
-
-  ctx = modbus_new_tcp(NULL, port);
-  if (!ctx) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
-    rclcpp::shutdown();
-    return;
-  }
-  _thread = std::thread(&Modbus::_modbus, this, port);
-
-  num_client=0;
-  _jsontcpthread = std::thread(&Modbus::_json, this, jsonport);
-
-/*
-  static int s_port=0,s_jsport=0;
-  _handle = this->add_on_set_parameters_callback(
-    [this](const std::vector<rclcpp::Parameter> & parameters) {
-      SetParametersResult result;
-      result.successful = true;
-      for (const auto & p : parameters) {
-        if (p.get_name() == "port") {
-          if(s_port==0)
-          {
-            s_port=1;
-            auto port = p.as_int();
-            ctx = modbus_new_tcp(NULL, port);
-            if (!ctx) {
-              RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
-              rclcpp::shutdown();
-              return result;
-            }
-            _thread = std::thread(&Modbus::_modbus, this, port);
-          }
-        } 
-        else if (p.get_name() == "jsonport") 
-        {
-          if(s_jsport==0)
-          {
-            s_jsport=1;
-            auto jsonport = p.as_int();
-            num_client=0;
-            _jsontcpthread = std::thread(&Modbus::_json, this, jsonport);
-          }
-        }
+  switch(e2proomdata.robot_mod)
+  {
+  case E2POOM_ROBOT_MOD_NULL:
+  case E2POOM_ROBOT_MOD_ZHICHANG:
+  case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+      // _mb_mapping = modbus_mapping_new(MODBUS_MAX_READ_BITS, 0, MODBUS_MAX_READ_REGISTERS, 0);
+      mb_mapping = modbus_mapping_new(0, 0, 400, 0);
+      if (!mb_mapping) {
+        RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
+        rclcpp::shutdown();
+        return;
       }
-      return result;
-    }
-  );
-*/
+      mb_mapping->tab_registers[1] = 0xff;
+
+      ctx = modbus_new_tcp(NULL, port);
+      if (!ctx) {
+        RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+        rclcpp::shutdown();
+        return;
+      }
+      _thread = std::thread(&Modbus::_modbus, this, port);
+      break;
+  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+      num_client=0;
+      _jsontcpthread = std::thread(&Modbus::_json, this, port);
+      break;
+  default:
+      break;
+  }
   RCLCPP_INFO(this->get_logger(), "Initialized successfully");
 }
 
 Modbus::~Modbus()
 {
   try {
-    _thread_parameterpotr.join();
+    _thread_parameterport.join();
     _thread.join();
     _jsontcpthread.join();
     _param_gpio.reset();
@@ -202,9 +208,26 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
 {
   switch(ddr)
   {
-    case als1_threshold_reg_add:
-      e2proomdata.als1_threshold=num;
-      _param_laserimagepos->set_parameters({rclcpp::Parameter("als1_threshold", (int16_t)num)}); 
+    case ALS100_THRESHOLD_REG_ADD:
+      e2proomdata.als100_threshold=num;
+      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_threshold", (int16_t)num)}); 
+    break;
+    default:
+    break;
+  }
+}
+
+void Modbus::_task_robot(int ddr,u_int16_t num)
+{
+  switch(ddr)
+  {
+    case ROBOT_MOD_REG_ADD: 
+      e2proomdata.robot_mod=num;
+      this->declare_parameter("robot_mod", e2proomdata.robot_mod);
+    break;
+    case ROBOT_PORT_REG_ADD:
+      e2proomdata.robot_port=num;
+      this->declare_parameter("port", e2proomdata.robot_port);
     break;
     default:
     break;
@@ -264,11 +287,7 @@ void Modbus::_modbus(int port)
       if (!FD_ISSET(fd, &rdset)) {continue;}
 
       if (fd == sock) {
-        // A client is asking a new connection
-        // struct sockaddr_in clientaddr;
-        // socklen_t addrlen = sizeof(clientaddr);
-        // memset(&clientaddr, 0, sizeof(clientaddr));
-        // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
+        
         ret = modbus_tcp_accept(ctx, &sock);
         if (ret != -1) {
           FD_SET(ret, &refset);
@@ -294,47 +313,32 @@ void Modbus::_modbus(int port)
           fdmax = *fds.rbegin();
           ret = 0;
         } else if (ret > 0) {
-          // Client request
-          // if (ret == 19 && query[7] == 0x10) {
-          //   auto ptr = reinterpret_cast<uint8_t *> (mb_mapping->tab_registers);
-          //   ptr[5] = query[13];
-          //   ptr[4] = query[14];
-          //   ptr[7] = query[15];
-          //   ptr[6] = query[16];
-          //   ptr[9] = query[17];
-          //   ptr[8] = query[18];
-          //   // if (++ccc % 30 == 0) {
-          //   //   RCLCPP_INFO(this->get_logger(), "%d %d %d",
-          //   //     int(mb_mapping->tab_registers[2]),
-          //   //     int(mb_mapping->tab_registers[3]),
-          //   //     int(mb_mapping->tab_registers[4]));
-          //   // }
-          //   continue;
-          // }
-          if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
-            if (query[14]) {
-              _gpio_laser(true);
-              _camera_power(true);
-            } else {
-              _camera_power(false);
-              _gpio_laser(false);
-            }
-          }
-          // if (ret == 19) {
-          //   auto ttt = std::chrono::system_clock::now();
-          //   std::chrono::duration<double> diff = ttt - nnn;
-          //   vvv[aaa++ % 1800] = diff.count();
-          //   nnn = ttt;
-          // }
-          ret = modbus_reply(ctx, query, ret, mb_mapping);
-
-          static int oldtasknum=INT_MAX;
-          if(oldtasknum!=mb_mapping->tab_registers[0x102])
+          switch(e2proomdata.robot_mod)
           {
-            oldtasknum=mb_mapping->tab_registers[0x102];
-            _task_numberset(oldtasknum);
-          }
+          case E2POOM_ROBOT_MOD_NULL:
+          case E2POOM_ROBOT_MOD_ZHICHANG:
+              if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
+                if (query[14]) {
+                  _gpio_laser(true);
+                  _camera_power(true);
+                } else {
+                  _camera_power(false);
+                  _gpio_laser(false);
+                }
+              }
+              ret = modbus_reply(ctx, query, ret, mb_mapping);
 
+              static int oldtasknum=INT_MAX;
+              if(oldtasknum!=mb_mapping->tab_registers[0x102])
+              {
+                oldtasknum=mb_mapping->tab_registers[0x102];
+                _task_numberset(oldtasknum);
+              }
+          break;
+          case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+
+          break;
+          }
           if (ret == -1) {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
@@ -357,16 +361,16 @@ void Modbus::_modbus(int port)
   // ofile.close();
 }
 
-void Modbus::_modbusparameterpotr(int port)
+void Modbus::_modbusrobotset(int port)
 {
   // int aaa = 0;
   // auto nnn = std::chrono::system_clock::now();
   // std::vector<double> vvv;
   // vvv.resize(1800);
-  auto sock = modbus_tcp_listen(ctx_parameterpotr, 10);
+  auto sock = modbus_tcp_listen(ctx_robot, 10);
   if (sock == -1) {
-    modbus_mapping_free(parameterpotr_mapping);
-    modbus_free(ctx_parameterpotr);
+    modbus_mapping_free(robot_mapping);
+    modbus_free(ctx_robot);
     RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
     rclcpp::shutdown();
     return;
@@ -405,7 +409,7 @@ void Modbus::_modbusparameterpotr(int port)
         // socklen_t addrlen = sizeof(clientaddr);
         // memset(&clientaddr, 0, sizeof(clientaddr));
         // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
-        ret = modbus_tcp_accept(ctx_parameterpotr, &sock);
+        ret = modbus_tcp_accept(ctx_robot, &sock);
         if (ret != -1) {
           FD_SET(ret, &refset);
           fds.insert(fds.end(), ret);
@@ -416,12 +420,12 @@ void Modbus::_modbusparameterpotr(int port)
         }
       } else {
         // A client is asking for reply
-        ret = modbus_set_socket(ctx_parameterpotr, fd);
+        ret = modbus_set_socket(ctx_robot, fd);
         if (ret == -1) {
           RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
           break;
         }
-        ret = modbus_receive(ctx_parameterpotr, query);
+        ret = modbus_receive(ctx_robot, query);
         if (ret == -1) {
           // Connection closed by the client or error
           close(fd);
@@ -430,17 +434,130 @@ void Modbus::_modbusparameterpotr(int port)
           fdmax = *fds.rbegin();
           ret = 0;
         } else if (ret > 0) {
-          ret = modbus_reply(ctx_parameterpotr, query, ret, parameterpotr_mapping);
+          ret = modbus_reply(ctx_robot, query, ret, robot_mapping);
 
-          static int oldtasknum[PARAMETER_REGEDIST_NUM]={INT_MAX};
+          static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
+          u_int8_t u8_temp=0;
+          for(int i=0;i<ROBOT_SET_REGEDIST_NUM;i++)
+          {
+            if(oldrobot[i]!=robot_mapping->tab_registers[i])
+            {
+              oldrobot[i]=robot_mapping->tab_registers[i];
+              u8_temp=1;
+              _task_robot(i,oldrobot[i]);
+            }
+          }
+          if(u8_temp==1)
+          {
+            e2proomdata.write_robot_para();
+          }
+
+          if (ret == -1) {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  close(sock);
+  modbus_mapping_free(robot_mapping);
+  modbus_free(ctx_robot);
+  if (ret == -1) {
+    rclcpp::shutdown();
+  }
+  // std::ofstream ofile("/diff.txt");
+  // for(auto d : vvv) {
+  //   ofile << d << "\n";
+  // }
+  // ofile.close();
+}
+
+void Modbus::_modbusparameterport(int port)
+{
+  // int aaa = 0;
+  // auto nnn = std::chrono::system_clock::now();
+  // std::vector<double> vvv;
+  // vvv.resize(1800);
+  auto sock = modbus_tcp_listen(ctx_parameterport, 10);
+  if (sock == -1) {
+    modbus_mapping_free(parameterport_mapping);
+    modbus_free(ctx_parameterport);
+    RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  std::set<int> fds {sock};
+
+  fd_set refset;
+  FD_ZERO(&refset);
+  FD_SET(sock, &refset);
+
+  int fdmax = sock;
+  uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
+  int ret = 0;
+  while (rclcpp::ok() && ret != -1) {
+    auto rdset = refset;
+    timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
+    ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
+    if (ret == -1) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to select.");
+      continue;
+    } else if (ret == 0) {
+      // time out.
+      continue;
+    }
+
+    auto fds_bak = fds;
+    for (auto fd : fds_bak) {
+      if (!FD_ISSET(fd, &rdset)) {continue;}
+
+      if (fd == sock) {
+        // A client is asking a new connection
+        // struct sockaddr_in clientaddr;
+        // socklen_t addrlen = sizeof(clientaddr);
+        // memset(&clientaddr, 0, sizeof(clientaddr));
+        // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
+        ret = modbus_tcp_accept(ctx_parameterport, &sock);
+        if (ret != -1) {
+          FD_SET(ret, &refset);
+          fds.insert(fds.end(), ret);
+          fdmax = *fds.rbegin();
+        } else {
+          RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
+          break;
+        }
+      } else {
+        // A client is asking for reply
+        ret = modbus_set_socket(ctx_parameterport, fd);
+        if (ret == -1) {
+          RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
+          break;
+        }
+        ret = modbus_receive(ctx_parameterport, query);
+        if (ret == -1) {
+          // Connection closed by the client or error
+          close(fd);
+          FD_CLR(fd, &refset);
+          fds.erase(fd);
+          fdmax = *fds.rbegin();
+          ret = 0;
+        } else if (ret > 0) {
+          ret = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
+
+          static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
           for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
           {
-            if(oldtasknum[i]!=parameterpotr_mapping->tab_registers[i])
+            if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
             {
-              oldtasknum[i]=parameterpotr_mapping->tab_registers[i];
+              oldparameter[i]=parameterport_mapping->tab_registers[i];
               u8_temp=1;
-              _task_parameter(i,oldtasknum[i]);
+              _task_parameter(i,oldparameter[i]);
             }
           }
           if(u8_temp==1)
@@ -458,8 +575,8 @@ void Modbus::_modbusparameterpotr(int port)
   }
 
   close(sock);
-  modbus_mapping_free(parameterpotr_mapping);
-  modbus_free(ctx_parameterpotr);
+  modbus_mapping_free(parameterport_mapping);
+  modbus_free(ctx_parameterport);
   if (ret == -1) {
     rclcpp::shutdown();
   }

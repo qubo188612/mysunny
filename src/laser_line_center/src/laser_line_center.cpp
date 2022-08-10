@@ -259,7 +259,7 @@ void LaserLineCenter::_manager()
       auto f = std::move(_futures.front());
       _futures.pop_front();
       lk.unlock();
-      if(pm.task_num==0)
+      if(pm.task_num>=0&&pm.task_num<100)
       {
         auto ptr = f.get();
         _pub->publish(std::move(ptr));

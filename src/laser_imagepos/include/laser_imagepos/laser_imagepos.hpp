@@ -15,7 +15,7 @@ namespace laser_imagepos
 using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
 
-const std::vector<std::string> KEYS = {"als1_threshold","task_num"};
+const std::vector<std::string> KEYS = {"als100_threshold","task_num"};
 
 /**
  * @brief To zip related parameters together.
@@ -23,7 +23,7 @@ const std::vector<std::string> KEYS = {"als1_threshold","task_num"};
  */
 struct Params
 {
-  int als1_threshold = 120;
+  int als100_threshold = 120;
   int task_num = 0;
 };
 

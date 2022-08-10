@@ -46,16 +46,16 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
       SetParametersResult result;
       result.successful = true;
       for (const auto & p : vp) {
-        if (p.get_name() == "als1_threshold") {
+        if (p.get_name() == "als100_threshold") {
           auto k = p.as_int();
           if (k <0 || k>255) {
             result.successful = false;
-            result.reason = "Failed to set als1_threshold";
+            result.reason = "Failed to set als100_threshold";
             return result;
           }
           else
           {
-            pm.als1_threshold=k;
+            pm.als100_threshold=k;
           }
         } else if (p.get_name() == "task_num") {
           if (p.as_int() < 0) {
@@ -98,7 +98,7 @@ LaserImagePos::~LaserImagePos()
 
 void LaserImagePos::_declare_parameters()
 {
-  this->declare_parameter("als1_threshold", pm.als1_threshold);
+  this->declare_parameter("als100_threshold", pm.als100_threshold);
   this->declare_parameter("task_num", pm.task_num);
 }
 
@@ -106,8 +106,8 @@ Params LaserImagePos::_update_parameters()
 {
   const auto & vp = this->get_parameters(KEYS);
   for (const auto & p : vp) {
-    if (p.get_name() == "als1_threshold") {
-      pm.als1_threshold = p.as_int();
+    if (p.get_name() == "als100_threshold") {
+      pm.als100_threshold = p.as_int();
     } else if (p.get_name() == "task_num") {
       pm.task_num = p.as_int();
     }
@@ -190,7 +190,7 @@ void LaserImagePos::_worker()
       std::promise<PointCloud2::UniquePtr> prom;
       _push_back_future(prom.get_future());
       lk.unlock();
-      if(pm.task_num!=0)
+      if(pm.task_num>=100&&pm.task_num<200)
       {
         auto line = execute(std::move(ptr), buf, pm);
         prom.set_value(std::move(line));

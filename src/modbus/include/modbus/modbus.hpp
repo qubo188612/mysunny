@@ -28,9 +28,13 @@
 
 namespace modbus
 {
+#define ROBOT_SET_REGEDIST_NUM            10
+#define ROBOT_MOD_REG_ADD                 0x0000
+#define ROBOT_PORT_REG_ADD                0x0001
 
-#define PARAMETER_REGEDIST_NUM            400
-#define als1_threshold_reg_add            0x0000
+
+#define PARAMETER_REGEDIST_NUM             400
+#define ALS100_THRESHOLD_REG_ADD           0x0000
 
 /**
  * @brief Modbus protocal wrapped from libmodbus-dev.
@@ -69,9 +73,13 @@ public:
   //modbus register 400 sizeof u_int16_t  
   modbus_mapping_t *mb_mapping; 
 
-  modbus_t * ctx_parameterpotr;
+  modbus_t * ctx_parameterport;
 
-  modbus_mapping_t *parameterpotr_mapping; 
+  modbus_mapping_t *parameterport_mapping; 
+
+
+  modbus_t * ctx_robot;
+  modbus_mapping_t *robot_mapping; 
 
 
   //tcp client;
@@ -99,6 +107,8 @@ public:
 
   void _task_parameter(int ddr,u_int16_t num);
 
+  void _task_robot(int ddr,u_int16_t num);
+
 private:
   
   E2proomData e2proomdata;
@@ -114,7 +124,9 @@ private:
    */
   void _json(int);
 
-  void _modbusparameterpotr(int);
+  void _modbusparameterport(int);
+
+  void _modbusrobotset(int);
 
 private:
   /**
@@ -133,6 +145,8 @@ private:
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_laserimagepos;
 
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_robotconfig;
+
  // OnSetParametersCallbackHandle::SharedPtr _handle;
 
   /**
@@ -147,7 +161,9 @@ private:
    */
   std::thread _jsontcpthread;
 
-  std::thread _thread_parameterpotr;
+  std::thread _thread_parameterport;
+
+  std::thread _thread_robotset;
 };
 
 void close_app(int s);

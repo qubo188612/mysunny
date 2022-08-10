@@ -1,5 +1,5 @@
 laser_imagepos_node:
   ros__parameters:
-    als1_threshold: 150               # int
+    als100_threshold: 150               # int
     task_num:       0                 # int
 

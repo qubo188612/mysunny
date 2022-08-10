@@ -13,7 +13,6 @@ modbus::modbus_node
 ## Parameters
 
 - /modbus_node/port int
-- /modbus_node/jsonport int
 
 ## Usage information
 
