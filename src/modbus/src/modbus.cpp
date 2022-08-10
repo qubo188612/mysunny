@@ -229,11 +229,11 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
   {
     case ROBOT_MOD_REG_ADD: 
       e2proomdata.robot_mod=num;
-      this->declare_parameter("robot_mod", e2proomdata.robot_mod);
+      this->set_parameters({rclcpp::Parameter("robot_mod", (u_int16_t)e2proomdata.robot_mod)});
     break;
     case ROBOT_PORT_REG_ADD:
       e2proomdata.robot_port=num;
-      this->declare_parameter("port", e2proomdata.robot_port);
+      this->set_parameters({rclcpp::Parameter("port", (u_int16_t)e2proomdata.robot_port)});
     break;
     default:
     break;
