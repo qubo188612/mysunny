@@ -28,6 +28,10 @@
 
 namespace modbus
 {
+
+#define SERVER_REGEDIST_NUM               400
+
+
 #define ROBOT_SET_REGEDIST_NUM            10
 #define ROBOT_MOD_REG_ADD                 0x0000
 #define ROBOT_PORT_REG_ADD                0x0001
@@ -69,14 +73,14 @@ public:
 
   //modbus sock
   modbus_t * ctx;
-
   //modbus register 400 sizeof u_int16_t  
   modbus_mapping_t *mb_mapping; 
 
+  modbus_t * ctx_forward;
+  modbus_mapping_t *mb_forwardmapping; 
+
   modbus_t * ctx_parameterport;
-
   modbus_mapping_t *parameterport_mapping; 
-
 
   modbus_t * ctx_robot;
   modbus_mapping_t *robot_mapping; 
@@ -118,15 +122,17 @@ private:
    */
   void _modbus(int);
 
+  void _modbusforward(int);//服务器数据modbus转发
+
 /**
    * @brief Send and receive in json format.
    *
    */
-  void _json(int);
+  void _json(int);//服务器数据json转发
 
-  void _modbusparameterport(int);
+  void _modbusparameterport(int);//框架2数据通信
 
-  void _modbusrobotset(int);
+  void _modbusrobotset(int);//机器人类型和端口设置
 
 private:
   /**
@@ -164,6 +170,8 @@ private:
   std::thread _thread_parameterport;
 
   std::thread _thread_robotset;
+
+  std::thread _threadforward;
 };
 
 void close_app(int s);

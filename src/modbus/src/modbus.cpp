@@ -73,24 +73,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   auto parameterport = this->get_parameter("parameterport").as_int();
   
   int port;
-  switch(e2proomdata.robot_mod)
-  {
-  case E2POOM_ROBOT_MOD_NULL:
-      this->declare_parameter("port", 1502);  //modbustcp协议端口
-      port = this->get_parameter("port").as_int(); 
-      break;
-  case E2POOM_ROBOT_MOD_ZHICHANG:
-  case E2POOM_ROBOT_MOD_MOKA_NABOTE:
-      this->declare_parameter("port", e2proomdata.robot_port);  //modbustcp协议端口
-      port = this->get_parameter("port").as_int(); 
-      break;
-  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
-      this->declare_parameter("port", e2proomdata.robot_port);//json协议端口
-      port = this->get_parameter("port").as_int();
-      break;
-  default:
-      break;
-  }
+  this->declare_parameter("port", 1502);  //modbustcp协议端口
+  port = this->get_parameter("port").as_int(); 
+
+  int robot_port;
+  this->declare_parameter("robot_port", e2proomdata.robot_port);  //modbustcp协议端口
+  robot_port = this->get_parameter("robot_port").as_int(); 
 
   parameterport_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
   if (!parameterport_mapping) {
@@ -119,31 +107,47 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   _thread_parameterport = std::thread(&Modbus::_modbusparameterport, this, parameterport);
 
+  mb_mapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
+  if (!mb_mapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
+    rclcpp::shutdown();
+    return;
+  }
+  mb_mapping->tab_registers[1] = 0xff;
+
+  ctx = modbus_new_tcp(NULL, port);
+  if (!ctx) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+    rclcpp::shutdown();
+    return;
+  }
+  _thread = std::thread(&Modbus::_modbus, this, port);
+
   switch(e2proomdata.robot_mod)
   {
   case E2POOM_ROBOT_MOD_NULL:
+  break;
   case E2POOM_ROBOT_MOD_ZHICHANG:
   case E2POOM_ROBOT_MOD_MOKA_NABOTE:
-      // _mb_mapping = modbus_mapping_new(MODBUS_MAX_READ_BITS, 0, MODBUS_MAX_READ_REGISTERS, 0);
-      mb_mapping = modbus_mapping_new(0, 0, 400, 0);
-      if (!mb_mapping) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbus registers.");
+      mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
+      if (!mb_forwardmapping) {
+        RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusforward registers.");
         rclcpp::shutdown();
         return;
       }
-      mb_mapping->tab_registers[1] = 0xff;
+      mb_forwardmapping->tab_registers[1] = 0xff;
 
-      ctx = modbus_new_tcp(NULL, port);
-      if (!ctx) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+      ctx_forward = modbus_new_tcp(NULL, robot_port);
+      if (!ctx_forward) {
+        RCLCPP_ERROR(this->get_logger(), "Failed to create modbusforward context.");
         rclcpp::shutdown();
         return;
       }
-      _thread = std::thread(&Modbus::_modbus, this, port);
+      _threadforward = std::thread(&Modbus::_modbusforward, this, robot_port);
       break;
   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
       num_client=0;
-      _jsontcpthread = std::thread(&Modbus::_json, this, port);
+      _jsontcpthread = std::thread(&Modbus::_json, this, robot_port);
       break;
   default:
       break;
@@ -154,9 +158,11 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 Modbus::~Modbus()
 {
   try {
+    _thread_robotset.join();
     _thread_parameterport.join();
     _thread.join();
     _jsontcpthread.join();
+    _threadforward.join();
     _param_gpio.reset();
     _param_camera.reset();
     _param_linecenter.reset();
@@ -313,33 +319,41 @@ void Modbus::_modbus(int port)
           fdmax = *fds.rbegin();
           ret = 0;
         } else if (ret > 0) {
-          ret = modbus_reply(ctx, query, ret, mb_mapping);
-          switch(e2proomdata.robot_mod)
-          {
-          case E2POOM_ROBOT_MOD_NULL:
-          case E2POOM_ROBOT_MOD_ZHICHANG:
-              {
-                if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
-                  if (query[14]) {
-                    _gpio_laser(true);
-                    _camera_power(true);
-                  } else {
-                    _camera_power(false);
-                    _gpio_laser(false);
-                  }
-                }
-                static int oldtasknum=INT_MAX;
-                if(oldtasknum!=mb_mapping->tab_registers[0x102])
-                {
-                  oldtasknum=mb_mapping->tab_registers[0x102];
-                  _task_numberset(oldtasknum);
-                }
+            if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
+              if (query[14]) {
+                _gpio_laser(true);
+                _camera_power(true);
+              } else {
+                _camera_power(false);
+                _gpio_laser(false);
               }
-          break;
-          case E2POOM_ROBOT_MOD_MOKA_NABOTE:
-              
+            }
+            ret = modbus_reply(ctx, query, ret, mb_mapping);
+            static int oldtasknum=INT_MAX;
+            if(oldtasknum!=mb_mapping->tab_registers[0x102])
+            {
+              oldtasknum=mb_mapping->tab_registers[0x102];
+              _task_numberset(oldtasknum);
+            }
 
-          break;
+            switch(e2proomdata.robot_mod)
+            {
+              case E2POOM_ROBOT_MOD_NULL:
+              break;
+              case E2POOM_ROBOT_MOD_ZHICHANG:
+                memcpy(mb_forwardmapping->tab_registers,mb_mapping->tab_registers,2*SERVER_REGEDIST_NUM);
+              break;
+              case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+                mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
+                if(mb_mapping->tab_registers[0x02]==0xff)
+                    mb_forwardmapping->tab_registers[0x0010]=1;
+                else 
+                    mb_forwardmapping->tab_registers[0x0010]=0;
+                mb_forwardmapping->tab_registers[0x0011]=0;
+                mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
+                mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
+              break;
+            }
           }
           if (ret == -1) {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
@@ -362,6 +376,8 @@ void Modbus::_modbus(int port)
   // }
   // ofile.close();
 }
+
+
 
 void Modbus::_modbusrobotset(int port)
 {
@@ -589,6 +605,172 @@ void Modbus::_modbusparameterport(int port)
   // ofile.close();
 }
 
+void Modbus::_modbusforward(int port)
+ // int aaa = 0;
+  // auto nnn = std::chrono::system_clock::now();
+  // std::vector<double> vvv;
+  // vvv.resize(1800);
+  auto sock = modbus_tcp_listen(ctx_forward, 10);
+  if (sock == -1) {
+    modbus_mapping_free(mb_forwardmapping);
+    modbus_free(ctx_forward);
+    RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  std::set<int> fds {sock};
+
+  fd_set refset;
+  FD_ZERO(&refset);
+  FD_SET(sock, &refset);
+
+  int fdmax = sock;
+  uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
+  int ret = 0;
+  while (rclcpp::ok() && ret != -1) {
+    auto rdset = refset;
+    timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
+    ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
+    if (ret == -1) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to select.");
+      continue;
+    } else if (ret == 0) {
+      // time out.
+      continue;
+    }
+
+    auto fds_bak = fds;
+    for (auto fd : fds_bak) {
+      if (!FD_ISSET(fd, &rdset)) {continue;}
+
+      if (fd == sock) {
+        
+        ret = modbus_tcp_accept(ctx_forward, &sock);
+        if (ret != -1) {
+          FD_SET(ret, &refset);
+          fds.insert(fds.end(), ret);
+          fdmax = *fds.rbegin();
+        } else {
+          RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
+          break;
+        }
+      } else {
+        // A client is asking for reply
+        ret = modbus_set_socket(ctx_forward, fd);
+        if (ret == -1) {
+          RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
+          break;
+        }
+        ret = modbus_receive(ctx_forward, query);
+        if (ret == -1) {
+          // Connection closed by the client or error
+          close(fd);
+          FD_CLR(fd, &refset);
+          fds.erase(fd);
+          fdmax = *fds.rbegin();
+          ret = 0;
+        } else if (ret > 0) {
+            ret = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
+
+            switch(e2proomdata.robot_mod)
+            {
+              case E2POOM_ROBOT_MOD_NULL:
+              case E2POOM_ROBOT_MOD_ZHICHANG:
+              {
+                if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
+                  if (query[14]) {
+                    _gpio_laser(true);
+                    _camera_power(true);
+                    robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
+                  } else {
+                    _camera_power(false);
+                    _gpio_laser(false);
+                    robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101]
+                  }
+                }
+              
+                static int oldtasknum=INT_MAX;
+                if(oldtasknum!=mb_forwardmapping->tab_registers[0x102])
+                {
+                  oldtasknum=mb_forwardmapping->tab_registers[0x102];
+                  robot_mapping->tab_registers[0x102]=oldtasknum;
+                  _task_numberset(oldtasknum);
+                }
+              }
+              break;
+              case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+              {
+                static int oldtasknum=INT_MAX;
+                if(oldtasknum!=mb_forwardmapping->tab_registers[0x000])
+                {
+                  oldtasknum=mb_forwardmapping->tab_registers[0x000];
+                  robot_mapping->tab_registers[0x102]=oldtasknum;
+                  _task_numberset(oldtasknum);
+                }
+
+                static int oldgpio_laser=INT_MAX;
+                if(oldgpio_laser!=mb_forwardmapping->tab_registers[0x001])
+                {
+                  oldgpio_laser=mb_forwardmapping->tab_registers[0x001];
+                  if(oldgpio_laser==0x001)
+                  {
+                    _gpio_laser(true);
+                  }
+                  else if(oldgpio_laser==0x000)
+                  {
+                    _gpio_laser(false);
+                  }
+                }
+
+                static int oldcamera_power=INT_MAX;
+                if(mb_forwardmapping->tab_registers[0x002]==1||mb_forwardmapping->tab_registers[0x003]==1)
+                {
+                  if(oldcamera_power!=1)
+                  {
+                    oldcamera_power=1;
+                    _camera_power(true);
+                  }
+                }
+                else
+                {
+                  if(oldcamera_power!=0)
+                  {
+                    oldcamera_power=0;
+                    _camera_power(false);
+                  }
+                }
+              }
+              break;
+              default:
+              break;
+            }
+          }
+          if (ret == -1) {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  close(sock);
+  modbus_mapping_free(mb_forwardmapping);
+  modbus_free(ctx_forward);
+  if (ret == -1) {
+    rclcpp::shutdown();
+  }
+  // std::ofstream ofile("/diff.txt");
+  // for(auto d : vvv) {
+  //   ofile << d << "\n";
+  // }
+  // ofile.close();
+}
+
+
 void Modbus::_json(int port)
 {
     pthread_t msg;
@@ -616,39 +798,6 @@ void close_app(int s)
     rclcpp::shutdown();
 }
 
-/*
-void * send_client(void * m) 
-{
-    struct descript_socket *desc = (struct descript_socket*) m;
-	  while(rclcpp::ok()) 
-    {
-        if(!jsontcp.is_online() && jsontcp.get_last_closed_sockets() == desc->id) 
-        {
-            cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->ip << " )"<< endl;
-            break;
-		    }
-        std::time_t t = std::time(0);
-        std::tm* now = std::localtime(&t);
-        int hour = now->tm_hour;
-        int min  = now->tm_min;
-        int sec  = now->tm_sec;
-
-        std::string date = 
-              to_string(now->tm_year + 1900) + "-" +
-              to_string(now->tm_mon + 1)     + "-" +
-              to_string(now->tm_mday)        + " " +
-              to_string(hour)                + ":" +
-              to_string(min)                 + ":" +
-              to_string(sec)                 + "\r\n";
-        cerr << date << endl;
-        jsontcp.Send(date, desc->id);
-        sleep(1);
-	  }
-    pthread_exit(NULL);
-    return 0;
-}
-*/
-
 void* received(void *m)
 {
     Modbus *_p=(Modbus*)m;
@@ -666,20 +815,13 @@ void* received(void *m)
                     << "socket:  " << _p->desc[i]->socket  << endl
                     << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
 
-          //    if(!_p->desc[i]->enable_message_runtime) 
-          //    {
-          //        _p->desc[i]->enable_message_runtime = true;
-                    /*
-                    if( pthread_create(&_p->client[_p->num_client], NULL, send_client, (void *) _p->desc[i]) == 0) 
-                    {
-                        cerr << "ATTIVA THREAD INVIO MESSAGGI" << endl;
-                    }
-                    */
-
                     Json::Value root;
                     jsonfuction js;
                     Json::Value sent_root;
-
+                switch(e2proomdata.robot_mod)
+                {
+                  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+                  {
                 #ifdef USE_PARENTHESES_INSTEAD_QUOTATION
                     for(unsigned int n=0;n<_p->desc[i]->message.size();n++)
                     {
@@ -689,7 +831,6 @@ void* received(void *m)
                         }
                     }
                 #endif
-                    
                     if(0==js.readJsonFromString(_p->desc[i]->message,&root))
                     {
                         Json::Value::Members mem = root.getMemberNames();
@@ -896,8 +1037,11 @@ void* received(void *m)
 
                     _p->num_client++;
                   // start message background thread
-            //  }
-                
+                  }
+                  break;
+                  default:
+                  break;
+                }
                 jsontcp.clean(i);
             }
         }
@@ -907,16 +1051,6 @@ void* received(void *m)
 }
 
 }  // namespace modbus
-/*
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<modbus::Modbus>());
-  rclcpp::shutdown();
-  
-  return 0;
-}
-*/
 
 #include "rclcpp_components/register_node_macro.hpp"
 

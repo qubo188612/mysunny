@@ -13,9 +13,9 @@
 #define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI  2        //智昌川崎机器人
 #define E2POOM_ROBOT_MOD_MOKA_NABOTE        3        //摩卡纳博特机器人
-#define E2POOM_ROBOT_PORT_MIN               1502        //机器人通信最小端口
-#define E2POOM_ROBOT_PORT_USE               1502       //机器人通信默认端口
-#define E2POOM_ROBOT_PORT_MAX               65535       //机器人通信最大端口
+#define E2POOM_ROBOT_PORT_MIN               1503     //机器人通信最小端口
+#define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口
+#define E2POOM_ROBOT_PORT_MAX               65535    //机器人通信最大端口
 
 
 //算法100参数
