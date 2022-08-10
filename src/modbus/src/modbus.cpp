@@ -257,7 +257,8 @@ void Modbus::_modbus(int port)
   // std::vector<double> vvv;
   // vvv.resize(1800);
   auto sock = modbus_tcp_listen(ctx, 10);
-  if (sock == -1) {
+  if (sock == -1) 
+  {
     modbus_mapping_free(mb_mapping);
     modbus_free(ctx);
     RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
@@ -274,88 +275,106 @@ void Modbus::_modbus(int port)
   int fdmax = sock;
   uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
   int ret = 0;
-  while (rclcpp::ok() && ret != -1) {
+  while (rclcpp::ok() && ret != -1) 
+  {
     auto rdset = refset;
     timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 100000;
     ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
-    if (ret == -1) {
+    if (ret == -1) 
+    {
       RCLCPP_ERROR(this->get_logger(), "Failed to select.");
       continue;
-    } else if (ret == 0) {
+    } 
+    else if (ret == 0) 
+    {
       // time out.
       continue;
     }
 
     auto fds_bak = fds;
-    for (auto fd : fds_bak) {
-      if (!FD_ISSET(fd, &rdset)) {continue;}
+    for (auto fd : fds_bak) 
+    {
+      if (!FD_ISSET(fd, &rdset)) 
+        {continue;}
 
-      if (fd == sock) {
+      if (fd == sock) 
+      {
         
         ret = modbus_tcp_accept(ctx, &sock);
-        if (ret != -1) {
+        if (ret != -1) 
+        {
           FD_SET(ret, &refset);
           fds.insert(fds.end(), ret);
           fdmax = *fds.rbegin();
-        } else {
+        } else 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
           break;
         }
-      } else {
+      } 
+      else 
+      {
         // A client is asking for reply
         ret = modbus_set_socket(ctx, fd);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
           break;
         }
         ret = modbus_receive(ctx, query);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           // Connection closed by the client or error
           close(fd);
           FD_CLR(fd, &refset);
           fds.erase(fd);
           fdmax = *fds.rbegin();
           ret = 0;
-        } else if (ret > 0) {
-            if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
-              if (query[14]) {
-                _gpio_laser(true);
-                _camera_power(true);
-              } else {
-                _camera_power(false);
-                _gpio_laser(false);
-              }
-            }
-            ret = modbus_reply(ctx, query, ret, mb_mapping);
-            static int oldtasknum=INT_MAX;
-            if(oldtasknum!=mb_mapping->tab_registers[0x102])
+        } 
+        else if (ret > 0) 
+        {
+          if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) 
+          {
+            if (query[14]) 
             {
-              oldtasknum=mb_mapping->tab_registers[0x102];
-              _task_numberset(oldtasknum);
-            }
-
-            switch(e2proomdata.robot_mod)
+              _gpio_laser(true);
+              _camera_power(true);
+            } else 
             {
-              case E2POOM_ROBOT_MOD_NULL:
-              break;
-              case E2POOM_ROBOT_MOD_ZHICHANG:
-                memcpy(mb_forwardmapping->tab_registers,mb_mapping->tab_registers,2*SERVER_REGEDIST_NUM);
-              break;
-              case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
-                mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
-                if(mb_mapping->tab_registers[0x02]==0xff)
-                    mb_forwardmapping->tab_registers[0x0010]=1;
-                else 
-                    mb_forwardmapping->tab_registers[0x0010]=0;
-                mb_forwardmapping->tab_registers[0x0011]=0;
-                mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
-                mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
-              break;
+              _camera_power(false);
+              _gpio_laser(false);
             }
           }
-          if (ret == -1) {
+          ret = modbus_reply(ctx, query, ret, mb_mapping);
+          static int oldtasknum=INT_MAX;
+          if(oldtasknum!=mb_mapping->tab_registers[0x102])
+          {
+            oldtasknum=mb_mapping->tab_registers[0x102];
+            _task_numberset(oldtasknum);
+          }
+
+          switch(e2proomdata.robot_mod)
+          {
+            case E2POOM_ROBOT_MOD_NULL:
+            break;
+            case E2POOM_ROBOT_MOD_ZHICHANG:
+              memcpy(mb_forwardmapping->tab_registers,mb_mapping->tab_registers,2*SERVER_REGEDIST_NUM);
+            break;
+            case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+              mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
+              if(mb_mapping->tab_registers[0x02]==0xff)
+                  mb_forwardmapping->tab_registers[0x0010]=1;
+              else 
+                  mb_forwardmapping->tab_registers[0x0010]=0;
+              mb_forwardmapping->tab_registers[0x0011]=0;
+              mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
+              mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
+            break;
+          }
+          if (ret == -1) 
+          {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
           }
@@ -367,26 +386,17 @@ void Modbus::_modbus(int port)
   close(sock);
   modbus_mapping_free(mb_mapping);
   modbus_free(ctx);
-  if (ret == -1) {
+  if (ret == -1) 
+  {
     rclcpp::shutdown();
   }
-  // std::ofstream ofile("/diff.txt");
-  // for(auto d : vvv) {
-  //   ofile << d << "\n";
-  // }
-  // ofile.close();
 }
-
-
 
 void Modbus::_modbusrobotset(int port)
 {
-  // int aaa = 0;
-  // auto nnn = std::chrono::system_clock::now();
-  // std::vector<double> vvv;
-  // vvv.resize(1800);
   auto sock = modbus_tcp_listen(ctx_robot, 10);
-  if (sock == -1) {
+  if (sock == -1) 
+  {
     modbus_mapping_free(robot_mapping);
     modbus_free(ctx_robot);
     RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
@@ -403,55 +413,71 @@ void Modbus::_modbusrobotset(int port)
   int fdmax = sock;
   uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
   int ret = 0;
-  while (rclcpp::ok() && ret != -1) {
+  while (rclcpp::ok() && ret != -1) 
+  {
     auto rdset = refset;
     timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 100000;
     ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
-    if (ret == -1) {
+    if (ret == -1) 
+    {
       RCLCPP_ERROR(this->get_logger(), "Failed to select.");
       continue;
-    } else if (ret == 0) {
+    } 
+    else if (ret == 0) 
+    {
       // time out.
       continue;
     }
 
     auto fds_bak = fds;
-    for (auto fd : fds_bak) {
-      if (!FD_ISSET(fd, &rdset)) {continue;}
+    for (auto fd : fds_bak) 
+    {
+      if (!FD_ISSET(fd, &rdset)) 
+        {continue;}
 
-      if (fd == sock) {
+      if (fd == sock) 
+      {
         // A client is asking a new connection
         // struct sockaddr_in clientaddr;
         // socklen_t addrlen = sizeof(clientaddr);
         // memset(&clientaddr, 0, sizeof(clientaddr));
         // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
         ret = modbus_tcp_accept(ctx_robot, &sock);
-        if (ret != -1) {
+        if (ret != -1) 
+        {
           FD_SET(ret, &refset);
           fds.insert(fds.end(), ret);
           fdmax = *fds.rbegin();
-        } else {
+        } 
+        else 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
           break;
         }
-      } else {
+      }
+      else 
+      {
         // A client is asking for reply
         ret = modbus_set_socket(ctx_robot, fd);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
           break;
         }
         ret = modbus_receive(ctx_robot, query);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           // Connection closed by the client or error
           close(fd);
           FD_CLR(fd, &refset);
           fds.erase(fd);
           fdmax = *fds.rbegin();
           ret = 0;
-        } else if (ret > 0) {
+        } 
+        else if (ret > 0) 
+        {
           ret = modbus_reply(ctx_robot, query, ret, robot_mapping);
 
           static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
@@ -469,8 +495,8 @@ void Modbus::_modbusrobotset(int port)
           {
             e2proomdata.write_robot_para();
           }
-
-          if (ret == -1) {
+          if (ret == -1) 
+          {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
           }
@@ -482,7 +508,8 @@ void Modbus::_modbusrobotset(int port)
   close(sock);
   modbus_mapping_free(robot_mapping);
   modbus_free(ctx_robot);
-  if (ret == -1) {
+  if (ret == -1) 
+  {
     rclcpp::shutdown();
   }
   // std::ofstream ofile("/diff.txt");
@@ -499,7 +526,8 @@ void Modbus::_modbusparameterport(int port)
   // std::vector<double> vvv;
   // vvv.resize(1800);
   auto sock = modbus_tcp_listen(ctx_parameterport, 10);
-  if (sock == -1) {
+  if (sock == -1) 
+  {
     modbus_mapping_free(parameterport_mapping);
     modbus_free(ctx_parameterport);
     RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
@@ -516,55 +544,70 @@ void Modbus::_modbusparameterport(int port)
   int fdmax = sock;
   uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
   int ret = 0;
-  while (rclcpp::ok() && ret != -1) {
+  while (rclcpp::ok() && ret != -1) 
+  {
     auto rdset = refset;
     timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 100000;
     ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
-    if (ret == -1) {
+    if (ret == -1) 
+    {
       RCLCPP_ERROR(this->get_logger(), "Failed to select.");
       continue;
-    } else if (ret == 0) {
+    } 
+    else if (ret == 0) 
+    {
       // time out.
       continue;
     }
 
     auto fds_bak = fds;
-    for (auto fd : fds_bak) {
+    for (auto fd : fds_bak) 
+    {
       if (!FD_ISSET(fd, &rdset)) {continue;}
 
-      if (fd == sock) {
+      if (fd == sock) 
+      {
         // A client is asking a new connection
         // struct sockaddr_in clientaddr;
         // socklen_t addrlen = sizeof(clientaddr);
         // memset(&clientaddr, 0, sizeof(clientaddr));
         // ret = accept(sock, (struct sockaddr *)&clientaddr, &addrlen);
         ret = modbus_tcp_accept(ctx_parameterport, &sock);
-        if (ret != -1) {
+        if (ret != -1) 
+        {
           FD_SET(ret, &refset);
           fds.insert(fds.end(), ret);
           fdmax = *fds.rbegin();
-        } else {
+        } 
+        else 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
           break;
         }
-      } else {
+      } 
+      else 
+      {
         // A client is asking for reply
         ret = modbus_set_socket(ctx_parameterport, fd);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
           break;
         }
         ret = modbus_receive(ctx_parameterport, query);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           // Connection closed by the client or error
           close(fd);
           FD_CLR(fd, &refset);
           fds.erase(fd);
           fdmax = *fds.rbegin();
           ret = 0;
-        } else if (ret > 0) {
+        } 
+        else if (ret > 0) 
+        {
           ret = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
 
           static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
@@ -582,8 +625,8 @@ void Modbus::_modbusparameterport(int port)
           {
             e2proomdata.write();
           }
-
-          if (ret == -1) {
+          if (ret == -1) 
+          {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
           }
@@ -606,12 +649,14 @@ void Modbus::_modbusparameterport(int port)
 }
 
 void Modbus::_modbusforward(int port)
+{
  // int aaa = 0;
   // auto nnn = std::chrono::system_clock::now();
   // std::vector<double> vvv;
   // vvv.resize(1800);
   auto sock = modbus_tcp_listen(ctx_forward, 10);
-  if (sock == -1) {
+  if (sock == -1) 
+  {
     modbus_mapping_free(mb_forwardmapping);
     modbus_free(ctx_forward);
     RCLCPP_ERROR(this->get_logger(), "Failed to listen.");
@@ -628,127 +673,142 @@ void Modbus::_modbusforward(int port)
   int fdmax = sock;
   uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
   int ret = 0;
-  while (rclcpp::ok() && ret != -1) {
+  while (rclcpp::ok() && ret != -1) 
+  {
     auto rdset = refset;
     timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 100000;
     ret = select(fdmax + 1, &rdset, NULL, NULL, &tv);
-    if (ret == -1) {
+    if (ret == -1) 
+    {
       RCLCPP_ERROR(this->get_logger(), "Failed to select.");
       continue;
-    } else if (ret == 0) {
+    } 
+    else if (ret == 0) 
+    {
       // time out.
       continue;
     }
 
     auto fds_bak = fds;
-    for (auto fd : fds_bak) {
+    for (auto fd : fds_bak) 
+    {
       if (!FD_ISSET(fd, &rdset)) {continue;}
 
-      if (fd == sock) {
+      if (fd == sock) 
+      {
         
         ret = modbus_tcp_accept(ctx_forward, &sock);
-        if (ret != -1) {
+        if (ret != -1) 
+        {
           FD_SET(ret, &refset);
           fds.insert(fds.end(), ret);
           fdmax = *fds.rbegin();
-        } else {
+        } 
+        else 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to accept.");
           break;
         }
-      } else {
+      } 
+      else 
+      {
         // A client is asking for reply
         ret = modbus_set_socket(ctx_forward, fd);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           RCLCPP_ERROR(this->get_logger(), "Failed to set socket.");
           break;
         }
         ret = modbus_receive(ctx_forward, query);
-        if (ret == -1) {
+        if (ret == -1) 
+        {
           // Connection closed by the client or error
           close(fd);
           FD_CLR(fd, &refset);
           fds.erase(fd);
           fdmax = *fds.rbegin();
           ret = 0;
-        } else if (ret > 0) {
-            ret = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
+        } 
+        else if (ret > 0) 
+        {
+          ret = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
 
-            switch(e2proomdata.robot_mod)
+          switch(e2proomdata.robot_mod)
+          {
+            case E2POOM_ROBOT_MOD_NULL:
+            case E2POOM_ROBOT_MOD_ZHICHANG:
             {
-              case E2POOM_ROBOT_MOD_NULL:
-              case E2POOM_ROBOT_MOD_ZHICHANG:
-              {
-                if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
-                  if (query[14]) {
-                    _gpio_laser(true);
-                    _camera_power(true);
-                    robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
-                  } else {
-                    _camera_power(false);
-                    _gpio_laser(false);
-                    robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101]
-                  }
-                }
-              
-                static int oldtasknum=INT_MAX;
-                if(oldtasknum!=mb_forwardmapping->tab_registers[0x102])
-                {
-                  oldtasknum=mb_forwardmapping->tab_registers[0x102];
-                  robot_mapping->tab_registers[0x102]=oldtasknum;
-                  _task_numberset(oldtasknum);
+              if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
+                if (query[14]) {
+                  _gpio_laser(true);
+                  _camera_power(true);
+                  robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
+                } else {
+                  _camera_power(false);
+                  _gpio_laser(false);
+                  robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
                 }
               }
-              break;
-              case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+            
+              static int oldtasknum=INT_MAX;
+              if(oldtasknum!=mb_forwardmapping->tab_registers[0x102])
               {
-                static int oldtasknum=INT_MAX;
-                if(oldtasknum!=mb_forwardmapping->tab_registers[0x000])
-                {
-                  oldtasknum=mb_forwardmapping->tab_registers[0x000];
-                  robot_mapping->tab_registers[0x102]=oldtasknum;
-                  _task_numberset(oldtasknum);
-                }
-
-                static int oldgpio_laser=INT_MAX;
-                if(oldgpio_laser!=mb_forwardmapping->tab_registers[0x001])
-                {
-                  oldgpio_laser=mb_forwardmapping->tab_registers[0x001];
-                  if(oldgpio_laser==0x001)
-                  {
-                    _gpio_laser(true);
-                  }
-                  else if(oldgpio_laser==0x000)
-                  {
-                    _gpio_laser(false);
-                  }
-                }
-
-                static int oldcamera_power=INT_MAX;
-                if(mb_forwardmapping->tab_registers[0x002]==1||mb_forwardmapping->tab_registers[0x003]==1)
-                {
-                  if(oldcamera_power!=1)
-                  {
-                    oldcamera_power=1;
-                    _camera_power(true);
-                  }
-                }
-                else
-                {
-                  if(oldcamera_power!=0)
-                  {
-                    oldcamera_power=0;
-                    _camera_power(false);
-                  }
-                }
+                oldtasknum=mb_forwardmapping->tab_registers[0x102];
+                robot_mapping->tab_registers[0x102]=oldtasknum;
+                _task_numberset(oldtasknum);
               }
-              break;
-              default:
-              break;
             }
+            break;
+            case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+            {
+              static int oldtasknum=INT_MAX;
+              if(oldtasknum!=mb_forwardmapping->tab_registers[0x000])
+              {
+                oldtasknum=mb_forwardmapping->tab_registers[0x000];
+                robot_mapping->tab_registers[0x102]=oldtasknum;
+                _task_numberset(oldtasknum);
+              }
+
+              static int oldgpio_laser=INT_MAX;
+              if(oldgpio_laser!=mb_forwardmapping->tab_registers[0x001])
+              {
+                oldgpio_laser=mb_forwardmapping->tab_registers[0x001];
+                if(oldgpio_laser==0x001)
+                {
+                  _gpio_laser(true);
+                }
+                else if(oldgpio_laser==0x000)
+                {
+                  _gpio_laser(false);
+                }
+              }
+
+              static int oldcamera_power=INT_MAX;
+              if(mb_forwardmapping->tab_registers[0x002]==1||mb_forwardmapping->tab_registers[0x003]==1)
+              {
+                if(oldcamera_power!=1)
+                {
+                  oldcamera_power=1;
+                  _camera_power(true);
+                }
+              }
+              else
+              {
+                if(oldcamera_power!=0)
+                {
+                  oldcamera_power=0;
+                  _camera_power(false);
+                }
+              }
+            }
+            break;
+            default:
+            break;
           }
-          if (ret == -1) {
+          if (ret == -1) 
+          {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             break;
           }
@@ -818,7 +878,7 @@ void* received(void *m)
                     Json::Value root;
                     jsonfuction js;
                     Json::Value sent_root;
-                switch(e2proomdata.robot_mod)
+                switch(_p->e2proomdata.robot_mod)
                 {
                   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
                   {

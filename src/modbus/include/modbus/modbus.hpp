@@ -113,9 +113,10 @@ public:
 
   void _task_robot(int ddr,u_int16_t num);
 
+  E2proomData e2proomdata;
 private:
   
-  E2proomData e2proomdata;
+  
   /**
    * @brief Control camera capture or not.
    *
