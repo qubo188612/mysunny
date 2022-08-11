@@ -72,12 +72,12 @@ def generate_launch_description():
         parameters=[params['rotate_image_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
-#   params['laser_imagepos_node']['workers'] = 4
+    params['laser_imagepos_node']['workers'] = 4
     laser_imagepos_node = ComposableNode(
         package='laser_imagepos',
         plugin='laser_imagepos::LaserImagePos',
         remappings=[('~/image', '/rotate_image_node/image_rotated2')],
-#       parameters=[params['laser_imagepos_node']],
+        parameters=[params['laser_imagepos_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     params['laser_line_center_node']['workers'] = 4
@@ -110,7 +110,7 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container_mt',
         composable_node_descriptions=[
-            camera_tis_node,
+          # camera_tis_node,
           # camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
@@ -141,7 +141,7 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         container,
-        seam_tracking_node,
+     #  seam_tracking_node,
         modbus_node,
-        gpio_raspberry_node,
+     #  gpio_raspberry_node,
         config_tis_node])
