@@ -348,6 +348,7 @@ void Modbus::_modbus(int port)
             }
           }
           ret = modbus_reply(ctx, query, ret, mb_mapping);
+
           static int oldtasknum=INT_MAX;
           if(oldtasknum!=mb_mapping->tab_registers[0x102])
           {
@@ -360,9 +361,10 @@ void Modbus::_modbus(int port)
             case E2POOM_ROBOT_MOD_NULL:
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
+            case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
               memcpy(mb_forwardmapping->tab_registers,mb_mapping->tab_registers,2*SERVER_REGEDIST_NUM);
             break;
-            case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+            case E2POOM_ROBOT_MOD_MOKA_NABOTE:
               mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
               if(mb_mapping->tab_registers[0x02]==0xff)
                   mb_forwardmapping->tab_registers[0x0010]=1;
@@ -371,8 +373,9 @@ void Modbus::_modbus(int port)
               mb_forwardmapping->tab_registers[0x0011]=0;
               mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
               mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
-            break;
+            break;       
           }
+
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");

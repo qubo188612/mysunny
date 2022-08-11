@@ -240,7 +240,7 @@ void LaserLineCenter::_worker()
       std::promise<PointCloud2::UniquePtr> prom;
       _push_back_future(prom.get_future());
       lk.unlock();
-      if(pm.task_num==0)
+      if(pm.task_num>=0&&pm.task_num<100)
       {
         auto line = execute(std::move(ptr), buf, pm);
         prom.set_value(std::move(line));
