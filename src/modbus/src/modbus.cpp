@@ -747,11 +747,11 @@ void Modbus::_modbusforward(int port)
                 if (query[14]) {
                   _gpio_laser(true);
                   _camera_power(true);
-                  robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
+                  mb_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
                 } else {
                   _camera_power(false);
                   _gpio_laser(false);
-                  robot_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
+                  mb_mapping->tab_registers[0x101]=mb_forwardmapping->tab_registers[0x101];
                 }
               }
             
@@ -759,7 +759,7 @@ void Modbus::_modbusforward(int port)
               if(oldtasknum!=mb_forwardmapping->tab_registers[0x102])
               {
                 oldtasknum=mb_forwardmapping->tab_registers[0x102];
-                robot_mapping->tab_registers[0x102]=oldtasknum;
+                mb_mapping->tab_registers[0x102]=oldtasknum;
                 _task_numberset(oldtasknum);
               }
             }
@@ -770,7 +770,7 @@ void Modbus::_modbusforward(int port)
               if(oldtasknum!=mb_forwardmapping->tab_registers[0x000])
               {
                 oldtasknum=mb_forwardmapping->tab_registers[0x000];
-                robot_mapping->tab_registers[0x102]=oldtasknum;
+                mb_mapping->tab_registers[0x102]=oldtasknum;
                 _task_numberset(oldtasknum);
               }
 
