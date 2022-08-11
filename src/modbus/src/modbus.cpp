@@ -135,8 +135,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
         rclcpp::shutdown();
         return;
       }
-      mb_forwardmapping->tab_registers[1] = 0xff;
-
+      
       ctx_forward = modbus_new_tcp(NULL, robot_port);
       if (!ctx_forward) {
         RCLCPP_ERROR(this->get_logger(), "Failed to create modbusforward context.");
