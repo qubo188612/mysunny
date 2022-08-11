@@ -33,7 +33,7 @@ def generate_launch_description():
 
     node = ComposableNode(
         package='laser_imagepos',
-        plugin='laser_imagepos::LaserLineCenter',
+        plugin='laser_imagepos::LaserImagePos',
         parameters=[configParams])
 
     container = ComposableNodeContainer(
