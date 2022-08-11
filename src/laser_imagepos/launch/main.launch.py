@@ -23,21 +23,21 @@ from launch_ros.actions import ComposableNodeContainer
 def generate_launch_description():
     """Generate launch description with a component."""
     configFile = os.path.join(
-        get_package_share_directory('laser_line_center'),
+        get_package_share_directory('laser_imagepos'),
         'config',
         'params.yaml')
 
     with open(configFile, 'r') as file:
         handle = yaml.safe_load(file)
-        configParams = handle['laser_line_center_node']['ros__parameters']
+        configParams = handle['laser_imagepos_node']['ros__parameters']
 
     node = ComposableNode(
-        package='laser_line_center',
-        plugin='laser_line_center::LaserLineCenter',
+        package='laser_imagepos',
+        plugin='laser_imagepos::LaserLineCenter',
         parameters=[configParams])
 
     container = ComposableNodeContainer(
-        name='laser_line_center_container',
+        name='laser_imagepos_container',
         namespace='',
         package='rclcpp_components',
         executable='component_container',
