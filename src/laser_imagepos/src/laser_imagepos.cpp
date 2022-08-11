@@ -19,7 +19,7 @@ int workers(const rclcpp::NodeOptions & options)
 }
 
 LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
-: Node("laser_line_center_node", options)
+: Node("laser_imagepos_node", options)
 {
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
