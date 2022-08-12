@@ -59,8 +59,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     rclcpp::shutdown();
     return;
   }
-  robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=e2proomdata.robot_mod;
-  robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=e2proomdata.robot_port;
+  robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
+  robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
   ctx_robot = modbus_new_tcp(NULL, robotsetport);
   if (!ctx_robot) {
     RCLCPP_ERROR(this->get_logger(), "Failed to create modbusrobot context.");
@@ -123,18 +123,19 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   _thread = std::thread(&Modbus::_modbus, this, port);
 
+  mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
+  if (!mb_forwardmapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusforward registers.");
+    rclcpp::shutdown();
+    return;
+  }
+
   switch(e2proomdata.robot_mod)
   {
   case E2POOM_ROBOT_MOD_NULL:
   break;
   case E2POOM_ROBOT_MOD_ZHICHANG:
   case E2POOM_ROBOT_MOD_MOKA_NABOTE:
-      mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
-      if (!mb_forwardmapping) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusforward registers.");
-        rclcpp::shutdown();
-        return;
-      }
       
       ctx_forward = modbus_new_tcp(NULL, robot_port);
       if (!ctx_forward) {
@@ -232,7 +233,7 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case ROBOT_PORT_REG_ADD:
       e2proomdata.robot_port=num;
-      this->set_parameters({rclcpp::Parameter("port", (u_int16_t)e2proomdata.robot_port)});
+      this->set_parameters({rclcpp::Parameter("robot_port", (u_int16_t)e2proomdata.robot_port)});
     break;
     default:
     break;
@@ -361,7 +362,10 @@ void Modbus::_modbus(int port)
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
             case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
-              memcpy(mb_forwardmapping->tab_registers,mb_mapping->tab_registers,2*SERVER_REGEDIST_NUM);
+              for(int i=0;i<SERVER_REGEDIST_NUM;i++)
+              {
+                mb_forwardmapping->tab_registers[i],mb_mapping->tab_registers[i];
+              }
             break;
             case E2POOM_ROBOT_MOD_MOKA_NABOTE:
               mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
@@ -372,8 +376,11 @@ void Modbus::_modbus(int port)
               mb_forwardmapping->tab_registers[0x0011]=0;
               mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
               mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
-            break;       
+            break; 
+            default:
+            break;
           }
+          
 
           if (ret == -1) 
           {
@@ -481,7 +488,7 @@ void Modbus::_modbusrobotset(int port)
         else if (ret > 0) 
         {
           ret = modbus_reply(ctx_robot, query, ret, robot_mapping);
-
+          
           static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
           for(int i=0;i<ROBOT_SET_REGEDIST_NUM;i++)
@@ -497,6 +504,12 @@ void Modbus::_modbusrobotset(int port)
           {
             e2proomdata.write_robot_para();
           }
+          
+         /*
+          e2proomdata.robot_mod=(Uint16)robot_mapping->tab_registers[0];
+          e2proomdata.robot_port=(Uint16)robot_mapping->tab_registers[1];
+          e2proomdata.write_robot_para();
+        */
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");

@@ -101,6 +101,8 @@ void E2proomData::read_para()
       buff=NULL;
     }
 
+    check_para();
+
 }
 
 void E2proomData::write_als100_para()
