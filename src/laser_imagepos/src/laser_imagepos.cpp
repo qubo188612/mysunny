@@ -27,8 +27,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 
   pm = _update_parameters();
 
-  //_workers = workers(options);
-  _workers=4;
+  _workers = workers(options);
   for (int i = 0; i < _workers; ++i) {
     _threads.push_back(std::thread(&LaserImagePos::_worker, this));
   }
