@@ -21,6 +21,10 @@ int workers(const rclcpp::NodeOptions & options)
 LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 : Node("laser_imagepos_node", options)
 {
+  _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
+
+  ps = _get_nowexposure();
+
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
   _declare_parameters();
@@ -48,7 +52,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
       for (const auto & p : vp) {
         if (p.get_name() == "als100_threshold") {
           auto k = p.as_int();
-          if (k <0 || k>255) {
+          if (k <20 || k>65535) {
             result.successful = false;
             result.reason = "Failed to set als100_threshold";
             return result;
@@ -65,7 +69,29 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           }
           else
           {
+            if(p.as_int()>=100&&p.as_int()<200)
+            {
+              if(pm.task_num>=0&&pm.task_num<100)
+              {
+                ps=_get_nowexposure();//保存当前曝光以便之后复位
+              }
+            }
             pm.task_num=p.as_int();
+            if(pm.task_num>=0&&pm.task_num<100)
+            {
+              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", ps._0_99_exposure)});
+            }
+            else if(pm.task_num>=100&&pm.task_num<200)
+            {
+              switch(pm.task_num)
+              {
+                case 100:
+                  _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_threshold)});
+                break;
+                defatult:
+                break;
+              }
+            }
           }
         }
       }
@@ -81,6 +107,7 @@ LaserImagePos::~LaserImagePos()
   try {
     _sub.reset();
     _handle.reset();
+    _param_camera.reset();
     _images_con.notify_all();
     _futures_con.notify_one();
     for (auto & t : _threads) {
@@ -113,6 +140,18 @@ Params LaserImagePos::_update_parameters()
     }
   }
   return pm;
+}
+
+Params_exposure LaserImagePos::_get_nowexposure()
+{
+  const std::vector<std::string> KEYS2 = {"exposure_time"};
+  const auto  vp = _param_camera->get_parameters(KEYS2);
+  for (const auto  p : vp.get()) {
+    if (p.get_name() == "exposure_time") {
+      ps._0_99_exposure = p.as_int();
+    } 
+  }
+  return ps;
 }
 
 PointCloud2::UniquePtr to_pc2(const std::vector<float> & pnts)

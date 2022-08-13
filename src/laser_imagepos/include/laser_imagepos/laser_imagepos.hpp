@@ -27,6 +27,13 @@ struct Params
   int task_num = 0;
 };
 
+struct Params_exposure
+{
+  u_int16_t _0_99_exposure;
+  u_int16_t _200_299_exposure;
+  u_int16_t _300_399_exposure;
+};
+
 class LaserImagePos : public rclcpp::Node
 {
 public:
@@ -58,6 +65,12 @@ public:
 private:
 
   /**
+   * @brief Parameter client for camera.
+   *
+   */
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera;
+
+  /**
    * @brief Publisher name.
    *
    */
@@ -86,6 +99,10 @@ private:
    *
    */
   void _declare_parameters();
+
+  Params_exposure _get_nowexposure();
+
+  Params_exposure ps;
 
   /**
    * @brief Update parameters from ROS.
@@ -119,6 +136,8 @@ private:
   std::deque<std::future<PointCloud2::UniquePtr>> _futures;
 
   std::deque<Image::UniquePtr> _images;
+
+  int _0_99_exposure_time;
 
 };
 

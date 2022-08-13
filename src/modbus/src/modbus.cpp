@@ -216,7 +216,7 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
   {
     case ALS100_THRESHOLD_REG_ADD:
       e2proomdata.als100_threshold=num;
-      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_threshold", (int16_t)num)}); 
+      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_threshold", (int16_t)num)});
     break;
     default:
     break;
