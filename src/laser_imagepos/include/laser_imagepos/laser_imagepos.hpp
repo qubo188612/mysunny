@@ -70,6 +70,8 @@ private:
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera;
 
+  std::shared_ptr<rclcpp::SyncParametersClient> _param_camera_get;
+
   /**
    * @brief Publisher name.
    *

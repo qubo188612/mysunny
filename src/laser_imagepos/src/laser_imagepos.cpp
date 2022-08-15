@@ -22,6 +22,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 : Node("laser_imagepos_node", options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
+  _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
 
   ps = _get_nowexposure();
 
@@ -108,6 +109,7 @@ LaserImagePos::~LaserImagePos()
     _sub.reset();
     _handle.reset();
     _param_camera.reset();
+    _param_camera_get.reset();
     _images_con.notify_all();
     _futures_con.notify_one();
     for (auto & t : _threads) {
@@ -144,19 +146,22 @@ Params LaserImagePos::_update_parameters()
 
 Params_exposure LaserImagePos::_get_nowexposure()
 {
-  /*
   const std::vector<std::string> KEYS2 = {"exposure_time"};
-  const auto  vp = _param_camera->get_parameters(KEYS2);
-  for (const auto  p : vp.get()) {
-    if (p.get_name() == "exposure_time") {
-      ps._0_99_exposure = p.as_int();
-    } 
+  _param_camera_get->wait_for_service();
+  auto vp = _param_camera_get->get_parameters(KEYS2);
+  for (auto & p : vp)
+  {
+      if (p.get_name() == "exposure_time")
+      {
+          auto k = p.as_int();
+          if(pm.task_num>=0&&pm.task_num<100)
+            ps._0_99_exposure=k;
+          else if(pm.task_num>=200&&pm.task_num<300)
+            ps._200_299_exposure=k;
+          else if(pm.task_num>=300&&pm.task_num<400)
+            ps._300_399_exposure=k;  
+      }
   }
-  */
-  ps._0_99_exposure=1000;
-  ps._200_299_exposure=0;
-  ps._300_399_exposure=0;
-  return ps;
 }
 
 PointCloud2::UniquePtr to_pc2(const std::vector<float> & pnts)

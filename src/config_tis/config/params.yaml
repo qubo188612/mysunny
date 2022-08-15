@@ -1,3 +1,0 @@
-laser_imagepos_node:
-    als100_threshold: 150               # int
-    task_num:       0                 # int
