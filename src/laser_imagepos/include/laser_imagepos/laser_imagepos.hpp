@@ -29,9 +29,9 @@ struct Params
 
 struct Params_exposure
 {
-  u_int16_t _0_99_exposure;
-  u_int16_t _200_299_exposure;
-  u_int16_t _300_399_exposure;
+  u_int16_t _0_99_exposure = 1000;
+  u_int16_t _200_299_exposure = 0;
+  u_int16_t _300_399_exposure = 0;
 };
 
 class LaserImagePos : public rclcpp::Node

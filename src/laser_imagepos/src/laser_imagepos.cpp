@@ -25,6 +25,10 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
   _param_camera_get->wait_for_service();
   
+  _declare_parameters();
+
+  pm = _update_parameters();
+
   ps._0_99_exposure=0;
   ps._200_299_exposure=0;
   ps._300_399_exposure=0; 
@@ -32,10 +36,6 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   ps = _get_nowexposure();
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
-
-  _declare_parameters();
-
-  pm = _update_parameters();
 
   _workers = workers(options);
   for (int i = 0; i < _workers; ++i) {
@@ -151,7 +151,7 @@ Params LaserImagePos::_update_parameters()
 
 Params_exposure LaserImagePos::_get_nowexposure()
 {
-  /*
+ 
   const std::vector<std::string> KEYS2 = {"exposure_time"};
   auto vp = _param_camera_get->get_parameters(KEYS2);
   for (auto & p : vp)
@@ -167,11 +167,12 @@ Params_exposure LaserImagePos::_get_nowexposure()
             ps._300_399_exposure=k;  
       }
   } 
-  */
+ /*
   ps._0_99_exposure=1000;
   ps._200_299_exposure=0;
   ps._300_399_exposure=0; 
   return ps;
+  */
 }
 
 PointCloud2::UniquePtr to_pc2(const std::vector<float> & pnts)
