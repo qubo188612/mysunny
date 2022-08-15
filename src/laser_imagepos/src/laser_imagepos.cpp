@@ -147,7 +147,7 @@ Params LaserImagePos::_update_parameters()
 Params_exposure LaserImagePos::_get_nowexposure()
 {
   const std::vector<std::string> KEYS2 = {"exposure_time"};
- //_param_camera_get->wait_for_service();
+  _param_camera_get->wait_for_service();
   auto vp = _param_camera_get->get_parameters(KEYS2);
   for (auto & p : vp)
   {
@@ -162,6 +162,7 @@ Params_exposure LaserImagePos::_get_nowexposure()
             ps._300_399_exposure=k;  
       }
   }
+  return ps;
 }
 
 PointCloud2::UniquePtr to_pc2(const std::vector<float> & pnts)
