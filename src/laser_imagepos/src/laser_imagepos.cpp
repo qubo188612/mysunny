@@ -24,6 +24,11 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
   _param_camera_get->wait_for_service();
+  
+  ps._0_99_exposure=0;
+  ps._200_299_exposure=0;
+  ps._300_399_exposure=0; 
+
   ps = _get_nowexposure();
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
@@ -160,7 +165,7 @@ Params_exposure LaserImagePos::_get_nowexposure()
           else if(pm.task_num>=300&&pm.task_num<400)
             ps._300_399_exposure=k;  
       }
-  }
+  } 
   return ps;
 }
 
