@@ -151,6 +151,7 @@ Params LaserImagePos::_update_parameters()
 
 Params_exposure LaserImagePos::_get_nowexposure()
 {
+  /*
   const std::vector<std::string> KEYS2 = {"exposure_time"};
   auto vp = _param_camera_get->get_parameters(KEYS2);
   for (auto & p : vp)
@@ -166,6 +167,10 @@ Params_exposure LaserImagePos::_get_nowexposure()
             ps._300_399_exposure=k;  
       }
   } 
+  */
+  ps._0_99_exposure=1000;
+  ps._200_299_exposure=0;
+  ps._300_399_exposure=0; 
   return ps;
 }
 
