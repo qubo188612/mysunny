@@ -16,6 +16,7 @@ using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
 
 const std::vector<std::string> KEYS = {"als100_threshold","task_num"};
+const std::vector<std::string> KEYS2 = {"exposure_time"};
 
 /**
  * @brief To zip related parameters together.
