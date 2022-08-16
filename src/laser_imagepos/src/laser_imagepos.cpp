@@ -67,6 +67,10 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           else
           {
             pm.als100_threshold=k;
+            if(pm.task_num>=100&&pm.task_num<200)
+            {
+              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_threshold)});
+            }
           }
         }
         /*
