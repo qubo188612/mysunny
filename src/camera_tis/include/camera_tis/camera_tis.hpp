@@ -117,7 +117,7 @@ private:
 
 private:
 
-  std::shared_ptr<rclcpp::AsyncParametersClient> _param_imagepos;
+//std::shared_ptr<rclcpp::AsyncParametersClient> _param_imagepos;
 
   /**
    * @brief Publisher name.

@@ -16,7 +16,7 @@ using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
 
 const std::vector<std::string> KEYS = {"als100_threshold","task_num"};
-const std::vector<std::string> KEYS2 = {"exposure_time"};
+//const std::vector<std::string> KEYS2 = {"exposure_time"};
 
 /**
  * @brief To zip related parameters together.
@@ -27,14 +27,14 @@ struct Params
   int als100_threshold = 120;
   int task_num = 0;
 };
-
+/*
 struct Params_exposure
 {
   u_int16_t _0_99_exposure = 1000;
   u_int16_t _200_299_exposure = 0;
   u_int16_t _300_399_exposure = 0;
 };
-
+*/
 class LaserImagePos : public rclcpp::Node
 {
 public:
@@ -71,7 +71,7 @@ private:
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera;
 
-  std::shared_ptr<rclcpp::SyncParametersClient> _param_camera_get;
+//  std::shared_ptr<rclcpp::SyncParametersClient> _param_camera_get;
 
   /**
    * @brief Publisher name.
@@ -103,9 +103,9 @@ private:
    */
   void _declare_parameters();
 
-  Params_exposure _get_nowexposure();
+//Params_exposure _get_nowexposure();
 
-  Params_exposure ps;
+//Params_exposure ps;
 
   /**
    * @brief Update parameters from ROS.
