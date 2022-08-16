@@ -109,6 +109,8 @@ gboolean set_property(_GstElement * pipeline, const char * property, int value)
 CameraTis::CameraTis(const rclcpp::NodeOptions & options)
 : Node("camera_tis_node", options)
 {
+  _param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
+
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
   _initialize_camera();
 
@@ -162,6 +164,7 @@ void CameraTis::_initialize_camera()
   if (_set_exposure(e)) {
     throw std::runtime_error("TIS set exposure fail");
   }
+  _param_imagepos->set_parameters({rclcpp::Parameter("rember_exposure_time", e)});
 
   // Set pipeline state to pause before spin.
   gst_element_set_state(_pipeline, GST_STATE_PAUSED);
@@ -180,6 +183,10 @@ void CameraTis::_initialize_camera()
             result.successful = false;
             result.reason = "Failed to set exposure time";
             return result;
+          }
+          else
+          {
+            _param_imagepos->set_parameters({rclcpp::Parameter("rember_exposure_time", p.as_int())});
           }
         } else if (p.get_name() == "power") {
           auto ret = this->_set_power(p.as_bool());

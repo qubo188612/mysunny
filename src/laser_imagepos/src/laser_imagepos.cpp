@@ -23,7 +23,6 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
-  _param_camera_get->wait_for_service();
   
   _declare_parameters();
 
@@ -33,7 +32,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   ps._200_299_exposure=0;
   ps._300_399_exposure=0; 
 
-  ps = _get_nowexposure();
+//ps = _get_nowexposure();
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
@@ -67,7 +66,18 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           {
             pm.als100_threshold=k;
           }
-        } else if (p.get_name() == "task_num") {
+        }
+        else if (p.get_name() == "rember_exposure_time")
+        {
+          auto k = p.as_int();
+          if(pm.task_num>=0&&pm.task_num<100)
+            ps._0_99_exposure=k;
+          else if(pm.task_num>=200&&pm.task_num<300)
+            ps._200_299_exposure=k;
+          else if(pm.task_num>=300&&pm.task_num<400)
+            ps._300_399_exposure=k;
+        } 
+        else if (p.get_name() == "task_num") {
           if (p.as_int() < 0) {
             result.successful = false;
             result.reason = "Failed to set task_num";
@@ -75,13 +85,6 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           }
           else
           {
-            if(p.as_int()>=100&&p.as_int()<200)
-            {
-              if(pm.task_num>=0&&pm.task_num<100)
-              {
-                ps=_get_nowexposure();//保存当前曝光以便之后复位
-              }
-            }
             pm.task_num=p.as_int();
             if(pm.task_num>=0&&pm.task_num<100)
             {
@@ -134,6 +137,7 @@ void LaserImagePos::_declare_parameters()
 {
   this->declare_parameter("als100_threshold", pm.als100_threshold);
   this->declare_parameter("task_num", pm.task_num);
+  this->declare_parameter("rember_exposure_time",1000);
 }
 
 Params LaserImagePos::_update_parameters()
@@ -152,6 +156,7 @@ Params LaserImagePos::_update_parameters()
 Params_exposure LaserImagePos::_get_nowexposure()
 {
   auto vp = _param_camera_get->get_parameters(KEYS2);
+  _param_camera_get->wait_for_service();
   for (auto & p : vp)
   {
       if (p.get_name() == "exposure_time")

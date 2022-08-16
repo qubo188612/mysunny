@@ -116,6 +116,9 @@ private:
   int _set_exposure(int e);
 
 private:
+
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_imagepos;
+
   /**
    * @brief Publisher name.
    *
