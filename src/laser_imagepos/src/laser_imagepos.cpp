@@ -22,23 +22,13 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 : Node("laser_imagepos_node", options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
-//_param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
   
   _declare_parameters();
 
   pm = _update_parameters();
 
-/*
-  ps._0_99_exposure=0;
-  ps._200_299_exposure=0;
-  ps._300_399_exposure=0; 
+  _pub = this->create_publisher<IfAlgorhmitmsg>(_pub_name, rclcpp::SensorDataQoS());
 
-  ps = _get_nowexposure();
-*/
-
-  _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
-
-  _pub_msg = this->create_publisher<IfAlgorhmitmsg>(_pub_msg_name, rclcpp::SensorDataQoS());
 
   _workers = workers(options);
   for (int i = 0; i < _workers; ++i) {
@@ -57,37 +47,11 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & vp) {
       SetParametersResult result;
+      int alg_return;
       result.successful = true;
       for (const auto & p : vp) {
-        if (p.get_name() == "als100_exposure_time") {
-          auto k = p.as_int();
-          if (k <20 || k>65535) {
-            result.successful = false;
-            result.reason = "Failed to set als100_exposure_time";
-            return result;
-          }
-          else
-          {
-            pm.als100_exposure_time=k;
-            if(pm.task_num>=100&&pm.task_num<200)
-            {
-              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_exposure_time)});
-            }
-          }
-        }
-        /*
-        else if (p.get_name() == "rember_exposure_time")
+        if (p.get_name() == "task_num") 
         {
-          auto k = p.as_int();
-          if(pm.task_num>=0&&pm.task_num<100)
-            ps._0_99_exposure=k;
-          else if(pm.task_num>=200&&pm.task_num<300)
-            ps._200_299_exposure=k;
-          else if(pm.task_num>=300&&pm.task_num<400)
-            ps._300_399_exposure=k;
-        } 
-        */
-        else if (p.get_name() == "task_num") {
           if (p.as_int() < 0) {
             result.successful = false;
             result.reason = "Failed to set task_num";
@@ -96,12 +60,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           else
           {
             pm.task_num=p.as_int();
-            /*
-            if(pm.task_num>=0&&pm.task_num<100)
-            {
-              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", ps._0_99_exposure)});
-            }
-            else */if(pm.task_num>=100&&pm.task_num<200)
+            if(pm.task_num>=100&&pm.task_num<200)
             {
               switch(pm.task_num)
               {
@@ -112,6 +71,15 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
                 break;
               }
             }
+          }
+        }
+        else if(alg_return=alg100_getcallbackParameter(p)!=0)
+        {
+          if(alg_return<0)
+          {
+            result.successful = false;
+            result.reason = "Failed to set alg100_Parameter";
+            return result;
           }
         }
       }
@@ -128,14 +96,12 @@ LaserImagePos::~LaserImagePos()
     _sub.reset();
     _handle.reset();
     _param_camera.reset();
-//  _param_camera_get.reset();
     _images_con.notify_all();
     _futures_con.notify_one();
     for (auto & t : _threads) {
       t.join();
     }
     _pub.reset();
-    _pub_msg.reset();
 
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -147,107 +113,151 @@ LaserImagePos::~LaserImagePos()
 
 void LaserImagePos::_declare_parameters()
 {
-  this->declare_parameter("als100_exposure_time", pm.als100_exposure_time);
+  alg100_declare_parameters();
   this->declare_parameter("task_num", pm.task_num);
-//this->declare_parameter("rember_exposure_time",1000);
 }
 
 Params LaserImagePos::_update_parameters()
 {
   const auto & vp = this->get_parameters(KEYS);
   for (const auto & p : vp) {
-    if (p.get_name() == "als100_exposure_time") {
-      pm.als100_exposure_time = p.as_int();
-    } else if (p.get_name() == "task_num") {
+    if (p.get_name() == "task_num") {
       pm.task_num = p.as_int();
     }
   }
+  alg100_update_parameters();
   return pm;
 }
-/*
-Params_exposure LaserImagePos::_get_nowexposure()
+
+int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像
+                            std::vector <cv::Point2f> &pointcloud,   //输出激光轮廓
+                            std::vector <cv::Point2f> &namepoint)    //输出结果点信息
 {
-  auto vp = _param_camera_get->get_parameters(KEYS2);
-  _param_camera_get->wait_for_service();
-  for (auto & p : vp)
+  static int oldwidth=0,oldHeight=0;
+
+  if(oldwidth!=imageIn.cols||oldHeight!=imageIn.rows)
   {
-      if (p.get_name() == "exposure_time")
-      {
-          auto k = p.as_int();
-          if(pm.task_num>=0&&pm.task_num<100)
-            ps._0_99_exposure=k;
-          else if(pm.task_num>=200&&pm.task_num<300)
-            ps._200_299_exposure=k;
-          else if(pm.task_num>=300&&pm.task_num<400)
-            ps._300_399_exposure=k;  
-      }
-  } 
-  return ps;
-}
-*/
+    if(oldwidth!=0||oldHeight!=0)
+    {
+      Myhalcv2::MyhalcvMemFree();
+      delete [] cv8uc1_Imagebuff_image;
+      delete [] cv8uc1_Imagebuff1;
+      delete [] cv8uc1_Imagebuff2;
+      delete [] cv8uc1_Imagebuff3;
+      delete [] cv8uc1_Imagebuff4;
+      delete [] cv8uc1_Imagebuff5;
+      delete [] cv8uc1_Imagebuff6;
+      delete [] cv8uc1_Imagebuff7;
+      delete [] cv8uc1_Imagebuff8;
+      delete [] X_line;
+      delete [] X_lineMark;
+      delete [] X_linedif32;
+      delete [] niheX;
+      delete [] niheY;
+      delete [] f_line;
+    }
+    oldwidth=imageIn.cols;
+    oldHeight=imageIn.rows;
+    Myhalcv2::MyhalcvMemInit(oldHeight,oldwidth);
 
-PointCloud2::UniquePtr to_pc2(const std::vector<float> & pnts)
+    cv8uc1_Imagebuff_image=new char [oldwidth*oldHeight*4];
+    cv8uc1_Imagebuff1=new char [oldwidth*oldHeight];
+    cv8uc1_Imagebuff2=new char [Myhalcv2::getHoughsize()];
+    cv8uc1_Imagebuff3=new char [Myhalcv2::getConectsize()*oldwidth*oldHeight];
+    cv8uc1_Imagebuff4=new char [oldwidth*oldHeight];
+    cv8uc1_Imagebuff5=new char [oldwidth*oldHeight];
+    cv8uc1_Imagebuff6=new char [oldwidth*oldHeight*2];
+    cv8uc1_Imagebuff7=new char [oldwidth*oldHeight];
+    cv8uc1_Imagebuff8=new char [oldwidth*oldHeight];
+
+    Int32 bigsize;
+    bigsize=oldwidth>oldHeight?oldwidth:oldHeight;
+    X_line=new Int32 [bigsize];
+    f_line=new float [bigsize];
+    X_lineMark=new Uint8 [bigsize*4];
+    X_linedif32=new Int32 [bigsize];
+    niheX=new Int32 [bigsize];
+    niheY=new Int32 [bigsize];
+
+  }
+
+  switch(pm.task_num)
+  {
+    case 100:   //内角1算法
+      if(0!=alg100_runimage(imageIn,pointcloud,namepoint))
+        return 1;
+    break;
+    default:
+      return 1;
+  }
+
+  return 0;
+}
+
+std::string LaserImagePos::mat_type2encoding(int mat_type)
 {
-  auto ptr = std::make_unique<PointCloud2>();
-  if (pnts.empty()) {return ptr;}
-
-  auto num = pnts.size();
-
-  ptr->height = 1;              // If the cloud is unordered, height is 1  如果cloud 是无序的 height 是 1
-  ptr->width = num;             //点云的长度
-
-  ptr->fields.resize(1);
-
-  ptr->fields[0].name = "u";
-  ptr->fields[0].offset = 0;
-  ptr->fields[0].datatype = 7;    // 	 INT8    = 1
-                                  //	 UINT8   = 2
-                                  //	 INT16   = 3
-                                  //	 UINT16  = 4
-                                  //	 INT32   = 5
-                                  //	 UINT32  = 6
-                                  //	 FLOAT32 = 7
-                                  //	 FLOAT64 = 8
-  ptr->fields[0].count = 1;     
-
-  ptr->is_bigendian = false;
-  ptr->point_step = 4;        // Length of a point in bytes 一个点占的比特数 
-  ptr->row_step = num * 4;    // Length of a row in bytes 一行的长度占用的比特数
-
-  ptr->data.resize(num * 4);
-
-  ptr->is_dense = true;       // 没有非法数据点
-
-  memcpy(ptr->data.data(), pnts.data(), num * 4);
-
-  return ptr;
+  switch (mat_type) {
+    case CV_8UC1:
+      return "mono8";
+    case CV_8UC3:
+      return "bgr8";
+    case CV_16SC1:
+      return "mono16";
+    case CV_8UC4:
+      return "rgba8";
+    default:
+      throw std::runtime_error("unsupported encoding type");
+  }
 }
 
-std::vector<float> center(
-  const cv::Mat & img,
-  cv::Mat & buf,
-  const Params & pm)
-{
-  std::vector<float> pnts;
-  if (img.empty()) {return pnts;}
-
-  pnts.clear();
-
-  return pnts;
-}
-
-PointCloud2::UniquePtr execute(Image::UniquePtr ptr, cv::Mat & buf, const Params & pm)
+IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat & buf, const Params & pm)
 {
   if (ptr->header.frame_id == "-1" || ptr->data.empty()) {
-    auto line = std::make_unique<PointCloud2>();
-    line->header = ptr->header;
-    return line;
+    auto result = std::make_unique<IfAlgorhmitmsg>();
+    result->imageout.header = ptr->header;
+    result->result=false;
+    return result;
   }
+  IfAlgorhmitmsg::UniquePtr result;
   cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-  auto pnts = center(img, buf, pm);
-  auto line = to_pc2(pnts);
-  line->header = ptr->header;
-  return line;
+  std::vector <cv::Point2f> pointcloud,resultpoint;
+
+  if(0!=RunImage(img,pointcloud,resultpoint))
+  {
+    result->result=false;
+  }
+  else
+  {
+    result->result=true;
+  }
+
+  result->result=true;
+  result->imageout.header = ptr->header;
+  result->imageout.height = img.rows;
+  result->imageout.width = img.cols;
+  result->imageout.encoding = mat_type2encoding(img.type());
+  result->imageout.is_bigendian = false;
+  result->imageout.step = static_cast<sensor_msgs::msg::Image::_step_type>(img.step);
+  result->imageout.data.assign(img.datastart, img.dataend);
+  for(int n=0;n<pointcloud.size();n++)
+  {
+    tutorial_interfaces::msg::IfAlgorhmitpoint2f Ifpointcloud;
+    Ifpointcloud.x=pointcloud[n].x;
+    Ifpointcloud.y=pointcloud[n].y;
+    result->lasertrackout.push_back(Ifpointcloud);
+  }
+  for(int n=0;n<resultpoint.size();n++)
+  {
+    tutorial_interfaces::msg::IfAlgorhmittargetpoint2f pointtarget;
+    char str[20];
+    sprintf(str,"point_%d",n);
+    pointtarget.name=str;
+    pointtarget.x=resultpoint[n].x;
+    pointtarget.y=resultpoint[n].y;
+    result->targetpointout.push_back(pointtarget);
+  }
+  
+  return result;
 }
 
 void LaserImagePos::_worker()
@@ -258,7 +268,7 @@ void LaserImagePos::_worker()
     if (_images.empty() == false) {
       auto ptr = std::move(_images.front());
       _images.pop_front();
-      std::promise<PointCloud2::UniquePtr> prom;
+      std::promise<IfAlgorhmitmsg::UniquePtr> prom;
       _push_back_future(prom.get_future());
       lk.unlock();
       if(pm.task_num>=100&&pm.task_num<200)
@@ -284,7 +294,7 @@ void LaserImagePos::_push_back_image(Image::UniquePtr ptr)
   _images_con.notify_all();
 }
 
-void LaserImagePos::_push_back_future(std::future<PointCloud2::UniquePtr> fut)
+void LaserImagePos::_push_back_future(std::future<IfAlgorhmitmsg::UniquePtr> fut)
 {
   std::unique_lock<std::mutex> lk(_futures_mut);
   _futures.emplace_back(std::move(fut));

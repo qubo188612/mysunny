@@ -9,6 +9,7 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
+#include "myhalcv2/myhalcv2.h"
 
 namespace laser_imagepos
 {
@@ -17,8 +18,29 @@ using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
 using tutorial_interfaces::msg::IfAlgorhmitmsg;
 
-const std::vector<std::string> KEYS = {"als100_exposure_time","task_num"};
-//const std::vector<std::string> KEYS2 = {"exposure_time"};
+const std::vector<std::string> KEYS = {"task_num"};
+
+const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
+                                              "als100_pingjun",
+                                              "als100_b_yanmofuzhu",
+                                              "als100_b_gudingquyu",
+                                              "als100_widthliantongdis",
+                                              "als100_highliantongdis",
+                                              "als100_gujiaerzhi",
+                                              "als100_jiguanghight",
+                                              "als100_jiguanglong",
+                                              "als100_jiguangkuandu",
+                                              "als100_Updif",
+                                              "als100_Updifmin",
+                                              "als100_Uplong",
+                                              "als100_Downdif",
+                                              "als100_Downdifmin",
+                                              "als100_Downdlong",
+                                              "als100_duanxianerzhi",
+                                              "als100_erzhisize",
+                                              "als100_erzhisize2",
+                                              "als100_searchdectancemax",
+                                              "als100_searchdectancemin"};
 
 /**
  * @brief To zip related parameters together.
@@ -26,7 +48,30 @@ const std::vector<std::string> KEYS = {"als100_exposure_time","task_num"};
  */
 struct Params
 {
-  int als100_exposure_time = 120;
+/********************************/
+//算法100参数
+  int als100_exposure_time = 120;//曝光值
+  int als100_pingjun = 15;  //二值阈值
+  int als100_b_yanmofuzhu=1;//是否使用掩摸辅助
+  int als100_b_gudingquyu=0;//是否固定区域
+  int als100_widthliantongdis=2;//激光宽度连通距离
+  int als100_highliantongdis=15;//激光长度连通距离
+  int als100_gujiaerzhi=160;//找骨架二值图
+  int als100_jiguanghight=50;//整体激光最短长度
+  int als100_jiguanglong=20;//单边激光最短长度
+  int als100_jiguangkuandu=4;//激光粗细
+  int als100_Updif=0;//上半段倾斜开始斜度10
+  int als100_Updifmin=-5;//上半段倾斜终止斜度10
+  int als100_Uplong=5;//上半段直线长度
+  int als100_Downdif=0;//下半段倾斜开始斜度0
+  int als100_Downdifmin=5;//下半段倾斜终止斜度0
+  int als100_Downdlong=5;//下半段直线长度
+  int als100_duanxianerzhi=180;//找断线的二值阈值
+  int als100_erzhisize=150;//断线二值图的上下阈值尺寸
+  int als100_erzhisize2=60;//断线二值图的左右阈值尺寸
+  int als100_searchdectancemax=160;//搜寻焊缝端点距离中央凹槽最远的距离
+  int als100_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
+/************************************/
   int task_num = 0;
 };
 /*
@@ -79,19 +124,11 @@ private:
    * @brief Publisher name.
    *
    */
-  const char * _pub_name = "~/lines";
+  const char * _pub_name = "~/result";
 
-  const char * _pub_msg_name = "~/msg";
-
-
-  /**
-   * @brief Shared pointer to publisher.
-   *
-   */
-  rclcpp::Publisher<PointCloud2>::SharedPtr _pub;
+  rclcpp::Publisher<IfAlgorhmitmsg>::SharedPtr _pub;
 
 
-  rclcpp::Publisher<IfAlgorhmitmsg>::SharedPtr _pub_msg;
   /**
    * @brief Subscription name.
    *
@@ -110,6 +147,8 @@ private:
    */
   void _declare_parameters();
 
+  void alg100_declare_parameters();
+
 //Params_exposure _get_nowexposure();
 
 //Params_exposure ps;
@@ -120,6 +159,10 @@ private:
    * @return Params Zipped parameters
    */
   Params _update_parameters();
+
+  void alg100_update_parameters();
+
+  int alg100_getcallbackParameter(const rclcpp::Parameter &p);
 
   Params pm;
 
@@ -141,14 +184,38 @@ private:
 
   void _push_back_image(Image::UniquePtr ptr);
 
-  void _push_back_future(std::future<PointCloud2::UniquePtr> fut);
+  void _push_back_future(std::future<IfAlgorhmitmsg::UniquePtr> fut);
 
-  std::deque<std::future<PointCloud2::UniquePtr>> _futures;
+  std::deque<std::future<IfAlgorhmitmsg::UniquePtr>> _futures;
 
   std::deque<Image::UniquePtr> _images;
 
   int _0_99_exposure_time;
 
+  IfAlgorhmitmsg::UniquePtr execute(Image::UniquePtr ptr, cv::Mat & buf, const Params & pm);
+
+  std::string mat_type2encoding(int mat_type);
+
+  //返回值1检测失败，0检测成功
+  int RunImage(cv::Mat &imageIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint);   //输出结果点信息
+
+  char *cv8uc1_Imagebuff_image;
+  char *cv8uc1_Imagebuff1;
+  char *cv8uc1_Imagebuff2;
+  char *cv8uc1_Imagebuff3;
+  char *cv8uc1_Imagebuff4;
+  char *cv8uc1_Imagebuff5;
+  char *cv8uc1_Imagebuff6;
+  char *cv8uc1_Imagebuff7;
+  char *cv8uc1_Imagebuff8;
+
+  Int32 *X_line;
+  float *f_line;
+  Uint8 *X_lineMark;
+  Int32 *X_linedif32,*niheX,*niheY;
+  Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX,Imageheadline;
+
+  int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint);
 };
 
 }

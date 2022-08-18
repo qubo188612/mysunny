@@ -212,15 +212,8 @@ void Modbus::_task_numberset(u_int16_t num)
 
 void Modbus::_task_parameter(int ddr,u_int16_t num)
 {
-  switch(ddr)
-  {
-    case ALS100_EXPOSURE_TIME_REG_ADD:
-      e2proomdata.als100_exposure_time=num;
-      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_exposure_time", (int16_t)num)});
-    break;
-    default:
-    break;
-  }
+  if(0!=als100_task_parameter(ddr,num))
+      return;
 }
 
 void Modbus::_task_robot(int ddr,u_int16_t num)

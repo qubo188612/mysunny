@@ -15,6 +15,27 @@ laser_line_center_node:
 
 laser_imagepos_node:
     als100_exposure_time: 150               # int
+    als100_pingjun:       15
+    als100_b_yanmofuzhu:  1
+    als100_b_gudingquyu:  0
+    als100_widthliantongdis:  2
+    als100_highliantongdis:   15
+    als100_gujiaerzhi:        160
+    als100_jiguanghight:      50
+    als100_jiguanglong:       20
+    als100_jiguangkuandu:     4
+    als100_Updif:             0
+    als100_Updifmin:          -5
+    als100_Uplong:            5
+    als100_Downdif:           0
+    als100_Downdifmin:        5
+    als100_Downdlong:         5
+    als100_duanxianerzhi:     180
+    als100_erzhisize:         150
+    als100_erzhisize2:        60
+    als100_searchdectancemax: 160
+    als100_searchdectancemin: 25
+
     task_num:       0                 # int
  #  rember_exposure_time:       1000    # int
 
