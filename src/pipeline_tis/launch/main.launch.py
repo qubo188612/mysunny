@@ -76,7 +76,7 @@ def generate_launch_description():
     laser_imagepos_node = ComposableNode(
         package='laser_imagepos',
         plugin='laser_imagepos::LaserImagePos',
-        remappings=[('~/image', '/rotate_image_node/image_rotated2')],
+        remappings=[('~/image', '/rotate_image_node/image_rotated')],       
         parameters=[params['laser_imagepos_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
