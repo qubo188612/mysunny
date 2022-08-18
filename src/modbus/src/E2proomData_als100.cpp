@@ -6,6 +6,9 @@
 
 void E2proomData::Init_als100_E2proomData()
 {
+    als100_pingjun_min=E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_MIN;
+    als100_pingjun_use=E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_USE;
+    als100_pingjun_max=E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_MAX;
     als100_exposure_time_min=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN;
     als100_exposure_time_max=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX;
     als100_exposure_time_use=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_USE;
@@ -72,6 +75,8 @@ void E2proomData::als100_check_para()
 {
     if(als100_exposure_time<als100_exposure_time_min||als100_exposure_time>als100_exposure_time_max)
         als100_exposure_time=als100_exposure_time_use;
+    if(als100_pingjun<als100_pingjun_min||als100_pingjun>als100_pingjun_max)
+        als100_pingjun=als100_pingjun_use;
     if(als100_b_yanmofuzhu<als100_b_yanmofuzhu_min||als100_b_yanmofuzhu>als100_b_yanmofuzhu_max)
         als100_b_yanmofuzhu=als100_b_yanmofuzhu_use;
     if(als100_b_gudingquyu<als100_b_gudingquyu_min||als100_b_gudingquyu>als100_b_gudingquyu_max)
@@ -138,6 +143,8 @@ void E2proomData::als100_read_para()
       als100_exposure_time=*ui16_p;
       ui16_p++;
       i16_p = (Int16*)ui16_p;
+      als100_pingjun=*i16_p;
+      i16_p++;
       als100_b_yanmofuzhu=*i16_p;
       i16_p++;
       als100_b_gudingquyu=*i16_p;
@@ -203,6 +210,8 @@ void E2proomData::write_als100_para()
     *ui16_p=als100_exposure_time;
     ui16_p++;
     i16_p = (Int16*)ui16_p;
+    *i16_p=als100_pingjun;
+    i16_p++;
     *i16_p=als100_b_yanmofuzhu;
     i16_p++;
     *i16_p=als100_b_gudingquyu;
@@ -254,6 +263,7 @@ void E2proomData::write_als100_para()
 void E2proomData::init_als100_para()
 {
     als100_exposure_time=als100_exposure_time_use;
+    als100_pingjun=als100_pingjun_use;
     als100_b_yanmofuzhu=als100_b_yanmofuzhu_use;
     als100_b_gudingquyu=als100_b_gudingquyu_use;
     als100_widthliantongdis=als100_widthliantongdis_use;

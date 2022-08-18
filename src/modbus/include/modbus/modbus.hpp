@@ -41,25 +41,26 @@ namespace modbus
 
 
 #define ALS100_EXPOSURE_TIME_REG_ADD           0x0000
-#define ALS100_B_YANMOFUZHU_REG_ADD            0x0001
-#define ALS100_B_GUDINGQUYU_REG_ADD            0x0002
-#define ALS100_WIDTHLIANTONGDIS_REG_ADD        0x0003
-#define ALS100_HIGHLIANTONGDIS_REG_ADD         0x0004
-#define ALS100_GUJIAERZHI_REG_ADD              0x0005
-#define ALS100_JIGUANGHIGHT_REG_ADD             0x0006
-#define ALS100_JIGUANGLONG_REG_ADD             0x0007
-#define ALS100_JIGUANGKUANDU_REG_ADD           0x0008
-#define ALS100_UPDIF_REG_ADD                   0x0009
-#define ALS100_UPDIFMIN_REG_ADD                0x000a
-#define ALS100_UPLONG_REG_ADD                  0x000b
-#define ALS100_DOWNDIF_REG_ADD                 0x000c
-#define ALS100_DOWNDIFMIN_REG_ADD              0x000d
-#define ALS100_DOWNDLONG_REG_ADD               0x000e
-#define ALS100_DUANXIANERZHI_REG_ADD           0x000f
-#define ALS100_ERZHISIZE_REG_ADD               0x0010
-#define ALS100_ERZHISIZE2_REG_ADD              0x0011
-#define ALS100_SEARCHDECTANCEMAX_REG_ADD       0x0012
-#define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0013
+#define ALS100_PINGJUN_REG_ADD                 0x0001
+#define ALS100_B_YANMOFUZHU_REG_ADD            0x0002
+#define ALS100_B_GUDINGQUYU_REG_ADD            0x0003
+#define ALS100_WIDTHLIANTONGDIS_REG_ADD        0x0004
+#define ALS100_HIGHLIANTONGDIS_REG_ADD         0x0005
+#define ALS100_GUJIAERZHI_REG_ADD              0x0006
+#define ALS100_JIGUANGHIGHT_REG_ADD            0x0007
+#define ALS100_JIGUANGLONG_REG_ADD             0x0008
+#define ALS100_JIGUANGKUANDU_REG_ADD           0x0009
+#define ALS100_UPDIF_REG_ADD                   0x000a
+#define ALS100_UPDIFMIN_REG_ADD                0x000b
+#define ALS100_UPLONG_REG_ADD                  0x000c
+#define ALS100_DOWNDIF_REG_ADD                 0x000d
+#define ALS100_DOWNDIFMIN_REG_ADD              0x000e
+#define ALS100_DOWNDLONG_REG_ADD               0x000f
+#define ALS100_DUANXIANERZHI_REG_ADD           0x0010
+#define ALS100_ERZHISIZE_REG_ADD               0x0011
+#define ALS100_ERZHISIZE2_REG_ADD              0x0012
+#define ALS100_SEARCHDECTANCEMAX_REG_ADD       0x0013
+#define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
 
 
 /**

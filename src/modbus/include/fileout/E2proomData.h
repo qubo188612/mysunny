@@ -24,7 +24,13 @@
 
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_USE				1000       //曝光默认值   
-#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值'
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_USE				1000       //曝光默认值   
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值'
+#define E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_MIN                     0
+#define E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_USE                     15
+#define E2POOM_ALG100_LASERIMAGEPOS_PINGJUN_MAX                     255
 #define E2POOM_ALG100_LASERIMAGEPOS_B_YANMOFUZHU_MIN                0 
 #define E2POOM_ALG100_LASERIMAGEPOS_B_YANMOFUZHU_USE                1
 #define E2POOM_ALG100_LASERIMAGEPOS_B_YANMOFUZHU_MAX                1
@@ -103,6 +109,7 @@ public:
 /****************************/
     //任务100参数
     Uint16 als100_exposure_time;  //曝光模式
+    Int16 als100_pingjun;//二值阈值
     Int16 als100_b_yanmofuzhu;//是否使用掩摸辅助
     Int16 als100_b_gudingquyu;//是否固定区域
     Int16 als100_widthliantongdis;//激光宽度连通距离
@@ -130,6 +137,9 @@ public:
     Uint16 als100_exposure_time_min;    //曝光最小值
     Uint16 als100_exposure_time_max;    //曝光最大值
     Uint16 als100_exposure_time_use;    //曝光默认值
+    Int16 als100_pingjun_min;
+    Int16 als100_pingjun_max;
+    Int16 als100_pingjun_use;
     Int16 als100_b_yanmofuzhu_min;
     Int16 als100_b_yanmofuzhu_max;
     Int16 als100_b_yanmofuzhu_use;

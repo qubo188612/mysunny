@@ -19,6 +19,11 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_exposure_time", num)});
             return 1;
         break;
+        case ALS100_PINGJUN_REG_ADD:
+            e2proomdata.als100_pingjun=num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_pingjun", num)});
+            return 1;
+        break;
         case ALS100_B_YANMOFUZHU_REG_ADD:
             e2proomdata.als100_b_yanmofuzhu=(int16_t)num;
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_b_yanmofuzhu", num)});
@@ -123,6 +128,7 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
 void Modbus::init_als100_parameter()
 {
     parameterport_mapping->tab_registers[ALS100_EXPOSURE_TIME_REG_ADD]=e2proomdata.als100_exposure_time;
+    parameterport_mapping->tab_registers[ALS100_PINGJUN_REG_ADD]=e2proomdata.als100_pingjun;
     parameterport_mapping->tab_registers[ALS100_B_YANMOFUZHU_REG_ADD]=e2proomdata.als100_b_yanmofuzhu;
     parameterport_mapping->tab_registers[ALS100_B_GUDINGQUYU_REG_ADD]=e2proomdata.als100_b_gudingquyu;
     parameterport_mapping->tab_registers[ALS100_WIDTHLIANTONGDIS_REG_ADD]=e2proomdata.als100_widthliantongdis;
