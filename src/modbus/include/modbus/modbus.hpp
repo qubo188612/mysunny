@@ -46,7 +46,7 @@ namespace modbus
 #define ALS100_WIDTHLIANTONGDIS_REG_ADD        0x0003
 #define ALS100_HIGHLIANTONGDIS_REG_ADD         0x0004
 #define ALS100_GUJIAERZHI_REG_ADD              0x0005
-#define ALS100_IGUANGHIGHT_REG_ADD             0x0006
+#define ALS100_JIGUANGHIGHT_REG_ADD             0x0006
 #define ALS100_JIGUANGLONG_REG_ADD             0x0007
 #define ALS100_JIGUANGKUANDU_REG_ADD           0x0008
 #define ALS100_UPDIF_REG_ADD                   0x0009
@@ -134,6 +134,7 @@ public:
   void _task_parameter(int ddr,u_int16_t num);
 
   int als100_task_parameter(int ddr,u_int16_t num);
+  void init_als100_parameter();
 
   void _task_robot(int ddr,u_int16_t num);
 

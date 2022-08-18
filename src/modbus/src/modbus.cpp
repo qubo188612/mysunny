@@ -87,7 +87,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     return;
   }
 
-  parameterport_mapping->tab_registers[ALS100_EXPOSURE_TIME_REG_ADD]=e2proomdata.als100_exposure_time;
+  init_als100_parameter();
   
   static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)

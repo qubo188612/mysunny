@@ -44,7 +44,7 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_gujiaerzhi", num)});
             return 1;
         break;
-        case ALS100_IGUANGHIGHT_REG_ADD:
+        case ALS100_JIGUANGHIGHT_REG_ADD:
             e2proomdata.als100_jiguanghight=(int16_t)num;
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_jiguanghight", num)});
             return 1;
@@ -118,6 +118,30 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
         break;
     }
     return 0;
+}
+
+void Modbus::init_als100_parameter()
+{
+    parameterport_mapping->tab_registers[ALS100_EXPOSURE_TIME_REG_ADD]=e2proomdata.als100_exposure_time;
+    parameterport_mapping->tab_registers[ALS100_B_YANMOFUZHU_REG_ADD]=e2proomdata.als100_b_yanmofuzhu;
+    parameterport_mapping->tab_registers[ALS100_B_GUDINGQUYU_REG_ADD]=e2proomdata.als100_b_gudingquyu;
+    parameterport_mapping->tab_registers[ALS100_WIDTHLIANTONGDIS_REG_ADD]=e2proomdata.als100_widthliantongdis;
+    parameterport_mapping->tab_registers[ALS100_HIGHLIANTONGDIS_REG_ADD]=e2proomdata.als100_highliantongdis;
+    parameterport_mapping->tab_registers[ALS100_GUJIAERZHI_REG_ADD]=e2proomdata.als100_gujiaerzhi;
+    parameterport_mapping->tab_registers[ALS100_JIGUANGHIGHT_REG_ADD]=e2proomdata.als100_jiguanghight;
+    parameterport_mapping->tab_registers[ALS100_JIGUANGLONG_REG_ADD]=e2proomdata.als100_jiguanglong;
+    parameterport_mapping->tab_registers[ALS100_JIGUANGKUANDU_REG_ADD]=e2proomdata.als100_jiguangkuandu;
+    parameterport_mapping->tab_registers[ALS100_UPDIF_REG_ADD]=e2proomdata.als100_Updif;
+    parameterport_mapping->tab_registers[ALS100_UPDIFMIN_REG_ADD]=e2proomdata.als100_Updifmin;
+    parameterport_mapping->tab_registers[ALS100_UPLONG_REG_ADD]=e2proomdata.als100_Uplong;
+    parameterport_mapping->tab_registers[ALS100_DOWNDIF_REG_ADD]=e2proomdata.als100_Downdif;
+    parameterport_mapping->tab_registers[ALS100_DOWNDIFMIN_REG_ADD]=e2proomdata.als100_Downdifmin;
+    parameterport_mapping->tab_registers[ALS100_DOWNDLONG_REG_ADD]=e2proomdata.als100_Downdlong;
+    parameterport_mapping->tab_registers[ALS100_DUANXIANERZHI_REG_ADD]=e2proomdata.als100_duanxianerzhi;
+    parameterport_mapping->tab_registers[ALS100_ERZHISIZE_REG_ADD]=e2proomdata.als100_erzhisize;
+    parameterport_mapping->tab_registers[ALS100_ERZHISIZE2_REG_ADD]=e2proomdata.als100_erzhisize2;
+    parameterport_mapping->tab_registers[ALS100_SEARCHDECTANCEMAX_REG_ADD]=e2proomdata.als100_searchdectancemax;
+    parameterport_mapping->tab_registers[ALS100_SEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als100_searchdectancemin;
 }
 
 }
