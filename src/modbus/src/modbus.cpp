@@ -198,6 +198,7 @@ void Modbus::_camera_power(bool f)
 {
   if (f) {
     _param_camera->set_parameters({rclcpp::Parameter("power", true)});
+    _param_laserimagepos->set_parameters({rclcpp::Parameter("start", 1)});
   } else {
     _param_camera->set_parameters({rclcpp::Parameter("power", false)});
   }
@@ -212,6 +213,13 @@ void Modbus::_task_numberset(u_int16_t num)
 
 void Modbus::_task_parameter(int ddr,u_int16_t num)
 {
+  switch(ddr)
+  {
+    case ALS_SHOW_STEP_REG_ADD:
+      _param_laserimagepos->set_parameters({rclcpp::Parameter("show_step", num)});
+      return;
+    break;
+  }
   if(0!=als100_task_parameter(ddr,num))
       return;
 }

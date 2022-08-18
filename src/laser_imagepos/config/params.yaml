@@ -23,3 +23,5 @@ laser_imagepos_node:
     als100_searchdectancemin: 25
 
     task_num:       0                 # int
+    show_step:      0
+    start:          0

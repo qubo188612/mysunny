@@ -18,7 +18,7 @@ using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
 using tutorial_interfaces::msg::IfAlgorhmitmsg;
 
-const std::vector<std::string> KEYS = {"task_num"};
+const std::vector<std::string> KEYS = {"task_num","show_step","start"};
 
 const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_pingjun",
@@ -73,6 +73,7 @@ struct Params
   int als100_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
 /************************************/
   int task_num = 0;
+  int show_step = 0;      
 };
 /*
 struct Params_exposure
@@ -196,8 +197,9 @@ private:
 
   std::string mat_type2encoding(int mat_type);
 
+  void InitRunImage();//初始化算法
   //返回值1检测失败，0检测成功
-  int RunImage(cv::Mat &imageIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint);   //输出结果点信息
+  int RunImage(cv::Mat &imageIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint,int step);   //输出结果点信息
 
   char *cv8uc1_Imagebuff_image;
   char *cv8uc1_Imagebuff1;
@@ -214,8 +216,10 @@ private:
   Uint8 *X_lineMark;
   Int32 *X_linedif32,*niheX,*niheY;
   Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX,Imageheadline;
+  Int32 firstsearch;
+  Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
 
-  int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint);
+  int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint,int step);
 };
 
 }

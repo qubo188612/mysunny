@@ -73,6 +73,32 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
             }
           }
         }
+        else if(p.get_name() == "show_step")
+        {
+          if (p.as_int() < 0) {
+            result.successful = false;
+            result.reason = "Failed to set show_step";
+            return result;
+          }
+          else
+          {
+            pm.show_step=p.as_int();
+          }
+        }
+        else if(p.get_name() == "start")
+        {
+          if (p.as_int() < 0) {
+            result.successful = false;
+            result.reason = "Failed to set start";
+            return result;
+          }
+          else if(p.as_int() > 0)
+          {
+            pm.show_step=p.as_int();
+            InitRunImage();
+          //this->declare_parameter("start", 0); 
+          }
+        }
         else if(alg_return=alg100_getcallbackParameter(p)!=0)
         {
           if(alg_return<0)
@@ -115,6 +141,8 @@ void LaserImagePos::_declare_parameters()
 {
   alg100_declare_parameters();
   this->declare_parameter("task_num", pm.task_num);
+  this->declare_parameter("show_step", pm.show_step);
+  this->declare_parameter("start", pm.show_step);
 }
 
 Params LaserImagePos::_update_parameters()
@@ -124,14 +152,27 @@ Params LaserImagePos::_update_parameters()
     if (p.get_name() == "task_num") {
       pm.task_num = p.as_int();
     }
+    else if(p.get_name() == "show_step") {
+      pm.show_step = p.as_int();
+    }
   }
   alg100_update_parameters();
   return pm;
 }
 
+void LaserImagePos::InitRunImage()
+{
+  firstsearch=0;
+  firstsearch_stx=0,
+  firstsearch_sty=0,
+  firstsearch_edx=0,
+  firstsearch_edy=0;
+}
+
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像
                             std::vector <cv::Point2f> &pointcloud,   //输出激光轮廓
-                            std::vector <cv::Point2f> &namepoint)    //输出结果点信息
+                            std::vector <cv::Point2f> &namepoint,
+                            int step)    //输出结果点信息
 {
   static int oldwidth=0,oldHeight=0;
 
@@ -184,7 +225,7 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
   switch(pm.task_num)
   {
     case 100:   //内角1算法
-      if(0!=alg100_runimage(imageIn,pointcloud,namepoint))
+      if(0!=alg100_runimage(imageIn,pointcloud,namepoint,step))
         return 1;
     break;
     default:
@@ -222,7 +263,7 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
   cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
   std::vector <cv::Point2f> pointcloud,resultpoint;
 
-  if(0!=RunImage(img,pointcloud,resultpoint))
+  if(0!=RunImage(img,pointcloud,resultpoint,pm.show_step))
   {
     result->result=false;
   }

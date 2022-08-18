@@ -39,7 +39,6 @@ namespace modbus
 
 #define PARAMETER_REGEDIST_NUM                 400
 
-
 #define ALS100_EXPOSURE_TIME_REG_ADD           0x0000
 #define ALS100_PINGJUN_REG_ADD                 0x0001
 #define ALS100_B_YANMOFUZHU_REG_ADD            0x0002
@@ -61,6 +60,8 @@ namespace modbus
 #define ALS100_ERZHISIZE2_REG_ADD              0x0012
 #define ALS100_SEARCHDECTANCEMAX_REG_ADD       0x0013
 #define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
+
+#define ALS_SHOW_STEP_REG_ADD                  0x0190
 
 
 /**
