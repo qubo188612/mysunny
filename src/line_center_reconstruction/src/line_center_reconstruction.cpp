@@ -167,11 +167,13 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
     _threads.push_back(std::thread(&LineCenterReconstruction::_worker, this));
   }
   _threads.push_back(std::thread(&LineCenterReconstruction::_manager, this));
-
+  
+/*
   for (int i = 0; i < _workers; ++i) {
     _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_worker, this));
   }
   _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_manager, this));
+*/
 
   _sub = this->create_subscription<PointCloud2>(
     _sub_name,
@@ -181,7 +183,8 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point(std::move(ptr));
     }
   );
-  
+
+ /* 
   _sub_task100_199 = this->create_subscription<IfAlgorhmitmsg>(
     _sub_task100_199_name,
     rclcpp::SensorDataQoS(),
@@ -190,7 +193,7 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
-
+*/
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
 
