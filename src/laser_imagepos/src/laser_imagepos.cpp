@@ -34,6 +34,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   for (int i = 0; i < _workers; ++i) {
     _threads.push_back(std::thread(&LaserImagePos::_worker, this));
   }
+  _threads.push_back(std::thread(&LaserImagePos::_manager, this));
 
   _sub = this->create_subscription<Image>(
     _sub_name,
@@ -319,6 +320,23 @@ void LaserImagePos::_worker()
       }
     } else {
       _images_con.wait(lk);
+    }
+  }
+}
+
+
+void LaserImagePos::_manager()
+{
+  while (rclcpp::ok()) {
+    std::unique_lock<std::mutex> lk(_futures_mut);
+    if (_futures.empty() == false) {
+      auto f = std::move(_futures.front());
+      _futures.pop_front();
+      lk.unlock();
+      auto ptr = f.get();
+      _pub->publish(std::move(ptr));
+    } else {
+      _futures_con.wait(lk);
     }
   }
 }

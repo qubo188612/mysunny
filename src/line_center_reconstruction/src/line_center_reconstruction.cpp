@@ -102,7 +102,7 @@ PointCloud2::UniquePtr to_pc2(
  * @param ptr The input point cloud data.
  * @return PointCloud2::UniquePtr Point cloud message to publish.
  */
-PointCloud2::UniquePtr execute(PointCloud2::UniquePtr ptr, const Params & pm)
+PointCloud2::UniquePtr LineCenterReconstruction::execute(PointCloud2::UniquePtr ptr, const Params & pm)
 {
   if (ptr->header.frame_id == "-1" || ptr->data.empty()) {return ptr;}
 
@@ -121,6 +121,22 @@ PointCloud2::UniquePtr execute(PointCloud2::UniquePtr ptr, const Params & pm)
   auto msg = to_pc2(dst, src);
   msg->header = ptr->header;
   return msg;
+}
+
+IfAlgorhmitmsg::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm)
+{
+  if (ptr->imageout.header.frame_id == "-1" 
+   || ptr->targetpointout.size()==0
+   || ptr->result==false) {return ptr;}
+   /*
+  auto src = from_pc2(ptr);
+  if (src.empty()) {
+    auto msg = std::make_unique<PointCloud2>();
+    msg->header = ptr->header;
+    return msg;
+  }
+  */
+  return ptr;
 }
 
 /**
@@ -152,12 +168,26 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
   }
   _threads.push_back(std::thread(&LineCenterReconstruction::_manager, this));
 
+  for (int i = 0; i < _workers; ++i) {
+    _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_worker, this));
+  }
+  _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_manager, this));
+
   _sub = this->create_subscription<PointCloud2>(
     _sub_name,
     rclcpp::SensorDataQoS(),
     [this](PointCloud2::UniquePtr ptr)
     {
       _push_back_point(std::move(ptr));
+    }
+  );
+  
+  _sub_task100_199 = this->create_subscription<IfAlgorhmitmsg>(
+    _sub_task100_199_name,
+    rclcpp::SensorDataQoS(),
+    [this](IfAlgorhmitmsg::UniquePtr ptr)
+    {
+      _push_back_point_task100_199(std::move(ptr));
     }
   );
 
@@ -238,6 +268,25 @@ void LineCenterReconstruction::_worker()
   }
 }
 
+void LineCenterReconstruction::_task100_199_worker()
+{
+  while (rclcpp::ok()) {
+    std::unique_lock<std::mutex> lk(_task100_199_mut);
+    if (_task100_199.empty() == false) {
+      auto ptr = std::move(_task100_199.front());
+      _task100_199.pop_front();
+      std::promise<IfAlgorhmitmsg::UniquePtr> prom;
+      _push_back_future_task100_199(prom.get_future());
+      auto pm = _update_parameters();
+      lk.unlock();
+      auto msg = _task100_199_execute(std::move(ptr), pm);
+      prom.set_value(std::move(msg));
+    } else {
+      _task100_199_con.wait(lk);
+    }
+  }
+}
+
 void LineCenterReconstruction::_manager()
 {
   while (rclcpp::ok()) {
@@ -254,6 +303,22 @@ void LineCenterReconstruction::_manager()
   }
 }
 
+void LineCenterReconstruction::_task100_199_manager()
+{
+  while (rclcpp::ok()) {
+    std::unique_lock<std::mutex> lk(_task100_199_futures_mut);
+    if (_task100_199_futures.empty() == false) {
+      auto f = std::move(_task100_199_futures.front());
+      _task100_199_futures.pop_front();
+      lk.unlock();
+      auto ptr = f.get();
+    //_pub->publish(std::move(ptr));
+    } else {
+      _task100_19_futures_con.wait(lk);
+    }
+  }
+}
+
 void LineCenterReconstruction::_push_back_point(PointCloud2::UniquePtr ptr)
 {
   std::unique_lock<std::mutex> lk(_points_mut);
@@ -266,12 +331,32 @@ void LineCenterReconstruction::_push_back_point(PointCloud2::UniquePtr ptr)
   _points_con.notify_all();
 }
 
+void LineCenterReconstruction::_push_back_point_task100_199(IfAlgorhmitmsg::UniquePtr ptr)
+{
+  std::unique_lock<std::mutex> lk(_task100_199_mut);
+  _task100_199.emplace_back(std::move(ptr));
+  auto s = static_cast<int>(_task100_199.size());
+  if (s > _workers + 1) {
+    _task100_199.pop_front();
+  }
+  lk.unlock();
+  _task100_199_con.notify_all();
+}
+
 void LineCenterReconstruction::_push_back_future(std::future<PointCloud2::UniquePtr> fut)
 {
   std::unique_lock<std::mutex> lk(_futures_mut);
   _futures.emplace_back(std::move(fut));
   lk.unlock();
   _futures_con.notify_one();
+}
+
+void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgorhmitmsg::UniquePtr> fut)
+{
+  std::unique_lock<std::mutex> lk(_task100_199_futures_mut);
+  _task100_199_futures.emplace_back(std::move(fut));
+  lk.unlock();
+  _task100_19_futures_con.notify_one();
 }
 
 }  // namespace line_center_reconstruction

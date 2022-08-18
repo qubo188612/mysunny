@@ -21,11 +21,13 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 
 namespace line_center_reconstruction
 {
 
 using sensor_msgs::msg::PointCloud2;
+using tutorial_interfaces::msg::IfAlgorhmitmsg;
 
 /**
  * @brief List of parameter names.
@@ -110,6 +112,10 @@ private:
    */
   void _manager();
 
+  void _task100_199_worker();
+
+  void _task100_199_manager();
+
   /**
    * @brief Push a point cloud and notity workers.
    *
@@ -117,12 +123,16 @@ private:
    */
   void _push_back_point(PointCloud2::UniquePtr ptr);
 
+  void _push_back_point_task100_199(IfAlgorhmitmsg::UniquePtr ptr);
+
   /**
    * @brief Promise a future so its future can be sychronized and notify the manager.
    *
    * @param f A future to point cloud msg.
    */
   void _push_back_future(std::future<PointCloud2::UniquePtr> fut);
+
+  void _push_back_future_task100_199(std::future<IfAlgorhmitmsg::UniquePtr> fut);
 
 private:
   /**
@@ -143,11 +153,15 @@ private:
    */
   const char * _sub_name = "~/line";
 
+  const char * _sub_task100_199_name = "~/task100_199";
+
   /**
    * @brief Shared pointer to subscription.
    *
    */
   rclcpp::Subscription<PointCloud2>::SharedPtr _sub;
+
+  rclcpp::Subscription<IfAlgorhmitmsg>::SharedPtr _sub_task100_199;
 
   /**
    * @brief Number of co-workers.
@@ -173,6 +187,17 @@ private:
    */
   std::deque<PointCloud2::UniquePtr> _points;
 
+
+  std::mutex _task100_199_mut;
+
+  std::mutex _task100_199_futures_mut;
+
+  std::condition_variable _task100_199_con;
+
+  std::condition_variable _task100_19_futures_con;
+
+  std::deque<IfAlgorhmitmsg::UniquePtr> _task100_199;
+
   /**
    * @brief Mutex to protect result queue.
    *
@@ -191,11 +216,19 @@ private:
    */
   std::deque<std::future<PointCloud2::UniquePtr>> _futures;
 
+  std::deque<std::future<IfAlgorhmitmsg::UniquePtr>> _task100_199_futures;
+
   /**
    * @brief Threads for workers and the manager.
    *
    */
   std::vector<std::thread> _threads;
+
+  std::vector<std::thread> _task100_199_threads;
+
+  PointCloud2::UniquePtr execute(PointCloud2::UniquePtr ptr, const Params & pm);
+
+  IfAlgorhmitmsg::UniquePtr _task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm);
 };
 
 }  // namespace line_center_reconstruction

@@ -61,7 +61,7 @@ namespace modbus
 #define ALS100_SEARCHDECTANCEMAX_REG_ADD       0x0013
 #define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
 
-#define ALS_SHOW_STEP_REG_ADD                  0x0190
+#define ALS_SHOW_STEP_REG_ADD                  0x018f
 
 
 /**

@@ -171,6 +171,8 @@ private:
 
   void _worker();
 
+  void _manager();
+
   std::vector<std::thread> _threads;
 
   OnSetParametersCallbackHandle::SharedPtr _handle;
