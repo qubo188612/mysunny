@@ -38,6 +38,8 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
+  _pub_msg = this->create_publisher<IfAlgorhmitmsg>(_pub_msg_name, rclcpp::SensorDataQoS());
+
   _workers = workers(options);
   for (int i = 0; i < _workers; ++i) {
     _threads.push_back(std::thread(&LaserImagePos::_worker, this));
@@ -57,19 +59,19 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
       SetParametersResult result;
       result.successful = true;
       for (const auto & p : vp) {
-        if (p.get_name() == "als100_threshold") {
+        if (p.get_name() == "als100_exposure_time") {
           auto k = p.as_int();
           if (k <20 || k>65535) {
             result.successful = false;
-            result.reason = "Failed to set als100_threshold";
+            result.reason = "Failed to set als100_exposure_time";
             return result;
           }
           else
           {
-            pm.als100_threshold=k;
+            pm.als100_exposure_time=k;
             if(pm.task_num>=100&&pm.task_num<200)
             {
-              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_threshold)});
+              _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_exposure_time)});
             }
           }
         }
@@ -104,7 +106,7 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
               switch(pm.task_num)
               {
                 case 100:
-                  _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_threshold)});
+                  _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_exposure_time)});
                 break;
                 defatult:
                 break;
@@ -133,6 +135,7 @@ LaserImagePos::~LaserImagePos()
       t.join();
     }
     _pub.reset();
+    _pub_msg.reset();
 
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -144,7 +147,7 @@ LaserImagePos::~LaserImagePos()
 
 void LaserImagePos::_declare_parameters()
 {
-  this->declare_parameter("als100_threshold", pm.als100_threshold);
+  this->declare_parameter("als100_exposure_time", pm.als100_exposure_time);
   this->declare_parameter("task_num", pm.task_num);
 //this->declare_parameter("rember_exposure_time",1000);
 }
@@ -153,8 +156,8 @@ Params LaserImagePos::_update_parameters()
 {
   const auto & vp = this->get_parameters(KEYS);
   for (const auto & p : vp) {
-    if (p.get_name() == "als100_threshold") {
-      pm.als100_threshold = p.as_int();
+    if (p.get_name() == "als100_exposure_time") {
+      pm.als100_exposure_time = p.as_int();
     } else if (p.get_name() == "task_num") {
       pm.task_num = p.as_int();
     }

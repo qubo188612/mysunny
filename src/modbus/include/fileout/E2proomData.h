@@ -22,9 +22,9 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              20
 #define E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_DLG.bsd"
 
-#define E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_MIN				0         //显示模式最小值
-#define E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_USE				120       //显示模式默认值   
-#define E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_MAX				255       //显示模式最大值
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_USE				1000       //曝光默认值   
+#define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
 
 class E2proomData
 {
@@ -44,14 +44,14 @@ public:
     Uint16 robot_port_use;      //机器人端口默认值
 /****************************/
     //任务100参数
-    Int16 als100_threshold;  //显示模式
+    Int16 als100_exposure_time;  //曝光模式
 
     void write_als100_para();				//保存任务100参数
     void init_als100_para();				//初始化任务100参数
     //默认参数
-    Int16 als100_threshold_min;    //显示模式最小值
-    Int16 als100_threshold_max;    //显示模式最大值
-    Int16 als100_threshold_use;    //显示模式默认值
+    Int16 als100_exposure_time_min;    //曝光最小值
+    Int16 als100_exposure_time_max;    //曝光最大值
+    Int16 als100_exposure_time_use;    //曝光默认值
 
 
 /****************************/

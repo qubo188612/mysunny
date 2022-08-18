@@ -15,9 +15,9 @@ E2proomData::E2proomData()
     robot_port_min=E2POOM_ROBOT_PORT_MIN;
     robot_port_max=E2POOM_ROBOT_PORT_MAX;
     robot_port_use=E2POOM_ROBOT_PORT_USE;
-    als100_threshold_min=E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_MIN;
-    als100_threshold_max=E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_MAX;
-    als100_threshold_use=E2POOM_ALG100_LASERIMAGEPOS_THRESHOLD_USE;
+    als100_exposure_time_min=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN;
+    als100_exposure_time_max=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MAX;
+    als100_exposure_time_use=E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_USE;
 
     read_para();
 }
@@ -38,8 +38,8 @@ void E2proomData::check_para()
 
     if(robot_port<robot_port_min||robot_port>robot_port_max)
         robot_port=robot_port_use;
-    if(als100_threshold<als100_threshold_min||als100_threshold>als100_threshold_max)
-        als100_threshold=als100_threshold_use;
+    if(als100_exposure_time<als100_exposure_time_min||als100_exposure_time>als100_exposure_time_max)
+        als100_exposure_time=als100_exposure_time_use;
 }
 
 void E2proomData::read_para()
@@ -92,7 +92,7 @@ void E2proomData::read_para()
       Int16 *i16_p;
 
       i16_p = (Int16*)buff;
-      als100_threshold=*i16_p;
+      als100_exposure_time=*i16_p;
       i16_p++;
     }
     if(buff!=NULL)
@@ -118,7 +118,7 @@ void E2proomData::write_als100_para()
     Int16 *i16_p;
 
     i16_p = (Int16*)buff;
-    *i16_p=als100_threshold;
+    *i16_p=als100_exposure_time;
     i16_p++;
 
 
@@ -133,7 +133,7 @@ void E2proomData::write_als100_para()
 
 void E2proomData::init_als100_para()
 {
-    als100_threshold=als100_threshold_use;
+    als100_exposure_time=als100_exposure_time_use;
 }
 
 void E2proomData::write_robot_para()

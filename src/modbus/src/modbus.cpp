@@ -87,7 +87,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     return;
   }
 
-  parameterport_mapping->tab_registers[ALS100_THRESHOLD_REG_ADD]=e2proomdata.als100_threshold;
+  parameterport_mapping->tab_registers[ALS100_EXPOSURE_TIME_REG_ADD]=e2proomdata.als100_exposure_time;
   
   static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
@@ -214,9 +214,9 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
 {
   switch(ddr)
   {
-    case ALS100_THRESHOLD_REG_ADD:
-      e2proomdata.als100_threshold=num;
-      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_threshold", (int16_t)num)});
+    case ALS100_EXPOSURE_TIME_REG_ADD:
+      e2proomdata.als100_exposure_time=num;
+      _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_exposure_time", (int16_t)num)});
     break;
     default:
     break;

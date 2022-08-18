@@ -8,7 +8,7 @@
 #if USE_XIMGPROC == 1
 #include "opencv2/ximgproc.hpp"
 #endif
-#include "tistdtypes.h"
+#include "myhalcv2/tistdtypes.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -160,6 +160,13 @@ namespace Myhalcv2
         CV_CLRCLE_FILL=-1,	//实心圆
         CV_CLRCLE_UNFILL=1	//空心圆
     }circletype;
+
+    //虚线模式
+    typedef enum DOTTEDTYPE
+    {
+        CV_DOTTEDLINE_LINE,     //直线虚线
+        CV_DOTTEDLINE_POINT 	//点虚线
+    }dottedtype;
 
     //高斯算子窗口大小
     typedef enum GAUSS_WIN
@@ -634,7 +641,8 @@ namespace Myhalcv2
         MHC_LINE_SQARE,			//线性拟合
         MHC_VAR_SQARE,			//二乘拟合
         MHC_HEADTAIL_SQARE,		//首尾拟合
-        MHC_HOUGH_SQARE			//霍夫拟合
+        MHC_HOUGH_SQARE,		//霍夫拟合
+        MHC_MIXDIS_SQARE        //最小距离拟合
     }sqaretype;
 
     //排序连通模式
@@ -1786,6 +1794,29 @@ namespace Myhalcv2
                     Int32 color3,				//通道3直线颜色
                     linetype connectivity,		//直线连通模式
                     Int32 thickness);			//直线粗细
+
+    //两点法画虚线
+    Int8 MyDottedLine(Mat *matIn_Out,           //输入/输出矩阵,支持CV_8UC1,CV_8UC3类型
+                      L_Point32 st,				//虚线起点
+                      L_Point32 ed,				//虚线终点
+                      Int32 color,				//虚线颜色,CV_8UC3类型时3通道值均为color
+                      Int32 dis,                //虚间隔距离
+                      dottedtype Mod,           //虚线模式
+                      linetype connectivity,    //虚线连通模式
+                      Int32 thickness);			//虚线粗细
+
+    //两点法画虚线
+    Int8 MyDottedLine3col(Mat *matIn_Out,           //输入/输出矩阵,支持CV_8UC1,CV_8UC3类型
+                          L_Point32 st,				//虚线起点
+                          L_Point32 ed,				//虚线终点
+                          Int32 color1,				//通道1虚线颜色,CV_8UC1类型时为color1,color2,color3色取平均
+                          Int32 color2,				//通道2虚线颜色
+                          Int32 color3,				//通道3虚线颜色
+                          Int32 dis,                //虚间隔距离
+                          dottedtype Mod,           //虚线模式
+                          linetype connectivity,    //虚线连通模式
+                          Int32 thickness);			//虚线粗细
+
 
     //圆心半径法画圆(如果要画粗线圆,请使用椭圆函数)
     Int8 MyCircle(Mat *matIn_Out,			//输入/输出矩阵,支持CV_8UC1,CV_8UC3类型

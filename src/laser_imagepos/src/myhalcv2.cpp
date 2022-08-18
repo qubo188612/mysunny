@@ -3351,6 +3351,311 @@ namespace Myhalcv2
         return returnnum;
     }
 
+    Int8 MyDottedLine(Mat *matIn_Out,L_Point32 st,L_Point32 ed,Int32 color,	Int32 dis, dottedtype Mod,linetype connectivity,Int32 thickness)
+    {
+        switch (Mod)
+        {
+            case CV_DOTTEDLINE_LINE:
+            {
+                float n = dis; //线长度
+                float w = ed.x - st.x, h = ed.y - st.y;
+                float l = sqrtf(w * w + h * h);
+                // 矫正线长度，使线个数为奇数
+                int m = l / n;
+                RotatedRect boxst,boxed;
+
+                m = m % 2 ? m : m + 1;
+                n = l / m;
+                boxst.angle=0;
+                boxst.center.x=st.x;
+                boxst.center.y=st.y;
+                boxst.size.width=1;
+                boxst.size.height=1;
+                boxed.angle=0;
+                boxed.center.x=ed.x;
+                boxed.center.y=ed.y;
+                boxed.size.width=1;
+                boxed.size.height=1;
+
+                MyEllipse(matIn_Out, boxst, color,connectivity, thickness);
+                MyEllipse(matIn_Out, boxed, color,connectivity, thickness);
+
+                if (st.y == ed.y) //水平线：y = m
+                {
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x,n1;
+                    L_Point32 m_st,m_ed;
+                    for (x = x1, n1 = 2 * n; x < x2; x = x + n1)
+                    {
+                        m_st.x=x+0.5;
+                        m_st.y=st.y;
+                        m_ed.x=x+n+0.5;
+                        m_ed.y=st.y;
+                        MyLine(matIn_Out,m_st,m_ed,color,connectivity,thickness);
+                    }
+                }
+                else if (st.x == ed.x) //垂直线, x = m
+                {
+                    float y1 = MIN(st.y, ed.y);
+                    float y2 = MAX(st.y, ed.y);
+                    float y,n1;
+                    L_Point32 m_st,m_ed;
+                    for (y = y1, n1 = 2 * n; y < y2; y = y + n1)
+                    {
+                        m_st.x=st.x;
+                        m_st.y=y+0.5;
+                        m_ed.x=st.x;
+                        m_ed.y=y+n+0.5;
+                        MyLine(matIn_Out,m_st,m_ed,color,connectivity,thickness);
+                    }
+                }
+                else // 倾斜线，与x轴、y轴都不垂直或平行
+                {
+                    // 直线方程的两点式：(y-y1)/(y2-y1)=(x-x1)/(x2-x1) -> y = (y2-y1)*(x-x1)/(x2-x1)+y1
+                    float n1 = n * abs(w) / l;
+                    float k = h / w;
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x,n2;
+                    L_Point32 m_st,m_ed;
+                    for (x = x1, n2 = 2 * n1; x < x2; x = x + n2)
+                    {
+                        m_st.x=x+0.5;
+                        m_st.y=k * (x - st.x) + st.y + 0.5;
+                        m_ed.x=x + n1 +0.5;
+                        m_ed.y=k * (x + n1 - st.x) + st.y+0.5;
+                        MyLine(matIn_Out,m_st,m_ed,color,connectivity,thickness);
+                    }
+                }
+            }
+            break;
+            case CV_DOTTEDLINE_POINT:
+            {
+                float n = dis;
+                float w = ed.x - st.x, h = ed.y - st.y;
+                float l = sqrtf(w * w + h * h);
+                int m = l / n;
+                RotatedRect boxst,boxed;
+                RotatedRect box;
+
+                n = l / m;
+                boxst.angle=0;
+                boxst.center.x=st.x;
+                boxst.center.y=st.y;
+                boxst.size.width=1;
+                boxst.size.height=1;
+                boxed.angle=0;
+                boxed.center.x=ed.x;
+                boxed.center.y=ed.y;
+                boxed.size.width=1;
+                boxed.size.height=1;
+                box.angle=0;
+                box.size.width=1;
+                box.size.height=1;
+                MyEllipse(matIn_Out, boxst, color,connectivity, thickness);
+                MyEllipse(matIn_Out, boxed, color,connectivity, thickness);
+
+                if (st.y == ed.y)
+                {
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x;
+                    for (x = x1 + n; x < x2; x = x + n)
+                    {
+                        box.center.x=x;
+                        box.center.y=st.y;
+                        MyEllipse(matIn_Out, box, color, connectivity,thickness);
+                    }
+                }
+                else if (st.x == ed.x)
+                {
+                    float y1 = MIN(st.y, ed.y);
+                    float y2 = MAX(st.y, ed.y);
+                    float y;
+                    for (y = y1 + n; y < y2; y = y + n)
+                    {
+                        box.center.x=st.x;
+                        box.center.y=y;
+                        MyEllipse(matIn_Out, box, color, connectivity,thickness);
+                    }
+                }
+                else // 倾斜线，与x轴、y轴都不垂直或平行
+                {
+                    // 直线方程的两点式：(y-y1)/(y2-y1)=(x-x1)/(x2-x1) -> y = (y2-y1)*(x-x1)/(x2-x1)+y1
+                    float m = n * abs(w) / l;
+                    float k = h / w;
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x;
+                    for (x = x1 + m; x < x2; x = x + m)
+                    {
+                        box.center.x=x;
+                        box.center.y=k * (x - st.x) + st.y;
+                        MyEllipse(matIn_Out, box, color, connectivity,thickness);
+                    }
+                }
+            }
+            break;
+            default:
+                return 1;
+            break;
+        }
+        return 0;
+    }
+
+    Int8 MyDottedLine3col(Mat *matIn_Out,L_Point32 st,L_Point32 ed,Int32 color1,Int32 color2,Int32 color3,Int32 dis, dottedtype Mod,linetype connectivity,Int32 thickness)
+    {
+        switch (Mod)
+        {
+            case CV_DOTTEDLINE_LINE:
+            {
+                float n = dis; //线长度
+                float w = ed.x - st.x, h = ed.y - st.y;
+                float l = sqrtf(w * w + h * h);
+                // 矫正线长度，使线个数为奇数
+                int m = l / n;
+                RotatedRect boxst,boxed;
+
+                m = m % 2 ? m : m + 1;
+                n = l / m;
+                boxst.angle=0;
+                boxst.center.x=st.x;
+                boxst.center.y=st.y;
+                boxst.size.width=1;
+                boxst.size.height=1;
+                boxed.angle=0;
+                boxed.center.x=ed.x;
+                boxed.center.y=ed.y;
+                boxed.size.width=1;
+                boxed.size.height=1;
+
+                MyEllipse3col(matIn_Out, boxst, color1,color2,color3,connectivity, thickness);
+                MyEllipse3col(matIn_Out, boxed, color1,color2,color3,connectivity, thickness);
+
+                if (st.y == ed.y) //水平线：y = m
+                {
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x,n1;
+                    L_Point32 m_st,m_ed;
+                    for (x = x1, n1 = 2 * n; x < x2; x = x + n1)
+                    {
+                        m_st.x=x+0.5;
+                        m_st.y=st.y;
+                        m_ed.x=x+n+0.5;
+                        m_ed.y=st.y;
+                        MyLine3col(matIn_Out,m_st,m_ed,color1,color2,color3,connectivity,thickness);
+                    }
+                }
+                else if (st.x == ed.x) //垂直线, x = m
+                {
+                    float y1 = MIN(st.y, ed.y);
+                    float y2 = MAX(st.y, ed.y);
+                    float y,n1;
+                    L_Point32 m_st,m_ed;
+                    for (y = y1, n1 = 2 * n; y < y2; y = y + n1)
+                    {
+                        m_st.x=st.x;
+                        m_st.y=y+0.5;
+                        m_ed.x=st.x;
+                        m_ed.y=y+n+0.5;
+                        MyLine3col(matIn_Out,m_st,m_ed,color1,color2,color3,connectivity,thickness);
+                    }
+                }
+                else // 倾斜线，与x轴、y轴都不垂直或平行
+                {
+                    // 直线方程的两点式：(y-y1)/(y2-y1)=(x-x1)/(x2-x1) -> y = (y2-y1)*(x-x1)/(x2-x1)+y1
+                    float n1 = n * abs(w) / l;
+                    float k = h / w;
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x,n2;
+                    L_Point32 m_st,m_ed;
+                    for (x = x1, n2 = 2 * n1; x < x2; x = x + n2)
+                    {
+                        m_st.x=x+0.5;
+                        m_st.y=k * (x - st.x) + st.y + 0.5;
+                        m_ed.x=x + n1 +0.5;
+                        m_ed.y=k * (x + n1 - st.x) + st.y+0.5;
+                        MyLine3col(matIn_Out,m_st,m_ed,color1,color2,color3,connectivity,thickness);
+                    }
+                }
+            }
+            break;
+            case CV_DOTTEDLINE_POINT:
+            {
+                float n = dis;
+                float w = ed.x - st.x, h = ed.y - st.y;
+                float l = sqrtf(w * w + h * h);
+                int m = l / n;
+                RotatedRect boxst,boxed;
+                RotatedRect box;
+
+                n = l / m;
+                boxst.angle=0;
+                boxst.center.x=st.x;
+                boxst.center.y=st.y;
+                boxst.size.width=1;
+                boxst.size.height=1;
+                boxed.angle=0;
+                boxed.center.x=ed.x;
+                boxed.center.y=ed.y;
+                boxed.size.width=1;
+                boxed.size.height=1;
+                box.angle=0;
+                box.size.width=1;
+                box.size.height=1;
+                MyEllipse3col(matIn_Out, boxst, color1,color2,color3,connectivity, thickness);
+                MyEllipse3col(matIn_Out, boxed, color1,color2,color3,connectivity, thickness);
+
+                if (st.y == ed.y)
+                {
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x;
+                    for (x = x1 + n; x < x2; x = x + n)
+                    {
+                        box.center.x=x;
+                        box.center.y=st.y;
+                        MyEllipse3col(matIn_Out, box, color1,color2,color3, connectivity,thickness);
+                    }
+                }
+                else if (st.x == ed.x)
+                {
+                    float y1 = MIN(st.y, ed.y);
+                    float y2 = MAX(st.y, ed.y);
+                    float y;
+                    for (y = y1 + n; y < y2; y = y + n)
+                    {
+                        box.center.x=st.x;
+                        box.center.y=y;
+                        MyEllipse3col(matIn_Out, box, color1,color2,color3, connectivity,thickness);
+                    }
+                }
+                else
+                {
+                    float m = n * abs(w) / l;
+                    float k = h / w;
+                    float x1 = MIN(st.x, ed.x);
+                    float x2 = MAX(st.x, ed.x);
+                    float x;
+                    for (x = x1 + m; x < x2; x = x + m)
+                    {
+                        box.center.x=x;
+                        box.center.y=k * (x - st.x) + st.y;
+                        MyEllipse3col(matIn_Out, box, color1,color2,color3, connectivity,thickness);
+                    }
+                }
+            }
+            break;
+            default:
+                return 1;
+            break;
+        }
+        return 0;
+    }
+
     void sincos( Int32 angle, float *cosval, float *sinval)
     {
         angle += (angle < 0 ? 360 : 0);
@@ -21879,6 +22184,8 @@ namespace Myhalcv2
         Int32 headsumy=0,tailsumy=0;
         Int32 _1_4halfN;
         Mat Hough;
+        std::vector<cv::Point2f> points;
+        cv::Vec4f lines;
 
         switch(matIn._type)
         {
@@ -21901,6 +22208,19 @@ namespace Myhalcv2
                         }
                     break;
                     case MHC_HOUGH_SQARE:
+                    break;
+                    case MHC_MIXDIS_SQARE:
+                        for(j=nStartY;j<nStartY+nHeight;j++)
+                        {
+                            for(i=nStartX;i<nStartX+nWidth;i++)
+                            {
+                                if(matIn.data[j*nnWidth+i]!=0)
+                                {
+                                    cv::Point2f point(i,j);
+                                    points.push_back(point);
+                                }
+                            }
+                        }
                     break;
                     default:
                         return 1;
@@ -22087,6 +22407,28 @@ namespace Myhalcv2
                         *lineOut=linetemp.line[0];
                         *houghinfoOut=linetemp.houghinfo[0];
                     break;
+                    case MHC_MIXDIS_SQARE:
+                        if(points.size()==0)
+                            return 1;
+                        cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
+                        if(lines[0]!=0)
+                        {
+                            K[0]=lines[1]/lines[0];
+                            R[0]=-K[0]*lines[2]+lines[3];
+                            Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                            *lineOut=linetemp.line[0];
+                            *houghinfoOut=linetemp.houghinfo[0];
+                        }
+                        else
+                        {
+                            lineOut->st.x=lines[2];
+                            lineOut->st.y=0;
+                            lineOut->ed.x=lines[2];
+                            lineOut->ed.y=nnHeight-1;
+                            houghinfoOut->theta=MHC_TETARANGE/2;
+                            houghinfoOut->rho=draw_xyrho_to_houghrho(lines[2],nnWidth,nnHeight);
+                        }
+                    break;
                     default:
                         return 1;
                     break;
@@ -22125,6 +22467,8 @@ namespace Myhalcv2
         Int32 headsumy=0,tailsumy=0;
         Int32 _1_4halfN;
         Mat Hough;
+        std::vector<cv::Point2f> points;
+        cv::Vec4f lines;
 
         if(0!=judgeMaskSize(matIn,mask))//��Ĥ��ƥ��
             return 1;
@@ -22159,6 +22503,19 @@ namespace Myhalcv2
                                     pEdgeMapList[pEdgeMapListNum*2]=(Uint16)i;
                                     pEdgeMapList[pEdgeMapListNum*2+1]=(Uint16)j;
                                     pEdgeMapListNum++;
+                                }
+                            }
+                        }
+                    break;
+                    case MHC_MIXDIS_SQARE:
+                        for(j=nStartY;j<nStartY+nHeight;j++)
+                        {
+                            for(i=nStartX;i<nStartX+nWidth;i++)
+                            {
+                                if(matIn.data[j*nnWidth+i]!=0&&mask.data[j*nnWidth+i]!=0)
+                                {
+                                    cv::Point2f point(i,j);
+                                    points.push_back(point);
                                 }
                             }
                         }
@@ -22347,6 +22704,28 @@ namespace Myhalcv2
                         *lineOut=linetemp.line[0];
                         *houghinfoOut=linetemp.houghinfo[0];
                     break;
+                    case MHC_MIXDIS_SQARE:
+                        if(points.size()==0)
+                            return 1;
+                        cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
+                        if(lines[0]!=0)
+                        {
+                            K[0]=lines[1]/lines[0];
+                            R[0]=-K[0]*lines[2]+lines[3];
+                            Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                            *lineOut=linetemp.line[0];
+                            *houghinfoOut=linetemp.houghinfo[0];
+                        }
+                        else
+                        {
+                            lineOut->st.x=lines[2];
+                            lineOut->st.y=0;
+                            lineOut->ed.x=lines[2];
+                            lineOut->ed.y=nnHeight-1;
+                            houghinfoOut->theta=MHC_TETARANGE/2;
+                            houghinfoOut->rho=draw_xyrho_to_houghrho(lines[2],nnWidth,nnHeight);
+                        }
+                    break;
                     default:
                         return 1;
                     break;
@@ -22381,6 +22760,8 @@ namespace Myhalcv2
         Int32 headsumy=0,tailsumy=0;
         Int32 _1_4halfN;
         Mat Hough;
+        std::vector<cv::Point2f> points;
+        cv::Vec4f lines;
 
         switch(Mod)
         {
@@ -22406,6 +22787,16 @@ namespace Myhalcv2
                     }
                 }
                 pEdgeMapListNum=ImageConectIn->mianji;
+            break;
+            case MHC_MIXDIS_SQARE:
+                for(j=0;j<ImageConectIn->AllMarkPointCount;j++)
+                {
+                    for(i=0;i<ImageConectIn->AllMarkPoint[j].PointArea;i++)
+                    {
+                        cv::Point2f point(ImageConectIn->AllMarkPoint[j].point[i].x,ImageConectIn->AllMarkPoint[j].point[i].y);
+                        points.push_back(point);
+                    }
+                }   
             break;
             default:
                 return 1;
@@ -22591,6 +22982,28 @@ namespace Myhalcv2
                     return 1;
                 *lineOut=linetemp.line[0];
                 *houghinfoOut=linetemp.houghinfo[0];
+            break;
+            case MHC_MIXDIS_SQARE:
+                if(points.size()==0)
+                    return 1;
+                cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
+                if(lines[0]!=0)
+                {
+                    K[0]=lines[1]/lines[0];
+                    R[0]=-K[0]*lines[2]+lines[3];
+                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    *lineOut=linetemp.line[0];
+                    *houghinfoOut=linetemp.houghinfo[0];
+                }
+                else
+                {
+                    lineOut->st.x=lines[2];
+                    lineOut->st.y=0;
+                    lineOut->ed.x=lines[2];
+                    lineOut->ed.y=nnHeight-1;
+                    houghinfoOut->theta=MHC_TETARANGE/2;
+                    houghinfoOut->rho=draw_xyrho_to_houghrho(lines[2],nnWidth,nnHeight);
+                }
             break;
             default:
                 return 1;
@@ -22622,6 +23035,8 @@ namespace Myhalcv2
         Int32 headsumy=0,tailsumy=0;
         Int32 _1_4halfN;
         Mat Hough;
+        std::vector<cv::Point2f> points;
+        cv::Vec4f lines;
 
         switch(Mod)
         {
@@ -22647,6 +23062,16 @@ namespace Myhalcv2
                     }
                 }
                 pEdgeMapListNum=ImageConectIn->mianji;
+            break;
+            case MHC_MIXDIS_SQARE:
+                for(j=0;j<ImageConectIn->AllMarkPointCount;j++)
+                {
+                    for(i=0;i<ImageConectIn->AllMarkPoint[j].PointArea;i++)
+                    {
+                        cv::Point2f point(ImageConectIn->AllMarkPoint[j].point[i].x+movex,ImageConectIn->AllMarkPoint[j].point[i].y+movey);
+                        points.push_back(point);
+                    }
+                }   
             break;
             default:
                 return 1;
@@ -22834,6 +23259,28 @@ namespace Myhalcv2
                 *lineOut=linetemp.line[0];
                 *houghinfoOut=linetemp.houghinfo[0];
             break;
+            case MHC_MIXDIS_SQARE:
+                if(points.size()==0)
+                    return 1;
+                cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
+                if(lines[0]!=0)
+                {
+                    K[0]=lines[1]/lines[0];
+                    R[0]=-K[0]*lines[2]+lines[3];
+                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    *lineOut=linetemp.line[0];
+                    *houghinfoOut=linetemp.houghinfo[0];
+                }
+                else
+                {
+                    lineOut->st.x=lines[2];
+                    lineOut->st.y=0;
+                    lineOut->ed.x=lines[2];
+                    lineOut->ed.y=nnHeight-1;
+                    houghinfoOut->theta=MHC_TETARANGE/2;
+                    houghinfoOut->rho=draw_xyrho_to_houghrho(lines[2],nnWidth,nnHeight);
+                }
+            break;
             default:
                 return 1;
             break;
@@ -22864,6 +23311,8 @@ namespace Myhalcv2
         Int32 headsumy=0,tailsumy=0;
         Int32 _1_4halfN;
         Mat Hough;
+        std::vector<cv::Point2f> points;
+        cv::Vec4f lines;
 
         switch(Mod)
         {
@@ -22878,6 +23327,13 @@ namespace Myhalcv2
                     pEdgeMapList[i*2+1]=(Uint16)dataYIn[i];
                 }
                 pEdgeMapListNum=N;
+            break;
+            case MHC_MIXDIS_SQARE:
+                for(i=0;i<N;i++)
+                {
+                    cv::Point2f point(dataXIn[i],dataYIn[i]);
+                    points.push_back(point);
+                }
             break;
             default:
                 return 1;
@@ -23063,6 +23519,28 @@ namespace Myhalcv2
                     return 1;
                 *lineOut=linetemp.line[0];
                 *houghinfoOut=linetemp.houghinfo[0];
+            break;
+            case MHC_MIXDIS_SQARE:
+                if(points.size()==0)
+                    return 1;
+                cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
+                if(lines[0]!=0)
+                {
+                    K[0]=lines[1]/lines[0];
+                    R[0]=-K[0]*lines[2]+lines[3];
+                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    *lineOut=linetemp.line[0];
+                    *houghinfoOut=linetemp.houghinfo[0];
+                }
+                else
+                {
+                    lineOut->st.x=lines[2];
+                    lineOut->st.y=0;
+                    lineOut->ed.x=lines[2];
+                    lineOut->ed.y=nnHeight-1;
+                    houghinfoOut->theta=MHC_TETARANGE/2;
+                    houghinfoOut->rho=draw_xyrho_to_houghrho(lines[2],nnWidth,nnHeight);
+                }
             break;
             default:
                 return 1;
@@ -42277,6 +42755,7 @@ namespace Myhalcv2
                 case MHC_LINE_SQARE:
                 case MHC_VAR_SQARE:
                 case MHC_HEADTAIL_SQARE:
+                case MHC_MIXDIS_SQARE:
                     Mynormalize_rowXY_line32_INVlinePoint(matInBig,dataXIn,dataYIn,&datacount,l32_templine,lineInsize,value,bry_value,bry_mod,matInSmall,size_value);
                 break;
                 case MHC_HOUGH_SQARE:
@@ -42292,6 +42771,7 @@ namespace Myhalcv2
             case MHC_LINE_SQARE:
             case MHC_VAR_SQARE:
             case MHC_HEADTAIL_SQARE:
+            case MHC_MIXDIS_SQARE:
                 if(0!=MyData_sqare_line(dataXIn,dataYIn,datacount,matInBig.nWidth,matInBig.nHeight,Mod,lineOut,houghinfoOut))
                     return 1;
             break;
@@ -44372,6 +44852,7 @@ namespace Myhalcv2
                 case MHC_LINE_SQARE:
                 case MHC_VAR_SQARE:
                 case MHC_HEADTAIL_SQARE:
+                case MHC_MIXDIS_SQARE:
                     Mynormalize_lineXY_line32_INVlinePoint(matInBig,dataXIn,dataYIn,&datacount,l32_templine,lineInsize,value,bry_value,bry_mod,matInSmall,size_value);
                 break;
                 case MHC_HOUGH_SQARE:
@@ -44387,6 +44868,7 @@ namespace Myhalcv2
             case MHC_LINE_SQARE:
             case MHC_VAR_SQARE:
             case MHC_HEADTAIL_SQARE:
+            case MHC_MIXDIS_SQARE:
                 if(0!=MyData_sqare_line(dataXIn,dataYIn,datacount,matInBig.nWidth,matInBig.nHeight,Mod,lineOut,houghinfoOut))
                     return 1;
             break;

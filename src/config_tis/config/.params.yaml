@@ -14,7 +14,7 @@ laser_line_center_node:
     task_num: 0
 
 laser_imagepos_node:
-    als100_threshold: 150               # int
+    als100_exposure_time: 150               # int
     task_num:       0                 # int
  #  rember_exposure_time:       1000    # int
 

@@ -37,8 +37,8 @@ namespace modbus
 #define ROBOT_PORT_REG_ADD                0x0001
 
 
-#define PARAMETER_REGEDIST_NUM             400
-#define ALS100_THRESHOLD_REG_ADD           0x0000
+#define PARAMETER_REGEDIST_NUM                 400
+#define ALS100_EXPOSURE_TIME_REG_ADD           0x0000
 
 /**
  * @brief Modbus protocal wrapped from libmodbus-dev.

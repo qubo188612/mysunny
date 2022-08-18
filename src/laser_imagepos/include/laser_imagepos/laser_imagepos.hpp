@@ -8,14 +8,16 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 
 namespace laser_imagepos
 {
 
 using sensor_msgs::msg::Image;
 using sensor_msgs::msg::PointCloud2;
+using tutorial_interfaces::msg::IfAlgorhmitmsg;
 
-const std::vector<std::string> KEYS = {"als100_threshold","task_num"};
+const std::vector<std::string> KEYS = {"als100_exposure_time","task_num"};
 //const std::vector<std::string> KEYS2 = {"exposure_time"};
 
 /**
@@ -24,7 +26,7 @@ const std::vector<std::string> KEYS = {"als100_threshold","task_num"};
  */
 struct Params
 {
-  int als100_threshold = 120;
+  int als100_exposure_time = 120;
   int task_num = 0;
 };
 /*
@@ -77,7 +79,10 @@ private:
    * @brief Publisher name.
    *
    */
-  const char * _pub_name = "~/points";
+  const char * _pub_name = "~/lines";
+
+  const char * _pub_msg_name = "~/msg";
+
 
   /**
    * @brief Shared pointer to publisher.
@@ -85,6 +90,8 @@ private:
    */
   rclcpp::Publisher<PointCloud2>::SharedPtr _pub;
 
+
+  rclcpp::Publisher<IfAlgorhmitmsg>::SharedPtr _pub_msg;
   /**
    * @brief Subscription name.
    *
