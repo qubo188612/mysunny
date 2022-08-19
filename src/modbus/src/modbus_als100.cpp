@@ -119,6 +119,27 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_searchdectancemin", num)});
             return 1;
         break;
+        case ALS100_DIS_CENTER_ST_REG_ADD:
+            e2proomdata.als100_dis_center_st=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_dis_center_st", num)});
+            return 1;
+        break;
+        case ALS100_DIS_CENTER_ED_REG_ADD:
+            e2proomdata.als100_dis_center_ed=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als100_dis_center_ed", num)});
+            return 1;
+        break;
+
+
+        case ALS100_INIT_REG_ADD:
+            if(num==1)
+            {
+                e2proomdata.init_als100_para();
+                init_als100_parameter();
+                parameterport_mapping->tab_registers[ALS100_INIT_REG_ADD]=0;
+            }
+            return 1;
+  
         default:
         break;
     }
@@ -148,6 +169,8 @@ void Modbus::init_als100_parameter()
     parameterport_mapping->tab_registers[ALS100_ERZHISIZE2_REG_ADD]=e2proomdata.als100_erzhisize2;
     parameterport_mapping->tab_registers[ALS100_SEARCHDECTANCEMAX_REG_ADD]=e2proomdata.als100_searchdectancemax;
     parameterport_mapping->tab_registers[ALS100_SEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als100_searchdectancemin;
+    parameterport_mapping->tab_registers[ALS100_DIS_CENTER_ST_REG_ADD]=e2proomdata.als100_dis_center_st;
+    parameterport_mapping->tab_registers[ALS100_DIS_CENTER_ED_REG_ADD]=e2proomdata.als100_dis_center_ed;
 }
 
 }

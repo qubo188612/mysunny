@@ -172,6 +172,7 @@ void LaserImagePos::InitRunImage()
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像
                             std::vector <cv::Point2f> &pointcloud,   //输出激光轮廓
                             std::vector <cv::Point2f> &namepoint,
+                            bool &solderjoints,//是否焊点
                             int step)    //输出结果点信息
 {
   static int oldwidth=0,oldHeight=0;
@@ -225,7 +226,7 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
   switch(pm.task_num)
   {
     case 100:   //内角1算法
-      if(0!=alg100_runimage(imageIn,pointcloud,namepoint,step))
+      if(0!=alg100_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
         return 1;
     break;
     default:
@@ -262,8 +263,8 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
   auto result = std::make_unique<IfAlgorhmitmsg>();
   cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
   std::vector <cv::Point2f> pointcloud,resultpoint;
-
-  if(0!=RunImage(img,pointcloud,resultpoint,pm.show_step))
+  bool solderjoints;
+  if(0!=RunImage(img,pointcloud,resultpoint,solderjoints,pm.show_step))
   {
     result->result=false;
   }
@@ -296,6 +297,7 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     pointtarget.y=resultpoint[n].y;
     result->targetpointout.push_back(pointtarget);
   }
+  result->solderjoints=solderjoints;
   
   return result;
 }

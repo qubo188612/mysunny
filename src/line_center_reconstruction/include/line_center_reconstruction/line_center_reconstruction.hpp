@@ -18,6 +18,8 @@
 #include <deque>
 #include <string>
 #include <vector>
+#include <modbus.h>
+#include <unistd.h>
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -235,6 +237,15 @@ private:
   PointCloud2::UniquePtr execute(PointCloud2::UniquePtr ptr, const Params & pm);
 
   IfAlgorhmitcloud::UniquePtr _task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm);
+
+  //modbus sock
+  modbus_t * ctx;
+
+  std::thread _thread;
+
+  void _modbus(int port);
+  bool b_modbusconnect;
+
 };
 
 }  // namespace line_center_reconstruction

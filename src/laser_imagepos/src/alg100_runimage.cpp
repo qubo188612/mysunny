@@ -29,6 +29,8 @@ void LaserImagePos::alg100_declare_parameters()
     this->declare_parameter("als100_erzhisize2", pm.als100_erzhisize2);
     this->declare_parameter("als100_searchdectancemax", pm.als100_searchdectancemax);
     this->declare_parameter("als100_searchdectancemin", pm.als100_searchdectancemin);
+    this->declare_parameter("als100_dis_center_st", pm.als100_dis_center_st);
+    this->declare_parameter("als100_dis_center_ed", pm.als100_dis_center_ed);
 }
 
 void LaserImagePos::alg100_update_parameters()
@@ -96,6 +98,12 @@ void LaserImagePos::alg100_update_parameters()
     }
     else if (p.get_name() == "als100_searchdectancemin") {
       pm.als100_searchdectancemin = p.as_int();
+    }
+    else if (p.get_name() == "als100_dis_center_st") {
+      pm.als100_dis_center_st = p.as_int();
+    }
+    else if (p.get_name() == "als100_dis_center_ed") {
+      pm.als100_dis_center_ed = p.as_int();
     }
   }
 }
@@ -223,7 +231,19 @@ int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
         if (k < 1 || k > 500) {
             return -1;}
         else{pm.als100_searchdectancemin=p.as_int();
-            return 1;}}        
+            return 1;}}  
+    else if(p.get_name() == "als100_dis_center_st") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als100_dis_center_st=p.as_int();
+            return 1;}}   
+    else if(p.get_name() == "als100_dis_center_ed") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als100_dis_center_ed=p.as_int();
+            return 1;}}     
 
     return 0;
 }
@@ -231,6 +251,7 @@ int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
 int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
                                     std::vector <cv::Point2f> &pointcloud,
                                     std::vector <cv::Point2f> &namepoint,
+                                    bool &solderjoints,
                                     int step)    //输出结果点信息
 {
     Int32 i,j;
@@ -300,6 +321,8 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 erzhisize2=pm.als100_erzhisize2;//60;//断线二值图的左右阈值尺寸
     Int32 searchdectancemax=pm.als100_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
     Int32 searchdectancemin=pm.als100_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
+    Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
 
 
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
@@ -637,6 +660,20 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             return 1;
         }
     }
+    /************************************/
+        //人工辅助限制
+    stepfindED.y=MIN(stepfindED.y,minj-dis_center_st);
+    if(stepfindED.y<(Int32)X_Linestarty+6)
+        stepfindED.y=X_Linestarty+6;
+    stepfindED.x=X_line[stepfindED.y]>>1;
+    stepfindST.y=MAX(stepfindST.y,minj-dis_center_ed);
+    stepfindST.x=X_line[stepfindST.y]>>1;
+    if(stepfindED.y-stepfindST.y<Uplong)
+    {
+        return 1;
+    }
+    /**************************************/
+
     linedistance1=sqrt((double)(stepfindED.x-stepfindST.x)*(stepfindED.x-stepfindST.x)+(stepfindED.y-stepfindST.y)*(stepfindED.y-stepfindST.y));
     if(linedistance1<Uplong)//线太短寻找失败了
     {
@@ -711,6 +748,21 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             return 1;
         }
     }
+
+    /************************************/
+    //人工辅助限制
+    midfindST.y=MAX(midfindST.y,minj+dis_center_st);
+    if(midfindST.y>(Int32)(X_Lineendy-6))
+        midfindST.y=X_Lineendy-6;
+    midfindST.x=X_line[midfindST.y]>>1;
+    midfindED.y=MIN(midfindED.y,minj+dis_center_ed);
+    midfindED.x=X_line[midfindED.y]>>1;
+    if(midfindED.y-midfindST.y<Downdlong)
+    {
+        return 1;
+    }
+    /**************************************/
+
     linedistance2=sqrt((double)(midfindED.x-midfindST.x)*(midfindED.x-midfindST.x)+(midfindED.y-midfindST.y)*(midfindED.y-midfindST.y));
     if(linedistance2<Downdlong)//线太短寻找失败了
     {
@@ -750,6 +802,10 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
       Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
       Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
       Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+      Myhalcv2::MyCircle(&imageGasupain,stepfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
+      Myhalcv2::MyCircle(&imageGasupain,stepfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
+      Myhalcv2::MyCircle(&imageGasupain,midfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
+      Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
       Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
       return 0;
     }
@@ -1228,6 +1284,14 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     if(imageGasu.data[temp_resultfocal1.y*imageGasu.nWidth+temp_resultfocal1.x]!=imageGasu.data[temp_resultfocal2.y*imageGasu.nWidth+temp_resultfocal2.x])
     {
         handianEn=0;	//不是焊点
+    }
+    if(handianEn==0)
+    {
+        solderjoints=false;
+    }
+    else
+    {
+        solderjoints=true;
     }
     Myline16to32(tileline,&tileline32);
     Myline16to32(headline,&headline32);

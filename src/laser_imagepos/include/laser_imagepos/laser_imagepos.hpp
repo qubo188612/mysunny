@@ -40,7 +40,9 @@ const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_erzhisize",
                                               "als100_erzhisize2",
                                               "als100_searchdectancemax",
-                                              "als100_searchdectancemin"};
+                                              "als100_searchdectancemin",
+                                              "als100_dis_center_st",
+                                              "als100_dis_center_ed"};
 
 /**
  * @brief To zip related parameters together.
@@ -71,6 +73,8 @@ struct Params
   int als100_erzhisize2=60;//断线二值图的左右阈值尺寸
   int als100_searchdectancemax=160;//搜寻焊缝端点距离中央凹槽最远的距离
   int als100_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
+  int als100_dis_center_st=0;//距离中心点此处后开始统计
+  int als100_dis_center_ed=500;  //距离中心点此处后停止统计
 /************************************/
   int task_num = 0;
   int show_step = 0;      
@@ -201,7 +205,11 @@ private:
 
   void InitRunImage();//初始化算法
   //返回值1检测失败，0检测成功
-  int RunImage(cv::Mat &imageIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint,int step);   //输出结果点信息
+  int RunImage(cv::Mat &imageIn,
+               std::vector <cv::Point2f> &pointcloud,
+               std::vector <cv::Point2f> &namepoint,
+               bool &solderjoints,//是否焊点
+               int step);   //输出结果点信息
 
   char *cv8uc1_Imagebuff_image;
   char *cv8uc1_Imagebuff1;
@@ -221,7 +229,10 @@ private:
   Int32 firstsearch;
   Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
 
-  int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,std::vector <cv::Point2f> &namepoint,int step);
+  int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
+                      std::vector <cv::Point2f> &namepoint,
+                      bool &solderjoints,//是否焊点
+                      int step);
 };
 
 }

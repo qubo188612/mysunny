@@ -60,8 +60,12 @@ namespace modbus
 #define ALS100_ERZHISIZE2_REG_ADD              0x0012
 #define ALS100_SEARCHDECTANCEMAX_REG_ADD       0x0013
 #define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
+#define ALS100_DIS_CENTER_ST_REG_ADD           0x0015
+#define ALS100_DIS_CENTER_ED_REG_ADD           0x0016
+#define ALS100_INIT_REG_ADD                    0x001f
 
 #define ALS_SHOW_STEP_REG_ADD                  0x018f
+
 
 
 /**

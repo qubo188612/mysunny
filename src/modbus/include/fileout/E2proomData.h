@@ -19,7 +19,7 @@
 
 
 //算法100参数
-#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              50
+#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              54
 #define E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_DLG.bsd"
 
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -85,6 +85,12 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_MIN           1
 #define E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_USE           25
 #define E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_MAX           500
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_MIN               0
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_USE               0
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_MAX               500
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_USE               500
+#define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 class E2proomData
 {
@@ -126,6 +132,8 @@ public:
     Int16 als100_erzhisize2;//断线二值图的左右阈值尺寸
     Int16 als100_searchdectancemax;//搜寻焊缝端点距离中央凹槽最远的距离
     Int16 als100_searchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离
+    Int16 als100_dis_center_st;//距离中心点此处后开始统计
+    Int16 als100_dis_center_ed;//距离中心点此处后停止统计
       
 
     void write_als100_para();				//保存任务100参数
@@ -194,6 +202,12 @@ public:
     Int16 als100_searchdectancemin_min;
     Int16 als100_searchdectancemin_max;
     Int16 als100_searchdectancemin_use;
+    Int16 als100_dis_center_st_min;
+    Int16 als100_dis_center_st_max;
+    Int16 als100_dis_center_st_use;
+    Int16 als100_dis_center_ed_min;
+    Int16 als100_dis_center_ed_max;
+    Int16 als100_dis_center_ed_use;
 
 
 /****************************/

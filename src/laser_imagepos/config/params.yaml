@@ -1,9 +1,9 @@
 laser_imagepos_node:
   ros__parameters:
-    als100_exposure_time: 150               # int
-    als100_pingjun:       15
-    als100_b_yanmofuzhu:  1
-    als100_b_gudingquyu:  0
+    als100_exposure_time:     1000               # int
+    als100_pingjun:           15
+    als100_b_yanmofuzhu:      1
+    als100_b_gudingquyu:      0
     als100_widthliantongdis:  2
     als100_highliantongdis:   15
     als100_gujiaerzhi:        160
@@ -21,6 +21,8 @@ laser_imagepos_node:
     als100_erzhisize2:        60
     als100_searchdectancemax: 160
     als100_searchdectancemin: 25
+    als100_dis_center_st:     0
+    als100_dis_center_ed:     500
 
     task_num:       0                 # int
     show_step:      0

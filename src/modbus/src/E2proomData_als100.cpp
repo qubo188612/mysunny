@@ -69,6 +69,12 @@ void E2proomData::Init_als100_E2proomData()
     als100_searchdectancemin_min=E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_MIN;
     als100_searchdectancemin_use=E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_USE;
     als100_searchdectancemin_max=E2POOM_ALG100_LASERIMAGEPOS_SEARCHDECTANCEMIN_MAX;
+    als100_dis_center_st_min=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_MIN;
+    als100_dis_center_st_use=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_USE;
+    als100_dis_center_st_max=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ST_MAX;
+    als100_dis_center_ed_min=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MIN;
+    als100_dis_center_ed_use=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_USE;
+    als100_dis_center_ed_max=E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MAX;
 }
 
 void E2proomData::als100_check_para()
@@ -115,6 +121,10 @@ void E2proomData::als100_check_para()
         als100_searchdectancemax=als100_searchdectancemax_use;
     if(als100_searchdectancemin<als100_searchdectancemin_min||als100_searchdectancemin>als100_searchdectancemin_max)
         als100_searchdectancemin=als100_searchdectancemin_use;
+    if(als100_dis_center_st<als100_dis_center_st_min||als100_dis_center_st>als100_dis_center_st_max)
+        als100_dis_center_st=als100_dis_center_st_use;
+    if(als100_dis_center_ed<als100_dis_center_ed_min||als100_dis_center_ed>als100_dis_center_ed_max)
+        als100_dis_center_ed=als100_dis_center_ed_use;
 }
 
 void E2proomData::als100_read_para()
@@ -183,6 +193,10 @@ void E2proomData::als100_read_para()
       i16_p++;
       als100_searchdectancemin=*i16_p;
       i16_p++;
+      als100_dis_center_st=*i16_p;
+      i16_p++;
+      als100_dis_center_ed=*i16_p;
+      i16_p++;
 
     }
     if(buff!=NULL)
@@ -250,6 +264,11 @@ void E2proomData::write_als100_para()
     i16_p++;
     *i16_p=als100_searchdectancemin;
     i16_p++;
+    *i16_p=als100_dis_center_st;
+    i16_p++;
+    *i16_p=als100_dis_center_ed;
+    i16_p++;
+
 
     fo.WriteFile(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF);
 
@@ -283,4 +302,6 @@ void E2proomData::init_als100_para()
     als100_erzhisize2=als100_erzhisize2_use;
     als100_searchdectancemax=als100_searchdectancemax_use;
     als100_searchdectancemin=als100_searchdectancemin_use;
+    als100_dis_center_st=als100_dis_center_st_use;
+    als100_dis_center_ed=als100_dis_center_ed_use;
 }

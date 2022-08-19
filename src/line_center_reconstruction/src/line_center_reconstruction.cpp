@@ -148,6 +148,14 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
    {
       auto msg = std::make_unique<IfAlgorhmitcloud>();
       msg->header = ptr->imageout.header;
+
+      if(b_modbusconnect==true)
+      {
+        u_int16_t tab_reg[1];
+        tab_reg[0]=0;
+        int rc=modbus_write_registers(ctx,0x02,1,tab_reg);
+      }
+
       return msg;
    }
 
@@ -184,7 +192,54 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     pointtarget.name=ptr->targetpointout[i].name;
     msg->targetpointoutcloud.push_back(pointtarget);
   }
+  msg->solderjoints = ptr->solderjoints;
   msg->header = ptr->imageout.header;
+
+
+  if(b_modbusconnect==true)
+  {
+    u_int16_t tab_reg[3];
+    tab_reg[0]=0xff;
+    tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
+    tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
+    int rc=modbus_write_registers(ctx,0x02,3,tab_reg);
+    if(rc!=3)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error");
+    }
+
+    if(msg->targetpointoutcloud.size()>1)
+    {
+      int num=msg->targetpointoutcloud.size();
+      auto othertab_reg=new u_int16_t [(num-1)*2];
+      for(int i=1;i<num;i++)
+      {
+        othertab_reg[(i-1)*2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].x*100+0.5));
+        othertab_reg[(i-1)*2+1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].y*100+0.5));
+      }
+      int rc=modbus_write_registers(ctx,0x50,2*(num-1),othertab_reg);
+      if(rc!=2*(num-1))
+      {
+        RCLCPP_ERROR(this->get_logger(), "modbus send result error");
+      }
+      delete othertab_reg;
+    }
+
+    if(msg->solderjoints==true)
+    {
+      tab_reg[0]=0xff;
+    }
+    else
+    {
+      tab_reg[0]=0;
+    }
+    rc=modbus_write_registers(ctx,0x60,1,tab_reg);
+    if(rc!=1)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error");
+    }
+  }
+
   return msg;
 }
 
@@ -235,7 +290,6 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
     }
   );
 
-  
   _sub_task100_199 = this->create_subscription<IfAlgorhmitmsg>(
     _sub_task100_199_name,
     rclcpp::SensorDataQoS(),
@@ -245,12 +299,22 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
     }
   );
 
+  b_modbusconnect=false;
+  ctx = modbus_new_tcp(NULL, 1502);
+  if (!ctx) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+    rclcpp::shutdown();
+    return;
+  }
+  _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
+
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
 
 LineCenterReconstruction::~LineCenterReconstruction()
 {
   try {
+    _thread.join();
     _sub.reset();
     _points_con.notify_all();
     _futures_con.notify_one();
@@ -258,6 +322,7 @@ LineCenterReconstruction::~LineCenterReconstruction()
       t.join();
     }
     _pub.reset();
+    
 
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -301,6 +366,20 @@ Params LineCenterReconstruction::_update_parameters()
   //     _homo = cv::Mat(p.as_double_array(), true).reshape(1, 3);
   //   }
   // }
+}
+
+void LineCenterReconstruction::_modbus(int port)
+{
+  while (rclcpp::ok()) 
+  {
+    if (modbus_connect(ctx) == -1)
+    {
+      usleep(5);
+      continue;
+    }
+    b_modbusconnect=true;
+    break;
+  }
 }
 
 void LineCenterReconstruction::_worker()

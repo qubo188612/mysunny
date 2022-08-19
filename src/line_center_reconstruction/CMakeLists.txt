@@ -22,6 +22,8 @@ find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp)
 
@@ -39,6 +41,7 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} PkgConfig::MODBUS)
 
 rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "${PROJECT_NAME}::LineCenterReconstruction"
