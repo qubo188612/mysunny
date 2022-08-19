@@ -262,6 +262,10 @@ int workers(const rclcpp::NodeOptions & options)
 LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & options)
 : Node("line_center_reconstruction_node", options)
 {
+  b_modbusconnect=false;
+
+  _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
+
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
   _pub_task100_199 = this->create_publisher<IfAlgorhmitcloud>(_pub_task100_199_name, rclcpp::SensorDataQoS());
@@ -298,15 +302,6 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
-
-  b_modbusconnect=false;
-  ctx = modbus_new_tcp("127.0.0.1", 1502);
-  if (!ctx) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
-    rclcpp::shutdown();
-    return;
-  }
-  _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
 
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
@@ -372,8 +367,15 @@ void LineCenterReconstruction::_modbus(int port)
 {
   while (rclcpp::ok()) 
   {
+    ctx = modbus_new_tcp("127.0.0.1", 1502);
+    if (!ctx) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+      rclcpp::shutdown();
+      return;
+    }
     if (modbus_connect(ctx) == -1)
     {
+      modbus_free(ctx);
       usleep(5);
       continue;
     }

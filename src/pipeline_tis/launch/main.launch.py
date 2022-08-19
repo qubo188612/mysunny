@@ -52,15 +52,15 @@ def generate_launch_description():
     except Exception:
         pass
     
-#    camera_tis_node = ComposableNode(
-#    package='camera_tis',
-#    plugin='camera_tis::CameraTis',
-#    parameters=[params['camera_tis_node']],
-#    extra_arguments=[{'use_intra_process_comms': True}])
+    camera_tis_node = ComposableNode(
+    package='camera_tis',
+    plugin='camera_tis::CameraTis',
+    parameters=[params['camera_tis_node']],
+    extra_arguments=[{'use_intra_process_comms': True}])
 
-    camera_test_node = ComposableNode(
-    package='camera_test',
-    plugin='camera_test::CameraTest')
+#    camera_test_node = ComposableNode(
+#    package='camera_test',
+#    plugin='camera_test::CameraTest')
 
     params['rotate_image_node']['workers'] = 2
     rotate_image_node = ComposableNode(
@@ -108,8 +108,8 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container_mt',
         composable_node_descriptions=[
-        #   camera_tis_node,
-            camera_test_node,
+            camera_tis_node,
+        #   camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
             laser_line_center_node,
@@ -139,7 +139,7 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         container,
-    #   seam_tracking_node,
+        seam_tracking_node,
         modbus_node,
-    #   gpio_raspberry_node,
+        gpio_raspberry_node,
         config_tis_node])
