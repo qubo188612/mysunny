@@ -123,20 +123,51 @@ PointCloud2::UniquePtr LineCenterReconstruction::execute(PointCloud2::UniquePtr 
   return msg;
 }
 
-IfAlgorhmitmsg::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm)
+IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm)
 {
   if (ptr->imageout.header.frame_id == "-1" 
    || ptr->targetpointout.size()==0
-   || ptr->result==false) {return ptr;}
-   /*
-  auto src = from_pc2(ptr);
-  if (src.empty()) {
-    auto msg = std::make_unique<PointCloud2>();
-    msg->header = ptr->header;
-    return msg;
+   || ptr->result==false) 
+   {
+      auto msg = std::make_unique<IfAlgorhmitcloud>();
+      msg->lasertrackoutcloud.header = ptr->imageout.header;
+      return msg;
+   }
+
+  auto msg = std::make_unique<IfAlgorhmitcloud>();
+
+  auto _homo = cv::Mat(pm.homography_matrix, true).reshape(1, 3);
+  std::vector<cv::Point2f> dst;
+  dst.reserve(ptr->imageout.height);
+  std::vector<cv::Point2f> src;
+  for(int i=0;i<ptr->lasertrackout.size();i++)
+  {
+      cv::Point2f point(ptr->lasertrackout[i].x,ptr->lasertrackout[i].y);
+      src.push_back(point);
   }
-  */
-  return ptr;
+  cv::perspectiveTransform(src, dst, _homo);
+  auto cloud = to_pc2(dst, src);
+  msg->lasertrackoutcloud = *cloud;
+  
+  src.clear();
+  for(int i=0;i<ptr->targetpointout.size();i++)
+  {
+      cv::Point2f point(ptr->targetpointout[i].x,ptr->targetpointout[i].y);
+      src.push_back(point);
+  }
+  cv::perspectiveTransform(src, dst, _homo);
+
+  for(int i=0;i<dst.size();i++)
+  {
+    tutorial_interfaces::msg::IfAlgorhmittargetpoint4f pointtarget;
+    pointtarget.x=dst[i].x;
+    pointtarget.y=dst[i].y;
+    pointtarget.u=src[i].x;
+    pointtarget.v=src[i].y;
+    msg->targetpointoutcloud.push_back(pointtarget);
+  }
+  msg->lasertrackoutcloud.header = ptr->imageout.header;
+  return msg;
 }
 
 /**
@@ -160,6 +191,8 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 {
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
+  _pub_task100_199 = this->create_publisher<IfAlgorhmitcloud>(_pub_task100_199_name, rclcpp::SensorDataQoS());
+
   _declare_parameters();
 
   _workers = workers(options);
@@ -168,12 +201,12 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
   }
   _threads.push_back(std::thread(&LineCenterReconstruction::_manager, this));
   
-/*
+
   for (int i = 0; i < _workers; ++i) {
     _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_worker, this));
   }
   _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_manager, this));
-*/
+
 
   _sub = this->create_subscription<PointCloud2>(
     _sub_name,
@@ -184,7 +217,7 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
     }
   );
 
- /* 
+  
   _sub_task100_199 = this->create_subscription<IfAlgorhmitmsg>(
     _sub_task100_199_name,
     rclcpp::SensorDataQoS(),
@@ -193,7 +226,7 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
-*/
+
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
 
@@ -278,12 +311,12 @@ void LineCenterReconstruction::_task100_199_worker()
     if (_task100_199.empty() == false) {
       auto ptr = std::move(_task100_199.front());
       _task100_199.pop_front();
-      std::promise<IfAlgorhmitmsg::UniquePtr> prom;
+      std::promise<IfAlgorhmitcloud::UniquePtr> prom;
       _push_back_future_task100_199(prom.get_future());
       auto pm = _update_parameters();
       lk.unlock();
       auto msg = _task100_199_execute(std::move(ptr), pm);
-      prom.set_value(std::move(msg));
+    //  prom.set_value(std::move(msg));
     } else {
       _task100_199_con.wait(lk);
     }
@@ -315,7 +348,7 @@ void LineCenterReconstruction::_task100_199_manager()
       _task100_199_futures.pop_front();
       lk.unlock();
       auto ptr = f.get();
-    //_pub->publish(std::move(ptr));
+      _pub_task100_199->publish(std::move(ptr));
     } else {
       _task100_19_futures_con.wait(lk);
     }
@@ -354,7 +387,7 @@ void LineCenterReconstruction::_push_back_future(std::future<PointCloud2::Unique
   _futures_con.notify_one();
 }
 
-void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgorhmitmsg::UniquePtr> fut)
+void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgorhmitcloud::UniquePtr> fut)
 {
   std::unique_lock<std::mutex> lk(_task100_199_futures_mut);
   _task100_199_futures.emplace_back(std::move(fut));

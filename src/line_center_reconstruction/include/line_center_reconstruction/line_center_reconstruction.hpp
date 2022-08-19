@@ -22,12 +22,14 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 
 namespace line_center_reconstruction
 {
 
 using sensor_msgs::msg::PointCloud2;
 using tutorial_interfaces::msg::IfAlgorhmitmsg;
+using tutorial_interfaces::msg::IfAlgorhmitcloud;
 
 /**
  * @brief List of parameter names.
@@ -132,7 +134,7 @@ private:
    */
   void _push_back_future(std::future<PointCloud2::UniquePtr> fut);
 
-  void _push_back_future_task100_199(std::future<IfAlgorhmitmsg::UniquePtr> fut);
+  void _push_back_future_task100_199(std::future<IfAlgorhmitcloud::UniquePtr> fut);
 
 private:
   /**
@@ -141,11 +143,15 @@ private:
    */
   const char * _pub_name = "~/pnts";
 
+  const char * _pub_task100_199_name = "~/cloud_task100_199";
+
   /**
    * @brief Shared pointer to publisher.
    *
    */
   rclcpp::Publisher<PointCloud2>::SharedPtr _pub;
+
+  rclcpp::Publisher<IfAlgorhmitcloud>::SharedPtr _pub_task100_199;
 
   /**
    * @brief Subscription name.
@@ -153,7 +159,7 @@ private:
    */
   const char * _sub_name = "~/line";
 
-  const char * _sub_task100_199_name = "~/task100_199";
+  const char * _sub_task100_199_name = "~/image_task100_199";
 
   /**
    * @brief Shared pointer to subscription.
@@ -216,7 +222,7 @@ private:
    */
   std::deque<std::future<PointCloud2::UniquePtr>> _futures;
 
-  std::deque<std::future<IfAlgorhmitmsg::UniquePtr>> _task100_199_futures;
+  std::deque<std::future<IfAlgorhmitcloud::UniquePtr>> _task100_199_futures;
 
   /**
    * @brief Threads for workers and the manager.
@@ -228,7 +234,7 @@ private:
 
   PointCloud2::UniquePtr execute(PointCloud2::UniquePtr ptr, const Params & pm);
 
-  IfAlgorhmitmsg::UniquePtr _task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm);
+  IfAlgorhmitcloud::UniquePtr _task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm);
 };
 
 }  // namespace line_center_reconstruction
