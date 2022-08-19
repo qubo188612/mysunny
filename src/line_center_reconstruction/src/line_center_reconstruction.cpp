@@ -95,6 +95,23 @@ PointCloud2::UniquePtr to_pc2(
   return ptr;
 }
 
+std::vector<tutorial_interfaces::msg::IfAlgorhmitpoint4f> to_pc3(
+  const std::vector<cv::Point2f> & dst,
+  const std::vector<cv::Point2f> & src)
+{
+  auto num = dst.size();
+  std::vector<tutorial_interfaces::msg::IfAlgorhmitpoint4f> ptr;
+  ptr.resize(dst.size());
+  for (size_t i = 0; i < num; ++i) {
+    ptr[i].x = dst[i].x;
+    ptr[i].y = dst[i].y;
+    ptr[i].u = src[i].x;
+    ptr[i].v = src[i].y;
+  }
+
+  return ptr;
+}
+
 /**
  * @brief The algorithm to transform points from image plane to laser plane.
  *
@@ -130,7 +147,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
    || ptr->result==false) 
    {
       auto msg = std::make_unique<IfAlgorhmitcloud>();
-      msg->lasertrackoutcloud.header = ptr->imageout.header;
+      msg->header = ptr->imageout.header;
       return msg;
    }
 
@@ -146,8 +163,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       src.push_back(point);
   }
   cv::perspectiveTransform(src, dst, _homo);
-  auto cloud = to_pc2(dst, src);
-  msg->lasertrackoutcloud = *cloud;
+  auto cloud = to_pc3(dst, src);
+  msg->lasertrackoutcloud = cloud;
   
   src.clear();
   for(int i=0;i<ptr->targetpointout.size();i++)
@@ -164,9 +181,10 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     pointtarget.y=dst[i].y;
     pointtarget.u=src[i].x;
     pointtarget.v=src[i].y;
+    pointtarget.name=ptr->targetpointout[i].name;
     msg->targetpointoutcloud.push_back(pointtarget);
   }
-  msg->lasertrackoutcloud.header = ptr->imageout.header;
+  msg->header = ptr->imageout.header;
   return msg;
 }
 
@@ -316,7 +334,7 @@ void LineCenterReconstruction::_task100_199_worker()
       auto pm = _update_parameters();
       lk.unlock();
       auto msg = _task100_199_execute(std::move(ptr), pm);
-    //  prom.set_value(std::move(msg));
+      prom.set_value(std::move(msg));
     } else {
       _task100_199_con.wait(lk);
     }
