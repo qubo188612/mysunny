@@ -97,7 +97,6 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           {
             pm.show_step=p.as_int();
             InitRunImage();
-          //this->declare_parameter("start", 0); 
           }
         }
         else if(alg_return=alg100_getcallbackParameter(p)!=0)
@@ -143,7 +142,7 @@ void LaserImagePos::_declare_parameters()
   alg100_declare_parameters();
   this->declare_parameter("task_num", pm.task_num);
   this->declare_parameter("show_step", pm.show_step);
-  this->declare_parameter("start", pm.show_step);
+  this->declare_parameter("start", 0);
 }
 
 Params LaserImagePos::_update_parameters()
@@ -220,7 +219,7 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
     X_linedif32=new Int32 [bigsize];
     niheX=new Int32 [bigsize];
     niheY=new Int32 [bigsize];
-
+    RCLCPP_INFO(this->get_logger(), "Image size changed");
   }
 
   switch(pm.task_num)
@@ -260,7 +259,7 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     result->result=false;
     return result;
   }
-  IfAlgorhmitmsg::UniquePtr result;
+  auto result = std::make_unique<IfAlgorhmitmsg>();
   cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
   std::vector <cv::Point2f> pointcloud,resultpoint;
 
@@ -273,7 +272,6 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     result->result=true;
   }
 
-  result->result=true;
   result->imageout.header = ptr->header;
   result->imageout.height = img.rows;
   result->imageout.width = img.cols;
@@ -333,8 +331,11 @@ void LaserImagePos::_manager()
       auto f = std::move(_futures.front());
       _futures.pop_front();
       lk.unlock();
-      auto ptr = f.get();
-      _pub->publish(std::move(ptr));
+      if(pm.task_num>=100&&pm.task_num<200)
+      {
+        auto ptr = f.get();
+        _pub->publish(std::move(ptr));
+      }
     } else {
       _futures_con.wait(lk);
     }

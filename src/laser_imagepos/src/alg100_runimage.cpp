@@ -300,7 +300,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 erzhisize2=pm.als100_erzhisize2;//60;//断线二值图的左右阈值尺寸
     Int32 searchdectancemax=pm.als100_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
     Int32 searchdectancemin=pm.als100_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
-    
+
 
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
@@ -1267,6 +1267,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
     namepoint.push_back(cv_point);
+
     
     return 0;
 }
