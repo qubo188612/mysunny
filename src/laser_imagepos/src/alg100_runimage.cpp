@@ -1297,8 +1297,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myline16to32(headline,&headline32);
     if(step==1)
     {
-      if(cvimgIn.type()==CV_8UC1)
-        cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
+    /*
+        if(cvimgIn.type()==CV_8UC1)
+            cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
         cv_point_st.x=headline32.st.x;
         cv_point_st.y=headline32.st.y;
         cv_point_ed.x=headline32.ed.x;
@@ -1321,6 +1322,29 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             cv_point_st.y=resultfocal2.y;
             cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(255,0,255),2);
         }
+    */
+        cv_point_st.x=headline32.st.x;
+        cv_point_st.y=headline32.st.y;
+        cv_point_ed.x=headline32.ed.x;
+        cv_point_ed.y=headline32.ed.y;
+        cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
+        cv_point_st.x=tileline32.st.x;
+        cv_point_st.y=tileline32.st.y;
+        cv_point_ed.x=tileline32.ed.x;
+        cv_point_ed.y=tileline32.ed.y;
+        cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
+        cv_point_st.x=resultfocal.x;
+        cv_point_st.y=resultfocal.y;
+        cv::circle(cvimgIn,cv_point_st,10,128,2);
+        cv_point_st.x=resultfocal1.x;
+        cv_point_st.y=resultfocal1.y;
+        cv::circle(cvimgIn,cv_point_st,10,128,2);
+        if(handianEn==1)
+        {
+            cv_point_st.x=resultfocal2.x;
+            cv_point_st.y=resultfocal2.y;
+            cv::circle(cvimgIn,cv_point_st,10,128,2);
+        }   
     }
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
