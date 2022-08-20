@@ -324,16 +324,26 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
 
+#ifdef DEBUG_ALG
+    int debug_alg=1;
+    RCLCPP_INFO(this->get_logger(), "start alg100");
+#endif
 
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
     Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
     Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif    
     if(step!=0)
     {
       imageGasupain=MatCreatClone(imageGasu,cv8uc1_Imagebuff8);
     }
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==2)
     {
       Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -341,6 +351,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     imageBry=Myhalcv2::MatCreat(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
     Myhalcv2::Mynormalize(imageGasu,&imageBry);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==3)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -349,6 +362,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mybinaryval(imageBry,&bryvalue,Myhalcv2::MHC_BARINYVAL_MEAN);
     i32_bryvalue=(Int32)bryvalue+pingjun;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==4)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -378,6 +394,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,5);
     }
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==5)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
@@ -385,7 +404,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     i32_bryvalue=gujiaerzhi;
     Myhalcv2::Mybinary(m_brygujia,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
-
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==6)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
@@ -393,6 +414,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==7)
     {
       Myhalcv2::Mymat_to_binself(&imageBry,255);
@@ -465,6 +489,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyCutRoi(imageGasu,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft,jiguangTop,jiguangRight-jiguangLeft+1,jiguangDeep-jiguangTop+1);
     Myhalcv2::Mynormalize_lineXY(m_tempmatIn,&imageBry,1);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==8)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -472,6 +499,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     i32_bryvalue=gujiaerzhi;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==9)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -484,12 +514,18 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         return 0;
     }
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==10)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
     }
     Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==11)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -547,6 +583,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
           }
         }
     }
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==12)
     {
       Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -570,6 +609,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         }
     }
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight/4);//修复空的线
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==13)
     {
       for(j=X_Linestarty;j<=X_Lineendy;j++)
@@ -793,6 +835,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     if(nihenum==0)
         return 1;
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==14)
     {
       Myhalcv2::MatClone(imageGasu,&imageGasupain);
@@ -923,6 +968,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     if(0!=Myhalcv2::MyConect_sqare_line(&ImageConectlong,Myhalcv2::MHC_MIXDIS_SQARE,&headline,&headlinehough))
         return 1;
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==15)
     {
       Myhalcv2::MatClone(imageIn,&m_brygujia);
@@ -1015,6 +1063,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     if(0!=Myhalcv2::MyConect_sqare_line(&ImageConectlong,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough))
         return 1;
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==16)
     {
       Myhalcv2::MatClone(imageIn,&m_brygujia);
@@ -1063,7 +1114,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mymedian(imageGasu,&imageGasu);
     Myhalcv2::MyCutselfRoi(&imageGasu,1,1,imageGasu.width-2,imageGasu.height-2);
     Myhalcv2::Mynormalize_lineXY_downvalue(imageGasu,&imageGasu,15,255);
-
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==17)
     {
       Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1073,6 +1126,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     /**********/
 //断线分割膨胀法
     Myhalcv2::Mybinary(imageGasu,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==18)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
@@ -1085,6 +1141,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         return 1;
     }
     Myhalcv2::Myregion_to_bin(&ImageConectlong,&m_brygujia,255);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==19)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
@@ -1096,6 +1155,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myregion_to_label(&ImageConect,&m_brygujia);
     imageBry=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
     Myhalcv2::MyAddminRoi(imageBry,m_brygujia,&imageGasu,nstarti-1,nstartj-1);
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+#endif 
     if(step==20)
     {
       Myhalcv2::Mymat_to_bin(imageGasu,&m_brygujia,255);
@@ -1355,7 +1417,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
     namepoint.push_back(cv_point);
-
+#ifdef DEBUG_ALG;
+    RCLCPP_INFO(this->get_logger(), "finish alg100");
+#endif 
     
     return 0;
 }
