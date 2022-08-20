@@ -11,7 +11,7 @@
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "myhalcv2/myhalcv2.h"
 
-#define DEBUG_ALG
+//#define DEBUG_ALG
 
 namespace laser_imagepos
 {

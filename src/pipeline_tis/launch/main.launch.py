@@ -58,9 +58,9 @@ def generate_launch_description():
     parameters=[params['camera_tis_node']],
     extra_arguments=[{'use_intra_process_comms': True}])
 
-#    camera_test_node = ComposableNode(
-#    package='camera_test',
-#    plugin='camera_test::CameraTest')
+    camera_test_node = ComposableNode(
+    package='camera_test',
+    plugin='camera_test::CameraTest')
 
     params['rotate_image_node']['workers'] = 2
     rotate_image_node = ComposableNode(
