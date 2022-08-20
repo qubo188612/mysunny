@@ -95,7 +95,6 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           }
           else if(p.as_int() > 0)
           {
-            pm.show_step=p.as_int();
             InitRunImage();
           }
         }
