@@ -20,7 +20,6 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
-#include <cv_bridge/cv_bridge.h>
 
 namespace rotate_image
 {

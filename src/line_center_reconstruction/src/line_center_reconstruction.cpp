@@ -203,6 +203,10 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
     tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
     int rc=modbus_write_registers(ctx,0x02,3,tab_reg);
+    if(rc!=3)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
+    }
 
     if(msg->targetpointoutcloud.size()>1)
     {
@@ -214,6 +218,10 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         othertab_reg[(i-1)*2+1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].y*100+0.5));
       }
       int rc=modbus_write_registers(ctx,0x50,2*(num-1),othertab_reg);
+      if(rc!=2*(num-1))
+      {
+        RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x50=%d",rc);
+      }
       delete othertab_reg;
     }
 
@@ -226,6 +234,10 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       tab_reg[0]=0;
     }
     rc=modbus_write_registers(ctx,0x60,1,tab_reg);
+    if(rc!=1)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x60=%d",rc);
+    }
   }
 
   return msg;

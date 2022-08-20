@@ -10,7 +10,6 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "myhalcv2/myhalcv2.h"
-#include <cv_bridge/cv_bridge.h>
 
 namespace laser_imagepos
 {

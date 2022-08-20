@@ -94,7 +94,7 @@ def generate_launch_description():
         parameters=[params['laser_line_filter_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
-    params['line_center_reconstruction_node']['workers'] = 2
+    params['line_center_reconstruction_node']['workers'] = 1
     line_center_reconstruction_node = ComposableNode(
         package='line_center_reconstruction',
         plugin='line_center_reconstruction::LineCenterReconstruction',

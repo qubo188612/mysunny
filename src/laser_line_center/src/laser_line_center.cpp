@@ -84,17 +84,8 @@ PointCloud2::UniquePtr execute(Image::UniquePtr ptr, cv::Mat & buf, const Params
     line->header = ptr->header;
     return line;
   }
-/***********************************/
-//qubo
-  cv_bridge::CvImagePtr cv_ptr;
-  cv_ptr = cv_bridge::toCvCopy((*ptr), "mono8");
-  auto pnts = center(cv_ptr->image, buf, pm.ksize, pm.threshold, pm.width_min, pm.width_max);
-/*************************************/
-//wuzhuoqi
-//cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-//auto pnts = center(img, buf, pm.ksize, pm.threshold, pm.width_min, pm.width_max);
-/*****************************************/
-  
+  cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
+  auto pnts = center(img, buf, pm.ksize, pm.threshold, pm.width_min, pm.width_max);
   auto line = to_pc2(pnts);
   line->header = ptr->header;
   return line;
