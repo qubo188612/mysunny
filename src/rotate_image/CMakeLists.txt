@@ -21,6 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(cv_bridge REQUIRED)
 
 add_library(rotate_image SHARED src/rotate_image.cpp)
 
@@ -34,6 +35,7 @@ ament_target_dependencies(rotate_image
   rclcpp
   rclcpp_components
   sensor_msgs
+  cv_bridge
 )
 
 target_link_libraries(rotate_image ${OpenCV_LIBS})

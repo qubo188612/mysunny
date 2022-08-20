@@ -254,6 +254,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
                                     bool &solderjoints,
                                     int step)    //输出结果点信息
 {
+    cv::Mat cvimgInbry;
     Int32 i,j;
     Myhalcv2::Mat imageIn,imageGasu,imageGasupain,imageBry,m_tempmatIn,m_matMask;
     Myhalcv2::Mat m16_filterIma,m_filter,m_brygujia;
@@ -324,9 +325,16 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
 
-
+    if(cvimgIn.type()==CV_8UC3)
+    {
+        cv::cvtColor(cvimgIn,cvimgInbry,cv::COLOR_BGR2GRAY);
+    }
+    else
+    {
+        cvimgInbry=cvimgIn;
+    }
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
-    Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
+    Myhalcv2::CvMatToMat(cvimgInbry,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
     Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
     Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
@@ -1297,54 +1305,56 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myline16to32(headline,&headline32);
     if(step==1)
     {
-    /*
-        if(cvimgIn.type()==CV_8UC1)
-            cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
-        cv_point_st.x=headline32.st.x;
-        cv_point_st.y=headline32.st.y;
-        cv_point_ed.x=headline32.ed.x;
-        cv_point_ed.y=headline32.ed.y;
-        cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,0),2);
-        cv_point_st.x=tileline32.st.x;
-        cv_point_st.y=tileline32.st.y;
-        cv_point_ed.x=tileline32.ed.x;
-        cv_point_ed.y=tileline32.ed.y;
-        cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(0,255,0),2);
-        cv_point_st.x=resultfocal.x;
-        cv_point_st.y=resultfocal.y;
-        cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(0,0,255),2);
-        cv_point_st.x=resultfocal1.x;
-        cv_point_st.y=resultfocal1.y;
-        cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(0,255,255),2);
-        if(handianEn==1)
+        if(cvimgIn.type()==CV_8UC3)
         {
-            cv_point_st.x=resultfocal2.x;
-            cv_point_st.y=resultfocal2.y;
-            cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(255,0,255),2);
+            cv_point_st.x=headline32.st.x;
+            cv_point_st.y=headline32.st.y;
+            cv_point_ed.x=headline32.ed.x;
+            cv_point_ed.y=headline32.ed.y;
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,0),2);
+            cv_point_st.x=tileline32.st.x;
+            cv_point_st.y=tileline32.st.y;
+            cv_point_ed.x=tileline32.ed.x;
+            cv_point_ed.y=tileline32.ed.y;
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(0,255,0),2);
+            cv_point_st.x=resultfocal.x;
+            cv_point_st.y=resultfocal.y;
+            cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(0,0,255),2);
+            cv_point_st.x=resultfocal1.x;
+            cv_point_st.y=resultfocal1.y;
+            cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(0,255,255),2);
+            if(handianEn==1)
+            {
+                cv_point_st.x=resultfocal2.x;
+                cv_point_st.y=resultfocal2.y;
+                cv::circle(cvimgIn,cv_point_st,10,cv::Scalar(255,0,255),2);
+            }
         }
-    */
-        cv_point_st.x=headline32.st.x;
-        cv_point_st.y=headline32.st.y;
-        cv_point_ed.x=headline32.ed.x;
-        cv_point_ed.y=headline32.ed.y;
-        cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
-        cv_point_st.x=tileline32.st.x;
-        cv_point_st.y=tileline32.st.y;
-        cv_point_ed.x=tileline32.ed.x;
-        cv_point_ed.y=tileline32.ed.y;
-        cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
-        cv_point_st.x=resultfocal.x;
-        cv_point_st.y=resultfocal.y;
-        cv::circle(cvimgIn,cv_point_st,10,128,2);
-        cv_point_st.x=resultfocal1.x;
-        cv_point_st.y=resultfocal1.y;
-        cv::circle(cvimgIn,cv_point_st,10,128,2);
-        if(handianEn==1)
+        else
         {
-            cv_point_st.x=resultfocal2.x;
-            cv_point_st.y=resultfocal2.y;
+            cv_point_st.x=headline32.st.x;
+            cv_point_st.y=headline32.st.y;
+            cv_point_ed.x=headline32.ed.x;
+            cv_point_ed.y=headline32.ed.y;
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
+            cv_point_st.x=tileline32.st.x;
+            cv_point_st.y=tileline32.st.y;
+            cv_point_ed.x=tileline32.ed.x;
+            cv_point_ed.y=tileline32.ed.y;
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,128,2);
+            cv_point_st.x=resultfocal.x;
+            cv_point_st.y=resultfocal.y;
             cv::circle(cvimgIn,cv_point_st,10,128,2);
-        }   
+            cv_point_st.x=resultfocal1.x;
+            cv_point_st.y=resultfocal1.y;
+            cv::circle(cvimgIn,cv_point_st,10,128,2);
+            if(handianEn==1)
+            {
+                cv_point_st.x=resultfocal2.x;
+                cv_point_st.y=resultfocal2.y;
+                cv::circle(cvimgIn,cv_point_st,10,128,2);
+            }   
+        }
     }
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;

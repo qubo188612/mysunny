@@ -22,6 +22,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+#include <cv_bridge/cv_bridge.h>
 
 namespace laser_line_center
 {

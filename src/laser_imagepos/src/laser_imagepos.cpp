@@ -261,7 +261,11 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     return result;
   }
   auto result = std::make_unique<IfAlgorhmitmsg>();
-  cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
+
+  cv_bridge::CvImagePtr cv_ptr_img;
+  cv_ptr_img = cv_bridge::toCvCopy((*ptr), ptr->encoding);
+  cv::Mat img=cv_ptr_img->image;
+
   std::vector <cv::Point2f> pointcloud,resultpoint;
   bool solderjoints;
   if(0!=RunImage(img,pointcloud,resultpoint,solderjoints,pm.show_step))

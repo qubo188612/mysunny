@@ -96,10 +96,20 @@ void RotateImage::_worker()
         prom.set_value(std::move(ptr));
       } else {
         buf.resize(ptr->data.size());
-        cv::Mat src(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-        cv::Mat dst(ptr->width, ptr->height, CV_8UC1, buf.data());
-        // cv::rotate(src, dst, cv::ROTATE_90_CLOCKWISE);
-        cv::rotate(src, dst, _mode);
+/***********************************/
+//wuzhuoqi
+      //cv::Mat src(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
+      //cv::Mat dst(ptr->width, ptr->height, CV_8UC1, buf.data());
+      //cv::rotate(src, dst, cv::ROTATE_90_CLOCKWISE);
+      //cv::rotate(src, dst, _mode);
+/************************************/
+//qubo
+        cv_bridge::CvImagePtr cv_ptr_src;
+        cv_ptr_src = cv_bridge::toCvCopy((*ptr), ptr->encoding);
+        cv::Mat dst(ptr->width, ptr->height, cv_ptr_src->image.type(), buf.data());
+        cv::rotate(cv_ptr_src->image, dst, _mode);
+/************************************/
+
         std::swap(ptr->data, buf);
         std::swap(ptr->width, ptr->height);
         ptr->step = ptr->width;
