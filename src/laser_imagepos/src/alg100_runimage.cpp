@@ -638,6 +638,60 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     //找上半段
     zhengshunum=0;
     stepfind=0;
+    for(j=X_Linestarty+6;j<=X_Lineendy-6;j++)
+    {
+        //如果找到连续3个正数,可以确定起点
+        if(stepfind==0)
+        {
+            if(m32_filterIma.ptr_int[j]>=Updif)
+            {
+                zhengshunum++;
+            }
+            else if(m32_filterIma.ptr_int[j]<Updif)
+            {
+                zhengshunum=0;
+            }
+            if(zhengshunum==3)
+            {
+                stepfind=1;
+                stepfindST.x=(X_line[j]>>1);	//直线起点
+                stepfindST.y=j;
+                latsj=j;
+            }
+        }
+        if(stepfind==1)
+        {
+            if(m32_filterIma.ptr_int[j]>Updif)//定位到最后个大于0的地方
+            {
+                latsj=j;
+            }
+            if(m32_filterIma.ptr_int[j]<Updifmin)
+            {
+                int end=latsj;
+                stepfind=2;
+                stepfindED.x=(X_line[end]>>1);	//直线终点
+                stepfindED.y=end;
+            }
+        }
+        if(stepfind==2)
+        {
+            //再判断下长度
+            if(stepfindED.y-stepfindST.y<Uplong)
+            {
+                stepfind=0;
+                zhengshunum=0;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    if(stepfind!=2)
+    {
+        return 1;
+    }
+    /*
     for(j=minj;j>=X_Linestarty+6;j--)
     {
         //如果找到连续3个正数,可以确定起点
@@ -702,6 +756,8 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             return 1;
         }
     }
+    */
+
     /************************************/
         //人工辅助限制
     stepfindED.y=MIN(stepfindED.y,minj-dis_center_st);
@@ -725,6 +781,60 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     //找下半段
     zhengshunum=0;
     stepfind=0;
+    for(j=X_Lineendy-6;j>=X_Linestarty+6;j--)
+    {
+        //如果找到连续3个负数,可以确定起点
+        if(stepfind==0)
+        {
+            if(m32_filterIma.ptr_int[j]<=Downdif)
+            {
+                zhengshunum++;
+            }
+            else if(m32_filterIma.ptr_int[j]>Downdif)
+            {
+                zhengshunum=0;
+            }
+            if(zhengshunum==3)
+            {
+                stepfind=1;
+                midfindED.x=(X_line[j]>>1);	//直线起点
+                midfindED.y=j;
+                latsj=j;
+            }
+        }
+        if(stepfind==1)
+        {
+            if(m32_filterIma.ptr_int[j]<Downdif)//定位到最后个大于0的地方
+            {
+                latsj=j;
+            }
+            if(m32_filterIma.ptr_int[j]>Downdifmin)
+            {
+                int st=latsj;
+                stepfind=2;
+                midfindST.x=(X_line[st]>>1);	//直线终点
+                midfindST.y=st;
+            }
+        }
+        if(stepfind==2)
+        {
+            //再判断下长度
+            if(midfindED.y-midfindST.y<Downdlong)
+            {
+                stepfind=0;
+                zhengshunum=0;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    if(stepfind!=2)
+    {
+        return 1;
+    }
+    /*
     for(j=minj;j<=X_Lineendy-6;j++)
     {
         //如果找到连续3个负数,可以确定起点
@@ -790,6 +900,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             return 1;
         }
     }
+    */
 
     /************************************/
     //人工辅助限制
