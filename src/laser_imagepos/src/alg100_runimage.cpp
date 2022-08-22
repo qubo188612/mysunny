@@ -1493,12 +1493,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         cv_point_st.x=(resultfocal1.x>>2);
         cv_point_st.y=(resultfocal1.y>>2);
         cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(0,255,255),1);
-        if(handianEn==1)
-        {
-            cv_point_st.x=(resultfocal2.x>>2);
-            cv_point_st.y=(resultfocal2.y>>2);
-            cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
-        }   
+        cv_point_st.x=(resultfocal2.x>>2);
+        cv_point_st.y=(resultfocal2.y>>2);
+        cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
     }
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
