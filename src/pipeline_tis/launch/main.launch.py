@@ -67,7 +67,7 @@ def generate_launch_description():
         package='rotate_image',
         plugin='rotate_image::RotateImage',
         remappings=[('~/image', '/camera_tis_node/image')],
-    #   parameters=[params['rotate_image_node']],
+        parameters=[params['rotate_image_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     params['laser_imagepos_node']['workers'] = 1
@@ -75,7 +75,7 @@ def generate_launch_description():
         package='laser_imagepos',
         plugin='laser_imagepos::LaserImagePos',
         remappings=[('~/image', '/rotate_image_node/image_rotated')],       
-        parameters=[params['laser_imagepos_node']],
+    #   parameters=[params['laser_imagepos_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     params['laser_line_center_node']['workers'] = 4
