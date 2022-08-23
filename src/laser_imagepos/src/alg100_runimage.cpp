@@ -328,7 +328,10 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     int debug_alg=1;
     RCLCPP_INFO(this->get_logger(), "start alg100");
 #endif
-
+    if(step==2)
+    {
+      return 0;
+    }
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
@@ -344,7 +347,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==2)
+    if(step==3)
     {
       Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
       return 0;
@@ -354,7 +357,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==3)
+    if(step==4)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -365,7 +368,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==4)
+    if(step==5)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -397,7 +400,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==5)
+    if(step==6)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
       return 0;
@@ -407,7 +410,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==6)
+    if(step==7)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
       return 0;
@@ -417,7 +420,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==7)
+    if(step==8)
     {
       Myhalcv2::Mymat_to_binself(&imageBry,255);
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
@@ -495,7 +498,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==8)
+    if(step==9)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -505,7 +508,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==9)
+    if(step==10)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -520,7 +523,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==10)
+    if(step==11)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -529,7 +532,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==11)
+    if(step==12)
     {
       Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
@@ -589,7 +592,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==12)
+    if(step==13)
     {
       Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
       return 0;
@@ -623,7 +626,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==13)
+    if(step==14)
     {
       for(j=X_Linestarty;j<=X_Lineendy;j++)
       {
@@ -705,72 +708,6 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    /*
-    for(j=minj;j>=X_Linestarty+6;j--)
-    {
-        //如果找到连续3个正数,可以确定起点
-        if(stepfind==0)
-        {
-            if(m32_filterIma.ptr_int[j]>=Updif)
-            {
-                zhengshunum++;
-            }
-            else if(m32_filterIma.ptr_int[j]<Updif)
-            {
-                zhengshunum=0;
-            }
-            if(zhengshunum==3)
-            {
-                stepfind=1;
-                stepfindED.x=(X_line[j]>>1);	//直线起点
-                stepfindED.y=j;
-                latsj=j;
-            }
-        }
-        if(stepfind==1)
-        {
-            if(m32_filterIma.ptr_int[j]>Updif)//定位到最后个大于0的地方
-            {
-                latsj=j;
-            }
-            if(m32_filterIma.ptr_int[j]<Updifmin)
-            {
-                int st=latsj;
-                stepfind=2;
-                stepfindST.x=(X_line[st]>>1);	//直线终点
-                stepfindST.y=st;
-            }
-        }
-        if(stepfind==2)
-        {
-            //再判断下长度
-            if(stepfindED.y-stepfindST.y<Uplong)
-            {
-                stepfind=0;
-                zhengshunum=0;
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    if(stepfind==0)
-    {
-        return 1;
-    }
-    else if(stepfind==1)
-    {
-        int st=latsj;
-        stepfindST.x=(X_line[st]>>1);	//直线终点
-        stepfindST.y=st;
-        //再判断下长度
-        if(stepfindED.y-stepfindST.y<Uplong)
-        {
-            return 1;
-        }
-    }
-    */
 
     /************************************/
         //人工辅助限制
@@ -857,73 +794,6 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    /*
-    for(j=minj;j<=X_Lineendy-6;j++)
-    {
-        //如果找到连续3个负数,可以确定起点
-        if(stepfind==0)
-        {
-            if(m32_filterIma.ptr_int[j]<=Downdif)
-            {
-                zhengshunum++;
-            }
-            else if(m32_filterIma.ptr_int[j]>Downdif)
-            {
-                zhengshunum=0;
-            }
-            if(zhengshunum==3)
-            {
-                stepfind=1;
-                midfindST.x=(X_line[j]>>1);	//直线起点
-                midfindST.y=j;
-                latsj=j;
-            }
-        }
-        if(stepfind==1)
-        {
-            if(m32_filterIma.ptr_int[j]<Downdif)//定位到最后个大于0的地方
-            {
-                latsj=j;
-            }
-            if(m32_filterIma.ptr_int[j]>Downdifmin)
-            {
-                int end=latsj;
-                stepfind=2;
-                midfindED.x=(X_line[end]>>1);	//直线终点
-                midfindED.y=end;
-            }
-        }
-        if(stepfind==2)
-        {
-            //再判断下长度
-            if(midfindED.y-midfindST.y<Downdlong)
-            {
-                stepfind=0;
-                zhengshunum=0;
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    if(stepfind==0)
-    {
-        return 1;
-    }
-    else if(stepfind==1)
-    {
-        int end=latsj;
-        stepfind=2;
-        midfindED.x=(X_line[end]>>1);	//直线终点
-        midfindED.y=end;
-        //再判断下长度
-        if(midfindED.y-midfindST.y<Downdlong)
-        {
-            return 1;
-        }
-    }
-    */
 
     /************************************/
     //人工辅助限制
@@ -988,7 +858,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==14)
+    if(step==15)
     {
       Myhalcv2::MatClone(imageGasu,&imageGasupain);
       Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
@@ -1133,7 +1003,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==15)
+    if(step==16)
     {
       Myhalcv2::MatClone(imageIn,&m_brygujia);
       Myhalcv2::Myregion_to_add(&ImageConectlong,&m_brygujia,0);
@@ -1236,7 +1106,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==16)
+    if(step==17)
     {
       Myhalcv2::MatClone(imageIn,&m_brygujia);
       Myhalcv2::Myregion_to_add(&ImageConectlong,&m_brygujia,0);
@@ -1297,7 +1167,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==17)
+    if(step==18)
     {
       Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
       return 0;
@@ -1309,7 +1179,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==18)
+    if(step==19)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
       return 0;
@@ -1327,7 +1197,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==19)
+    if(step==20)
     {
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
       return 0;
@@ -1341,7 +1211,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
-    if(step==20)
+    if(step==21)
     {
       Myhalcv2::Mymat_to_bin(imageGasu,&m_brygujia,255);
       Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
