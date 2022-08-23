@@ -115,6 +115,13 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   mb_mapping->tab_registers[1] = 0xff;
 
+  mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
+  if (!mb_forwardmapping) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusforward registers.");
+    rclcpp::shutdown();
+    return;
+  }
+
   ctx = modbus_new_tcp(NULL, port);
   if (!ctx) {
     RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
@@ -123,12 +130,6 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   _thread = std::thread(&Modbus::_modbus, this, port);
 
-  mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
-  if (!mb_forwardmapping) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to initialize modbusforward registers.");
-    rclcpp::shutdown();
-    return;
-  }
 
   switch(e2proomdata.robot_mod)
   {
