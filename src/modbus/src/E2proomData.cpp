@@ -17,6 +17,7 @@ E2proomData::E2proomData()
     robot_port_use=E2POOM_ROBOT_PORT_USE;
     
     Init_als100_E2proomData();
+    Init_als101_E2proomData();
 
     read_para();
 }
@@ -39,6 +40,7 @@ void E2proomData::check_para()
         robot_port=robot_port_use;
 
     als100_check_para();
+    als101_check_para();
 }
 
 void E2proomData::read_para()
@@ -75,6 +77,7 @@ void E2proomData::read_para()
     }
 
     als100_read_para();
+    als101_read_para();
     
     check_para();
 
@@ -116,4 +119,5 @@ void E2proomData::init_robot_para()
 void E2proomData::write()
 {
     write_als100_para();
+    write_als101_para();
 }

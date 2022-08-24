@@ -47,6 +47,30 @@ const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_dis_center_st",
                                               "als100_dis_center_ed"};
 
+const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
+                                              "als101_pingjun",
+                                              "als101_b_yanmofuzhu",
+                                              "als101_b_gudingquyu",
+                                              "als101_widthliantongdis",
+                                              "als101_highliantongdis",
+                                              "als101_gujiaerzhi",
+                                              "als101_jiguanghight",
+                                              "als101_jiguanglong",
+                                              "als101_jiguangkuandu",
+                                              "als101_Updif",
+                                              "als101_Updifmin",
+                                              "als101_Uplong",
+                                              "als101_Downdif",
+                                              "als101_Downdifmin",
+                                              "als101_Downdlong",
+                                              "als101_duanxianerzhi",
+                                              "als101_erzhisize",
+                                              "als101_erzhisize2",
+                                              "als101_searchdectancemax",
+                                              "als101_searchdectancemin",
+                                              "als101_dis_center_st",
+                                              "als101_dis_center_ed"};
+
 /**
  * @brief To zip related parameters together.
  *
@@ -78,6 +102,31 @@ struct Params
   int als100_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
   int als100_dis_center_st=0;//距离中心点此处后开始统计
   int als100_dis_center_ed=500;  //距离中心点此处后停止统计
+/************************************/
+//算法101参数
+  int als101_exposure_time = 120;//曝光值
+  int als101_pingjun = 15;  //二值阈值
+  int als101_b_yanmofuzhu=1;//是否使用掩摸辅助
+  int als101_b_gudingquyu=0;//是否固定区域
+  int als101_widthliantongdis=2;//激光宽度连通距离
+  int als101_highliantongdis=15;//激光长度连通距离
+  int als101_gujiaerzhi=160;//找骨架二值图
+  int als101_jiguanghight=50;//整体激光最短长度
+  int als101_jiguanglong=20;//单边激光最短长度
+  int als101_jiguangkuandu=4;//激光粗细
+  int als101_Updif=0;//上半段倾斜开始斜度10
+  int als101_Updifmin=-5;//上半段倾斜终止斜度10
+  int als101_Uplong=5;//上半段直线长度
+  int als101_Downdif=0;//下半段倾斜开始斜度0
+  int als101_Downdifmin=5;//下半段倾斜终止斜度0
+  int als101_Downdlong=5;//下半段直线长度
+  int als101_duanxianerzhi=180;//找断线的二值阈值
+  int als101_erzhisize=150;//断线二值图的上下阈值尺寸
+  int als101_erzhisize2=60;//断线二值图的左右阈值尺寸
+  int als101_searchdectancemax=160;//搜寻焊缝端点距离中央凹槽最远的距离
+  int als101_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
+  int als101_dis_center_st=0;//距离中心点此处后开始统计
+  int als101_dis_center_ed=500;  //距离中心点此处后停止统计
 /************************************/
   int task_num = 0;
   int show_step = 0;      
@@ -155,7 +204,7 @@ private:
    */
   void _declare_parameters();
 
-  void alg100_declare_parameters();
+  
 
 //Params_exposure _get_nowexposure();
 
@@ -168,9 +217,14 @@ private:
    */
   Params _update_parameters();
 
+  void alg100_declare_parameters();
+  void alg101_declare_parameters();
+
   void alg100_update_parameters();
+  void alg101_update_parameters();
 
   int alg100_getcallbackParameter(const rclcpp::Parameter &p);
+  int alg101_getcallbackParameter(const rclcpp::Parameter &p);
 
   Params pm;
 
@@ -233,6 +287,10 @@ private:
   Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
 
   int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
+                      std::vector <cv::Point2f> &namepoint,
+                      bool &solderjoints,//是否焊点
+                      int step);
+  int alg101_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);

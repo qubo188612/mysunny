@@ -6,249 +6,249 @@ namespace laser_imagepos
 
 using rcl_interfaces::msg::SetParametersResult;
 
-void LaserImagePos::alg100_declare_parameters()
+void LaserImagePos::alg101_declare_parameters()
 {
-    this->declare_parameter("als100_exposure_time", pm.als100_exposure_time);
-    this->declare_parameter("als100_pingjun", pm.als100_pingjun);
-    this->declare_parameter("als100_b_yanmofuzhu", pm.als100_b_yanmofuzhu);
-    this->declare_parameter("als100_b_gudingquyu", pm.als100_b_gudingquyu);
-    this->declare_parameter("als100_widthliantongdis", pm.als100_widthliantongdis);
-    this->declare_parameter("als100_highliantongdis", pm.als100_highliantongdis);
-    this->declare_parameter("als100_gujiaerzhi", pm.als100_gujiaerzhi);
-    this->declare_parameter("als100_jiguanghight", pm.als100_jiguanghight);
-    this->declare_parameter("als100_jiguanglong", pm.als100_jiguanglong);
-    this->declare_parameter("als100_jiguangkuandu", pm.als100_jiguangkuandu);
-    this->declare_parameter("als100_Updif", pm.als100_Updif);
-    this->declare_parameter("als100_Updifmin", pm.als100_Updifmin);
-    this->declare_parameter("als100_Uplong", pm.als100_Uplong);
-    this->declare_parameter("als100_Downdif", pm.als100_Downdif);
-    this->declare_parameter("als100_Downdifmin", pm.als100_Downdifmin);
-    this->declare_parameter("als100_Downdlong", pm.als100_Downdlong);
-    this->declare_parameter("als100_duanxianerzhi", pm.als100_duanxianerzhi);
-    this->declare_parameter("als100_erzhisize", pm.als100_erzhisize);
-    this->declare_parameter("als100_erzhisize2", pm.als100_erzhisize2);
-    this->declare_parameter("als100_searchdectancemax", pm.als100_searchdectancemax);
-    this->declare_parameter("als100_searchdectancemin", pm.als100_searchdectancemin);
-    this->declare_parameter("als100_dis_center_st", pm.als100_dis_center_st);
-    this->declare_parameter("als100_dis_center_ed", pm.als100_dis_center_ed);
+    this->declare_parameter("als101_exposure_time", pm.als101_exposure_time);
+    this->declare_parameter("als101_pingjun", pm.als101_pingjun);
+    this->declare_parameter("als101_b_yanmofuzhu", pm.als101_b_yanmofuzhu);
+    this->declare_parameter("als101_b_gudingquyu", pm.als101_b_gudingquyu);
+    this->declare_parameter("als101_widthliantongdis", pm.als101_widthliantongdis);
+    this->declare_parameter("als101_highliantongdis", pm.als101_highliantongdis);
+    this->declare_parameter("als101_gujiaerzhi", pm.als101_gujiaerzhi);
+    this->declare_parameter("als101_jiguanghight", pm.als101_jiguanghight);
+    this->declare_parameter("als101_jiguanglong", pm.als101_jiguanglong);
+    this->declare_parameter("als101_jiguangkuandu", pm.als101_jiguangkuandu);
+    this->declare_parameter("als101_Updif", pm.als101_Updif);
+    this->declare_parameter("als101_Updifmin", pm.als101_Updifmin);
+    this->declare_parameter("als101_Uplong", pm.als101_Uplong);
+    this->declare_parameter("als101_Downdif", pm.als101_Downdif);
+    this->declare_parameter("als101_Downdifmin", pm.als101_Downdifmin);
+    this->declare_parameter("als101_Downdlong", pm.als101_Downdlong);
+    this->declare_parameter("als101_duanxianerzhi", pm.als101_duanxianerzhi);
+    this->declare_parameter("als101_erzhisize", pm.als101_erzhisize);
+    this->declare_parameter("als101_erzhisize2", pm.als101_erzhisize2);
+    this->declare_parameter("als101_searchdectancemax", pm.als101_searchdectancemax);
+    this->declare_parameter("als101_searchdectancemin", pm.als101_searchdectancemin);
+    this->declare_parameter("als101_dis_center_st", pm.als101_dis_center_st);
+    this->declare_parameter("als101_dis_center_ed", pm.als101_dis_center_ed);
 }
 
-void LaserImagePos::alg100_update_parameters()
+void LaserImagePos::alg101_update_parameters()
 {
-  const auto & vp = this->get_parameters(KEYS_ALS100);
+  const auto & vp = this->get_parameters(KEYS_ALS101);
   for (const auto & p : vp) {
-    if (p.get_name() == "als100_exposure_time") {
-      pm.als100_exposure_time = p.as_int();
-    } else if (p.get_name() == "als100_pingjun") {
-      pm.als100_pingjun = p.as_int();
+    if (p.get_name() == "als101_exposure_time") {
+      pm.als101_exposure_time = p.as_int();
+    } else if (p.get_name() == "als101_pingjun") {
+      pm.als101_pingjun = p.as_int();
     }
-    else if (p.get_name() == "als100_b_yanmofuzhu") {
-      pm.als100_b_yanmofuzhu = p.as_int();
+    else if (p.get_name() == "als101_b_yanmofuzhu") {
+      pm.als101_b_yanmofuzhu = p.as_int();
     }
-    else if (p.get_name() == "als100_b_gudingquyu") {
-      pm.als100_b_gudingquyu = p.as_int();
+    else if (p.get_name() == "als101_b_gudingquyu") {
+      pm.als101_b_gudingquyu = p.as_int();
     }
-    else if (p.get_name() == "als100_widthliantongdis") {
-      pm.als100_widthliantongdis = p.as_int();
+    else if (p.get_name() == "als101_widthliantongdis") {
+      pm.als101_widthliantongdis = p.as_int();
     }
-    else if (p.get_name() == "als100_highliantongdis") {
-      pm.als100_highliantongdis = p.as_int();
+    else if (p.get_name() == "als101_highliantongdis") {
+      pm.als101_highliantongdis = p.as_int();
     }
-    else if (p.get_name() == "als100_gujiaerzhi") {
-      pm.als100_gujiaerzhi = p.as_int();
+    else if (p.get_name() == "als101_gujiaerzhi") {
+      pm.als101_gujiaerzhi = p.as_int();
     }
-    else if (p.get_name() == "als100_jiguanghight") {
-      pm.als100_jiguanghight = p.as_int();
+    else if (p.get_name() == "als101_jiguanghight") {
+      pm.als101_jiguanghight = p.as_int();
     }
-    else if (p.get_name() == "als100_jiguanglong") {
-      pm.als100_jiguanglong = p.as_int();
+    else if (p.get_name() == "als101_jiguanglong") {
+      pm.als101_jiguanglong = p.as_int();
     }
-    else if (p.get_name() == "als100_jiguangkuandu") {
-      pm.als100_jiguangkuandu = p.as_int();
+    else if (p.get_name() == "als101_jiguangkuandu") {
+      pm.als101_jiguangkuandu = p.as_int();
     }
-    else if (p.get_name() == "als100_Updif") {
-      pm.als100_Updif = p.as_int();
+    else if (p.get_name() == "als101_Updif") {
+      pm.als101_Updif = p.as_int();
     }
-    else if (p.get_name() == "als100_Updifmin") {
-      pm.als100_Updifmin = p.as_int();
+    else if (p.get_name() == "als101_Updifmin") {
+      pm.als101_Updifmin = p.as_int();
     }
-    else if (p.get_name() == "als100_Uplong") {
-      pm.als100_Uplong = p.as_int();
+    else if (p.get_name() == "als101_Uplong") {
+      pm.als101_Uplong = p.as_int();
     }
-    else if (p.get_name() == "als100_Downdif") {
-      pm.als100_Downdif = p.as_int();
+    else if (p.get_name() == "als101_Downdif") {
+      pm.als101_Downdif = p.as_int();
     }
-    else if (p.get_name() == "als100_Downdifmin") {
-      pm.als100_Downdifmin = p.as_int();
+    else if (p.get_name() == "als101_Downdifmin") {
+      pm.als101_Downdifmin = p.as_int();
     }
-    else if (p.get_name() == "als100_Downdlong") {
-      pm.als100_Downdlong = p.as_int();
+    else if (p.get_name() == "als101_Downdlong") {
+      pm.als101_Downdlong = p.as_int();
     }
-    else if (p.get_name() == "als100_duanxianerzhi") {
-      pm.als100_duanxianerzhi = p.as_int();
+    else if (p.get_name() == "als101_duanxianerzhi") {
+      pm.als101_duanxianerzhi = p.as_int();
     }
-    else if (p.get_name() == "als100_erzhisize") {
-      pm.als100_erzhisize = p.as_int();
+    else if (p.get_name() == "als101_erzhisize") {
+      pm.als101_erzhisize = p.as_int();
     }
-    else if (p.get_name() == "als100_erzhisize2") {
-      pm.als100_erzhisize2 = p.as_int();
+    else if (p.get_name() == "als101_erzhisize2") {
+      pm.als101_erzhisize2 = p.as_int();
     }
-    else if (p.get_name() == "als100_searchdectancemax") {
-      pm.als100_searchdectancemax = p.as_int();
+    else if (p.get_name() == "als101_searchdectancemax") {
+      pm.als101_searchdectancemax = p.as_int();
     }
-    else if (p.get_name() == "als100_searchdectancemin") {
-      pm.als100_searchdectancemin = p.as_int();
+    else if (p.get_name() == "als101_searchdectancemin") {
+      pm.als101_searchdectancemin = p.as_int();
     }
-    else if (p.get_name() == "als100_dis_center_st") {
-      pm.als100_dis_center_st = p.as_int();
+    else if (p.get_name() == "als101_dis_center_st") {
+      pm.als101_dis_center_st = p.as_int();
     }
-    else if (p.get_name() == "als100_dis_center_ed") {
-      pm.als100_dis_center_ed = p.as_int();
+    else if (p.get_name() == "als101_dis_center_ed") {
+      pm.als101_dis_center_ed = p.as_int();
     }
   }
 }
 
-int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
+int LaserImagePos::alg101_getcallbackParameter(const rclcpp::Parameter &p)
 {
-    if (p.get_name() == "als100_exposure_time") {
+    if (p.get_name() == "als101_exposure_time") {
         auto k = p.as_int();
         if (k <20 || k>65535) {
             return -1;}
-        else{pm.als100_exposure_time=k;
-            if(pm.task_num==100){
-                _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als100_exposure_time)});}
+        else{pm.als101_exposure_time=k;
+            if(pm.task_num==101){
+                _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als101_exposure_time)});}
             return 1;}}
-    else if(p.get_name() == "als100_pingjun") {
+    else if(p.get_name() == "als101_pingjun") {
         auto k = p.as_int();
         if (k <0 || k>255) {
             return -1;}
-        else{pm.als100_pingjun=p.as_int();
+        else{pm.als101_pingjun=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_b_yanmofuzhu") {
+    else if(p.get_name() == "als101_b_yanmofuzhu") {
         auto k = p.as_int();
         if (k != 0 && k!=1) {
             return -1;}
-        else{pm.als100_b_yanmofuzhu=p.as_int();
+        else{pm.als101_b_yanmofuzhu=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_b_gudingquyu") {
+    else if(p.get_name() == "als101_b_gudingquyu") {
         auto k = p.as_int();
         if (k != 0 && k!=1) {
             return -1;}
-        else{pm.als100_b_gudingquyu=p.as_int();
+        else{pm.als101_b_gudingquyu=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_widthliantongdis") {
+    else if(p.get_name() == "als101_widthliantongdis") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_widthliantongdis=p.as_int();
+        else{pm.als101_widthliantongdis=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_highliantongdis") {
+    else if(p.get_name() == "als101_highliantongdis") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_highliantongdis=p.as_int();
+        else{pm.als101_highliantongdis=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_gujiaerzhi") {
+    else if(p.get_name() == "als101_gujiaerzhi") {
         auto k = p.as_int();
         if (k < 0 || k > 255) {
             return -1;}
-        else{pm.als100_gujiaerzhi=p.as_int();
+        else{pm.als101_gujiaerzhi=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_jiguanghight") {
+    else if(p.get_name() == "als101_jiguanghight") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_jiguanghight=p.as_int();
+        else{pm.als101_jiguanghight=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_jiguanglong") {
+    else if(p.get_name() == "als101_jiguanglong") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_jiguanglong=p.as_int();
+        else{pm.als101_jiguanglong=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_jiguangkuandu") {
+    else if(p.get_name() == "als101_jiguangkuandu") {
         auto k = p.as_int();
         if (k < 0 || k > 20) {
             return -1;}
-        else{pm.als100_jiguangkuandu=p.as_int();
+        else{pm.als101_jiguangkuandu=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Updif") {
+    else if(p.get_name() == "als101_Updif") {
         auto k = p.as_int();
         if (k < -255 || k > 255) {
             return -1;}
-        else{pm.als100_Updif=p.as_int();
+        else{pm.als101_Updif=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Updifmin") {
+    else if(p.get_name() == "als101_Updifmin") {
         auto k = p.as_int();
         if (k < -255 || k > 255) {
             return -1;}
-        else{pm.als100_Updifmin=p.as_int();
+        else{pm.als101_Updifmin=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Uplong") {
+    else if(p.get_name() == "als101_Uplong") {
         auto k = p.as_int();
         if (k < 1 || k > 500) {
             return -1;}
-        else{pm.als100_Uplong=p.as_int();
+        else{pm.als101_Uplong=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Downdif") {
+    else if(p.get_name() == "als101_Downdif") {
         auto k = p.as_int();
         if (k < -255 || k > 255) {
             return -1;}
-        else{pm.als100_Downdif=p.as_int();
+        else{pm.als101_Downdif=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Downdifmin") {
+    else if(p.get_name() == "als101_Downdifmin") {
         auto k = p.as_int();
         if (k < -255 || k > 255) {
             return -1;}
-        else{pm.als100_Downdifmin=p.as_int();
+        else{pm.als101_Downdifmin=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_Downdlong") {
+    else if(p.get_name() == "als101_Downdlong") {
         auto k = p.as_int();
         if (k < 1 || k > 500) {
             return -1;}
-        else{pm.als100_Downdlong=p.as_int();
+        else{pm.als101_Downdlong=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_erzhisize") {
+    else if(p.get_name() == "als101_erzhisize") {
         auto k = p.as_int();
         if (k < 80 || k > 500) {
             return -1;}
-        else{pm.als100_erzhisize=p.as_int();
+        else{pm.als101_erzhisize=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_erzhisize2") {
+    else if(p.get_name() == "als101_erzhisize2") {
         auto k = p.as_int();
         if (k < 30 || k > 500) {
             return -1;}
-        else{pm.als100_erzhisize2=p.as_int();
+        else{pm.als101_erzhisize2=p.as_int();
             return 1;}}
-    else if(p.get_name() == "als100_searchdectancemax") {
+    else if(p.get_name() == "als101_searchdectancemax") {
         auto k = p.as_int();
         if (k < 30 || k > 500) {
             return -1;}
-        else{pm.als100_searchdectancemax=p.as_int();
+        else{pm.als101_searchdectancemax=p.as_int();
             return 1;}}   
-    else if(p.get_name() == "als100_searchdectancemin") {
+    else if(p.get_name() == "als101_searchdectancemin") {
         auto k = p.as_int();
         if (k < 1 || k > 500) {
             return -1;}
-        else{pm.als100_searchdectancemin=p.as_int();
+        else{pm.als101_searchdectancemin=p.as_int();
             return 1;}}  
-    else if(p.get_name() == "als100_dis_center_st") {
+    else if(p.get_name() == "als101_dis_center_st") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_dis_center_st=p.as_int();
+        else{pm.als101_dis_center_st=p.as_int();
             return 1;}}   
-    else if(p.get_name() == "als100_dis_center_ed") {
+    else if(p.get_name() == "als101_dis_center_ed") {
         auto k = p.as_int();
         if (k < 0 || k > 500) {
             return -1;}
-        else{pm.als100_dis_center_ed=p.as_int();
+        else{pm.als101_dis_center_ed=p.as_int();
             return 1;}}     
 
     return 0;
 }
 
-int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
+int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
                                     std::vector <cv::Point2f> &pointcloud,
                                     std::vector <cv::Point2f> &namepoint,
                                     bool &solderjoints,
@@ -276,7 +276,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 stepfind=0;
     Myhalcv2::L_Point32 stepfindST,stepfindED;//结果线1拟合区域,(下方)
     Myhalcv2::L_Point32 midfindST,midfindED;//结果线2拟合区域,(上方)
-    Int32 minj,mini;
+    Int32 maxj,maxi;
     Int32 latsj;
     Int32 linedistance1,linedistance2;
     Int32 nihenum=0;
@@ -301,32 +301,32 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     /*********************/
     //算法参数
-    Int32 pingjun=pm.als100_pingjun;//15;//二值阈值
-    Int32 b_yanmofuzhu=pm.als100_b_yanmofuzhu;//1;//是否使用掩摸辅助
-    Int32 b_gudingquyu=pm.als100_b_gudingquyu;//0;//是否固定区域
-    Int32 widthliantongdis=pm.als100_widthliantongdis;//2;//激光宽度连通距离
-    Int32 highliantongdis=pm.als100_highliantongdis;//15;//激光长度连通距离
-    Int32 gujiaerzhi=pm.als100_gujiaerzhi;//160;//找骨架二值图
-    Int32 jiguanghight=pm.als100_jiguanghight;//50;//整体激光最短长度
-    Int32 jiguanglong=pm.als100_jiguanglong;//20;//单边激光最短长度
-    Int32 jiguangkuandu=pm.als100_jiguangkuandu;//4;//激光粗细
-    Int32 Updif=pm.als100_Updif;//0;//上半段倾斜开始斜度10
-    Int32 Updifmin=pm.als100_Updifmin;//-5;//上半段倾斜终止斜度10
-    Int32 Uplong=pm.als100_Uplong;//5;//上半段直线长度
-    Int32 Downdif=pm.als100_Downdif;//0;//下半段倾斜开始斜度0
-    Int32 Downdifmin=pm.als100_Downdifmin;//5;//下半段倾斜终止斜度0
-    Int32 Downdlong=pm.als100_Downdlong;//5;//下半段直线长度
-    Int32 duanxianerzhi=pm.als100_duanxianerzhi;//180;//找断线的二值阈值
-    Int32 erzhisize=pm.als100_erzhisize;//150;//断线二值图的上下阈值尺寸
-    Int32 erzhisize2=pm.als100_erzhisize2;//60;//断线二值图的左右阈值尺寸
-    Int32 searchdectancemax=pm.als100_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
-    Int32 searchdectancemin=pm.als100_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
-    Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
-    Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
+    Int32 pingjun=pm.als101_pingjun;//15;//二值阈值
+    Int32 b_yanmofuzhu=pm.als101_b_yanmofuzhu;//1;//是否使用掩摸辅助
+    Int32 b_gudingquyu=pm.als101_b_gudingquyu;//0;//是否固定区域
+    Int32 widthliantongdis=pm.als101_widthliantongdis;//2;//激光宽度连通距离
+    Int32 highliantongdis=pm.als101_highliantongdis;//15;//激光长度连通距离
+    Int32 gujiaerzhi=pm.als101_gujiaerzhi;//160;//找骨架二值图
+    Int32 jiguanghight=pm.als101_jiguanghight;//50;//整体激光最短长度
+    Int32 jiguanglong=pm.als101_jiguanglong;//20;//单边激光最短长度
+    Int32 jiguangkuandu=pm.als101_jiguangkuandu;//4;//激光粗细
+    Int32 Updif=pm.als101_Updif;//0;//上半段倾斜开始斜度10
+    Int32 Updifmin=pm.als101_Updifmin;//5;//上半段倾斜终止斜度10
+    Int32 Uplong=pm.als101_Uplong;//5;//上半段直线长度
+    Int32 Downdif=pm.als101_Downdif;//0;//下半段倾斜开始斜度0
+    Int32 Downdifmin=pm.als101_Downdifmin;//-5;//下半段倾斜终止斜度0
+    Int32 Downdlong=pm.als101_Downdlong;//5;//下半段直线长度
+    Int32 duanxianerzhi=pm.als101_duanxianerzhi;//180;//找断线的二值阈值
+    Int32 erzhisize=pm.als101_erzhisize;//150;//断线二值图的上下阈值尺寸
+    Int32 erzhisize2=pm.als101_erzhisize2;//60;//断线二值图的左右阈值尺寸
+    Int32 searchdectancemax=pm.als101_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
+    Int32 searchdectancemin=pm.als101_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
+    Int32 dis_center_st=pm.als101_dis_center_st;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed=pm.als101_dis_center_ed;//500;  //距离中心点此处后停止统计
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
-    RCLCPP_INFO(this->get_logger(), "start alg100");
+    RCLCPP_INFO(this->get_logger(), "start alg101");
 #endif
     if(step==2)
     {
@@ -338,14 +338,14 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
     Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif    
     if(step!=0)
     {
       imageGasupain=MatCreatClone(imageGasu,cv8uc1_Imagebuff8);
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==3)
     {
@@ -355,7 +355,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     imageBry=Myhalcv2::MatCreat(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
     Myhalcv2::Mynormalize(imageGasu,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==4)
     {
@@ -366,7 +366,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=(Int32)bryvalue+pingjun;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==5)
     {
@@ -398,7 +398,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,5);
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==6)
     {
@@ -408,7 +408,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=gujiaerzhi;
     Myhalcv2::Mybinary(m_brygujia,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==7)
     {
@@ -418,7 +418,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==8)
     {
@@ -496,7 +496,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyCutRoi(imageGasu,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft,jiguangTop,jiguangRight-jiguangLeft+1,jiguangDeep-jiguangTop+1);
     Myhalcv2::Mynormalize_lineXY(m_tempmatIn,&imageBry,1);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==9)
     {
@@ -506,7 +506,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=gujiaerzhi;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==10)
     {
@@ -521,7 +521,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==11)
     {
@@ -530,7 +530,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==12)
     {
@@ -590,7 +590,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         }
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==13)
     {
@@ -624,7 +624,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight/4);//修复空的线
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==14)
     {
@@ -636,13 +636,13 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
       return 0;
     }
 
-    mini=RANDOM_MAX;
+    maxi=RANDOM_MIN;
     for(j=X_Linestarty;j<=X_Lineendy;j++)
     {
-        if(mini>X_line[j])
+        if(maxi<X_line[j])
         {
-            mini=X_line[j];
-            minj=j;
+            maxi=X_line[j];
+            maxj=j;
         }
     }
     i32_mXline=Myhalcv2::MatCreat(1,nHeight/4,Myhalcv2::CCV_32SC1,X_line);//把线横摆
@@ -657,11 +657,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         //如果找到连续3个正数,可以确定起点
         if(stepfind==0)
         {
-            if(m32_filterIma.ptr_int[j]>=Updif)
+            if(m32_filterIma.ptr_int[j]<=Updif)
             {
                 zhengshunum++;
             }
-            else if(m32_filterIma.ptr_int[j]<Updif)
+            else if(m32_filterIma.ptr_int[j]>Updif)
             {
                 zhengshunum=0;
             }
@@ -675,11 +675,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         }
         if(stepfind==1)
         {
-            if(m32_filterIma.ptr_int[j]>Updif)//定位到最后个大于0的地方
+            if(m32_filterIma.ptr_int[j]<Updif)//定位到最后个大于0的地方
             {
                 latsj=j;
             }
-            if(m32_filterIma.ptr_int[j]<Updifmin)
+            if(m32_filterIma.ptr_int[j]>Updifmin)
             {
                 int end=latsj;
                 stepfind=2;
@@ -711,11 +711,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     /************************************/
         //人工辅助限制
-    stepfindED.y=MIN(stepfindED.y,minj-dis_center_st);
+    stepfindED.y=MIN(stepfindED.y,maxj-dis_center_st);
     if(stepfindED.y<(Int32)X_Linestarty+6)
         stepfindED.y=X_Linestarty+6;
     stepfindED.x=X_line[stepfindED.y]>>1;
-    stepfindST.y=MAX(stepfindST.y,minj-dis_center_ed);
+    stepfindST.y=MAX(stepfindST.y,maxj-dis_center_ed);
     stepfindST.x=X_line[stepfindST.y]>>1;
     if(stepfindED.y-stepfindST.y<Uplong)
     {
@@ -743,11 +743,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         //如果找到连续3个负数,可以确定起点
         if(stepfind==0)
         {
-            if(m32_filterIma.ptr_int[j]<=Downdif)
+            if(m32_filterIma.ptr_int[j]>=Downdif)
             {
                 zhengshunum++;
             }
-            else if(m32_filterIma.ptr_int[j]>Downdif)
+            else if(m32_filterIma.ptr_int[j]<Downdif)
             {
                 zhengshunum=0;
             }
@@ -761,11 +761,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         }
         if(stepfind==1)
         {
-            if(m32_filterIma.ptr_int[j]<Downdif)//定位到最后个大于0的地方
+            if(m32_filterIma.ptr_int[j]>Downdif)//定位到最后个大于0的地方
             {
                 latsj=j;
             }
-            if(m32_filterIma.ptr_int[j]>Downdifmin)
+            if(m32_filterIma.ptr_int[j]<Downdifmin)
             {
                 int st=latsj;
                 stepfind=2;
@@ -797,11 +797,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     /************************************/
     //人工辅助限制
-    midfindST.y=MAX(midfindST.y,minj+dis_center_st);
+    midfindST.y=MAX(midfindST.y,maxj+dis_center_st);
     if(midfindST.y>(Int32)(X_Lineendy-6))
         midfindST.y=X_Lineendy-6;
     midfindST.x=X_line[midfindST.y]>>1;
-    midfindED.y=MIN(midfindED.y,minj+dis_center_ed);
+    midfindED.y=MIN(midfindED.y,maxj+dis_center_ed);
     midfindED.x=X_line[midfindED.y]>>1;
     if(midfindED.y-midfindST.y<Downdlong)
     {
@@ -856,7 +856,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==15)
     {
@@ -1001,7 +1001,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         return 1;
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==16)
     {
@@ -1104,7 +1104,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         return 1;
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==17)
     {
@@ -1165,7 +1165,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyCutselfRoi(&imageGasu,1,1,imageGasu.width-2,imageGasu.height-2);
     Myhalcv2::Mynormalize_lineXY_downvalue(imageGasu,&imageGasu,15,255);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==18)
     {
@@ -1177,7 +1177,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 //断线分割膨胀法
     Myhalcv2::Mybinary(imageGasu,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==19)
     {
@@ -1195,7 +1195,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::Myregion_to_bin(&ImageConectlong,&m_brygujia,255);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==20)
     {
@@ -1209,7 +1209,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     imageBry=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
     Myhalcv2::MyAddminRoi(imageBry,m_brygujia,&imageGasu,nstarti-1,nstartj-1);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
+    RCLCPP_INFO(this->get_logger(), "start alg101=%d",debug_alg++);
 #endif 
     if(step==21)
     {
@@ -1446,7 +1446,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     namepoint.push_back(cv_point);
 
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "finish alg100");
+    RCLCPP_INFO(this->get_logger(), "finish alg101");
 #endif 
     
     return 0;

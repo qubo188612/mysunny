@@ -11,7 +11,7 @@ laser_imagepos_node:
     als100_jiguanglong:       20
     als100_jiguangkuandu:     4
     als100_Updif:             0
-    als100_Updifmin:          -5
+    als100_Updifmin:         -5
     als100_Uplong:            5
     als100_Downdif:           0
     als100_Downdifmin:        5
@@ -23,6 +23,30 @@ laser_imagepos_node:
     als100_searchdectancemin: 25
     als100_dis_center_st:     0
     als100_dis_center_ed:     500
+
+    als101_exposure_time:     120               # int
+    als101_pingjun:           15
+    als101_b_yanmofuzhu:      1
+    als101_b_gudingquyu:      0
+    als101_widthliantongdis:  6
+    als101_highliantongdis:   15
+    als101_gujiaerzhi:        160
+    als101_jiguanghight:      50
+    als101_jiguanglong:       20
+    als101_jiguangkuandu:     4
+    als101_Updif:             0
+    als101_Updifmin:          5
+    als101_Uplong:            5
+    als101_Downdif:           0
+    als101_Downdifmin:       -5
+    als101_Downdlong:         5
+    als101_duanxianerzhi:     180
+    als101_erzhisize:         150
+    als101_erzhisize2:        60
+    als101_searchdectancemax: 160
+    als101_searchdectancemin: 25
+    als101_dis_center_st:     0
+    als101_dis_center_ed:     500
 
     task_num:       0                 # int
     show_step:      0

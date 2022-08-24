@@ -33,6 +33,7 @@
 
 #define SQRTof2_Q8 		  362
 #define RANDOM_MAX		  0x7FFFFFFF
+#define RANDOM_MIN       -2147483648
 
 #define MIN(a,b)  ((a) > (b) ? (b) : (a))
 #define MAX(a,b)  ((a) < (b) ? (b) : (a))

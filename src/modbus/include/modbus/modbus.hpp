@@ -62,7 +62,34 @@ namespace modbus
 #define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
 #define ALS100_DIS_CENTER_ST_REG_ADD           0x0015
 #define ALS100_DIS_CENTER_ED_REG_ADD           0x0016
+
 #define ALS100_INIT_REG_ADD                    0x001f
+
+#define ALS101_EXPOSURE_TIME_REG_ADD           0x0020
+#define ALS101_PINGJUN_REG_ADD                 0x0021
+#define ALS101_B_YANMOFUZHU_REG_ADD            0x0022
+#define ALS101_B_GUDINGQUYU_REG_ADD            0x0023
+#define ALS101_WIDTHLIANTONGDIS_REG_ADD        0x0024
+#define ALS101_HIGHLIANTONGDIS_REG_ADD         0x0025
+#define ALS101_GUJIAERZHI_REG_ADD              0x0026
+#define ALS101_JIGUANGHIGHT_REG_ADD            0x0027
+#define ALS101_JIGUANGLONG_REG_ADD             0x0028
+#define ALS101_JIGUANGKUANDU_REG_ADD           0x0029
+#define ALS101_UPDIF_REG_ADD                   0x002a
+#define ALS101_UPDIFMIN_REG_ADD                0x002b
+#define ALS101_UPLONG_REG_ADD                  0x002c
+#define ALS101_DOWNDIF_REG_ADD                 0x002d
+#define ALS101_DOWNDIFMIN_REG_ADD              0x002e
+#define ALS101_DOWNDLONG_REG_ADD               0x002f
+#define ALS101_DUANXIANERZHI_REG_ADD           0x0030
+#define ALS101_ERZHISIZE_REG_ADD               0x0031
+#define ALS101_ERZHISIZE2_REG_ADD              0x0032
+#define ALS101_SEARCHDECTANCEMAX_REG_ADD       0x0033
+#define ALS101_SEARCHDECTANCEMIN_REG_ADD       0x0034
+#define ALS101_DIS_CENTER_ST_REG_ADD           0x0035
+#define ALS101_DIS_CENTER_ED_REG_ADD           0x0036
+
+#define ALS101_INIT_REG_ADD                    0x003f
 
 #define ALS_SHOW_STEP_REG_ADD                  0x018f
 
@@ -140,7 +167,9 @@ public:
   void _task_parameter(int ddr,u_int16_t num);
 
   int als100_task_parameter(int ddr,u_int16_t num);
+  int als101_task_parameter(int ddr,u_int16_t num);
   void init_als100_parameter();
+  void init_als101_parameter();
 
   void _task_robot(int ddr,u_int16_t num);
 

@@ -88,6 +88,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
 
   init_als100_parameter();
+  init_als101_parameter();
   
   static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
@@ -222,6 +223,8 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
     break;
   }
   if(0!=als100_task_parameter(ddr,num))
+      return;
+  if(0!=als101_task_parameter(ddr,num))
       return;
 }
 
