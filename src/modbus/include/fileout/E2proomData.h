@@ -5,6 +5,13 @@
 #include "fileout/FileOut.h"
 #include "float.h"
 
+//任务号设置
+#define E2POOM_TASK_NUM_SAVEBUFF           8
+#define E2POOM_TASK_NUM_SYSPATH_MOTO       "./SAVE/E2P_TASK_NUM_DLG.bsd" 
+#define E2POOM_TASK_NUM_MIN                0
+#define E2POOM_TASK_NUM_USE                0
+#define E2POOM_TASK_NUM_MAX                65535 
+
 //机器人设置
 #define E2POOM_ROBOT_SAVEBUFF              20
 #define E2POOM_ROBOT_SYSPATH_MOTO			"./SAVE/E2P_ROBOT_DLG.bsd"
@@ -171,14 +178,24 @@ class E2proomData
 public:
     E2proomData();
     ~E2proomData();
+/****************************/   //任务号参数
+    //任务号参数
+    Uint16 task_num;             //任务号参数
+
+    void write_task_num_para();	     //保存机器人参数
+    void init_task_num_para();		 //初始化机器人参数
+    
+    Uint16 task_num_min;         //任务号参数最小值
+    Uint16 task_num_max;         //任务号参数最大值
+    Uint16 task_num_use;         //任务号参数默认值
 
 /****************************/
     //机器人参数
     Uint16 robot_mod;           //机器人型号
     Uint16 robot_port;          //机器人端口
 
-    void write_robot_para();				//保存机器人参数
-    void init_robot_para();				//初始化机器人参数
+    void write_robot_para();	//保存机器人参数
+    void init_robot_para();		//初始化机器人参数
 
     Uint16 robot_port_min;      //机器人端口最小值
     Uint16 robot_port_max;      //机器人端口最大值

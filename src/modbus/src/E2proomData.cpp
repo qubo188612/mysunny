@@ -12,6 +12,10 @@ E2proomData::E2proomData()
       mkdir("./SAVE",S_IRWXU);
     }
 
+    task_num_min=E2POOM_TASK_NUM_MIN;
+    task_num_use=E2POOM_TASK_NUM_USE;
+    task_num_max=E2POOM_TASK_NUM_MAX;
+
     robot_port_min=E2POOM_ROBOT_PORT_MIN;
     robot_port_max=E2POOM_ROBOT_PORT_MAX;
     robot_port_use=E2POOM_ROBOT_PORT_USE;
@@ -29,6 +33,9 @@ E2proomData::~E2proomData()
 
 void E2proomData::check_para()
 {
+    if(task_num<task_num_min||task_num_min>task_num_max)
+      task_num=task_num_use;
+
     if(robot_mod!=E2POOM_ROBOT_MOD_NULL&&
        robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG&&
        robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI&&
@@ -47,6 +54,33 @@ void E2proomData::read_para()
 {
     Uint8 *buff=NULL;
     CFileOut fo;
+
+    buff=new Uint8[E2POOM_TASK_NUM_SAVEBUFF];    
+    if(buff==NULL)
+        return;
+    if(0 > fo.ReadFile(E2POOM_TASK_NUM_SYSPATH_MOTO,buff,E2POOM_TASK_NUM_SAVEBUFF))
+    {
+        init_task_num_para();
+        if(buff!=NULL)
+        {
+          delete []buff;
+          buff=NULL;
+        }
+    }
+    else
+    {
+      Uint16 *u16_p;
+
+      u16_p = (Uint16*)buff;
+      task_num=*u16_p;
+      u16_p++;
+    }
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+
 
     buff=new Uint8[E2POOM_ROBOT_SAVEBUFF];
     if(buff==NULL)
@@ -81,6 +115,36 @@ void E2proomData::read_para()
     
     check_para();
 
+}
+
+void E2proomData::write_task_num_para()
+{
+    Uint8 *buff=NULL;
+    CFileOut fo;
+
+    check_para();
+    buff=new Uint8[E2POOM_TASK_NUM_SAVEBUFF];
+    if(buff==NULL)
+      return;
+
+    Uint16 *u16_p;
+
+    u16_p = (Uint16*)buff;
+    *u16_p=task_num;
+    u16_p++;
+
+    fo.WriteFile(E2POOM_TASK_NUM_SYSPATH_MOTO,buff,E2POOM_TASK_NUM_SAVEBUFF);
+
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+}
+
+void E2proomData::init_task_num_para()
+{
+    task_num=E2POOM_TASK_NUM_USE;
 }
 
 void E2proomData::write_robot_para()

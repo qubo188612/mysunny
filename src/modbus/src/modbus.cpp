@@ -115,6 +115,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     return;
   }
   mb_mapping->tab_registers[1] = 0xff;
+  mb_mapping->tab_registers[0x102] = (u_int16_t)e2proomdata.task_num;
+  _task_numberset(e2proomdata.task_num);
 
   mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
   if (!mb_forwardmapping) {
@@ -210,6 +212,8 @@ void Modbus::_task_numberset(u_int16_t num)
 {
   _param_linecenter->set_parameters({rclcpp::Parameter("task_num", num)}); 
   _param_laserimagepos->set_parameters({rclcpp::Parameter("task_num", num)}); 
+  e2proomdata.task_num=num;
+  e2proomdata.write_task_num_para();
 }
 
 
