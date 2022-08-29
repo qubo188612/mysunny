@@ -129,7 +129,21 @@ int Modbus::als102_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_dis_center_ed", num)});
             return 1;
         break;
-
+        case ALS102_B_OPENGUDINGDIMIAN_REG_ADD:
+            e2proomdata.als102_b_opengudingdimian=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_b_opengudingdimian", num)});
+            return 1;
+        break;
+        case ALS102_DIMIANPANGDINGJULI_REG_ADD:
+            e2proomdata.als102_dimianpangdingjuli=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_dimianpangdingjuli", num)});
+            return 1;
+        break;
+        case ALS102_DIMIANPINGJUNSHUNUM_REG_ADD:
+            e2proomdata.als102_dimianpingjunshunum=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_dimianpingjunshunum", num)});
+            return 1;
+        break;
 
         case ALS102_INIT_REG_ADD:
             if(num==1)
@@ -171,6 +185,9 @@ void Modbus::init_als102_parameter()
     parameterport_mapping->tab_registers[ALS102_SEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als102_searchdectancemin;
     parameterport_mapping->tab_registers[ALS102_DIS_CENTER_ST_REG_ADD]=e2proomdata.als102_dis_center_st;
     parameterport_mapping->tab_registers[ALS102_DIS_CENTER_ED_REG_ADD]=e2proomdata.als102_dis_center_ed;
+    parameterport_mapping->tab_registers[ALS102_B_OPENGUDINGDIMIAN_REG_ADD]=e2proomdata.als102_b_opengudingdimian;
+    parameterport_mapping->tab_registers[ALS102_DIMIANPANGDINGJULI_REG_ADD]=e2proomdata.als102_dimianpangdingjuli;
+    parameterport_mapping->tab_registers[ALS102_DIMIANPINGJUNSHUNUM_REG_ADD]=e2proomdata.als102_dimianpingjunshunum;
 }
 
 }

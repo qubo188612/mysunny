@@ -194,6 +194,12 @@ void LaserImagePos::InitRunImage()
   firstsearch_sty=0,
   firstsearch_edx=0,
   firstsearch_edy=0;
+  jishuST_x=0;
+  jishuST_y=0;
+  jishuED_x=0;
+  jishuED_y=0;
+  jishuNum=0;
+  firstdimian=0;
 }
 
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像

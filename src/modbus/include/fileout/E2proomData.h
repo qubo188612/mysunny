@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              54
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              60
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -246,6 +246,16 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED_USE               30
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
+#define E2POOM_ALG102_LASERIMAGEPOS_B_OPENGUDINGDIMIAN_MIN          0
+#define E2POOM_ALG102_LASERIMAGEPOS_B_OPENGUDINGDIMIAN_MAX          1
+#define E2POOM_ALG102_LASERIMAGEPOS_B_OPENGUDINGDIMIAN_USE          0
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPANGDINGJULI_MIN          1
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPANGDINGJULI_MAX          500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPANGDINGJULI_USE          15
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MIN         1
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MAX         500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_USE         10
+
 
 class E2proomData
 {
@@ -499,6 +509,9 @@ public:
     Int16 als102_searchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离
     Int16 als102_dis_center_st;//距离中心点此处后开始统计
     Int16 als102_dis_center_ed;//距离中心点此处后停止统计
+    Int16 als102_b_opengudingdimian;//是否固定底面
+    Int16 als102_dimianpangdingjuli;//底面判定距离
+    Int16 als102_dimianpingjunshunum;//底面平均数统计个数
       
 
     void write_als102_para();				//保存任务102参数
@@ -573,6 +586,15 @@ public:
     Int16 als102_dis_center_ed_min;
     Int16 als102_dis_center_ed_max;
     Int16 als102_dis_center_ed_use;
+    Int16 als102_b_opengudingdimian_min;
+    Int16 als102_b_opengudingdimian_max;
+    Int16 als102_b_opengudingdimian_use;
+    Int16 als102_dimianpangdingjuli_min;
+    Int16 als102_dimianpangdingjuli_max;
+    Int16 als102_dimianpangdingjuli_use;
+    Int16 als102_dimianpingjunshunum_min;
+    Int16 als102_dimianpingjunshunum_max;
+    Int16 als102_dimianpingjunshunum_use;
 
 
 /****************************/

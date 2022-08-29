@@ -93,7 +93,10 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_searchdectancemax",
                                               "als102_searchdectancemin",
                                               "als102_dis_center_st",
-                                              "als102_dis_center_ed"};
+                                              "als102_dis_center_ed",
+                                              "als102_b_opengudingdimian",
+                                              "als102_dimianpangdingjuli",
+                                              "als102_dimianpingjunshunum"};
 
 /**
  * @brief To zip related parameters together.
@@ -176,6 +179,9 @@ struct Params
   int als102_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
   int als102_dis_center_st=0;//距离中心点此处后开始统计
   int als102_dis_center_ed=30;  //距离中心点此处后停止统计
+  int als102_b_opengudingdimian=1;//是否固定底面
+  int als102_dimianpangdingjuli=15;//底面判定距离
+  int als102_dimianpingjunshunum=10;//底面平均数统计个数
 /************************************/
   int task_num = 0;
   int show_step = 0;      
@@ -337,6 +343,8 @@ private:
   Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX,Imageheadline;
   Int32 firstsearch;
   Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
+  Int32 jishuST_x,jishuST_y,jishuED_x,jishuED_y,jishuNum;
+  Int32 firstdimian;
 
   int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
