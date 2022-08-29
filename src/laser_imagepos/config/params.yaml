@@ -1,6 +1,6 @@
 laser_imagepos_node:
   ros__parameters:
-    als100_exposure_time:     120               # int
+    als100_exposure_time:     10000               # int
     als100_pingjun:           15
     als100_b_yanmofuzhu:      1
     als100_b_gudingquyu:      0
@@ -24,7 +24,7 @@ laser_imagepos_node:
     als100_dis_center_st:     0
     als100_dis_center_ed:     500
 
-    als101_exposure_time:     120               # int
+    als101_exposure_time:     10000               # int
     als101_pingjun:           15
     als101_b_yanmofuzhu:      1
     als101_b_gudingquyu:      0
@@ -47,6 +47,31 @@ laser_imagepos_node:
     als101_searchdectancemin: 25
     als101_dis_center_st:     0
     als101_dis_center_ed:     500
+
+    als102_exposure_time:     10000               # int
+    als102_pingjun:           15
+    als102_b_yanmofuzhu:      1
+    als102_b_gudingquyu:      0
+    als102_widthliantongdis:  6
+    als102_highliantongdis:   15
+    als102_gujiaerzhi:        160
+    als102_jiguanghight:      50
+    als102_jiguanglong:       20
+    als102_jiguangkuandu:     4
+    als102_Updif:            -2
+    als102_Updifmin:         -5
+    als102_Uplong:            5
+    als102_Downdif:          -5
+    als102_Downdifmin:       -2
+    als102_Downdlong:         5
+    als102_duanxianerzhi:     180
+    als102_erzhisize:         150
+    als102_erzhisize2:        60
+    als102_searchdectancemax: 160
+    als102_searchdectancemin: 25
+    als102_dis_center_st:     0
+    als102_dis_center_ed:     30
+
 
     task_num:       0                 # int
     show_step:      0

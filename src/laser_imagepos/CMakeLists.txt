@@ -29,7 +29,8 @@ find_package(tutorial_interfaces REQUIRED)
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp 
                                    src/myhalcv2.cpp 
                                    src/alg100_runimage.cpp
-                                   src/alg101_runimage.cpp)
+                                   src/alg101_runimage.cpp
+                                   src/alg102_runimage.cpp)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

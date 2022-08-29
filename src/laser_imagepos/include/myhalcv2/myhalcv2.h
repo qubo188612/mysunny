@@ -33,7 +33,7 @@
 
 #define SQRTof2_Q8 		  362
 #define RANDOM_MAX		  0x7FFFFFFF
-#define RANDOM_MIN       -2147483648
+#define RANDOM_MIN		  -2147483648
 
 #define MIN(a,b)  ((a) > (b) ? (b) : (a))
 #define MAX(a,b)  ((a) < (b) ? (b) : (a))
@@ -1466,8 +1466,8 @@ namespace Myhalcv2
                                Int32 thickness);		//直线粗细
 
     //斜率截距式转MyCountLine类
-    Int8 Mylinekb_to_gion(float *k_In,				//输入直线斜率数组
-                          float *b_In,				//输入直线截距数组
+    Int8 Mylinekb_to_gion(double *k_In,				//输入直线斜率数组
+                          double *b_In,				//输入直线截距数组
                           Int32 num,				//输入数组个数,num需小于MHC_SEARCH_LINENUM
                           Uint32 nHeight,			//输入直线的矩阵高度
                           Uint32 nWidth,			//输入直线的矩阵宽度

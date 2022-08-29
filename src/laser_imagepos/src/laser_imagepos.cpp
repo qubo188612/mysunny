@@ -71,6 +71,9 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
                 case 101:
                   _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als101_exposure_time)});
                 break;
+                case 102:
+                  _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als102_exposure_time)});
+                break;
                 defatult:
                 break;
               }
@@ -119,6 +122,15 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
             return result;
           }
         }
+        else if(alg_return=alg102_getcallbackParameter(p)!=0)
+        {
+          if(alg_return<0)
+          {
+            result.successful = false;
+            result.reason = "Failed to set alg102_Parameter";
+            return result;
+          }
+        }
       }
       return result;
     }
@@ -152,6 +164,7 @@ void LaserImagePos::_declare_parameters()
 {
   alg100_declare_parameters();
   alg101_declare_parameters();
+  alg102_declare_parameters();
   this->declare_parameter("task_num", pm.task_num);
   this->declare_parameter("show_step", pm.show_step);
   this->declare_parameter("start", 0);
@@ -170,6 +183,7 @@ Params LaserImagePos::_update_parameters()
   }
   alg100_update_parameters();
   alg101_update_parameters();
+  alg102_update_parameters();
   return pm;
 }
 
@@ -242,8 +256,12 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
       if(0!=alg100_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
         return 1;
     break;
-    case 101:   //内角1算法
+    case 101:   //外角2算法
       if(0!=alg101_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
+        return 1;
+    break;
+    case 102:   //小波纹板算法
+      if(0!=alg102_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
         return 1;
     break;
     default:

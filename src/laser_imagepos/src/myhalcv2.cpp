@@ -20472,7 +20472,7 @@ namespace Myhalcv2
         return 	rho;
     }
 
-    Int8 Mylinekb_to_gion(float *k_In,float *b_In,Int32 num,Uint32 nHeight,Uint32 nWidth,MyCountLine *LineOut)
+    Int8 Mylinekb_to_gion(double *k_In,double *b_In,Int32 num,Uint32 nHeight,Uint32 nWidth,MyCountLine *LineOut)
     {
         Int32 n;
         double everTheta = CV_PI/MHC_TETARANGE;
@@ -22173,7 +22173,7 @@ namespace Myhalcv2
         Int32 *i32_bufferY=(Int32*)u8_buffer_x1Temp1;
         Int32 N=0;
         double sumxx,sumx,sumy,sumxy;
-        float K[1],R[1];
+        double K[1],R[1];
         MyCountLine linetemp;
         double Dxx = 0, Dxy = 0, Dyy = 0;
         double lambda;
@@ -22286,8 +22286,7 @@ namespace Myhalcv2
                                 {
                                     double a1=1,b1=0,c1=sumx;
                                     double deta1=0,deta2=0;
-                                    Int32 n;
-                                    for(n=0;n<N;n++)
+                                    for(i=0;i<N;i++)
                                     {
                                         deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                         deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22331,8 +22330,7 @@ namespace Myhalcv2
                                 {
                                     double a1=1,b1=0,c1=sumx;
                                     double deta1=0,deta2=0;
-                                    Int32 n;
-                                    for(n=0;n<N;n++)
+                                    for(i=0;i<N;i++)
                                     {
                                         deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                         deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22411,7 +22409,7 @@ namespace Myhalcv2
                         if(points.size()==0)
                             return 1;
                         cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                        if(lines[0]!=0)
+                        if(fabs((double)lines[0])>0.000001)
                         {
                             K[0]=lines[1]/lines[0];
                             R[0]=-K[0]*lines[2]+lines[3];
@@ -22456,7 +22454,7 @@ namespace Myhalcv2
         Uint16 pEdgeMapListNum=0;
         Int32 N=0;
         double sumxx,sumx,sumy,sumxy;
-        float K[1],R[1];
+        double K[1],R[1];
         MyCountLine linetemp;
         double Dxx = 0, Dxy = 0, Dyy = 0;
         double lambda;
@@ -22583,8 +22581,7 @@ namespace Myhalcv2
                                 {
                                     double a1=1,b1=0,c1=sumx;
                                     double deta1=0,deta2=0;
-                                    Int32 n;
-                                    for(n=0;n<N;n++)
+                                    for(i=0;i<N;i++)
                                     {
                                         deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                         deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22627,8 +22624,7 @@ namespace Myhalcv2
                                 {
                                     double a1=1,b1=0,c1=sumx;
                                     double deta1=0,deta2=0;
-                                    Int32 n;
-                                    for(n=0;n<N;n++)
+                                    for(i=0;i<N;i++)
                                     {
                                         deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                         deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22708,7 +22704,7 @@ namespace Myhalcv2
                         if(points.size()==0)
                             return 1;
                         cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                        if(lines[0]!=0)
+                        if(fabs((double)lines[0])>0.000001)
                         {
                             K[0]=lines[1]/lines[0];
                             R[0]=-K[0]*lines[2]+lines[3];
@@ -22749,7 +22745,7 @@ namespace Myhalcv2
         Uint16 pEdgeMapListNum;
         Int32 N=0;
         double sumxx,sumx,sumy,sumxy;
-        float K[1],R[1];
+        double K[1],R[1];
         MyCountLine linetemp;
         double Dxx = 0, Dxy = 0, Dyy = 0;
         double lambda;
@@ -22862,8 +22858,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22906,8 +22901,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -22987,7 +22981,7 @@ namespace Myhalcv2
                 if(points.size()==0)
                     return 1;
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                if(lines[0]!=0)
+                if(fabs((double)lines[0])>0.000001)
                 {
                     K[0]=lines[1]/lines[0];
                     R[0]=-K[0]*lines[2]+lines[3];
@@ -23024,7 +23018,7 @@ namespace Myhalcv2
         Uint16 pEdgeMapListNum;
         Int32 N=0;
         double sumxx,sumx,sumy,sumxy;
-        float K[1],R[1];
+        double K[1],R[1];
         MyCountLine linetemp;
         double Dxx = 0, Dxy = 0, Dyy = 0;
         double lambda;
@@ -23138,8 +23132,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -23182,8 +23175,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -23263,7 +23255,7 @@ namespace Myhalcv2
                 if(points.size()==0)
                     return 1;
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                if(lines[0]!=0)
+                if(fabs((double)lines[0])>0.000001)
                 {
                     K[0]=lines[1]/lines[0];
                     R[0]=-K[0]*lines[2]+lines[3];
@@ -23299,7 +23291,7 @@ namespace Myhalcv2
         Uint16 pEdgeMapListNum;
         Int32 N=num;
         double sumxx,sumx,sumy,sumxy;
-        float K[1],R[1];
+        double K[1],R[1];
         MyCountLine linetemp;
         Int32 i;
         double Dxx = 0, Dxy = 0, Dyy = 0;
@@ -23398,8 +23390,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -23443,8 +23434,7 @@ namespace Myhalcv2
                         {
                             double a1=1,b1=0,c1=sumx;
                             double deta1=0,deta2=0;
-                            Int32 n;
-                            for(n=0;n<N;n++)
+                            for(i=0;i<N;i++)
                             {
                                 deta1+=(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a)*(i32_bufferX[i]-(-b*i32_bufferY[i]-c)/a);
                                 deta2+=(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1)*(i32_bufferX[i]-(-b1*i32_bufferY[i]-c1)/a1);
@@ -23524,7 +23514,7 @@ namespace Myhalcv2
                 if(points.size()==0)
                     return 1;
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                if(lines[0]!=0)
+                if(fabs((double)lines[0])>0.000001)
                 {
                     K[0]=lines[1]/lines[0];
                     R[0]=-K[0]*lines[2]+lines[3];
