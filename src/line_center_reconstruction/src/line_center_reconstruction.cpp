@@ -101,7 +101,8 @@ std::vector<tutorial_interfaces::msg::IfAlgorhmitpoint4f> to_pc3(
 {
   auto num = dst.size();
   std::vector<tutorial_interfaces::msg::IfAlgorhmitpoint4f> ptr;
-  ptr.resize(dst.size());
+  if(dst.size()>0)
+      ptr.resize(dst.size());
   for (size_t i = 0; i < num; ++i) {
     ptr[i].x = dst[i].x;
     ptr[i].y = dst[i].y;
@@ -170,7 +171,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       cv::Point2f point(ptr->lasertrackout[i].x,ptr->lasertrackout[i].y);
       src.push_back(point);
   }
-  cv::perspectiveTransform(src, dst, _homo);
+  if(src.size()>0)
+      cv::perspectiveTransform(src, dst, _homo);
   auto cloud = to_pc3(dst, src);
   msg->lasertrackoutcloud = cloud;
   
@@ -180,7 +182,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       cv::Point2f point(ptr->targetpointout[i].x,ptr->targetpointout[i].y);
       src.push_back(point);
   }
-  cv::perspectiveTransform(src, dst, _homo);
+  if(src.size()>0)
+      cv::perspectiveTransform(src, dst, _homo);
 
   for(int i=0;i<dst.size();i++)
   {

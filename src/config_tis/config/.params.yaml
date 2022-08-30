@@ -72,17 +72,18 @@ laser_imagepos_node:
     als102_jiguanghight:        50
     als102_jiguanglong:         20
     als102_jiguangkuandu:       4
-    als102_Updif:              -2
+    als102_Updif:               0
     als102_Updifmin:           -5
     als102_Uplong:              5
-    als102_Downdif:            -5
-    als102_Downdifmin:         -2
+    als102_Downdif:             0
+    als102_Downdifmin:          5
     als102_Downdlong:           5
-    als102_duanxianerzhi:       180
-    als102_erzhisize:           150
-    als102_erzhisize2:          60
-    als102_searchdectancemax:   160
-    als102_searchdectancemin:   25
+    als102_St_Down:             5
+    als102_Ed_Down:             50
+    als102_St_Up:               5
+    als102_Ed_Up:               50
+    als102_Updif2:             -2
+    als102_Updifmin2:          -5
     als102_dis_center_st:       0
     als102_dis_center_ed:       30
     als102_b_opengudingdimian:  0

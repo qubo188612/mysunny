@@ -87,11 +87,12 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_Downdif",
                                               "als102_Downdifmin",
                                               "als102_Downdlong",
-                                              "als102_duanxianerzhi",
-                                              "als102_erzhisize",
-                                              "als102_erzhisize2",
-                                              "als102_searchdectancemax",
-                                              "als102_searchdectancemin",
+                                              "als102_St_Down",
+                                              "als102_Ed_Down",
+                                              "als102_St_Up",
+                                              "als102_Ed_Up",
+                                              "als102_Updif2",
+                                              "als102_Updifmin2",
                                               "als102_dis_center_st",
                                               "als102_dis_center_ed",
                                               "als102_b_opengudingdimian",
@@ -166,17 +167,18 @@ struct Params
   int als102_jiguanghight=50;//整体激光最短长度
   int als102_jiguanglong=20;//单边激光最短长度
   int als102_jiguangkuandu=4;//激光粗细
-  int als102_Updif=-2;//上半段倾斜开始斜度10
+  int als102_Updif=0;//上半段倾斜开始斜度10
   int als102_Updifmin=-5;//上半段倾斜终止斜度10
   int als102_Uplong=5;//上半段直线长度
-  int als102_Downdif=-5;//下半段倾斜开始斜度0
-  int als102_Downdifmin=-2;//下半段倾斜终止斜度0
+  int als102_Downdif=0;//下半段倾斜开始斜度0
+  int als102_Downdifmin=5;//下半段倾斜终止斜度0
   int als102_Downdlong=5;//下半段直线长度
-  int als102_duanxianerzhi=180;//找断线的二值阈值
-  int als102_erzhisize=150;//断线二值图的上下阈值尺寸
-  int als102_erzhisize2=60;//断线二值图的左右阈值尺寸
-  int als102_searchdectancemax=160;//搜寻焊缝端点距离中央凹槽最远的距离
-  int als102_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
+  int als102_St_Down=5;//下半段拟合起点
+  int als102_Ed_Down=50;//下半段拟合终点
+  int als102_St_Up=5;//上半段拟合起点
+  int als102_Ed_Up=50;//上半段拟合终点
+  int als102_Updif2=-2;//上半段倾斜开始斜度10
+  int als102_Updifmin2=-5;//上半段倾斜终止斜度10
   int als102_dis_center_st=0;//距离中心点此处后开始统计
   int als102_dis_center_ed=30;  //距离中心点此处后停止统计
   int als102_b_opengudingdimian=1;//是否固定底面

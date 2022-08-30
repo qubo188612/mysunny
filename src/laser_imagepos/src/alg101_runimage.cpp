@@ -208,6 +208,12 @@ int LaserImagePos::alg101_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als101_Downdlong=p.as_int();
             return 1;}}
+     else if(p.get_name() == "als100_duanxianerzhi") {
+        auto k = p.as_int();
+        if (k < 0 || k > 255) {
+            return -1;}
+        else{pm.als100_duanxianerzhi=p.as_int();
+            return 1;}}
     else if(p.get_name() == "als101_erzhisize") {
         auto k = p.as_int();
         if (k < 80 || k > 500) {

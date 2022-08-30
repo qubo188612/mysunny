@@ -94,29 +94,34 @@ int Modbus::als102_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Downdlong", num)});
             return 1;
         break;
-        case ALS102_DUANXIANERZHI_REG_ADD:
-            e2proomdata.als102_duanxianerzhi=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_duanxianerzhi", num)});
+        case ALS102_ST_DOWN_REG_ADD:
+            e2proomdata.als102_St_Down=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_St_Down", num)});
             return 1;
         break;
-        case ALS102_ERZHISIZE_REG_ADD:
-            e2proomdata.als102_erzhisize=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_erzhisize", num)});
+        case ALS102_ED_DOWN_REG_ADD:
+            e2proomdata.als102_Ed_Down=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Ed_Down", num)});
             return 1;
         break;
-        case ALS102_ERZHISIZE2_REG_ADD:
-            e2proomdata.als102_erzhisize2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_erzhisize2", num)});
+        case ALS102_ST_UP_REG_ADD:
+            e2proomdata.als102_St_Up=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_St_Up", num)});
             return 1;
         break;
-        case ALS102_SEARCHDECTANCEMAX_REG_ADD:
-            e2proomdata.als102_searchdectancemax=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_searchdectancemax", num)});
+        case ALS102_ED_UP_REG_ADD:
+            e2proomdata.als102_Ed_Up=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Ed_Up", num)});
             return 1;
         break;
-        case ALS102_SEARCHDECTANCEMIN_REG_ADD:
-            e2proomdata.als102_searchdectancemin=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_searchdectancemin", num)});
+        case ALS102_UPDIF2_REG_ADD:
+            e2proomdata.als102_Updif2=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Updif2", num)});
+            return 1;
+        break;
+        case ALS102_UPDIFMIN2_REG_ADD:
+            e2proomdata.als102_Updifmin2=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Updifmin2", num)});
             return 1;
         break;
         case ALS102_DIS_CENTER_ST_REG_ADD:
@@ -178,11 +183,12 @@ void Modbus::init_als102_parameter()
     parameterport_mapping->tab_registers[ALS102_DOWNDIF_REG_ADD]=e2proomdata.als102_Downdif;
     parameterport_mapping->tab_registers[ALS102_DOWNDIFMIN_REG_ADD]=e2proomdata.als102_Downdifmin;
     parameterport_mapping->tab_registers[ALS102_DOWNDLONG_REG_ADD]=e2proomdata.als102_Downdlong;
-    parameterport_mapping->tab_registers[ALS102_DUANXIANERZHI_REG_ADD]=e2proomdata.als102_duanxianerzhi;
-    parameterport_mapping->tab_registers[ALS102_ERZHISIZE_REG_ADD]=e2proomdata.als102_erzhisize;
-    parameterport_mapping->tab_registers[ALS102_ERZHISIZE2_REG_ADD]=e2proomdata.als102_erzhisize2;
-    parameterport_mapping->tab_registers[ALS102_SEARCHDECTANCEMAX_REG_ADD]=e2proomdata.als102_searchdectancemax;
-    parameterport_mapping->tab_registers[ALS102_SEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als102_searchdectancemin;
+    parameterport_mapping->tab_registers[ALS102_ST_DOWN_REG_ADD]=e2proomdata.als102_St_Down;
+    parameterport_mapping->tab_registers[ALS102_ED_DOWN_REG_ADD]=e2proomdata.als102_Ed_Down;
+    parameterport_mapping->tab_registers[ALS102_ST_UP_REG_ADD]=e2proomdata.als102_St_Up;
+    parameterport_mapping->tab_registers[ALS102_ED_UP_REG_ADD]=e2proomdata.als102_Ed_Up;
+    parameterport_mapping->tab_registers[ALS102_UPDIF2_REG_ADD]=e2proomdata.als102_Updif2;
+    parameterport_mapping->tab_registers[ALS102_UPDIFMIN2_REG_ADD]=e2proomdata.als102_Updifmin2;
     parameterport_mapping->tab_registers[ALS102_DIS_CENTER_ST_REG_ADD]=e2proomdata.als102_dis_center_st;
     parameterport_mapping->tab_registers[ALS102_DIS_CENTER_ED_REG_ADD]=e2proomdata.als102_dis_center_ed;
     parameterport_mapping->tab_registers[ALS102_B_OPENGUDINGDIMIAN_REG_ADD]=e2proomdata.als102_b_opengudingdimian;

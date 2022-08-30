@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              60
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              61
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -208,7 +208,7 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_JIGUANGKUANDU_USE               4
 #define E2POOM_ALG102_LASERIMAGEPOS_JIGUANGKUANDU_MAX               20
 #define E2POOM_ALG102_LASERIMAGEPOS_UPDIF_MIN                      -255 
-#define E2POOM_ALG102_LASERIMAGEPOS_UPDIF_USE                      -2
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIF_USE                       0
 #define E2POOM_ALG102_LASERIMAGEPOS_UPDIF_MAX                       255
 #define E2POOM_ALG102_LASERIMAGEPOS_UPDIFMIN_MIN                   -255 
 #define E2POOM_ALG102_LASERIMAGEPOS_UPDIFMIN_USE                   -5
@@ -217,29 +217,32 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_UPLONG_USE                      5
 #define E2POOM_ALG102_LASERIMAGEPOS_UPLONG_MAX                      500
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIF_MIN                    -255 
-#define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIF_USE                    -5
+#define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIF_USE                     0
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIF_MAX                     255
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIFMIN_MIN                 -255 
-#define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIFMIN_USE                 -2
+#define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIFMIN_USE                  5
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDIFMIN_MAX                  255
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDLONG_MIN                   1
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDLONG_USE                   5
 #define E2POOM_ALG102_LASERIMAGEPOS_DOWNDLONG_MAX                   500
-#define E2POOM_ALG102_LASERIMAGEPOS_DUANXIANERZHI_MIN               0
-#define E2POOM_ALG102_LASERIMAGEPOS_DUANXIANERZHI_USE               180
-#define E2POOM_ALG102_LASERIMAGEPOS_DUANXIANERZHI_MAX               255
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE_MIN                   80
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE_USE                   150
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE_MAX                   500
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE2_MIN                  30
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE2_USE                  60
-#define E2POOM_ALG102_LASERIMAGEPOS_ERZHISIZE2_MAX                  500
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMAX_MIN           30
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMAX_USE           160
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMAX_MAX           500
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMIN_MIN           1
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMIN_USE           25
-#define E2POOM_ALG102_LASERIMAGEPOS_SEARCHDECTANCEMIN_MAX           500
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_DOWN_MIN                     0
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_DOWN_USE                     5
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_DOWN_MAX                     500
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_DOWN_MIN                     0
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_DOWN_USE                     50
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_DOWN_MAX                     500
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_UP_MIN                       0
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_UP_USE                       5
+#define E2POOM_ALG102_LASERIMAGEPOS_ST_UP_MAX                       500
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_UP_MIN                       0
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_UP_USE                       50
+#define E2POOM_ALG102_LASERIMAGEPOS_ED_UP_MAX                       500
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIF2_MIN                     -255
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIF2_USE                     -2
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIF2_MAX                      255
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIFMIN2_MIN                  -255
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIFMIN2_USE                  -5
+#define E2POOM_ALG102_LASERIMAGEPOS_UPDIFMIN2_MAX                   255
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST_MIN               0
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST_USE               0
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST_MAX               500
@@ -502,11 +505,12 @@ public:
     Int16 als102_Downdif;//下半段倾斜开始斜度0
     Int16 als102_Downdifmin;//下半段倾斜终止斜度0
     Int16 als102_Downdlong;//下半段直线长度
-    Int16 als102_duanxianerzhi;//找断线的二值阈值
-    Int16 als102_erzhisize;//断线二值图的上下阈值尺寸
-    Int16 als102_erzhisize2;//断线二值图的左右阈值尺寸
-    Int16 als102_searchdectancemax;//搜寻焊缝端点距离中央凹槽最远的距离
-    Int16 als102_searchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离
+    Int16 als102_St_Down;//下半段拟合起点
+    Int16 als102_Ed_Down;//下半段拟合终点
+    Int16 als102_St_Up;//上半段拟合起点
+    Int16 als102_Ed_Up;//上半段拟合终点
+    Int16 als102_Updif2;//上半段倾斜开始斜度10
+    Int16 als102_Updifmin2;//上半段倾斜终止斜度10
     Int16 als102_dis_center_st;//距离中心点此处后开始统计
     Int16 als102_dis_center_ed;//距离中心点此处后停止统计
     Int16 als102_b_opengudingdimian;//是否固定底面
@@ -565,21 +569,24 @@ public:
     Int16 als102_Downdlong_min;
     Int16 als102_Downdlong_max;
     Int16 als102_Downdlong_use;
-    Int16 als102_duanxianerzhi_min;
-    Int16 als102_duanxianerzhi_max;
-    Int16 als102_duanxianerzhi_use;
-    Int16 als102_erzhisize_min;
-    Int16 als102_erzhisize_max;
-    Int16 als102_erzhisize_use;
-    Int16 als102_erzhisize2_min;
-    Int16 als102_erzhisize2_max;
-    Int16 als102_erzhisize2_use;
-    Int16 als102_searchdectancemax_min;
-    Int16 als102_searchdectancemax_max;
-    Int16 als102_searchdectancemax_use;
-    Int16 als102_searchdectancemin_min;
-    Int16 als102_searchdectancemin_max;
-    Int16 als102_searchdectancemin_use;
+    Int16 als102_St_Down_min;
+    Int16 als102_St_Down_max;
+    Int16 als102_St_Down_use;
+    Int16 als102_Ed_Down_min;
+    Int16 als102_Ed_Down_max;
+    Int16 als102_Ed_Down_use;
+    Int16 als102_St_Up_min;
+    Int16 als102_St_Up_max;
+    Int16 als102_St_Up_use;
+    Int16 als102_Ed_Up_min;
+    Int16 als102_Ed_Up_max;
+    Int16 als102_Ed_Up_use;
+    Int16 als102_Updif2_min;
+    Int16 als102_Updif2_max;
+    Int16 als102_Updif2_use;
+    Int16 als102_Updifmin2_min;
+    Int16 als102_Updifmin2_max;
+    Int16 als102_Updifmin2_use;
     Int16 als102_dis_center_st_min;
     Int16 als102_dis_center_st_max;
     Int16 als102_dis_center_st_use;
