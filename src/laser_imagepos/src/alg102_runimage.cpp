@@ -1170,15 +1170,18 @@ con:
         Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
         Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
         Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
-        Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
-        Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ED);
-        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+        if(nocheck==0)
+        {
+            Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
+            Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ED);
+            Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+            Myhalcv2::MyCircle(&imageGasupain,stepfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
+            Myhalcv2::MyCircle(&imageGasupain,stepfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        }
         Myhalcv2::MyCircle(&imageGasupain,endfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyCircle(&imageGasupain,endfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyCircle(&imageGasupain,midfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
@@ -1189,7 +1192,6 @@ con:
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
     }
-    
 
     //在大图上拟合
     imageGasu=Myhalcv2::MatCreatzero(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
@@ -1198,17 +1200,17 @@ con:
         imageGasu.data[j*imageGasu.nWidth+(X_line[j]>>1)]=255;
     }
 
-    headline.ed.x=headline.ed.x*4;
-    headline.ed.y=headline.ed.y*4;
-    headline.st.x=headline.st.x*4;
-    headline.st.y=headline.st.y*4;
-    stepfindST.x=stepfindST.x*4;
-    stepfindST.y=stepfindST.y*4;
-    stepfindED.x=stepfindED.x*4;
-    stepfindED.y=stepfindED.y*4;
-
     if(nocheck==0)
     {
+        headline.ed.x=headline.ed.x*4;
+        headline.ed.y=headline.ed.y*4;
+        headline.st.x=headline.st.x*4;
+        headline.st.y=headline.st.y*4;
+        stepfindST.x=stepfindST.x*4;
+        stepfindST.y=stepfindST.y*4;
+        stepfindED.x=stepfindED.x*4;
+        stepfindED.y=stepfindED.y*4;
+
         nstartj=MIN(stepfindST.y,stepfindED.y);
         nendj=MAX(stepfindST.y,stepfindED.y);
         nstarti=MIN(stepfindST.x,stepfindED.x)-30;
@@ -1326,6 +1328,10 @@ con:
                     fuzhufindST.y=jishuST_y/jishuNum;
                     fuzhufindED.x=jishuED_x/jishuNum;
                     fuzhufindED.y=jishuED_y/jishuNum;
+                #ifdef DEBUG_ALG;
+                    RCLCPP_INFO(this->get_logger(), "start_dimian_tongji,jishuNum=%d,jishuST_x=%d,jishuST_y=%d,jishuED_x=%d,jishuED_y=%d",
+                                                    jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
+                #endif 
                 }
             }
         }
@@ -1346,6 +1352,11 @@ con:
             Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
             return 0;
         }
+    #ifdef DEBUG_ALG;
+        RCLCPP_INFO(this->get_logger(), "fuzhufindST.x=%d,fuzhufindST.y=%d,fuzhufindED.x=%d,fuzhufindED.y=%d",
+                                            fuzhufindST.x,fuzhufindST.y,fuzhufindED.x,fuzhufindED.y
+                                            );
+    #endif 
     }
 
 
