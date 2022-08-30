@@ -324,7 +324,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_Point32 midfindST2,midfindED2;//结果线2拟合区域,(上方)
     Myhalcv2::L_Point32 endfindST,endfindED;//结果线2拟合区域,(上方)
     Myhalcv2::L_Point32 endfindST2,endfindED2;//结果线2拟合区域,(上方)
-    Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)
+    
     Int32 minj,mini;
     Int32 latsj;
     Int32 linedistance1,linedistance2,linedistance3;

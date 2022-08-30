@@ -347,6 +347,7 @@ private:
   Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
   Int32 jishuST_x,jishuST_y,jishuED_x,jishuED_y,jishuNum;
   Int32 firstdimian;
+  Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)
 
   int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
