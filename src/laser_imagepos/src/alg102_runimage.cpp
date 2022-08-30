@@ -332,11 +332,11 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 nstarti,nendi,nstartj,nendj;
     Myhalcv2::L_Point32 linepoint32ST,linepoint32ED;
     Myhalcv2::L_line tileline;	//结果线2以及原图的线,(短的)
-    Myhalcv2::L_line headline;	//结果线1以及原图的线,(短的)
+    Myhalcv2::L_line headline,headline_min;	//结果线1以及原图的线,(短的)
     Myhalcv2::L_line endline;	//结果线1以及原图的线,(短的)
     Myhalcv2::L_line32 tileline32;
     Myhalcv2::L_line32 headline32;
-    Myhalcv2::L_Point32 resultfocal1,resultfocal2,resultfocal;//交点
+    Myhalcv2::L_Point32 resultfocal1,resultfocal2,resultfocal,resultfocal3;//交点
     Int32 t;
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Int32 leijiwrite;
@@ -1022,14 +1022,16 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 
     }
 con:
-    if(canleranfield==1||canlearn==0)
+    if(canlearn==0)
     {
         jishuNum=0;
         jishuST_x=0;
         jishuST_y=0;
         jishuED_x=0;
         jishuED_y=0;
-
+    }
+    if(canleranfield==1||canlearn==0)
+    {
         if(b_opengudingdimian==1)   //固定底面
         {
             if(firstdimian==0)
@@ -1207,8 +1209,6 @@ con:
 
     if(nocheck==0)
     {
-        memset(X_line,0,sizeof(Int32)*nHeight);
-
         nstartj=MIN(stepfindST.y,stepfindED.y);
         nendj=MAX(stepfindST.y,stepfindED.y);
         nstarti=MIN(stepfindST.x,stepfindED.x)-30;
@@ -1347,6 +1347,124 @@ con:
             return 0;
         }
     }
+
+
+    headline_min.st.x=headline.st.x/4;
+    headline_min.st.y=headline.st.y/4;
+    headline_min.ed.x=headline.ed.x/4;
+    headline_min.ed.y=headline.ed.y/4;
+
+    //求得两直线交点
+    if(0!=Myhalcv2::MyGetLinefocal(headline_min,tileline,&resultfocal3))
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+    #endif
+        return 1;
+    }
+    minj=resultfocal3.y;
+    zhengshunum=0;
+    stepfind=0;
+    for(j=X_Lineendy-6;j>=minj+6;j--)
+    {
+        //如果找到连续3个负数,可以确定起点
+        if(stepfind==0)
+        {
+            if(m32_filterIma.ptr_int[j]<=Downdif)
+            {
+                zhengshunum++;
+            }
+            else if(m32_filterIma.ptr_int[j]>Downdif)
+            {
+                zhengshunum=0;
+            }
+            if(zhengshunum==3)
+            {
+                stepfind=1;
+                midfindED.x=(X_line[j]>>1);	//直线起点
+                midfindED.y=j;
+                latsj=j;
+            }
+        }
+        if(stepfind==1)
+        {
+            if(m32_filterIma.ptr_int[j]<Downdif)//定位到最后个大于0的地方
+            {
+                latsj=j;
+            }
+            if(m32_filterIma.ptr_int[j]>Downdifmin)
+            {
+                int st=latsj;
+                stepfind=2;
+                midfindST.x=(X_line[st]>>1);	//直线终点
+                midfindST.y=st;
+            }
+        }
+        if(stepfind==2)
+        {
+            //再判断下长度
+            if(midfindED.y-midfindST.y<Downdlong)
+            {
+                stepfind=0;
+                zhengshunum=0;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    if(stepfind!=2)
+    {
+        if(stepfind==0)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        #endif
+            return 1;
+        }
+        else
+        {
+            midfindST.y=j;
+            midfindST.x=(X_line[j]>>1);
+        }
+    }
+
+    /************************************/
+    //人工辅助限制
+    midfindST.y=MAX(midfindST.y,minj+dis_center_st);
+    if(midfindST.y>(Int32)(X_Lineendy-6))
+        midfindST.y=X_Lineendy-6;
+    midfindST.x=X_line[midfindST.y]>>1;
+    midfindED.y=MIN(midfindED.y,minj+dis_center_ed);
+    midfindED.x=X_line[midfindED.y]>>1;
+    if(midfindED.y-midfindST.y<Downdlong)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+    #endif
+        return 1;
+    }
+    /**************************************/
+    nihenum=0;
+    for(j=midfindST.y;j<=midfindED.y;j++)
+    {
+        if(X_lineMark[j]==1)
+        {
+            niheX[nihenum]=(X_line[j]>>1);
+            niheY[nihenum++]=j;
+        }
+    }
+    if(nihenum<Downdlong)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+    #endif
+        return 1;
+    }
+    Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
+
+
     
     tileline.ed.x=tileline.ed.x*4;
     tileline.ed.y=tileline.ed.y*4;
