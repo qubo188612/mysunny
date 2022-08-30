@@ -35,6 +35,10 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_b_opengudingdimian", pm.als102_b_opengudingdimian);
     this->declare_parameter("als102_dimianpangdingjuli", pm.als102_dimianpangdingjuli);
     this->declare_parameter("als102_dimianpingjunshunum", pm.als102_dimianpingjunshunum);
+    this->declare_parameter("als102_dis_center_st2", pm.als102_dis_center_st2);
+    this->declare_parameter("als102_dis_center_ed2", pm.als102_dis_center_ed2);
+    this->declare_parameter("als102_dis_center_st3", pm.als102_dis_center_st3);
+    this->declare_parameter("als102_dis_center_ed3", pm.als102_dis_center_ed3);
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -120,6 +124,18 @@ void LaserImagePos::alg102_update_parameters()
     }
     else if (p.get_name() == "als102_dimianpingjunshunum") {
       pm.als102_dimianpingjunshunum = p.as_int();
+    }
+    else if (p.get_name() == "als102_dis_center_st2") {
+      pm.als102_dis_center_st2 = p.as_int();
+    }
+    else if (p.get_name() == "als102_dis_center_ed2") {
+      pm.als102_dis_center_ed2 = p.as_int();
+    }
+    else if (p.get_name() == "als102_dis_center_st3") {
+      pm.als102_dis_center_st3 = p.as_int();
+    }
+    else if (p.get_name() == "als102_dis_center_ed3") {
+      pm.als102_dis_center_ed3 = p.as_int();
     }
   }
 }
@@ -290,6 +306,30 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als102_dimianpingjunshunum=p.as_int();
             return 1;}}
+    else if(p.get_name() == "als102_dis_center_st2") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als102_dis_center_st2=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als102_dis_center_ed2") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als102_dis_center_ed2=p.as_int();
+            return 1;}} 
+    else if(p.get_name() == "als102_dis_center_st3") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als102_dis_center_st3=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als102_dis_center_ed3") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als102_dis_center_ed3=p.as_int();
+            return 1;}}        
     return 0;
 }
 
@@ -378,14 +418,13 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 Updifmin2=pm.als102_Updifmin2;//-5;//上半段倾斜终止斜度10
     Int32 dis_center_st=pm.als102_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als102_dis_center_ed;//30;  //距离中心点此处后停止统计
-    Int32 dis_center_st2=20;//0;     //距离中心点此处后开始统计
-    Int32 dis_center_ed2=100;//30;  //距离中心点此处后停止统计
-    Int32 dis_center_st3=20;//0;     //距离中心点此处后开始统计
-    Int32 dis_center_ed3=500;//30;  //距离中心点此处后停止统计
     Int32 b_opengudingdimian=pm.als102_b_opengudingdimian;//1;//是否固定底面
     Int32 dimianpangdingjuli=pm.als102_dimianpangdingjuli;//15;//底面判定距离
     Int32 dimianpingjunshunum=pm.als102_dimianpingjunshunum;//10;//底面平均数统计个数
-    
+    Int32 dis_center_st2=pm.als102_dis_center_st2;//5;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed2=pm.als102_dis_center_ed2;//100;//30;  //距离中心点此处后停止统计
+    Int32 dis_center_st3=pm.als102_dis_center_st3;//5;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed3=pm.als102_dis_center_ed3;//500;//30;  //距离中心点此处后停止统计
     
 #ifdef DEBUG_ALG
     int debug_alg=1;

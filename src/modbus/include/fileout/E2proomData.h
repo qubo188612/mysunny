@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              61
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              70
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -258,7 +258,18 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MIN         1
 #define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MAX         500
 #define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_USE         10
-
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_MIN              0
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_MAX              500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_USE              5
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_MIN              0
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_MAX              500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_USE              100
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_MIN              0
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_MAX              500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_USE              5
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MIN              0
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MAX              500
+#define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_USE              500
 
 class E2proomData
 {
@@ -516,7 +527,10 @@ public:
     Int16 als102_b_opengudingdimian;//是否固定底面
     Int16 als102_dimianpangdingjuli;//底面判定距离
     Int16 als102_dimianpingjunshunum;//底面平均数统计个数
-      
+    Int16 als102_dis_center_st2;
+    Int16 als102_dis_center_ed2;
+    Int16 als102_dis_center_st3;
+    Int16 als102_dis_center_ed3;  
 
     void write_als102_para();				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -602,8 +616,18 @@ public:
     Int16 als102_dimianpingjunshunum_min;
     Int16 als102_dimianpingjunshunum_max;
     Int16 als102_dimianpingjunshunum_use;
-
-
+    Int16 als102_dis_center_st2_min;
+    Int16 als102_dis_center_st2_max;
+    Int16 als102_dis_center_st2_use;
+    Int16 als102_dis_center_ed2_min;
+    Int16 als102_dis_center_ed2_max;
+    Int16 als102_dis_center_ed2_use;
+    Int16 als102_dis_center_st3_min;
+    Int16 als102_dis_center_st3_max;
+    Int16 als102_dis_center_st3_use;
+    Int16 als102_dis_center_ed3_min; 
+    Int16 als102_dis_center_ed3_max;
+    Int16 als102_dis_center_ed3_use;  
 /****************************/
     void write();
 private:

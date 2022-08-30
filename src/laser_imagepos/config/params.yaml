@@ -75,6 +75,10 @@ laser_imagepos_node:
     als102_b_opengudingdimian:  0
     als102_dimianpangdingjuli:  15
     als102_dimianpingjunshunum: 10
+    als102_dis_center_st2:      5
+    als102_dis_center_ed2:      100
+    als102_dis_center_st3:      5
+    als102_dis_center_ed3:      500
 
 
     task_num:       0                 # int

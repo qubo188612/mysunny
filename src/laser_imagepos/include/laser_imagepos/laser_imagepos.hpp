@@ -97,7 +97,11 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_dis_center_ed",
                                               "als102_b_opengudingdimian",
                                               "als102_dimianpangdingjuli",
-                                              "als102_dimianpingjunshunum"};
+                                              "als102_dimianpingjunshunum",
+                                              "als102_dis_center_st2",
+                                              "als102_dis_center_ed2",
+                                              "als102_dis_center_st3",
+                                              "als102_dis_center_ed3"};
 
 /**
  * @brief To zip related parameters together.
@@ -184,6 +188,10 @@ struct Params
   int als102_b_opengudingdimian=1;//是否固定底面
   int als102_dimianpangdingjuli=15;//底面判定距离
   int als102_dimianpingjunshunum=10;//底面平均数统计个数
+  int als102_dis_center_st2=5;
+  int als102_dis_center_ed2=100;
+  int als102_dis_center_st3=5;
+  int als102_dis_center_ed3=100;
 /************************************/
   int task_num = 0;
   int show_step = 0;      

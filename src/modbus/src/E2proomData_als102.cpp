@@ -86,7 +86,19 @@ void E2proomData::Init_als102_E2proomData()
     als102_dimianpangdingjuli_use=E2POOM_ALG102_LASERIMAGEPOS_DIMIANPANGDINGJULI_USE;          
     als102_dimianpingjunshunum_min=E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MIN;         
     als102_dimianpingjunshunum_max=E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MAX;         
-    als102_dimianpingjunshunum_use=E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_USE;         
+    als102_dimianpingjunshunum_use=E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_USE;    
+    als102_dis_center_st2_min=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_MIN;   
+    als102_dis_center_st2_max=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_MAX;  
+    als102_dis_center_st2_use=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST2_USE;
+    als102_dis_center_ed2_min=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_MIN;   
+    als102_dis_center_ed2_max=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_MAX;  
+    als102_dis_center_ed2_use=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED2_USE;
+    als102_dis_center_st3_min=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_MIN;   
+    als102_dis_center_st3_max=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_MAX;  
+    als102_dis_center_st3_use=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ST3_USE;
+    als102_dis_center_ed3_min=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MIN;   
+    als102_dis_center_ed3_max=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MAX;  
+    als102_dis_center_ed3_use=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_USE;
 }
 
 void E2proomData::als102_check_para()
@@ -145,6 +157,14 @@ void E2proomData::als102_check_para()
         als102_dimianpangdingjuli=als102_dimianpangdingjuli_use;
     if(als102_dimianpingjunshunum<als102_dimianpingjunshunum_min||als102_dimianpingjunshunum>als102_dimianpingjunshunum_max)
         als102_dimianpingjunshunum=als102_dimianpingjunshunum_use;
+    if(als102_dis_center_st2<als102_dis_center_st2_min||als102_dis_center_st2>als102_dis_center_st2_max)
+        als102_dis_center_st2=als102_dis_center_st2_use;
+    if(als102_dis_center_ed2<als102_dis_center_ed2_min||als102_dis_center_ed2>als102_dis_center_ed2_max)
+        als102_dis_center_ed2=als102_dis_center_ed2_use;
+    if(als102_dis_center_st3<als102_dis_center_st3_min||als102_dis_center_st3>als102_dis_center_st3_max)
+        als102_dis_center_st3=als102_dis_center_st3_use;
+    if(als102_dis_center_ed3<als102_dis_center_ed3_min||als102_dis_center_ed3>als102_dis_center_ed3_max)
+        als102_dis_center_ed3=als102_dis_center_ed3_use;
 }
 
 void E2proomData::als102_read_para()
@@ -225,7 +245,14 @@ void E2proomData::als102_read_para()
       i16_p++;
       als102_dimianpingjunshunum=*i16_p;
       i16_p++;
-
+      als102_dis_center_st2=*i16_p;
+      i16_p++;
+      als102_dis_center_ed2=*i16_p;
+      i16_p++;
+      als102_dis_center_st3=*i16_p;
+      i16_p++;
+      als102_dis_center_ed3=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -304,7 +331,14 @@ void E2proomData::write_als102_para()
     i16_p++;
     *i16_p=als102_dimianpingjunshunum;
     i16_p++;
-
+    *i16_p=als102_dis_center_st2;
+    i16_p++;
+    *i16_p=als102_dis_center_ed2;
+    i16_p++;
+    *i16_p=als102_dis_center_st3;
+    i16_p++;
+    *i16_p=als102_dis_center_ed3;
+    i16_p++;
 
     fo.WriteFile(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF);
 
@@ -344,4 +378,8 @@ void E2proomData::init_als102_para()
     als102_b_opengudingdimian=als102_b_opengudingdimian_use;
     als102_dimianpangdingjuli=als102_dimianpangdingjuli_use;
     als102_dimianpingjunshunum=als102_dimianpingjunshunum_use;
+    als102_dis_center_st2=als102_dis_center_st2_use;
+    als102_dis_center_ed2=als102_dis_center_ed2_use;
+    als102_dis_center_st3=als102_dis_center_st3_use;
+    als102_dis_center_ed3=als102_dis_center_ed3_use;
 }
