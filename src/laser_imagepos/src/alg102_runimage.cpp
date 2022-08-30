@@ -378,6 +378,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 Updifmin2=pm.als102_Updifmin2;//-5;//上半段倾斜终止斜度10
     Int32 dis_center_st=pm.als102_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als102_dis_center_ed;//30;  //距离中心点此处后停止统计
+    Int32 dis_center_st2=20;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed2=100;//30;  //距离中心点此处后停止统计
+    Int32 dis_center_st3=20;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed3=500;//30;  //距离中心点此处后停止统计
     Int32 b_opengudingdimian=pm.als102_b_opengudingdimian;//1;//是否固定底面
     Int32 dimianpangdingjuli=pm.als102_dimianpangdingjuli;//15;//底面判定距离
     Int32 dimianpingjunshunum=pm.als102_dimianpingjunshunum;//10;//底面平均数统计个数
@@ -986,11 +990,11 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         mini=X_line[minj];
         /************************************/
         //人工辅助限制
-        stepfindED.y=MIN(stepfindED.y,minj-dis_center_st);
+        stepfindED.y=MIN(stepfindED.y,minj-dis_center_st2);
         if(stepfindED.y<(Int32)X_Linestarty+6)
             stepfindED.y=X_Linestarty+6;
         stepfindED.x=X_line[stepfindED.y]>>1;
-        stepfindST.y=MAX(stepfindST.y,minj-dis_center_ed);
+        stepfindST.y=MAX(stepfindST.y,minj-dis_center_ed2);
         stepfindST.x=X_line[stepfindST.y]>>1;
         if(stepfindED.y-stepfindST.y<Uplong)
         {
@@ -1443,11 +1447,11 @@ con:
 
     /************************************/
     //人工辅助限制
-    midfindST.y=MAX(midfindST.y,minj+dis_center_st);
+    midfindST.y=MAX(midfindST.y,minj+dis_center_st3);
     if(midfindST.y>(Int32)(X_Lineendy-6))
         midfindST.y=X_Lineendy-6;
     midfindST.x=X_line[midfindST.y]>>1;
-    midfindED.y=MIN(midfindED.y,minj+dis_center_ed);
+    midfindED.y=MIN(midfindED.y,minj+dis_center_ed3);
     midfindED.x=X_line[midfindED.y]>>1;
     if(midfindED.y-midfindST.y<Downdlong)
     {
