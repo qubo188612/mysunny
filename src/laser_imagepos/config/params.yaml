@@ -80,6 +80,14 @@ laser_imagepos_node:
     als102_dis_center_st3:      5
     als102_dis_center_ed3:      500
 
+    als103_exposure_time:       10000
+    als103_pingjun:             15
+    als103_gujiaerzhi:          160
+    als103_widthliantongdis:    5
+    als103_highliantongdis:     5
+    als103_jiguanglong:         5
+    als103_jiguangkuandu:       10
+
 
     task_num:       0                 # int
     show_step:      0

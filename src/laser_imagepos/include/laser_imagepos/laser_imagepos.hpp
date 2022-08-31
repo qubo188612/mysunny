@@ -103,6 +103,14 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_dis_center_st3",
                                               "als102_dis_center_ed3"};
 
+const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
+                                              "als103_pingjun",
+                                              "als103_gujiaerzhi",
+                                              "als103_widthliantongdis",
+                                              "als103_highliantongdis",
+                                              "als103_jiguanglong",
+                                              "als103_jiguangkuandu"};
+
 /**
  * @brief To zip related parameters together.
  *
@@ -192,6 +200,15 @@ struct Params
   int als102_dis_center_ed2=100;
   int als102_dis_center_st3=5;
   int als102_dis_center_ed3=100;
+/************************************/
+//算法103参数
+  int als103_exposure_time=10000;//曝光值
+  int als103_pingjun=15;
+  int als103_gujiaerzhi=160;
+  int als103_widthliantongdis=5;
+  int als103_highliantongdis=5;
+  int als103_jiguanglong=5;//激光长度
+  int als103_jiguangkuandu=10;//激光宽度
 /************************************/
   int task_num = 0;
   int show_step = 0;      
@@ -285,14 +302,17 @@ private:
   void alg100_declare_parameters();
   void alg101_declare_parameters();
   void alg102_declare_parameters();
+  void alg103_declare_parameters();
 
   void alg100_update_parameters();
   void alg101_update_parameters();
   void alg102_update_parameters();
+  void alg103_update_parameters();
 
   int alg100_getcallbackParameter(const rclcpp::Parameter &p);
   int alg101_getcallbackParameter(const rclcpp::Parameter &p);
   int alg102_getcallbackParameter(const rclcpp::Parameter &p);
+  int alg103_getcallbackParameter(const rclcpp::Parameter &p);
 
   Params pm;
 
@@ -366,6 +386,10 @@ private:
                       bool &solderjoints,//是否焊点
                       int step);
   int alg102_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
+                      std::vector <cv::Point2f> &namepoint,
+                      bool &solderjoints,//是否焊点
+                      int step);
+  int alg103_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);

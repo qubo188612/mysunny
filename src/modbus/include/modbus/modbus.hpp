@@ -125,6 +125,16 @@ namespace modbus
 
 #define ALS102_INIT_REG_ADD                    0x005f
 
+#define ALS103_EXPOSURE_TIME_REG_ADD           0x0060
+#define ALS103_PINGJUN_REG_ADD                 0x0061
+#define ALS103_GUJIAERZHI_REG_ADD              0x0062
+#define ALS103_WIDTHLIANTONGDIS_REG_ADD        0x0063
+#define ALS103_HIGHLIANTONGDIS_REG_ADD         0x0064
+#define ALS103_JIGUANGLONG_REG_ADD             0x0065
+#define ALS103_JIGUANGKUANDU_REG_ADD           0x0066
+
+#define ALS103_INIT_REG_ADD                    0x006f
+
 #define ALS_SHOW_STEP_REG_ADD                  0x018f
 
 
@@ -203,9 +213,11 @@ public:
   int als100_task_parameter(int ddr,u_int16_t num);
   int als101_task_parameter(int ddr,u_int16_t num);
   int als102_task_parameter(int ddr,u_int16_t num);
+  int als103_task_parameter(int ddr,u_int16_t num);
   void init_als100_parameter();
   void init_als101_parameter();
   void init_als102_parameter();
+  void init_als103_parameter();
 
   void _task_robot(int ddr,u_int16_t num);
 

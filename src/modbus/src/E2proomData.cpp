@@ -23,6 +23,7 @@ E2proomData::E2proomData()
     Init_als100_E2proomData();
     Init_als101_E2proomData();
     Init_als102_E2proomData();
+    Init_als103_E2proomData();
 
     read_para();
 }
@@ -50,6 +51,7 @@ void E2proomData::check_para()
     als100_check_para();
     als101_check_para();
     als102_check_para();
+    als103_check_para();
 }
 
 void E2proomData::read_para()
@@ -115,6 +117,7 @@ void E2proomData::read_para()
     als100_read_para();
     als101_read_para();
     als102_read_para();
+    als103_read_para();
     
     check_para();
 
@@ -188,4 +191,5 @@ void E2proomData::write()
     write_als100_para();
     write_als101_para();
     write_als102_para();
+    write_als103_para();
 }

@@ -179,7 +179,7 @@
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000      //曝光默认值   
-#define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值'
+#define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGJUN_MIN                     0
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGJUN_USE                     15
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGJUN_MAX                     255
@@ -270,6 +270,32 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MIN              0
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MAX              500
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_USE              500
+
+//算法103参数
+#define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                18
+#define E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_103.bsd"
+
+#define E2POOM_ALG103_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG103_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000      //曝光默认值   
+#define E2POOM_ALG103_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
+#define E2POOM_ALG103_LASERIMAGEPOS_PINGJUN_MIN                     0
+#define E2POOM_ALG103_LASERIMAGEPOS_PINGJUN_USE                     15
+#define E2POOM_ALG103_LASERIMAGEPOS_PINGJUN_MAX                     255
+#define E2POOM_ALG103_LASERIMAGEPOS_GUJIAERZHI_MIN                  0
+#define E2POOM_ALG103_LASERIMAGEPOS_GUJIAERZHI_USE                  160
+#define E2POOM_ALG103_LASERIMAGEPOS_GUJIAERZHI_MAX                  255
+#define E2POOM_ALG103_LASERIMAGEPOS_WIDTHLIANTONGDIS_MIN            0
+#define E2POOM_ALG103_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            5
+#define E2POOM_ALG103_LASERIMAGEPOS_WIDTHLIANTONGDIS_MAX            255
+#define E2POOM_ALG103_LASERIMAGEPOS_HIGHLIANTONGDIS_MIN             0
+#define E2POOM_ALG103_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             5
+#define E2POOM_ALG103_LASERIMAGEPOS_HIGHLIANTONGDIS_MAX             255
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGLONG_MIN                 0
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGLONG_USE                 5
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGLONG_MAX                 255
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGKUANDU_MIN               0
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGKUANDU_USE               10
+#define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGKUANDU_MAX               255
 
 class E2proomData
 {
@@ -628,6 +654,43 @@ public:
     Int16 als102_dis_center_ed3_min; 
     Int16 als102_dis_center_ed3_max;
     Int16 als102_dis_center_ed3_use;  
+
+/****************************/
+    //任务103参数
+    Uint16 als103_exposure_time;  //曝光模式
+    Int16 als103_pingjun;
+    Int16 als103_gujiaerzhi;
+    Int16 als103_widthliantongdis;
+    Int16 als103_highliantongdis;
+    Int16 als103_jiguanglong;//激光长度
+    Int16 als103_jiguangkuandu;//激光宽度
+
+    void write_als103_para();				//保存任务103参数
+    void init_als103_para();				//初始化任务103参数
+    //默认参数
+    Uint16 als103_exposure_time_min;    //曝光最小值
+    Uint16 als103_exposure_time_max;    //曝光最大值
+    Uint16 als103_exposure_time_use;    //曝光默认值
+    Int16 als103_pingjun_min;
+    Int16 als103_pingjun_max;
+    Int16 als103_pingjun_use;
+    Int16 als103_gujiaerzhi_min;
+    Int16 als103_gujiaerzhi_max;
+    Int16 als103_gujiaerzhi_use;
+    Int16 als103_widthliantongdis_min;
+    Int16 als103_widthliantongdis_max;
+    Int16 als103_widthliantongdis_use;
+    Int16 als103_highliantongdis_min;
+    Int16 als103_highliantongdis_max;
+    Int16 als103_highliantongdis_use;
+    Int16 als103_jiguanglong_min;
+    Int16 als103_jiguanglong_max;
+    Int16 als103_jiguanglong_use;
+    Int16 als103_jiguangkuandu_min;
+    Int16 als103_jiguangkuandu_max;
+    Int16 als103_jiguangkuandu_use;
+
+
 /****************************/
     void write();
 private:
@@ -637,14 +700,17 @@ private:
     void Init_als100_E2proomData();
     void Init_als101_E2proomData();
     void Init_als102_E2proomData();
+    void Init_als103_E2proomData();
     
     void als100_check_para();
     void als101_check_para();
     void als102_check_para();
+    void als103_check_para();
 
     void als100_read_para();
     void als101_read_para();
     void als102_read_para();
+    void als103_read_para();
 };
 
 #endif // E2PROOMDATA_H

@@ -1682,9 +1682,10 @@ con:
         cv_point_st.y=(resultfocal2.y>>2);
         cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
     }
+    solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point);
+    namepoint.push_back(cv_point);   
 /*
     cv_point.x=resultfocal1.x;
     cv_point.y=resultfocal1.y;
