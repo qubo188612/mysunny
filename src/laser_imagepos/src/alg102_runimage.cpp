@@ -1685,12 +1685,14 @@ con:
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);
+/*
     cv_point.x=resultfocal1.x;
     cv_point.y=resultfocal1.y;
     namepoint.push_back(cv_point);
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
     namepoint.push_back(cv_point);
+*/
 
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "finish alg102");
