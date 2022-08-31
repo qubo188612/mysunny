@@ -855,6 +855,15 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
 
+    if(step==15)
+    {
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
+        Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
+        Myhalcv2::MyCircle(&imageGasupain,midfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+    }
 
     endfindST.y=X_Linestarty+St_Down;
     endfindED.y=X_Linestarty+Ed_Down+St_Down;
@@ -917,7 +926,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         if(stepfind==0)
         {
         #ifdef QUICK_TRANSMIT
-            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         #endif
             return 1;
         }
@@ -934,7 +943,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     if(endfindED.y-endfindST.y<Downdlong)
     {
     #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
     #endif
         return 1;
     }
@@ -951,16 +960,33 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     if(nihenum<5)
     {
     #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
     #endif
         return 1;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&endline,&endlinehough);
 
+    if(step==15)
+    {
+        Myhalcv2::MyPoint16to32(endline.st,&linepoint32ST);
+        Myhalcv2::MyPoint16to32(endline.ed,&linepoint32ED);
+        Myhalcv2::MyCircle(&imageGasupain,endfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle(&imageGasupain,endfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+    }
+
     //判断两直线距离
-    minj=(midfindST.y+midfindED.y)/2;
+    minj=(midfindST.y+endfindED.y)/2;
     MyGetLineXpos(tileline,minj,&j);
     MyGetLineXpos(endline,minj,&i);
+    if(step==15)
+    {
+        linepoint32ST.x=imageGasupain.startx;
+        linepoint32ST.y=minj;
+        linepoint32ED.x=imageGasupain.startx+imageGasupain.width;
+        linepoint32ED.y=minj;
+        Myhalcv2::MyDottedLine(&imageGasupain,linepoint32ST,linepoint32ED,255,10,Myhalcv2::CV_DOTTEDLINE_LINE,Myhalcv2::CV_LINE_8LT,1);
+    }
     canlearn=0;
     if(i-j>dimianpangdingjuli)
     {
@@ -1022,11 +1048,27 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         }
         if(stepfind!=2)
         {
-            canleranfield=1;
-            goto con;
+            if(stepfind!=1)
+            {
+                canleranfield=1;
+                goto con;
+            }
+            else
+            {
+                stepfindST.x=(X_line[j]>>1);
+                stepfindST.y=j;
+            }
         }
         minj=stepfindED.y;
         mini=X_line[minj];
+        if(step==15)
+        {
+            linepoint32ST.x=imageGasupain.startx;
+            linepoint32ST.y=minj;
+            linepoint32ED.x=imageGasupain.startx+imageGasupain.width;
+            linepoint32ED.y=minj;
+            Myhalcv2::MyDottedLine(&imageGasupain,linepoint32ST,linepoint32ED,255,10,Myhalcv2::CV_DOTTEDLINE_POINT,Myhalcv2::CV_LINE_8LT,1);
+        }
         /************************************/
         //人工辅助限制
         stepfindED.y=MIN(stepfindED.y,minj-dis_center_st2);
@@ -1062,7 +1104,6 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
             goto con;
         }
         Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&headline,&headlinehough);
-
     }
 con:
     if(canlearn==0)
@@ -1150,7 +1191,7 @@ con:
             if(stepfind!=2)
             {
             #ifdef QUICK_TRANSMIT
-                Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+                Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
             #endif
                 return 1;
             }
@@ -1167,7 +1208,7 @@ con:
             if(stepfindED.y-stepfindST.y<Uplong)
             {
             #ifdef QUICK_TRANSMIT
-                Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+                Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
             #endif
                 return 1;
             }
@@ -1177,7 +1218,7 @@ con:
             if(linedistance1<Uplong)//线太短寻找失败了
             {
             #ifdef QUICK_TRANSMIT
-                Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+                Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
             #endif
                 return 1;
             }
@@ -1194,7 +1235,7 @@ con:
             if(nihenum==0)
             {
             #ifdef QUICK_TRANSMIT
-                Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+                Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
             #endif
                 return 1;
             }
@@ -1202,17 +1243,9 @@ con:
 
         }
     }
-    
 
     if(step==15)
     {
-        Myhalcv2::MatClone(imageGasu,&imageGasupain);
-        Myhalcv2::MyPoint16to32(endline.st,&linepoint32ST);
-        Myhalcv2::MyPoint16to32(endline.ed,&linepoint32ED);
-        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
-        Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
-        Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
-        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
         if(nocheck==0)
         {
             Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
@@ -1221,10 +1254,6 @@ con:
             Myhalcv2::MyCircle(&imageGasupain,stepfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
             Myhalcv2::MyCircle(&imageGasupain,stepfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         }
-        Myhalcv2::MyCircle(&imageGasupain,endfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,endfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,midfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
