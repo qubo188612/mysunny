@@ -320,7 +320,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         {
             if(imageBry.data[y*imageBry.nWidth+x]==0)
             {
-                f_line[i]=FLT_MAX;
+                f_line[i]=-1;
             }
         }
         cv::Point2f point(f_line[i],i);
@@ -333,7 +333,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
             cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
         for(j=0;j<nHeight;j++)
         {
-            if(f_line[j]!=FLT_MAX)
+            if(f_line[j]>=0)
             {
                 Int32 di=(f_line[j]/4+0.5);
                 Int32 dj=j/4;

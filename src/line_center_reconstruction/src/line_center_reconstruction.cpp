@@ -169,7 +169,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   for(int i=0;i<ptr->lasertrackout.size();i++)
   {
       cv::Point2f point;
-      if(ptr->lasertrackout[i].x<=ptr->imageout.width-1&&ptr->lasertrackout[i].x>=0)
+      if(ptr->lasertrackout[i].x>=0)
       {
         point.x=ptr->lasertrackout[i].x;
         point.y=ptr->lasertrackout[i].y;
