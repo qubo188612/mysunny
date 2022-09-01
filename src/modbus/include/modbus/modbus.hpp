@@ -132,6 +132,7 @@ namespace modbus
 #define ALS103_HIGHLIANTONGDIS_REG_ADD         0x0064
 #define ALS103_JIGUANGLONG_REG_ADD             0x0065
 #define ALS103_JIGUANGKUANDU_REG_ADD           0x0066
+#define ALS103_JIGUANGDUIBIDU_REG_ADD          0x0067
 
 #define ALS103_INIT_REG_ADD                    0x006f
 

@@ -15,6 +15,7 @@ void LaserImagePos::alg103_declare_parameters()
     this->declare_parameter("als103_highliantongdis", pm.als103_highliantongdis);
     this->declare_parameter("als103_jiguanglong", pm.als103_jiguanglong);
     this->declare_parameter("als103_jiguangkuandu", pm.als103_jiguangkuandu);
+    this->declare_parameter("als103_jiguangduibidu", pm.als103_jiguangduibidu);
 }
 
 void LaserImagePos::alg103_update_parameters()
@@ -41,6 +42,9 @@ void LaserImagePos::alg103_update_parameters()
     }
     else if (p.get_name() == "als103_jiguangkuandu") {
       pm.als103_jiguangkuandu = p.as_int();
+    }
+    else if (p.get_name() == "als103_jiguangduibidu") {
+      pm.als103_jiguangduibidu = p.as_int();
     }
   }
 }
@@ -91,6 +95,12 @@ int LaserImagePos::alg103_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als103_jiguangkuandu=p.as_int();
             return 1;}}
+    else if(p.get_name() == "als103_jiguangduibidu") {
+        auto k = p.as_int();
+        if (k <0 || k>255) {
+            return -1;}
+        else{pm.als103_jiguangduibidu=p.as_int();
+            return 1;}}
 
     return 0;
 }
@@ -133,6 +143,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     Int32 highliantongdis=pm.als103_highliantongdis;//5;
     Int32 jiguanglong=pm.als103_jiguanglong;//5;//激光长度
     Int32 jiguangkuandu=pm.als103_jiguangkuandu;//10;//激光宽度
+    Int32 jiguangduibidu=pm.als103_jiguangduibidu;//5;
 
     if(step==2)
     {
@@ -169,7 +180,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         return 0;
     }
     m_brygujia=Myhalcv2::MatCreatzero(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
-    Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,1);
+    Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,jiguangduibidu);
 
     if(step==5)
     {

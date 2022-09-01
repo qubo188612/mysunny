@@ -109,7 +109,8 @@ const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_widthliantongdis",
                                               "als103_highliantongdis",
                                               "als103_jiguanglong",
-                                              "als103_jiguangkuandu"};
+                                              "als103_jiguangkuandu",
+                                              "als103_jiguangduibidu"};
 
 /**
  * @brief To zip related parameters together.
@@ -209,6 +210,7 @@ struct Params
   int als103_highliantongdis=5;
   int als103_jiguanglong=5;//激光长度
   int als103_jiguangkuandu=10;//激光宽度
+  int als103_jiguangduibidu=5;//
 /************************************/
   int task_num = 0;
   int show_step = 0;      

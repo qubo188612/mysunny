@@ -101,6 +101,7 @@ laser_imagepos_node:
     als103_highliantongdis:     5
     als103_jiguanglong:         5
     als103_jiguangkuandu:       10
+    als103_jiguangduibidu:      5
 
     task_num:       0                 # int
     show_step:      0
