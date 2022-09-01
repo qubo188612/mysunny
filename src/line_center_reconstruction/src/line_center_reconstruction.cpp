@@ -168,7 +168,17 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   std::vector<cv::Point2f> src;
   for(int i=0;i<ptr->lasertrackout.size();i++)
   {
-      cv::Point2f point(ptr->lasertrackout[i].x,ptr->lasertrackout[i].y);
+      cv::Point2f point;
+      if(ptr->lasertrackout[i].x<=ptr->imageout.width-1&&ptr->lasertrackout[i].x>=0)
+      {
+        point.x=ptr->lasertrackout[i].x;
+        point.y=ptr->lasertrackout[i].y;
+      }
+      else
+      {
+        point.x=-1;
+        point.y=ptr->lasertrackout[i].y;
+      }
       src.push_back(point);
   }
   if(src.size()>0)
