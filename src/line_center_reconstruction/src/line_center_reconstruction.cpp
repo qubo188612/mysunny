@@ -164,7 +164,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
 
   auto _homo = cv::Mat(pm.homography_matrix, true).reshape(1, 3);
   std::vector<cv::Point2f> dst;
-  dst.reserve(ptr->imageout.height);
   std::vector<cv::Point2f> src;
   for(int i=0;i<ptr->lasertrackout.size();i++)
   {
@@ -182,18 +181,25 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       src.push_back(point);
   }
   if(src.size()>0)
+  {
+      dst.reserve(src.size());
       cv::perspectiveTransform(src, dst, _homo);
+  }
   auto cloud = to_pc3(dst, src);
   msg->lasertrackoutcloud = cloud;
   
   src.clear();
+  dst.clear();
   for(int i=0;i<ptr->targetpointout.size();i++)
   {
       cv::Point2f point(ptr->targetpointout[i].x,ptr->targetpointout[i].y);
       src.push_back(point);
   }
   if(src.size()>0)
+  {
+      dst.reserve(src.size());
       cv::perspectiveTransform(src, dst, _homo);
+  }
 
   for(int i=0;i<dst.size();i++)
   {
