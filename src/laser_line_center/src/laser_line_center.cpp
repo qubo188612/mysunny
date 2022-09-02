@@ -232,40 +232,48 @@ Params LaserLineCenter::_update_parameters()
 void LaserLineCenter::_worker()
 {
   cv::Mat buf;
-  while (rclcpp::ok()) {
-    std::unique_lock<std::mutex> lk(_images_mut);
-    if (_images.empty() == false) {
-      auto ptr = std::move(_images.front());
-      _images.pop_front();
-      std::promise<PointCloud2::UniquePtr> prom;
-      _push_back_future(prom.get_future());
-      lk.unlock();
-      if(pm.task_num>=0&&pm.task_num<100)
+  while (rclcpp::ok()) 
+  {
+    if(pm.task_num>=0&&pm.task_num<100)
+    {
+      std::unique_lock<std::mutex> lk(_images_mut);
+      if (_images.empty() == false) 
       {
+        auto ptr = std::move(_images.front());
+        _images.pop_front();
+        std::promise<PointCloud2::UniquePtr> prom;
+        _push_back_future(prom.get_future());
+        lk.unlock();
         auto line = execute(std::move(ptr), buf, pm);
         prom.set_value(std::move(line));
       }
-    } else {
-      _images_con.wait(lk);
+      else 
+      {
+        _images_con.wait(lk);
+      }
     }
   }
 }
 
 void LaserLineCenter::_manager()
 {
-  while (rclcpp::ok()) {
-    std::unique_lock<std::mutex> lk(_futures_mut);
-    if (_futures.empty() == false) {
-      auto f = std::move(_futures.front());
-      _futures.pop_front();
-      lk.unlock();
-      if(pm.task_num>=0&&pm.task_num<100)
+  while (rclcpp::ok()) 
+  {
+    if(pm.task_num>=0&&pm.task_num<100)
+    {
+      std::unique_lock<std::mutex> lk(_futures_mut);
+      if (_futures.empty() == false) 
       {
+        auto f = std::move(_futures.front());
+        _futures.pop_front();
+        lk.unlock();
         auto ptr = f.get();
         _pub->publish(std::move(ptr));
+      } 
+      else 
+      {
+        _futures_con.wait(lk);
       }
-    } else {
-      _futures_con.wait(lk);
     }
   }
 }
