@@ -188,12 +188,12 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   auto cloud = to_pc3(dst, src);
   msg->lasertrackoutcloud = cloud;
   
-  src.clear();
   dst.clear();
+  src.resize(ptr->targetpointout.size());
   for(int i=0;i<ptr->targetpointout.size();i++)
   {
       cv::Point2f point(ptr->targetpointout[i].x,ptr->targetpointout[i].y);
-      src.push_back(point);
+      src[i]=point;
   }
   if(src.size()>0)
   {
@@ -201,15 +201,14 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       cv::perspectiveTransform(src, dst, _homo);
   }
 
+  msg->targetpointoutcloud.resize(dst.size());
   for(int i=0;i<dst.size();i++)
   {
-    tutorial_interfaces::msg::IfAlgorhmittargetpoint4f pointtarget;
-    pointtarget.x=dst[i].x;
-    pointtarget.y=dst[i].y;
-    pointtarget.u=src[i].x;
-    pointtarget.v=src[i].y;
-    pointtarget.name=ptr->targetpointout[i].name;
-    msg->targetpointoutcloud.push_back(pointtarget);
+    msg->targetpointoutcloud[i].x=dst[i].x;
+    msg->targetpointoutcloud[i].y=dst[i].y;
+    msg->targetpointoutcloud[i].u=src[i].x;
+    msg->targetpointoutcloud[i].v=src[i].y;
+    msg->targetpointoutcloud[i].name=ptr->targetpointout[i].name;
   }
   msg->solderjoints = ptr->solderjoints;
   msg->header = ptr->imageout.header;
@@ -330,12 +329,17 @@ LineCenterReconstruction::~LineCenterReconstruction()
   try {
     _thread.join();
     _sub.reset();
+    _sub_task100_199.reset();
     _points_con.notify_all();
     _futures_con.notify_one();
     for (auto & t : _threads) {
       t.join();
     }
+    for (auto & t : _task100_199_threads) {
+      t.join();
+    }
     _pub.reset();
+    _pub_task100_199.reset();
     
 
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
