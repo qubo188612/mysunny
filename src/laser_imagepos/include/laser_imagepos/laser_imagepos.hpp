@@ -10,6 +10,7 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "myhalcv2/myhalcv2.h"
+#include "unistd.h"
 
 //#define DEBUG_ALG       //输出算法步骤
 #define QUICK_TRANSMIT    //快速传输

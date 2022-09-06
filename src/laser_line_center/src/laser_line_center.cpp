@@ -252,6 +252,7 @@ void LaserLineCenter::_worker()
         _images_con.wait(lk);
       }
     }
+    sleep(0);
   }
 }
 
@@ -275,6 +276,7 @@ void LaserLineCenter::_manager()
         _futures_con.wait(lk);
       }
     }
+    sleep(0);
   }
 }
 

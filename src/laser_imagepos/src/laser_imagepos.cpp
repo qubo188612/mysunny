@@ -384,6 +384,7 @@ void LaserImagePos::_worker()
         _images_con.wait(lk);
       }
     }
+    sleep(0);
   }
 }
 
@@ -409,6 +410,7 @@ void LaserImagePos::_manager()
         _futures_con.wait(lk);
       }
     }
+    sleep(0);
   }
 }
 
