@@ -17,6 +17,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
+#include "fileout/E2camData.h"
 
 #define SHOW_OUTPUT_FPS
 
@@ -53,6 +54,10 @@ public:
    * Throw no exception.
    */
   virtual ~CameraTis();
+
+  int WIDTH;
+  int HEIGHT;
+  int SIZE;
 
 private:
   /**
@@ -117,6 +122,12 @@ private:
    */
   int _set_exposure(int e);
 
+  int _set_width(int width);
+
+  int _set_height(int height);
+
+  E2proomData camdata;
+
 private:
 
 //std::shared_ptr<rclcpp::AsyncParametersClient> _param_imagepos;
@@ -150,6 +161,8 @@ private:
    *
    */
   OnSetParametersCallbackHandle::SharedPtr _handle;
+
+  
 };
 
 }  // namespace camera_tis

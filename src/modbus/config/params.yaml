@@ -5,3 +5,6 @@ modbus_node:
     port: 1502                  # int
     robot_port: 1503
     robot_mod: 0
+    camer_size_width: 1536
+    camer_size_height: 1024
+

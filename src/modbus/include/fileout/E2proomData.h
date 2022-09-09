@@ -327,6 +327,7 @@ public:
     Uint16 robot_port_min;      //机器人端口最小值
     Uint16 robot_port_max;      //机器人端口最大值
     Uint16 robot_port_use;      //机器人端口默认值
+
 /****************************/
     //任务100参数
     Uint16 als100_exposure_time;  //曝光模式

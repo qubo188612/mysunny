@@ -36,6 +36,8 @@ namespace modbus
 #define ROBOT_MOD_REG_ADD                 0x0000
 #define ROBOT_PORT_REG_ADD                0x0001
 
+#define CAMER_SIZE_WIDTH_REG_ADD          0x0005
+#define CAMER_SIZE_HEIGHT_REG_ADD         0x0006
 
 #define PARAMETER_REGEDIST_NUM                 400
 
@@ -207,6 +209,10 @@ public:
    */
   void _camera_power(bool);
 
+  void _camera_get_size(int *width,int *height);
+
+  void _camera_set_size(int width,int height);
+
   void _task_numberset(u_int16_t num);
 
   void _task_parameter(int ddr,u_int16_t num);
@@ -250,6 +256,7 @@ private:
    *
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera;
+  std::shared_ptr<rclcpp::SyncParametersClient> _param_camera_get;
 
   /**
    * @brief Parameter client for gpio.

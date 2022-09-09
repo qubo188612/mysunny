@@ -44,12 +44,6 @@ constexpr char PIPELINE_STR[] =
   " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4";
 
 /**
- * @brief Const expression for image size infomation.
- *
- */
-constexpr int WIDTH = 1536, HEIGHT = 1024, SIZE = WIDTH * HEIGHT;
-
-/**
  * @brief Set the property object for string.
  *
  * @param property The name of the property to set.
@@ -109,8 +103,15 @@ gboolean set_property(_GstElement * pipeline, const char * property, int value)
 CameraTis::CameraTis(const rclcpp::NodeOptions & options)
 : Node("camera_tis_node", options)
 {
-//_param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
+  /**
+   * @brief Const expression for image size infomation.
+   *
+   */
+  int WIDTH = camdata.camer_size_width;
+  int HEIGHT = camdata.camer_size_height;
+  int SIZE = WIDTH * HEIGHT;
 
+//_param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
   _initialize_camera();
 
@@ -195,6 +196,22 @@ void CameraTis::_initialize_camera()
           if (ret) {
             result.successful = false;
             result.reason = "Failed to set power";
+            return result;
+          }
+        }
+        else if (p.get_name() == "width") {
+          auto ret = this->_set_width(p.as_int());
+          if (ret) {
+            result.successful = false;
+            result.reason = "Failed to set width";
+            return result;
+          }
+        }
+        else if (p.get_name() == "height") {
+          auto ret = this->_set_height(p.as_int());
+          if (ret) {
+            result.successful = false;
+            result.reason = "Failed to set height";
             return result;
           }
         }
@@ -294,6 +311,34 @@ int CameraTis::_set_power(bool p)
 int CameraTis::_set_exposure(int e)
 {
   return set_property(_pipeline, "Exposure Time (us)", e) ? 0 : 1;
+}
+
+int CameraTis::_set_width(int width)
+{
+  if(width<(int)camdata.camer_size_width_min||width>(int)camdata.camer_size_width_max)
+  { 
+    return 1;
+  }
+  else
+  {
+    camdata.camer_size_width=width;
+    camdata.write_camer_para();
+  }
+  return 0;
+}
+
+int CameraTis::_set_height(int height)
+{
+  if(height<(int)camdata.camer_size_height_min||height>(int)camdata.camer_size_height_max)
+  { 
+    return 1;
+  }
+  else
+  {
+    camdata.camer_size_height=height;
+    camdata.write_camer_para();
+  }
+  return 0;
 }
 
 }  // namespace camera_tis

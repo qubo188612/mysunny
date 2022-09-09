@@ -44,6 +44,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
+  _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
   _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
@@ -61,6 +62,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
+
+  int camer_width=1536,camer_height=1024;
+  _camera_get_size(&camer_width,&camer_height);
+  robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)camer_width;
+  robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)camer_height;
+
   ctx_robot = modbus_new_tcp(NULL, robotsetport);
   if (!ctx_robot) {
     RCLCPP_ERROR(this->get_logger(), "Failed to create modbusrobot context.");
@@ -195,6 +202,31 @@ void Modbus::_gpio_laser(bool f)
   }
 }
 
+void Modbus::_camera_get_size(int *width,int *height)
+{
+    const std::vector<std::string> KEYS = {"width","height"};
+    _param_camera_get->wait_for_service();
+    auto vp = _param_camera_get->get_parameters(KEYS);
+    for (auto & p : vp)
+    {
+        if (p.get_name() == "width")
+        {
+            auto k = p.as_int();
+            *width=k;
+        }
+        else if (p.get_name() == "height")
+        {
+            auto k = p.as_int();
+            *height=k;
+        }
+    }
+}
+
+void Modbus::_camera_set_size(int width,int height)
+{
+    _param_camera->set_parameters({rclcpp::Parameter("width", width)});
+    _param_camera->set_parameters({rclcpp::Parameter("height", height)});
+}
 /**
  * @brief Control camera capture or not.
  *
@@ -249,6 +281,12 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     case ROBOT_PORT_REG_ADD:
       e2proomdata.robot_port=num;
       this->set_parameters({rclcpp::Parameter("robot_port", (u_int16_t)e2proomdata.robot_port)});
+    break;
+    case CAMER_SIZE_WIDTH_REG_ADD:
+      _param_camera->set_parameters({rclcpp::Parameter("width", num)});
+    break;
+    case CAMER_SIZE_HEIGHT_REG_ADD:
+      _param_camera->set_parameters({rclcpp::Parameter("height", num)});
     break;
     default:
     break;
