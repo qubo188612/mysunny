@@ -18,6 +18,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
+#define SHOW_OUTPUT_FPS
+
 struct _GstElement;
 
 namespace camera_tis

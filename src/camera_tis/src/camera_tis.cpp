@@ -235,6 +235,24 @@ void CameraTis::_spin()
       memcpy(ptr->data.data(), info.data, SIZE);
       _pub->publish(std::move(ptr));
       gst_buffer_unmap(buffer, &info);
+
+    #ifdef SHOW_OUTPUT_FPS
+      static int32_t totel_fps=0;
+      static int32_t output_num=0;
+      static auto timest_fps=ptr->header.stamp;
+      totel_fps++;
+      auto timeed_fps=ptr->header.stamp;
+      if(output_num==200)
+      {
+          output_num=0;
+          double timest=(double)timest_fps.sec+timest_fps.nanosec/0.000000001;
+          double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
+          double time=timeed-timest;
+          double fps=(double)totel_fps/time;
+          RCLCPP_INFO(this->get_logger(), "Cam_fps:%0.3lf",fps);
+      }
+      output_num++;
+    #endif
     }
     gst_sample_unref(sample);
   }
