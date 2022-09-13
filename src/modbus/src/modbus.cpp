@@ -44,7 +44,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
 {
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
-  _param_camera_get = std::make_shared<rclcpp::SyncParametersClient>(this, "camera_tis_node");
+  _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
   _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
@@ -63,10 +63,19 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
 
-  int camer_width=1536,camer_height=1024;
+  camer_width=1536;
+  camer_height=1024;
+/*
   _camera_get_size(&camer_width,&camer_height);
   robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)camer_width;
   robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)camer_height;
+*/
+  _param_camera_get->wait_for_service();
+  auto parameters_future = _param_camera_get->get_parameters(
+                {"width","height"},
+                std::bind(&Modbus::callbackGlobalParam, this, std::placeholders::_1));
+
+                
 
   ctx_robot = modbus_new_tcp(NULL, robotsetport);
   if (!ctx_robot) {
@@ -203,6 +212,19 @@ void Modbus::_gpio_laser(bool f)
   }
 }
 
+void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
+{
+    auto result = future.get();
+    auto param1 = result.at(0);
+    auto param2 = result.at(1);
+    RCLCPP_INFO(this->get_logger(), "width param: %d", param1.as_int());
+    RCLCPP_INFO(this->get_logger(), "height param: %d", param2.as_int());
+
+    robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)param1.as_int();
+    robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)param2.as_int();  
+}
+
+/*
 void Modbus::_camera_get_size(int *width,int *height)
 {
     const std::vector<std::string> KEYS = {"width","height"};
@@ -222,7 +244,7 @@ void Modbus::_camera_get_size(int *width,int *height)
         }
     }
 }
-
+*/
 void Modbus::_camera_set_size(int width,int height)
 {
     _param_camera->set_parameters({rclcpp::Parameter("width", width)});

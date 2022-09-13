@@ -146,6 +146,8 @@ void CameraTis::_declare_parameters()
 
 void CameraTis::_initialize_camera()
 {
+  _declare_parameters();
+
   gst_debug_set_default_threshold(GST_LEVEL_WARNING);
   gst_init(NULL, NULL);
 
@@ -154,9 +156,8 @@ void CameraTis::_initialize_camera()
     throw std::runtime_error("TIS parse launch fail");
   }
 
-  _declare_parameters();
-
   // Disable auto exposure and auto gain, set brightness to 0
+  
   set_property(_pipeline, "Exposure Auto", false);
   set_property(_pipeline, "Gain Auto", false);
   set_property(_pipeline, "Brightness", 0);
@@ -174,7 +175,7 @@ void CameraTis::_initialize_camera()
   _thread = std::thread(&CameraTis::_spin, this);
 
   // ROS parameter callback handle.
-  
+ 
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
       SetParametersResult result;

@@ -209,7 +209,11 @@ public:
    */
   void _camera_power(bool);
 
-  void _camera_get_size(int *width,int *height);
+//void _camera_get_size(int *width,int *height);
+
+  int camer_width;
+  int camer_height;
+  void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
 
   void _camera_set_size(int width,int height);
 
@@ -256,7 +260,7 @@ private:
    *
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera;
-  std::shared_ptr<rclcpp::SyncParametersClient> _param_camera_get;
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera_get;
 
   /**
    * @brief Parameter client for gpio.
