@@ -362,7 +362,9 @@ LineCenterReconstruction::~LineCenterReconstruction()
     _sub.reset();
     _sub_task100_199.reset();
     _points_con.notify_all();
+    _task100_199_con.notify_all();
     _futures_con.notify_one();
+    _task100_199_futures_con.notify_all();
     for (auto & t : _threads) {
       t.join();
     }
@@ -504,7 +506,7 @@ void LineCenterReconstruction::_task100_199_manager()
       auto ptr = f.get();
       _pub_task100_199->publish(std::move(ptr));
     } else {
-      _task100_19_futures_con.wait(lk);
+      _task100_199_futures_con.wait(lk);
     }
   }
 }
@@ -546,7 +548,7 @@ void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgor
   std::unique_lock<std::mutex> lk(_task100_199_futures_mut);
   _task100_199_futures.emplace_back(std::move(fut));
   lk.unlock();
-  _task100_19_futures_con.notify_one();
+  _task100_199_futures_con.notify_one();
 }
 
 }  // namespace line_center_reconstruction
