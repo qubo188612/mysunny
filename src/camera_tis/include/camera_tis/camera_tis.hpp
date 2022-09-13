@@ -19,7 +19,7 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "fileout/E2camData.h"
 
-#define SHOW_OUTPUT_FPS
+//#define SHOW_OUTPUT_FPS
 
 struct _GstElement;
 

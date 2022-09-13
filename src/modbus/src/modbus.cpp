@@ -178,6 +178,7 @@ Modbus::~Modbus()
     _threadforward.join();
     _param_gpio.reset();
     _param_camera.reset();
+    _param_camera_get.reset();
     _param_linecenter.reset();
 //   _handle.reset();
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");

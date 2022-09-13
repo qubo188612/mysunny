@@ -146,8 +146,6 @@ void CameraTis::_declare_parameters()
 
 void CameraTis::_initialize_camera()
 {
-  _declare_parameters();
-
   gst_debug_set_default_threshold(GST_LEVEL_WARNING);
   gst_init(NULL, NULL);
 
@@ -155,6 +153,8 @@ void CameraTis::_initialize_camera()
   if (_pipeline == NULL) {
     throw std::runtime_error("TIS parse launch fail");
   }
+
+  _declare_parameters();
 
   // Disable auto exposure and auto gain, set brightness to 0
   set_property(_pipeline, "Exposure Auto", false);
@@ -170,9 +170,11 @@ void CameraTis::_initialize_camera()
   // Set pipeline state to pause before spin.
   gst_element_set_state(_pipeline, GST_STATE_PAUSED);
   // Spin infinitely until rclcpp::ok() return false which means termination.
+  
   _thread = std::thread(&CameraTis::_spin, this);
 
   // ROS parameter callback handle.
+  
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
       SetParametersResult result;
@@ -185,20 +187,15 @@ void CameraTis::_initialize_camera()
             result.reason = "Failed to set exposure time";
             return result;
           }
-          /*
-          else
-          {
-            _param_imagepos->set_parameters({rclcpp::Parameter("rember_exposure_time", p.as_int())});
-          }
-          */
-        } else if (p.get_name() == "power") {
+        } 
+        else if (p.get_name() == "power") {
           auto ret = this->_set_power(p.as_bool());
           if (ret) {
             result.successful = false;
             result.reason = "Failed to set power";
             return result;
           }
-        }      
+        }    
         else if (p.get_name() == "width") {
           auto ret = this->_set_width(p.as_int());
           if (ret) {
