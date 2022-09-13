@@ -216,12 +216,43 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
 
   if(b_modbusconnect==true)
   {
-    u_int16_t tab_reg[3];
+    u_int16_t tab_reg[8];
+
+    auto stamp = msg->header.stamp;
+    time_t t;
+    u_int16_t msec = msg->header.stamp.nanosec/1000000;
+    struct tm *p;
+    t=stamp.sec;
+    p=gmtime(&t);  
+
+    static double oldtime=0;
+    double nowtime;
+    struct timespec timerun = {0, 0};
+    clock_gettime(CLOCK_REALTIME, &timerun);
+    if(oldtime!=0)
+    {
+      nowtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
+      double fps=1.0/(nowtime-oldtime);
+      tab_reg[7]=(u_int16_t)(fps*100.0);
+      oldtime=nowtime;
+    }
+    else
+    {
+      oldtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
+      tab_reg[7]=0;
+    }
+    
+    
     tab_reg[0]=0xff;
     tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
     tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
-    int rc=modbus_write_registers(ctx,0x02,3,tab_reg);
-    if(rc!=3)
+    tab_reg[3]=(p->tm_hour+8)%24;
+    tab_reg[4]=p->tm_min;
+    tab_reg[5]=p->tm_sec;
+    tab_reg[6]=msec;
+
+    int rc=modbus_write_registers(ctx,0x02,8,tab_reg);
+    if(rc!=8)
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
     }
