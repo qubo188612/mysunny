@@ -198,7 +198,7 @@ void CameraTis::_initialize_camera()
             result.reason = "Failed to set power";
             return result;
           }
-        }
+        }      
         else if (p.get_name() == "width") {
           auto ret = this->_set_width(p.as_int());
           if (ret) {

@@ -23,7 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TIS REQUIRED IMPORTED_TARGET gstreamer-1.0 gstreamer-video-1.0 gobject-introspection-1.0 tcam)
 
-add_library(camera_tis SHARED src/camera_tis.cpp src/E2camData.cpp)
+add_library(camera_tis SHARED src/camera_tis.cpp src/E2camData.cpp src/FileOut.cpp)
 
 ament_target_dependencies(camera_tis
   rclcpp
