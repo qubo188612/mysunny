@@ -107,9 +107,9 @@ CameraTis::CameraTis(const rclcpp::NodeOptions & options)
    * @brief Const expression for image size infomation.
    *
    */
-  int WIDTH = camdata.camer_size_width;
-  int HEIGHT = camdata.camer_size_height;
-  int SIZE = WIDTH * HEIGHT;
+  WIDTH = camdata.camer_size_width;
+  HEIGHT = camdata.camer_size_height;
+  SIZE = WIDTH * HEIGHT;
 
 //_param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
