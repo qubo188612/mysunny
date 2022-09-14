@@ -70,6 +70,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)camer_width;
   robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)camer_height;
 */
+
+
   _param_camera_get->wait_for_service();
   auto parameters_future = _param_camera_get->get_parameters(
                 {"width","height"},

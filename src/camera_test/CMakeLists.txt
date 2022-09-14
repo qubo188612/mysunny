@@ -22,6 +22,8 @@ find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cv_bridge REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIB REQUIRED IMPORTED_TARGET libmodbus)
 
 add_library(camera_test SHARED src/camera_test.cpp)
 
@@ -32,6 +34,8 @@ ament_target_dependencies(camera_test
 )
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+
+target_link_libraries(camera_test PkgConfig::LIB)
 
 target_include_directories(camera_test
   PUBLIC

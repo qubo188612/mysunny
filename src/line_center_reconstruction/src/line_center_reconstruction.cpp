@@ -216,7 +216,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
 
   if(b_modbusconnect==true)
   {
-    u_int16_t tab_reg[8];
+    u_int16_t tab_reg[10];
 
     auto stamp = msg->header.stamp;
     time_t t;
@@ -251,7 +251,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       oldtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
       tab_reg[9]=0;
     }
-
 
     int rc=modbus_write_registers(ctx,0x02,10,tab_reg);
     if(rc!=10)

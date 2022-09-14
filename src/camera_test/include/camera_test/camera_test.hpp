@@ -6,6 +6,10 @@
 #include <cv_bridge/cv_bridge.h>
 #include "sensor_msgs/msg/image.hpp"
 #include "opencv2/opencv.hpp"
+#include <modbus.h>
+#include <unistd.h>
+
+#define SHOW_OUTPUT_FPS
 
 namespace camera_test
 {
@@ -42,6 +46,13 @@ public:
 
   std::string mat_type2encoding(int mat_type);
 
+#ifdef SHOW_OUTPUT_FPS
+  modbus_t * ctx;
+  void _modbus(int port);
+  bool b_modbusconnect;
+  std::thread _threadmodbus;
+#endif
+  
 private:
   /**
    * @brief Publisher name.
@@ -50,6 +61,8 @@ private:
   const char * _pub_name = "~/image";
 
   rclcpp::TimerBase::SharedPtr timer_;
+
+
 };
 
 void timer_callback();

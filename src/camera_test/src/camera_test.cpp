@@ -24,13 +24,68 @@ void timer_callback()
     image_msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(pThis->cv_image.step);
     image_msg->data.assign(pThis->cv_image.datastart, pThis->cv_image.dataend);
 
+#ifdef SHOW_OUTPUT_FPS
+    if(pThis->b_modbusconnect==true)
+    {
+        static bool b_timest=0;
+        static auto timest_fps=image_msg->header.stamp;
+        auto timeed_fps=image_msg->header.stamp;
+        if(b_timest==0)
+        {
+          b_timest=1;
+          timest_fps=image_msg->header.stamp;
+        }
+        else
+        {
+          timeed_fps=image_msg->header.stamp;
+          double timest=(double)timest_fps.sec+(double)timest_fps.nanosec/1000000000;
+          double timeed=(double)timeed_fps.sec+(double)timeed_fps.nanosec/1000000000;
+          double time=timeed-timest;
+          int fps=(int)((double)1.0/time*100.0);
+          u_int16_t tab_reg[1];
+          tab_reg[0]=(u_int16_t)fps;
+          int rc=modbus_write_registers(pThis->ctx,0x0c,1,tab_reg);
+          timest_fps=timeed_fps;
+        }
+    }
+    /*
+    static int32_t totel_fps=0;
+    static int32_t output_num=0;
+    static auto timest_fps=ptr->header.stamp;
+    totel_fps++;
+    auto timeed_fps=ptr->header.stamp;
+    if(output_num==200)
+    {
+        output_num=0;
+        double timest=(double)timest_fps.sec+timest_fps.nanosec/0.000000001;
+        double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
+        double time=timeed-timest;
+        double fps=(double)totel_fps/time;
+        printf("Cam_fps:%0.3lf",fps);
+    }
+    output_num++;
+    */
+  #endif
+
     pThis->_pub->publish(std::move(image_msg));
+
+  
   }
 }
 
 CameraTest::CameraTest(const rclcpp::NodeOptions & options)
 : Node("camera_tis_node", options)
 {
+#ifdef SHOW_OUTPUT_FPS
+  b_modbusconnect=false;
+
+  _threadmodbus = std::thread(&CameraTest::_modbus, this, 1502);
+#endif
+
+  int WIDTH=1536,HEIGHT=1024;
+  this->declare_parameter("width", WIDTH);
+  this->declare_parameter("height", HEIGHT);
+
   pThis=this;
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
   timer_ = this->create_wall_timer(25ms, std::bind(&camera_test::timer_callback));
@@ -43,6 +98,9 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
 CameraTest::~CameraTest()
 {
   try {
+  #ifdef SHOW_OUTPUT_FPS
+    _threadmodbus.join();
+  #endif
     _pub.reset();
 
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
@@ -52,6 +110,30 @@ CameraTest::~CameraTest()
     RCLCPP_ERROR(this->get_logger(), "Exception in destructor: unknown");
   }
 }
+
+#ifdef SHOW_OUTPUT_FPS
+void CameraTest::_modbus(int port)
+{
+  while (rclcpp::ok()) 
+  {
+    ctx = modbus_new_tcp(NULL, 1502);
+    if (!ctx) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to create modbus camfps.");
+      rclcpp::shutdown();
+      return;
+    }
+    if (modbus_connect(ctx) == -1)
+    {
+      modbus_free(ctx);
+      usleep(5);
+      continue;
+    }
+    RCLCPP_INFO(this->get_logger(), "connect modbus camfps succeed.");
+    b_modbusconnect=true;
+    break;
+  }
+}
+#endif
 
 std::string CameraTest::mat_type2encoding(int mat_type)
 {

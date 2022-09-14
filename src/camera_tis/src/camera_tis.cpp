@@ -288,8 +288,6 @@ void CameraTis::_spin()
       ptr->step = WIDTH;
       ptr->data.resize(SIZE);
       memcpy(ptr->data.data(), info.data, SIZE);
-      _pub->publish(std::move(ptr));
-      gst_buffer_unmap(buffer, &info);
 
     #ifdef SHOW_OUTPUT_FPS
       if(b_modbusconnect==true)
@@ -305,33 +303,24 @@ void CameraTis::_spin()
           else
           {
             timeed_fps=ptr->header.stamp;
-            double timest=(double)timest_fps.sec+timest_fps.nanosec/0.000000001;
-            double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
+            double timest=(double)timest_fps.sec+(double)timest_fps.nanosec/1000000000;
+            double timeed=(double)timeed_fps.sec+(double)timeed_fps.nanosec/1000000000;
             double time=timeed-timest;
             int fps=(int)((double)1.0/time*100.0);
             u_int16_t tab_reg[1];
             tab_reg[0]=(u_int16_t)fps;
             int rc=modbus_write_registers(ctx,0x0c,1,tab_reg);
+            if(rc!=1)
+            {
+              RCLCPP_INFO(this->get_logger(), "Failed to send modbus camfps.");
+            }
+            timest_fps=timeed_fps;
           }
       }
-      /*
-      static int32_t totel_fps=0;
-      static int32_t output_num=0;
-      static auto timest_fps=ptr->header.stamp;
-      totel_fps++;
-      auto timeed_fps=ptr->header.stamp;
-      if(output_num==200)
-      {
-          output_num=0;
-          double timest=(double)timest_fps.sec+timest_fps.nanosec/0.000000001;
-          double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
-          double time=timeed-timest;
-          double fps=(double)totel_fps/time;
-          printf("Cam_fps:%0.3lf",fps);
-      }
-      output_num++;
-      */
     #endif
+      _pub->publish(std::move(ptr));
+      gst_buffer_unmap(buffer, &info);
+
     }
     gst_sample_unref(sample);
   }
