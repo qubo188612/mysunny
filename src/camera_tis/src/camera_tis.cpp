@@ -122,7 +122,7 @@ CameraTis::~CameraTis()
 {
   try {
   #ifdef SHOW_OUTPUT_FPS
-    _thread.join();
+    _threadmodbus.join();
   #endif
     gst_element_set_state(_pipeline, GST_STATE_NULL);
     _thread.join();
@@ -242,7 +242,7 @@ void CameraTis::_modbus(int port)
   {
     ctx = modbus_new_tcp(NULL, 1502);
     if (!ctx) {
-      RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+      RCLCPP_ERROR(this->get_logger(), "Failed to create modbus camfps.");
       rclcpp::shutdown();
       return;
     }
@@ -252,7 +252,7 @@ void CameraTis::_modbus(int port)
       usleep(5);
       continue;
     }
-    RCLCPP_INFO(this->get_logger(), "connect modbus context succeed.");
+    RCLCPP_INFO(this->get_logger(), "connect modbus camfps succeed.");
     b_modbusconnect=true;
     break;
   }
@@ -312,10 +312,6 @@ void CameraTis::_spin()
             u_int16_t tab_reg[1];
             tab_reg[0]=(u_int16_t)fps;
             int rc=modbus_write_registers(ctx,0x0c,1,tab_reg);
-            if(rc!=1)
-            {
-              RCLCPP_ERROR(this->get_logger(), "modbus send fps error 0x0c=%d",rc);
-            }
           }
       }
       /*

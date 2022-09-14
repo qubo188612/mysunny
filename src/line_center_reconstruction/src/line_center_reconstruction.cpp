@@ -254,7 +254,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
 
 
     int rc=modbus_write_registers(ctx,0x02,10,tab_reg);
-    if(rc!=8)
+    if(rc!=10)
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
     }
