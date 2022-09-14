@@ -264,7 +264,7 @@ void CameraTis::_spin()
           double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
           double time=timeed-timest;
           double fps=(double)totel_fps/time;
-          RCLCPP_INFO(this->get_logger(), "Cam_fps:%0.3lf",fps);
+          printf("Cam_fps:%0.3lf",fps);
       }
       output_num++;
     #endif
