@@ -151,7 +151,14 @@ void CameraTis::_initialize_camera()
   gst_debug_set_default_threshold(GST_LEVEL_WARNING);
   gst_init(NULL, NULL);
 
-  _pipeline = gst_parse_launch(PIPELINE_STR, NULL);
+  char newPIPELINE_STR[500];
+  sprintf(newPIPELINE_STR,"\"tcambin name=source"
+  " ! video/x-raw,format=GRAY8,width=3072,height=2048,framerate=30/1"
+  " ! videoscale"
+  " ! video/x-raw,width=%d,height=%d"
+  " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4\"",WIDTH,HEIGHT);
+
+  _pipeline = gst_parse_launch(newPIPELINE_STR, NULL);
   if (_pipeline == NULL) {
     throw std::runtime_error("TIS parse launch fail");
   }
@@ -252,6 +259,7 @@ void CameraTis::_spin()
       gst_buffer_unmap(buffer, &info);
 
     #ifdef SHOW_OUTPUT_FPS
+    /*
       static int32_t totel_fps=0;
       static int32_t output_num=0;
       static auto timest_fps=ptr->header.stamp;
@@ -267,6 +275,7 @@ void CameraTis::_spin()
           printf("Cam_fps:%0.3lf",fps);
       }
       output_num++;
+    */
     #endif
     }
     gst_sample_unref(sample);
