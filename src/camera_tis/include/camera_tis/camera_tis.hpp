@@ -18,8 +18,10 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "fileout/E2camData.h"
+#include <modbus.h>
+#include <unistd.h>
 
-//#define SHOW_OUTPUT_FPS
+#define SHOW_OUTPUT_FPS
 
 struct _GstElement;
 
@@ -161,7 +163,12 @@ private:
    *
    */
   OnSetParametersCallbackHandle::SharedPtr _handle;
-
+#ifdef SHOW_OUTPUT_FPS
+  modbus_t * ctx;
+  void _modbus(int port);
+  bool b_modbusconnect;
+  std::thread _threadmodbus;
+#endif
   
 };
 

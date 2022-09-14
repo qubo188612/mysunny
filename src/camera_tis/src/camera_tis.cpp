@@ -121,6 +121,9 @@ CameraTis::CameraTis(const rclcpp::NodeOptions & options)
 CameraTis::~CameraTis()
 {
   try {
+  #ifdef SHOW_OUTPUT_FPS
+    _thread.join();
+  #endif
     gst_element_set_state(_pipeline, GST_STATE_NULL);
     _thread.join();
     gst_object_unref(_pipeline);
@@ -146,6 +149,12 @@ void CameraTis::_declare_parameters()
 
 void CameraTis::_initialize_camera()
 {
+#ifdef SHOW_OUTPUT_FPS
+  b_modbusconnect=false;
+
+  _threadmodbus = std::thread(&CameraTis::_modbus, this, 1502);
+#endif
+
   _declare_parameters();
 
   gst_debug_set_default_threshold(GST_LEVEL_WARNING);
@@ -226,6 +235,30 @@ void CameraTis::_initialize_camera()
   );
 }
 
+#ifdef SHOW_OUTPUT_FPS
+void CameraTis::_modbus(int port)
+{
+  while (rclcpp::ok()) 
+  {
+    ctx = modbus_new_tcp(NULL, 1502);
+    if (!ctx) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
+      rclcpp::shutdown();
+      return;
+    }
+    if (modbus_connect(ctx) == -1)
+    {
+      modbus_free(ctx);
+      usleep(5);
+      continue;
+    }
+    RCLCPP_INFO(this->get_logger(), "connect modbus context succeed.");
+    b_modbusconnect=true;
+    break;
+  }
+}
+#endif
+
 void CameraTis::_spin()
 {
   GstElement * sink = gst_bin_get_by_name(GST_BIN(_pipeline), "sink");
@@ -259,7 +292,33 @@ void CameraTis::_spin()
       gst_buffer_unmap(buffer, &info);
 
     #ifdef SHOW_OUTPUT_FPS
-    /*
+      if(b_modbusconnect==true)
+      {
+          static bool b_timest=0;
+          static auto timest_fps=ptr->header.stamp;
+          auto timeed_fps=ptr->header.stamp;
+          if(b_timest==0)
+          {
+            b_timest=1;
+            timest_fps=ptr->header.stamp;
+          }
+          else
+          {
+            timeed_fps=ptr->header.stamp;
+            double timest=(double)timest_fps.sec+timest_fps.nanosec/0.000000001;
+            double timeed=(double)timeed_fps.sec+timeed_fps.nanosec/0.000000001;
+            double time=timeed-timest;
+            int fps=(int)((double)1.0/time*100.0);
+            u_int16_t tab_reg[1];
+            tab_reg[0]=(u_int16_t)fps;
+            int rc=modbus_write_registers(ctx,0x0c,1,tab_reg);
+            if(rc!=1)
+            {
+              RCLCPP_ERROR(this->get_logger(), "modbus send fps error 0x0c=%d",rc);
+            }
+          }
+      }
+      /*
       static int32_t totel_fps=0;
       static int32_t output_num=0;
       static auto timest_fps=ptr->header.stamp;
@@ -275,7 +334,7 @@ void CameraTis::_spin()
           printf("Cam_fps:%0.3lf",fps);
       }
       output_num++;
-    */
+      */
     #endif
     }
     gst_sample_unref(sample);
