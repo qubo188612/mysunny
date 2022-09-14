@@ -152,11 +152,11 @@ void CameraTis::_initialize_camera()
   gst_init(NULL, NULL);
 
   char newPIPELINE_STR[500];
-  sprintf(newPIPELINE_STR,"\"tcambin name=source"
+  sprintf(newPIPELINE_STR,"tcambin name=source"
   " ! video/x-raw,format=GRAY8,width=3072,height=2048,framerate=30/1"
   " ! videoscale"
   " ! video/x-raw,width=%d,height=%d"
-  " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4\"",WIDTH,HEIGHT);
+  " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4",WIDTH,HEIGHT);
 
   _pipeline = gst_parse_launch(newPIPELINE_STR, NULL);
   if (_pipeline == NULL) {
