@@ -136,11 +136,11 @@ CameraTis::~CameraTis()
 
 void CameraTis::_declare_parameters()
 {
-  ParameterDescriptor pd;
-  pd.read_only = true;
+//ParameterDescriptor pd;
+//pd.read_only = true;
   this->declare_parameter("exposure_time", 1000);
-  this->declare_parameter("width", WIDTH, pd);
-  this->declare_parameter("height", HEIGHT, pd);
+  this->declare_parameter("width", WIDTH);
+  this->declare_parameter("height", HEIGHT);
   this->declare_parameter("power", false, ParameterDescriptor(), true);
 }
 

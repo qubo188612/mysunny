@@ -139,7 +139,7 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         container,
-    #   seam_tracking_node,
+        seam_tracking_node,
         modbus_node,
-    #   gpio_raspberry_node,
+        gpio_raspberry_node,
         config_tis_node])
