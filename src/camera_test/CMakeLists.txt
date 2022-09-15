@@ -21,7 +21,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(cv_bridge REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIB REQUIRED IMPORTED_TARGET libmodbus)
 

@@ -38,7 +38,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     nano \
     gpiod \
     libmodbus5 \
-    ros-galactic-cv-bridge \
     /tiscamera.deb \
     && rm -rf /var/lib/apt/lists/* /tiscamera.deb
 
