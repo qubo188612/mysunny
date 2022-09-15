@@ -11,6 +11,7 @@
 
   <depend>rclcpp</depend>
   <depend>tutorial_interfaces</depend>
+  <depend>OpenCV</depend>
   <depend>camera_test</depend>
   <depend>camera_tis</depend>
   <depend>rotate_image</depend>
@@ -22,7 +23,7 @@
   <depend>modbus</depend>
   <depend>gpio_raspberry</depend>
   <depend>config_tis</depend>
-
+  
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
