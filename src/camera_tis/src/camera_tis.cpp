@@ -110,6 +110,7 @@ CameraTis::CameraTis(const rclcpp::NodeOptions & options)
   WIDTH = camdata.camer_size_width;
   HEIGHT = camdata.camer_size_height;
   SIZE = WIDTH * HEIGHT;
+  FPS = camdata.camer_fps;
 
 //_param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
@@ -144,6 +145,7 @@ void CameraTis::_declare_parameters()
   this->declare_parameter("exposure_time", 1000);
   this->declare_parameter("width", WIDTH);
   this->declare_parameter("height", HEIGHT);
+  this->declare_parameter("fps", FPS);
   this->declare_parameter("power", false, ParameterDescriptor(), true);
 }
 
@@ -162,10 +164,10 @@ void CameraTis::_initialize_camera()
 
   char newPIPELINE_STR[500];
   sprintf(newPIPELINE_STR,"tcambin name=source"
-  " ! video/x-raw,format=GRAY8,width=3072,height=2048,framerate=30/1"
+  " ! video/x-raw,format=GRAY8,width=3072,height=2048,framerate=%d/1"
   " ! videoscale"
   " ! video/x-raw,width=%d,height=%d"
-  " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4",WIDTH,HEIGHT);
+  " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4",FPS,WIDTH,HEIGHT);
 
   _pipeline = gst_parse_launch(newPIPELINE_STR, NULL);
   if (_pipeline == NULL) {
@@ -226,6 +228,14 @@ void CameraTis::_initialize_camera()
           if (ret) {
             result.successful = false;
             result.reason = "Failed to set height";
+            return result;
+          }
+        }
+        else if (p.get_name() == "fps") {
+          auto ret = this->_set_fps(p.as_int());
+          if (ret) {
+            result.successful = false;
+            result.reason = "Failed to set fps";
             return result;
           }
         }
@@ -387,6 +397,20 @@ int CameraTis::_set_height(int height)
   else
   {
     camdata.camer_size_height=height;
+    camdata.write_camer_para();
+  }
+  return 0;
+}
+
+int CameraTis::_set_fps(int fps)
+{
+  if(fps<(int)camdata.camer_fps_min||fps>(int)camdata.camer_fps_max)
+  { 
+    return 1;
+  }
+  else
+  {
+    camdata.camer_fps=fps;
     camdata.write_camer_para();
   }
   return 0;

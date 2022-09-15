@@ -65,19 +65,13 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 
   camer_width=1536;
   camer_height=1024;
-/*
-  _camera_get_size(&camer_width,&camer_height);
-  robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)camer_width;
-  robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)camer_height;
-*/
-
+  camer_fps=30;
 
   _param_camera_get->wait_for_service();
   auto parameters_future = _param_camera_get->get_parameters(
-                {"width","height"},
+                {"width","height","fps"},
                 std::bind(&Modbus::callbackGlobalParam, this, std::placeholders::_1));
-
-                
+               
 
   ctx_robot = modbus_new_tcp(NULL, robotsetport);
   if (!ctx_robot) {
@@ -217,13 +211,23 @@ void Modbus::_gpio_laser(bool f)
 void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
 {
     auto result = future.get();
-    auto param1 = result.at(0);
-    auto param2 = result.at(1);
-    RCLCPP_INFO(this->get_logger(), "width param: %d", param1.as_int());
-    RCLCPP_INFO(this->get_logger(), "height param: %d", param2.as_int());
+    if(result.size()>=3)
+    {
+      auto width = result.at(0);
+      auto height = result.at(1);
+      auto fps = result.at(2);
+      RCLCPP_INFO(this->get_logger(), "width param: %d", width.as_int());
+      RCLCPP_INFO(this->get_logger(), "height param: %d", height.as_int());
+      RCLCPP_INFO(this->get_logger(), "fps param: %d", fps.as_int());
 
-    robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)param1.as_int();
-    robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)param2.as_int();  
+      robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)width.as_int();
+      robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)height.as_int();  
+      robot_mapping->tab_registers[CAMER_FPS_REG_ADD]=(u_int16_t)fps.as_int();  
+    }
+    else
+    {
+      RCLCPP_ERROR(this->get_logger(), "Get camer info error.");
+    }
 }
 
 /*
@@ -312,6 +316,9 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case CAMER_SIZE_HEIGHT_REG_ADD:
       _param_camera->set_parameters({rclcpp::Parameter("height", num)});
+    break;
+    case CAMER_FPS_REG_ADD:
+      _param_camera->set_parameters({rclcpp::Parameter("fps", num)});
     break;
     default:
     break;
