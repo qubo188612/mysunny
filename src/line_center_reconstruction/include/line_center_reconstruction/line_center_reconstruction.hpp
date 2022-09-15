@@ -26,6 +26,9 @@
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 
+#define PIC_IMAGE_HEIGHT 1536
+#define PIC_IMAGE_WIDTH  1024
+
 namespace line_center_reconstruction
 {
 
@@ -245,6 +248,11 @@ private:
 
   void _modbus(int port);
   bool b_modbusconnect;
+
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera_get;
+  void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
+  int picwidth;
+  int picheight;
 
 };
 

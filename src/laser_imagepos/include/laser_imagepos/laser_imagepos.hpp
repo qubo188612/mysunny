@@ -13,7 +13,7 @@
 #include "unistd.h"
 #include <time.h>
 
-#define DEBUG_ALG       //输出算法步骤
+//#define DEBUG_ALG       //输出算法步骤
 #define QUICK_TRANSMIT    //快速传输
 
 namespace laser_imagepos

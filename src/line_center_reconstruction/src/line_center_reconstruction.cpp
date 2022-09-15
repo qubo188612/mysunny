@@ -20,6 +20,13 @@
 
 #include "opencv2/opencv.hpp"
 
+template<typename _Tp>
+std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
+{
+	return (std::vector<_Tp>)(mat.reshape(1, 1));//通道数不变，按行转为一行
+}
+
+
 namespace line_center_reconstruction
 {
 
@@ -314,6 +321,15 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 {
   b_modbusconnect=false;
 
+  _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
+
+  picheight=PIC_IMAGE_HEIGHT;
+  picwidth=PIC_IMAGE_WIDTH;
+  _param_camera_get->wait_for_service();
+  auto parameters_future = _param_camera_get->get_parameters(
+                {"width","height"},
+                std::bind(&LineCenterReconstruction::callbackGlobalParam, this, std::placeholders::_1));
+
   _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
@@ -399,6 +415,27 @@ Params LineCenterReconstruction::_update_parameters()
   for (const auto & p : vp) {
     if (p.get_name() == "homography_matrix") {
       pm.homography_matrix = p.as_double_array();
+
+      if(picwidth!=PIC_IMAGE_WIDTH||picheight!=PIC_IMAGE_HEIGHT)
+      {
+         auto _homo = cv::Mat(pm.homography_matrix, true).reshape(1, 3);
+         std::vector<cv::Point2f> points_top(4);
+         std::vector<cv::Point2f> corners_trans;
+         points_top[0] = cv::Point2f(0,0);
+         points_top[1] = cv::Point2f(PIC_IMAGE_WIDTH-1,0);
+         points_top[2] = cv::Point2f(0,PIC_IMAGE_HEIGHT-1);
+         points_top[3] = cv::Point2f(PIC_IMAGE_WIDTH-1,PIC_IMAGE_HEIGHT-1);
+         cv::perspectiveTransform( points_top, corners_trans, _homo);
+         std::vector<cv::Point2f> points_trans(4);
+         points_trans[0] = cv::Point2f(0,0);
+         points_trans[1] = cv::Point2f(picwidth-1,0);
+         points_trans[2] = cv::Point2f(0,picheight-1);
+         points_trans[3] = cv::Point2f(picwidth-1,picheight-1);
+         
+         cv::Mat transform = getPerspectiveTransform(points_trans,corners_trans);
+         transform.convertTo(transform,CV_64FC1);
+         pm.homography_matrix=convertMat2Vector<double>(transform);
+      }
     }
     // if (p.get_name() == "camera_matrix") {
     //   pm.camera_matrix = p.as_double_array();
@@ -550,6 +587,22 @@ void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgor
   _task100_199_futures.emplace_back(std::move(fut));
   lk.unlock();
   _task100_199_futures_con.notify_one();
+}
+
+void LineCenterReconstruction::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
+{
+    auto result = future.get();
+    if(result.size()>=2)
+    {
+      picheight = result.at(0).as_int();
+      picwidth = result.at(1).as_int();
+      RCLCPP_INFO(this->get_logger(), "picwidth percent: %d", picwidth);
+      RCLCPP_INFO(this->get_logger(), "picheight percent: %d", picheight);
+    }
+    else
+    {
+      RCLCPP_ERROR(this->get_logger(), "Get camer info error.");
+    }
 }
 
 }  // namespace line_center_reconstruction
