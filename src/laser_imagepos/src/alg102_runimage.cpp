@@ -429,7 +429,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
     struct timespec timeed = {0, 0};
-    int timeuse;
+    long timeuse;
     RCLCPP_INFO(this->get_logger(), "start alg102");
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif
@@ -440,11 +440,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
-    Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
-    Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
+    Myhalcv2::Mygausspyramid_2levl(imageIn,&imageGasu);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=1,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif    
@@ -454,7 +453,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=2,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -467,7 +466,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mynormalize(imageGasu,&imageBry);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=3,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -481,7 +480,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=4,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -516,7 +515,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=5,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -529,7 +528,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mybinary(m_brygujia,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=6,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -542,7 +541,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=7,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -623,7 +622,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mynormalize_lineXY(m_tempmatIn,&imageBry,1);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=8,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -636,7 +635,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=9,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -654,7 +653,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=10,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -666,7 +665,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=11,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -729,7 +728,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=12,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -766,7 +765,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight/4);//修复空的线
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=13,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -781,7 +780,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=14,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -799,7 +798,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=15,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -916,7 +915,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=16,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1032,7 +1031,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=17,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1320,7 +1319,7 @@ con:
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=18,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1408,7 +1407,7 @@ con:
         }
     #ifdef DEBUG_ALG;
         clock_gettime(CLOCK_REALTIME, &timeed);
-        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
         RCLCPP_INFO(this->get_logger(), "start alg102=19,time=%d",timeuse);
         clock_gettime(CLOCK_REALTIME, &timest);
     #endif 
@@ -1481,7 +1480,7 @@ con:
         } 
     #ifdef DEBUG_ALG;
         clock_gettime(CLOCK_REALTIME, &timeed);
-        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
         RCLCPP_INFO(this->get_logger(), "start alg102=20,time=%d",timeuse);
         clock_gettime(CLOCK_REALTIME, &timest);
     #endif 
@@ -1509,7 +1508,7 @@ con:
     #endif 
     #ifdef DEBUG_ALG;
         clock_gettime(CLOCK_REALTIME, &timeed);
-        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
         RCLCPP_INFO(this->get_logger(), "start alg102=21,time=%d",timeuse);
         clock_gettime(CLOCK_REALTIME, &timest);
     #endif 
@@ -1633,7 +1632,7 @@ con:
 
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=22,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1703,7 +1702,7 @@ con:
     }
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=23,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1725,7 +1724,7 @@ con:
     ImageConectlong.width=imageIn.width;
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=24,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1759,7 +1758,7 @@ con:
     Myline16to32(headline,&headline32);
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "start alg102=25,time=%d",timeuse);
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
@@ -1803,7 +1802,7 @@ con:
 
 #ifdef DEBUG_ALG;
     clock_gettime(CLOCK_REALTIME, &timeed);
-    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000000000 + (timeed.tv_nsec - timest.tv_nsec);
     RCLCPP_INFO(this->get_logger(), "finish alg102,time=%d",timeuse);
 #endif 
     

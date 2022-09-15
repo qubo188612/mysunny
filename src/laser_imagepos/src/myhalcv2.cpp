@@ -15292,6 +15292,28 @@ namespace Myhalcv2
         return 0;
     }
 
+    Int8 Mygausspyramid_2levl(Mat matIn,Mat *matOut)
+    {
+        Int32 nStartY=matIn.starty;
+        Int32 nHeight=matIn.height;
+        Int32 nStartX=matIn.startx;
+        Int32 nWidth=matIn.width;
+        cv::Mat cvimgIn,cvimgOut;
+        void *buffer=matOut->data;
+
+        MatToCvMat(matIn,&cvimgIn);
+        cv::pyrDown(cvimgIn,cvimgOut);
+        cv::pyrDown(cvimgOut,cvimgOut);
+        CvMatToMat(cvimgOut,matOut,buffer);
+
+        matOut->startx=(nStartX>>2);
+        matOut->starty=(nStartY>>2);
+        matOut->width=(nWidth>>2);
+        matOut->height=(nHeight>>2);
+
+        return 0;
+    }
+
     Int8 MygausspyramidUp(Mat matIn,Mat *matOut)
     {
         Int32 nStartY=matIn.starty;

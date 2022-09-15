@@ -8,7 +8,7 @@
 #if USE_XIMGPROC == 1
 #include "opencv2/ximgproc.hpp"
 #endif
-#include "myhalcv2/tistdtypes.h"
+#include "tistdtypes.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1175,6 +1175,10 @@ namespace Myhalcv2
     //求下一层的高斯金字塔,2x2采样,用5x5高斯窗口,(会作用于全部区域,需要小心使用)
     Int8 Mygausspyramid(Mat matIn,		//输入待处理矩阵
                         Mat *matOut);	//输出下一层高斯金字塔图象,注意内存大小,至少为getsizeof(matIn._type)*(matIn.nHeight/2*matIn.nWidth/2)
+
+    //求下二层的高斯金字塔,2x2采样,用5x5高斯窗口,(会作用于全部区域,需要小心使用)
+    Int8 Mygausspyramid_2levl(Mat matIn,        //输入待处理矩阵
+                              Mat *matOut);     //输出下二层高斯金字塔图象,注意内存大小,至少为getsizeof(matIn._type)*(matIn.nHeight/4*matIn.nWidth/4)
 
     //求上一层高斯金字塔,(会作用于全部区域,需要小心使用)(如果再加上上一层的拉普拉斯塔(需要注意无符号类型的拉普拉斯塔数据的正负值可能是居中显示)就会变为上一层原图)
     Int8 MygausspyramidUp(Mat matIn,		//输入待处理矩阵

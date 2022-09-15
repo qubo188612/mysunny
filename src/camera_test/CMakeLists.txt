@@ -33,9 +33,7 @@ ament_target_dependencies(camera_test
   OpenCV
 )
 
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
-
-target_link_libraries(camera_test PkgConfig::LIB)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} PkgConfig::LIB)
 
 target_include_directories(camera_test
   PUBLIC

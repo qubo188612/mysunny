@@ -341,8 +341,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
-    Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
-    Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
+    Myhalcv2::Mygausspyramid_2levl(imageIn,&imageGasu);
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif    

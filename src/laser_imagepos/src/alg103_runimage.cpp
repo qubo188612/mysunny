@@ -156,8 +156,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     m_brygujia=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
     m16_filterIma=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff6);
     
-    Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
-    Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
+    Myhalcv2::Mygausspyramid_2levl(imageIn,&imageGasu);
 
     if(step==3)
     {
