@@ -11,8 +11,9 @@
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "myhalcv2/myhalcv2.h"
 #include "unistd.h"
+#include <time.h>
 
-//#define DEBUG_ALG       //输出算法步骤
+#define DEBUG_ALG       //输出算法步骤
 #define QUICK_TRANSMIT    //快速传输
 
 namespace laser_imagepos

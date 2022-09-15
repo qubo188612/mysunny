@@ -427,8 +427,11 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_ed3=pm.als102_dis_center_ed3;//500;//30;  //距离中心点此处后停止统计
     
 #ifdef DEBUG_ALG
-    int debug_alg=1;
+    struct timespec timest = {0, 0};
+    struct timespec timeed = {0, 0};
+    int timeuse;
     RCLCPP_INFO(this->get_logger(), "start alg102");
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif
     if(step==2)
     {
@@ -440,14 +443,20 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mygausspyramid(imageIn,&imageGasu);
     Myhalcv2::Mygausspyramid(imageGasu,&imageGasu);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=1,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif    
     if(step!=0)
     {
       imageGasupain=MatCreatClone(imageGasu,cv8uc1_Imagebuff8);
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=2,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==3)
     {
@@ -457,7 +466,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     imageBry=Myhalcv2::MatCreat(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
     Myhalcv2::Mynormalize(imageGasu,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=3,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==4)
     {
@@ -468,7 +480,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=(Int32)bryvalue+pingjun;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=4,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==5)
     {
@@ -500,7 +515,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,5);
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=5,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==6)
     {
@@ -510,7 +528,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=gujiaerzhi;
     Myhalcv2::Mybinary(m_brygujia,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=6,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==7)
     {
@@ -520,7 +541,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=7,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==8)
     {
@@ -598,7 +622,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyCutRoi(imageGasu,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft,jiguangTop,jiguangRight-jiguangLeft+1,jiguangDeep-jiguangTop+1);
     Myhalcv2::Mynormalize_lineXY(m_tempmatIn,&imageBry,1);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=8,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==9)
     {
@@ -608,7 +635,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     i32_bryvalue=gujiaerzhi;//求平均值二值化阈值
     Myhalcv2::Mybinary(imageBry,&imageBry,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=9,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==10)
     {
@@ -623,7 +653,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=10,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==11)
     {
@@ -632,7 +665,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=11,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==12)
     {
@@ -692,7 +728,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         }
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=12,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==13)
     {
@@ -726,7 +765,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight/4);//修复空的线
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=13,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(step==14)
     {
@@ -738,7 +780,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
       return 0;
     }
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "start alg102=%d",debug_alg++);
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=14,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     if(St_Down+Ed_Down+St_Up+Ed_Up>X_Lineendy-X_Linestarty-5)
     {
@@ -752,7 +797,12 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     m_filter2=Myhalcv2::MatCreat(1,10,Myhalcv2::CCV_16SC1,filterdata2);
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight/4,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
-
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=15,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
     //找下半段
     midfindED.y=X_Lineendy-St_Up;
     midfindST.y=X_Lineendy-St_Up-Ed_Up;
@@ -864,6 +914,12 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
     }
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=16,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
 
     endfindST.y=X_Linestarty+St_Down;
     endfindED.y=X_Linestarty+Ed_Down+St_Down;
@@ -974,7 +1030,12 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MyCircle(&imageGasupain,endfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
     }
-
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=17,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
     //判断两直线距离
     minj=(midfindST.y+endfindED.y)/2;
     MyGetLineXpos(tileline,minj,&j);
@@ -1257,6 +1318,12 @@ con:
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=18,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
 
     /***********************/
     
@@ -1339,6 +1406,12 @@ con:
                 m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(((maxX<<1)/maxXn)>>1)]=255;
             }
         }
+    #ifdef DEBUG_ALG;
+        clock_gettime(CLOCK_REALTIME, &timeed);
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        RCLCPP_INFO(this->get_logger(), "start alg102=19,time=%d",timeuse);
+        clock_gettime(CLOCK_REALTIME, &timest);
+    #endif 
 
         Myhalcv2::MyCutminRoi(m_brygujia,&m_brygujia,Myhalcv2::MHC_CUTMIN_32,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
         Myhalcv2::Myconnection2(m_brygujia,&ImageConect,10,2,3,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
@@ -1383,7 +1456,6 @@ con:
             Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
             return 0;
         }
-
         if(b_opengudingdimian==1)   //学习底面
         {
             if(canlearn==1&&linedistance1>15) //两直线距离远
@@ -1406,7 +1478,13 @@ con:
                 #endif 
                 }
             }
-        }
+        } 
+    #ifdef DEBUG_ALG;
+        clock_gettime(CLOCK_REALTIME, &timeed);
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        RCLCPP_INFO(this->get_logger(), "start alg102=20,time=%d",timeuse);
+        clock_gettime(CLOCK_REALTIME, &timest);
+    #endif 
     }
     else
     {
@@ -1428,6 +1506,12 @@ con:
         RCLCPP_INFO(this->get_logger(), "fuzhufindST.x=%d,fuzhufindST.y=%d,fuzhufindED.x=%d,fuzhufindED.y=%d",
                                             fuzhufindST.x,fuzhufindST.y,fuzhufindED.x,fuzhufindED.y
                                             );
+    #endif 
+    #ifdef DEBUG_ALG;
+        clock_gettime(CLOCK_REALTIME, &timeed);
+        timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+        RCLCPP_INFO(this->get_logger(), "start alg102=21,time=%d",timeuse);
+        clock_gettime(CLOCK_REALTIME, &timest);
     #endif 
     }
 
@@ -1547,6 +1631,12 @@ con:
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,imageGasu.nWidth,imageGasu.nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
 
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=22,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
 
     
     tileline.ed.x=tileline.ed.x*4;
@@ -1611,6 +1701,12 @@ con:
             m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(((maxX<<1)/maxXn)>>1)]=255;
         }
     }
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=23,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
     Myhalcv2::MyCutminRoi(m_brygujia,&m_brygujia,Myhalcv2::MHC_CUTMIN_32,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
     Myhalcv2::Myconnection2(m_brygujia,&ImageConect,15,2,3,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
     if(ImageConect.AllMarkPointCount==0)
@@ -1627,7 +1723,12 @@ con:
     ImageConectlong.starty=imageIn.starty;
     ImageConectlong.height=imageIn.height;
     ImageConectlong.width=imageIn.width;
-
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=24,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
     for(j=0;j<ImageConectlong.AllMarkPointCount;j++)
     {
       for(i=0;i<ImageConectlong.AllMarkPoint[j].PointArea;i++)
@@ -1656,7 +1757,12 @@ con:
     resultfocal2=resultfocal;
     Myline16to32(tileline,&tileline32);
     Myline16to32(headline,&headline32);
-    
+#ifdef DEBUG_ALG;
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "start alg102=25,time=%d",timeuse);
+    clock_gettime(CLOCK_REALTIME, &timest);
+#endif 
     if(step==1)
     {
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -1696,7 +1802,9 @@ con:
 */
 
 #ifdef DEBUG_ALG;
-    RCLCPP_INFO(this->get_logger(), "finish alg102");
+    clock_gettime(CLOCK_REALTIME, &timeed);
+    timeuse=(timeed.tv_sec - timest.tv_sec)*1000 + (timeed.tv_nsec - timest.tv_nsec)/1000000;
+    RCLCPP_INFO(this->get_logger(), "finish alg102,time=%d",timeuse);
 #endif 
     
     return 0;
