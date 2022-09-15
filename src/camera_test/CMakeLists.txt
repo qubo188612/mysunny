@@ -30,6 +30,7 @@ ament_target_dependencies(camera_test
   rclcpp
   rclcpp_components
   sensor_msgs
+  OpenCV
 )
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
