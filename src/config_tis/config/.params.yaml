@@ -1,7 +1,5 @@
 camera_tis_node:
     exposure_time: 1000         # int, exposure time in in microseconds
-    width: 1536                 # int, width in pixel
-    height: 1024                # int, height in pixel
 
 rotate_image_node:
     mode: 0                     # int, 0 - 90, 1 - 180, 2 - 270
@@ -14,95 +12,6 @@ laser_line_center_node:
     task_num: 0
 
 laser_imagepos_node:
-    als100_exposure_time:     10000   # int
-    als100_pingjun:           15
-    als100_b_yanmofuzhu:      1
-    als100_b_gudingquyu:      0
-    als100_widthliantongdis:  6
-    als100_highliantongdis:   15
-    als100_gujiaerzhi:        160
-    als100_jiguanghight:      50
-    als100_jiguanglong:       20
-    als100_jiguangkuandu:     4
-    als100_Updif:             0
-    als100_Updifmin:         -5
-    als100_Uplong:            5
-    als100_Downdif:           0
-    als100_Downdifmin:        5
-    als100_Downdlong:         5
-    als100_duanxianerzhi:     180
-    als100_erzhisize:         150
-    als100_erzhisize2:        60
-    als100_searchdectancemax: 160
-    als100_searchdectancemin: 25
-    als100_dis_center_st:     0
-    als100_dis_center_ed:     500
-
-    als101_exposure_time:     10000               # int
-    als101_pingjun:           15
-    als101_b_yanmofuzhu:      1
-    als101_b_gudingquyu:      0
-    als101_widthliantongdis:  6
-    als101_highliantongdis:   15
-    als101_gujiaerzhi:        160
-    als101_jiguanghight:      50
-    als101_jiguanglong:       20
-    als101_jiguangkuandu:     4
-    als101_Updif:             0
-    als101_Updifmin:          5
-    als101_Uplong:            5
-    als101_Downdif:           0
-    als101_Downdifmin:       -5
-    als101_Downdlong:         5
-    als101_duanxianerzhi:     180
-    als101_erzhisize:         150
-    als101_erzhisize2:        60
-    als101_searchdectancemax: 160
-    als101_searchdectancemin: 25
-    als101_dis_center_st:     0
-    als101_dis_center_ed:     500
-
-    als102_exposure_time:       10000               # int
-    als102_pingjun:             15
-    als102_b_yanmofuzhu:        1
-    als102_b_gudingquyu:        0
-    als102_widthliantongdis:    6
-    als102_highliantongdis:     15
-    als102_gujiaerzhi:          160
-    als102_jiguanghight:        50
-    als102_jiguanglong:         20
-    als102_jiguangkuandu:       4
-    als102_Updif:               0
-    als102_Updifmin:           -5
-    als102_Uplong:              5
-    als102_Downdif:             0
-    als102_Downdifmin:          5
-    als102_Downdlong:           5
-    als102_St_Down:             5
-    als102_Ed_Down:             50
-    als102_St_Up:               5
-    als102_Ed_Up:               50
-    als102_Updif2:             -2
-    als102_Updifmin2:          -5
-    als102_dis_center_st:       0
-    als102_dis_center_ed:       30
-    als102_b_opengudingdimian:  0
-    als102_dimianpangdingjuli:  15
-    als102_dimianpingjunshunum: 10
-    als102_dis_center_st2:      5
-    als102_dis_center_ed2:      100
-    als102_dis_center_st3:      5
-    als102_dis_center_ed3:      500
-
-    als103_exposure_time:       10000
-    als103_pingjun:             15
-    als103_gujiaerzhi:          160
-    als103_widthliantongdis:    5
-    als103_highliantongdis:     5
-    als103_jiguanglong:         5
-    als103_jiguangkuandu:       10
-    als103_jiguangduibidu:      5
-
     task_num:       0                 # int
     show_step:      0
     start:          0

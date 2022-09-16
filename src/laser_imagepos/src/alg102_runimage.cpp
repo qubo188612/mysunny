@@ -425,6 +425,8 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_ed2=pm.als102_dis_center_ed2;//100;//30;  //距离中心点此处后停止统计
     Int32 dis_center_st3=pm.als102_dis_center_st3;//5;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed3=pm.als102_dis_center_ed3;//500;//30;  //距离中心点此处后停止统计
+    Int32 pingpowending=1;//平坡处稳定焊点
+    Int32 pingpowending_dis=4;//平坡处稳定距离
     
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
@@ -1752,6 +1754,29 @@ con:
     #endif
         return 1;
     }
+
+    //验证稳定性
+    if(firstdimian==1&&pingpowending==1)
+    {
+        //求得两直线交点
+        Myhalcv2::L_line checkline;	//结果线2以及原图的线,(短的)
+        Myhalcv2::L_Point32 checkpoint;
+        Myhalcv2::MyPoint32to16(fuzhufindST,&checkline.st);
+        Myhalcv2::MyPoint32to16(fuzhufindED,&checkline.ed);
+        if(0!=Myhalcv2::MyGetLinefocal(tileline,checkline,&checkpoint))
+            return 1;
+        if((checkpoint.y-resultfocal.y)*(checkpoint.y-resultfocal.y)+(checkpoint.x-resultfocal.x)*(checkpoint.x-resultfocal.x)>pingpowending_dis*pingpowending_dis)
+        {
+            headline.st.x=fuzhufindST.x;
+            headline.st.y=fuzhufindST.y;
+            headline.ed.x=fuzhufindED.x;
+            headline.ed.y=fuzhufindED.y;
+            //求得两直线交点
+            if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
+                return 1;
+        }
+    }
+
     resultfocal1=resultfocal;
     resultfocal2=resultfocal;
     Myline16to32(tileline,&tileline32);
