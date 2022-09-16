@@ -103,7 +103,10 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_dis_center_st2",
                                               "als102_dis_center_ed2",
                                               "als102_dis_center_st3",
-                                              "als102_dis_center_ed3"};
+                                              "als102_dis_center_ed3",
+                                              "als102_xuexijuli",
+                                              "als102_b_pingpowending",
+                                              "als102_pingpowending_dis"};
 
 const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_pingjun",
@@ -203,6 +206,10 @@ struct Params
   int als102_dis_center_ed2=100;
   int als102_dis_center_st3=5;
   int als102_dis_center_ed3=100;
+  int als102_xuexijuli=15;
+  int als102_b_pingpowending=1;
+  int als102_pingpowending_dis=4;
+  
 /************************************/
 //算法103参数
   int als103_exposure_time=10000;//曝光值

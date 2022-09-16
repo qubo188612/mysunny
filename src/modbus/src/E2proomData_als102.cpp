@@ -99,6 +99,15 @@ void E2proomData::Init_als102_E2proomData()
     als102_dis_center_ed3_min=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MIN;   
     als102_dis_center_ed3_max=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MAX;  
     als102_dis_center_ed3_use=E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_USE;
+    als102_xuexijuli_min=E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_MIN;
+    als102_xuexijuli_max=E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_MAX;
+    als102_xuexijuli_use=E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_USE;
+    als102_b_pingpowending_min=E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_MIN;
+    als102_b_pingpowending_max=E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_MAX;
+    als102_b_pingpowending_use=E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_USE;
+    als102_pingpowending_dis_min=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MIN;
+    als102_pingpowending_dis_max=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MAX;
+    als102_pingpowending_dis_use=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_USE;
 }
 
 void E2proomData::als102_check_para()
@@ -165,6 +174,13 @@ void E2proomData::als102_check_para()
         als102_dis_center_st3=als102_dis_center_st3_use;
     if(als102_dis_center_ed3<als102_dis_center_ed3_min||als102_dis_center_ed3>als102_dis_center_ed3_max)
         als102_dis_center_ed3=als102_dis_center_ed3_use;
+    if(als102_xuexijuli<als102_xuexijuli_min||als102_xuexijuli>als102_xuexijuli_max)
+        als102_xuexijuli=als102_xuexijuli_use;
+    if(als102_b_pingpowending<als102_b_pingpowending_min||als102_b_pingpowending>als102_b_pingpowending_max)
+        als102_b_pingpowending=als102_b_pingpowending_use;
+    if(als102_pingpowending_dis<als102_pingpowending_dis_min||als102_pingpowending_dis>als102_pingpowending_dis_max)
+        als102_pingpowending_dis=als102_pingpowending_dis_use;
+
 }
 
 void E2proomData::als102_read_para()
@@ -253,6 +269,12 @@ void E2proomData::als102_read_para()
       i16_p++;
       als102_dis_center_ed3=*i16_p;
       i16_p++;
+      als102_xuexijuli=*i16_p;
+      i16_p++;
+      als102_b_pingpowending=*i16_p;
+      i16_p++;
+      als102_pingpowending_dis=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -339,6 +361,12 @@ void E2proomData::write_als102_para()
     i16_p++;
     *i16_p=als102_dis_center_ed3;
     i16_p++;
+    *i16_p=als102_xuexijuli;
+    i16_p++;
+    *i16_p=als102_b_pingpowending;
+    i16_p++;
+    *i16_p=als102_pingpowending_dis;
+    i16_p++;
 
     fo.WriteFile(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF);
 
@@ -382,4 +410,7 @@ void E2proomData::init_als102_para()
     als102_dis_center_ed2=als102_dis_center_ed2_use;
     als102_dis_center_st3=als102_dis_center_st3_use;
     als102_dis_center_ed3=als102_dis_center_ed3_use;
+    als102_xuexijuli=als102_xuexijuli_use;
+    als102_b_pingpowending=als102_b_pingpowending_use;
+    als102_pingpowending_dis=als102_pingpowending_dis_use;
 }

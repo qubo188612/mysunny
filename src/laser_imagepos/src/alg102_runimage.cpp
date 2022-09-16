@@ -39,6 +39,9 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_dis_center_ed2", pm.als102_dis_center_ed2);
     this->declare_parameter("als102_dis_center_st3", pm.als102_dis_center_st3);
     this->declare_parameter("als102_dis_center_ed3", pm.als102_dis_center_ed3);
+    this->declare_parameter("als102_xuexijuli", pm.als102_xuexijuli);
+    this->declare_parameter("als102_b_pingpowending", pm.als102_b_pingpowending);
+    this->declare_parameter("als102_pingpowending_dis", pm.als102_pingpowending_dis);
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -136,6 +139,15 @@ void LaserImagePos::alg102_update_parameters()
     }
     else if (p.get_name() == "als102_dis_center_ed3") {
       pm.als102_dis_center_ed3 = p.as_int();
+    }
+    else if (p.get_name() == "als102_xuexijuli") {
+      pm.als102_xuexijuli = p.as_int();
+    }
+    else if (p.get_name() == "als102_b_pingpowending") {
+      pm.als102_b_pingpowending = p.as_int();
+    }
+    else if (p.get_name() == "als102_pingpowending_dis") {
+      pm.als102_pingpowending_dis = p.as_int();
     }
   }
 }
@@ -330,6 +342,24 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als102_dis_center_ed3=p.as_int();
             return 1;}}        
+    else if(p.get_name() == "als102_xuexijuli") {
+        auto k = p.as_int();
+        if (k < 0 || k > 255) {
+            return -1;}
+        else{pm.als102_xuexijuli=p.as_int();
+            return 1;}}   
+    else if(p.get_name() == "als102_b_pingpowending") {
+        auto k = p.as_int();
+        if (k != 0 && k != 1) {
+            return -1;}
+        else{pm.als102_b_pingpowending=p.as_int();
+            return 1;}}   
+    else if(p.get_name() == "als102_pingpowending_dis") {
+        auto k = p.as_int();
+        if (k != 0 && k != 255) {
+            return -1;}
+        else{pm.als102_pingpowending_dis=p.as_int();
+            return 1;}} 
     return 0;
 }
 
@@ -425,8 +455,9 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_ed2=pm.als102_dis_center_ed2;//100;//30;  //距离中心点此处后停止统计
     Int32 dis_center_st3=pm.als102_dis_center_st3;//5;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed3=pm.als102_dis_center_ed3;//500;//30;  //距离中心点此处后停止统计
-    Int32 pingpowending=1;//平坡处稳定焊点
-    Int32 pingpowending_dis=4;//平坡处稳定距离
+    Int32 xuexijuli=pm.als102_xuexijuli;//15//学习距离
+    Int32 b_pingpowending=pm.als102_b_pingpowending;//1;//平坡处稳定焊点
+    Int32 pingpowending_dis=pm.als102_pingpowending_dis;//4;//平坡处稳定距离
     
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
@@ -1459,7 +1490,7 @@ con:
         }
         if(b_opengudingdimian==1)   //学习底面
         {
-            if(canlearn==1&&linedistance1>15) //两直线距离远
+            if(canlearn==1&&linedistance1>xuexijuli) //两直线距离远
             {
                 jishuNum++;
                 jishuST_x=jishuST_x+headline.st.x;
@@ -1756,7 +1787,7 @@ con:
     }
 
     //验证稳定性
-    if(firstdimian==1&&pingpowending==1)
+    if(firstdimian==1&&b_pingpowending==1)
     {
         //求得两直线交点
         Myhalcv2::L_line checkline;	//结果线2以及原图的线,(短的)

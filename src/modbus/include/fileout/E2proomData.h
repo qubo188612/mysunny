@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              70
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              76
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -270,6 +270,15 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MIN              0
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_MAX              500
 #define E2POOM_ALG102_LASERIMAGEPOS_DIS_CENTER_ED3_USE              500
+#define E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_MIN                   0
+#define E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_MAX                   255
+#define E2POOM_ALG102_LASERIMAGEPOS_XUEXIJULI_USE                   15
+#define E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_MIN            0
+#define E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_MAX            1
+#define E2POOM_ALG102_LASERIMAGEPOS_B_PINGPOWENGDING_USE            1
+#define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MIN          0
+#define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MAX          255
+#define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_USE          4
 
 //算法103参数
 #define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                20
@@ -561,6 +570,9 @@ public:
     Int16 als102_dis_center_ed2;
     Int16 als102_dis_center_st3;
     Int16 als102_dis_center_ed3;  
+    Int16 als102_xuexijuli;
+    Int16 als102_b_pingpowending;
+    Int16 als102_pingpowending_dis;
 
     void write_als102_para();				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -658,6 +670,16 @@ public:
     Int16 als102_dis_center_ed3_min; 
     Int16 als102_dis_center_ed3_max;
     Int16 als102_dis_center_ed3_use;  
+    Int16 als102_xuexijuli_min;
+    Int16 als102_xuexijuli_max;
+    Int16 als102_xuexijuli_use;
+    Int16 als102_b_pingpowending_min;
+    Int16 als102_b_pingpowending_max;
+    Int16 als102_b_pingpowending_use;
+    Int16 als102_pingpowending_dis_min;
+    Int16 als102_pingpowending_dis_max;
+    Int16 als102_pingpowending_dis_use;
+    
 
 /****************************/
     //任务103参数

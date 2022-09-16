@@ -70,7 +70,7 @@ def generate_launch_description():
         parameters=[params['rotate_image_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
-   #params['laser_imagepos_node']['workers'] = 1
+    params['laser_imagepos_node']['workers'] = 1
     laser_imagepos_node = ComposableNode(
         package='laser_imagepos',
         plugin='laser_imagepos::LaserImagePos',
@@ -112,8 +112,8 @@ def generate_launch_description():
         #   camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
-            laser_line_center_node,
-            laser_line_filter_node,
+        #   laser_line_center_node,
+        #   laser_line_filter_node,
             line_center_reconstruction_node])
 
     seam_tracking_node = Node(
@@ -139,7 +139,7 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         container,
-        seam_tracking_node,
+    #   seam_tracking_node,
         modbus_node,
         gpio_raspberry_node,
         config_tis_node])
