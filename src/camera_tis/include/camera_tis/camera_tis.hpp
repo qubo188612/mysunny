@@ -21,7 +21,7 @@
 #include <modbus.h>
 #include <unistd.h>
 
-//#define SHOW_OUTPUT_FPS
+#define SHOW_OUTPUT_FPS
 
 struct _GstElement;
 
