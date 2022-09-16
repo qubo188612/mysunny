@@ -214,6 +214,8 @@ void LaserImagePos::InitRunImage()
   jishuED_y=0;
   jishuNum=0;
   firstdimian=0;
+  fuzhuxielv=0;
+  b_fuzhuxielv=0;
 }
 
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像

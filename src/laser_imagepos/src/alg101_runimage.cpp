@@ -924,6 +924,14 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
     {
         nendi=nWidth-1;
     }
+    if(nstartj>nHeight-1)
+    {
+        nstartj=nHeight-1;
+    }
+    if(nendj>nHeight-1)
+    {
+        nendj=nHeight-1;
+    }
     Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
     Myhalcv2::Myfilter(m_tempmatIn,m_filter,&m16_filterIma,Myhalcv2::CCV_16UC1,0,f_center);
 

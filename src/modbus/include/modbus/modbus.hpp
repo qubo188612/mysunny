@@ -128,6 +128,8 @@ namespace modbus
 #define ALS102_XUEXIJULI_REG_ADD               0x005f
 #define ALS102_B_PINGPOWENGDING_REG_ADD        0x0060
 #define ALS102_PINGPOWENGDING_DIS_REG_ADD      0x0061
+#define ALS102_B_XIELVOPEN_REG_ADD             0x0062
+#define ALS102_XIELVFANWEI_REG_ADD             0x0063
 
 #define ALS102_INIT_REG_ADD                    0x006f
 

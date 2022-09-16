@@ -106,7 +106,9 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_dis_center_ed3",
                                               "als102_xuexijuli",
                                               "als102_b_pingpowending",
-                                              "als102_pingpowending_dis"};
+                                              "als102_pingpowending_dis",
+                                              "als102_b_xielvopen",
+                                              "als102_xielvfanwei"};
 
 const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_pingjun",
@@ -209,6 +211,8 @@ struct Params
   int als102_xuexijuli=15;
   int als102_b_pingpowending=1;
   int als102_pingpowending_dis=4;
+  int als102_b_xielvopen=1;
+  int als102_xielvfanwei=10;
   
 /************************************/
 //算法103参数
@@ -386,6 +390,8 @@ private:
   Int32 firstsearch_stx,firstsearch_sty,firstsearch_edx,firstsearch_edy;
   Int32 jishuST_x,jishuST_y,jishuED_x,jishuED_y,jishuNum;
   Int32 firstdimian;
+  Int32 fuzhuxielv,b_fuzhuxielv,jishuxielv;
+
   Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)
 
   int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,

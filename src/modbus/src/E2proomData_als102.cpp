@@ -108,6 +108,12 @@ void E2proomData::Init_als102_E2proomData()
     als102_pingpowending_dis_min=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MIN;
     als102_pingpowending_dis_max=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MAX;
     als102_pingpowending_dis_use=E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_USE;
+    als102_b_xielvopen_min=E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_MIN;
+    als102_b_xielvopen_max=E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_MAX;
+    als102_b_xielvopen_use=E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_USE;
+    als102_xielvfanwei_min=E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_MIN;
+    als102_xielvfanwei_max=E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_MAX;
+    als102_xielvfanwei_use=E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_USE;
 }
 
 void E2proomData::als102_check_para()
@@ -180,7 +186,10 @@ void E2proomData::als102_check_para()
         als102_b_pingpowending=als102_b_pingpowending_use;
     if(als102_pingpowending_dis<als102_pingpowending_dis_min||als102_pingpowending_dis>als102_pingpowending_dis_max)
         als102_pingpowending_dis=als102_pingpowending_dis_use;
-
+    if(als102_b_xielvopen<als102_b_xielvopen_min||als102_b_xielvopen>als102_b_xielvopen_max)
+        als102_b_xielvopen=als102_b_xielvopen_use;
+    if(als102_xielvfanwei<als102_xielvfanwei_min||als102_xielvfanwei>als102_xielvfanwei_max)
+        als102_xielvfanwei=als102_xielvfanwei_use;
 }
 
 void E2proomData::als102_read_para()
@@ -275,6 +284,10 @@ void E2proomData::als102_read_para()
       i16_p++;
       als102_pingpowending_dis=*i16_p;
       i16_p++;
+      als102_b_xielvopen=*i16_p;
+      i16_p++;
+      als102_xielvfanwei=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -367,6 +380,10 @@ void E2proomData::write_als102_para()
     i16_p++;
     *i16_p=als102_pingpowending_dis;
     i16_p++;
+    *i16_p=als102_b_xielvopen;
+    i16_p++;
+    *i16_p=als102_xielvfanwei;
+    i16_p++;
 
     fo.WriteFile(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF);
 
@@ -413,4 +430,6 @@ void E2proomData::init_als102_para()
     als102_xuexijuli=als102_xuexijuli_use;
     als102_b_pingpowending=als102_b_pingpowending_use;
     als102_pingpowending_dis=als102_pingpowending_dis_use;
+    als102_b_xielvopen=als102_b_xielvopen_use;
+    als102_xielvfanwei=als102_xielvfanwei_use;
 }

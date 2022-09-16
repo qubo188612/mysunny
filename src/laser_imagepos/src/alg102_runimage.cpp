@@ -42,6 +42,8 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_xuexijuli", pm.als102_xuexijuli);
     this->declare_parameter("als102_b_pingpowending", pm.als102_b_pingpowending);
     this->declare_parameter("als102_pingpowending_dis", pm.als102_pingpowending_dis);
+    this->declare_parameter("als102_b_xielvopen", pm.als102_b_xielvopen);
+    this->declare_parameter("als102_xielvfanwei", pm.als102_xielvfanwei);
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -148,6 +150,12 @@ void LaserImagePos::alg102_update_parameters()
     }
     else if (p.get_name() == "als102_pingpowending_dis") {
       pm.als102_pingpowending_dis = p.as_int();
+    }
+    else if (p.get_name() == "als102_b_xielvopen") {
+      pm.als102_b_xielvopen = p.as_int();
+    }
+    else if (p.get_name() == "als102_xielvfanwei") {
+      pm.als102_xielvfanwei = p.as_int();
     }
   }
 }
@@ -356,9 +364,21 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
             return 1;}}   
     else if(p.get_name() == "als102_pingpowending_dis") {
         auto k = p.as_int();
-        if (k != 0 && k != 255) {
+        if (k < 0 || k > 255) {
             return -1;}
         else{pm.als102_pingpowending_dis=p.as_int();
+            return 1;}} 
+    else if(p.get_name() == "als102_b_xielvopen") {
+        auto k = p.as_int();
+        if (k != 0 && k != 1) {
+            return -1;}
+        else{pm.als102_b_xielvopen=p.as_int();
+            return 1;}} 
+    else if(p.get_name() == "als102_xielvfanwei") {
+        auto k = p.as_int();
+        if (k < 0 || k > 255) {
+            return -1;}
+        else{pm.als102_xielvfanwei=p.as_int();
             return 1;}} 
     return 0;
 }
@@ -422,6 +442,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 canleranfield=0;
     Int32 nocheck=0;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
+    Int32 pingmianjuli;
 
     /*********************/
     //算法参数
@@ -458,6 +479,8 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 xuexijuli=pm.als102_xuexijuli;//15//学习距离
     Int32 b_pingpowending=pm.als102_b_pingpowending;//1;//平坡处稳定焊点
     Int32 pingpowending_dis=pm.als102_pingpowending_dis;//4;//平坡处稳定距离
+    Int32 b_xielvopen=pm.als102_b_xielvopen;//1//斜率限制
+    Int32 xielvfanwei=pm.als102_xielvfanwei;//10//斜率范围
     
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
@@ -1080,8 +1103,9 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         linepoint32ED.y=minj;
         Myhalcv2::MyDottedLine(&imageGasupain,linepoint32ST,linepoint32ED,255,10,Myhalcv2::CV_DOTTEDLINE_LINE,Myhalcv2::CV_LINE_8LT,1);
     }
+    pingmianjuli=i-j;
     canlearn=0;
-    if(i-j>dimianpangdingjuli)
+    if(pingmianjuli>dimianpangdingjuli)
     {
         //两平面距离远
         canlearn=1;
@@ -1394,6 +1418,14 @@ con:
         {
             nendi=nWidth-1;
         }
+        if(nstartj>nHeight-1)
+        {
+            nstartj=nHeight-1;
+        }
+        if(nendj>nHeight-1)
+        {
+            nendj=nHeight-1;
+        }
         Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
         Myhalcv2::Myfilter(m_tempmatIn,m_filter,&m16_filterIma,Myhalcv2::CCV_16UC1,0,f_center);
 
@@ -1490,24 +1522,80 @@ con:
         }
         if(b_opengudingdimian==1)   //学习底面
         {
-            if(canlearn==1&&linedistance1>xuexijuli) //两直线距离远
+            if(canlearn==1&&pingmianjuli>xuexijuli) //两直线距离远
             {
-                jishuNum++;
-                jishuST_x=jishuST_x+headline.st.x;
-                jishuST_y=jishuST_y+headline.st.y;
-                jishuED_x=jishuED_x+headline.ed.x;
-                jishuED_y=jishuED_y+headline.ed.y;
-                if(jishuNum>dimianpingjunshunum)
+                if(b_xielvopen==1)
                 {
-                    firstdimian=1;
-                    fuzhufindST.x=jishuST_x/jishuNum;
-                    fuzhufindST.y=jishuST_y/jishuNum;
-                    fuzhufindED.x=jishuED_x/jishuNum;
-                    fuzhufindED.y=jishuED_y/jishuNum;
-                #ifdef DEBUG_ALG;
-                    RCLCPP_INFO(this->get_logger(), "start_dimian_tongji,jishuNum=%d,jishuST_x=%d,jishuST_y=%d,jishuED_x=%d,jishuED_y=%d",
-                                                    jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
-                #endif 
+                    if(b_fuzhuxielv==0)
+                    {
+                        jishuNum++;
+                        jishuST_x=jishuST_x+headline.st.x;
+                        jishuST_y=jishuST_y+headline.st.y;
+                        jishuED_x=jishuED_x+headline.ed.x;
+                        jishuED_y=jishuED_y+headline.ed.y;
+                        if(jishuNum>dimianpingjunshunum)
+                        {
+                            firstdimian=1;
+                            fuzhufindST.x=jishuST_x/jishuNum;
+                            fuzhufindST.y=jishuST_y/jishuNum;
+                            fuzhufindED.x=jishuED_x/jishuNum;
+                            fuzhufindED.y=jishuED_y/jishuNum;
+                        #ifdef DEBUG_ALG;
+                            RCLCPP_INFO(this->get_logger(), "start_dimian_tongji,jishuNum=%d,jishuST_x=%d,jishuST_y=%d,jishuED_x=%d,jishuED_y=%d",
+                                                            jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
+                        #endif 
+                        }
+                        jishuxielv=jishuxielv+headlinehough.theta;
+                        if(jishuNum>dimianpingjunshunum)
+                        {
+                            b_fuzhuxielv=1;
+                            fuzhuxielv=jishuxielv/jishuNum;
+                        }
+                    }
+                    else
+                    {
+                        if(headlinehough.theta<fuzhuxielv+xielvfanwei||
+                            headlinehough.theta>fuzhuxielv-xielvfanwei)
+                        {
+                            jishuNum++;
+                            jishuST_x=jishuST_x+headline.st.x;
+                            jishuST_y=jishuST_y+headline.st.y;
+                            jishuED_x=jishuED_x+headline.ed.x;
+                            jishuED_y=jishuED_y+headline.ed.y;
+                            if(jishuNum>dimianpingjunshunum)
+                            {
+                                firstdimian=1;
+                                fuzhufindST.x=jishuST_x/jishuNum;
+                                fuzhufindST.y=jishuST_y/jishuNum;
+                                fuzhufindED.x=jishuED_x/jishuNum;
+                                fuzhufindED.y=jishuED_y/jishuNum;
+                            #ifdef DEBUG_ALG;
+                                RCLCPP_INFO(this->get_logger(), "start_dimian_tongji,jishuNum=%d,jishuST_x=%d,jishuST_y=%d,jishuED_x=%d,jishuED_y=%d",
+                                                                jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
+                            #endif 
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    jishuNum++;
+                    jishuST_x=jishuST_x+headline.st.x;
+                    jishuST_y=jishuST_y+headline.st.y;
+                    jishuED_x=jishuED_x+headline.ed.x;
+                    jishuED_y=jishuED_y+headline.ed.y;
+                    if(jishuNum>dimianpingjunshunum)
+                    {
+                        firstdimian=1;
+                        fuzhufindST.x=jishuST_x/jishuNum;
+                        fuzhufindST.y=jishuST_y/jishuNum;
+                        fuzhufindED.x=jishuED_x/jishuNum;
+                        fuzhufindED.y=jishuED_y/jishuNum;
+                    #ifdef DEBUG_ALG;
+                        RCLCPP_INFO(this->get_logger(), "start_dimian_tongji,jishuNum=%d,jishuST_x=%d,jishuST_y=%d,jishuED_x=%d,jishuED_y=%d",
+                                                        jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
+                    #endif 
+                    }
                 }
             }
         } 
@@ -1690,6 +1778,10 @@ con:
     if(nendi>nWidth-1)
     {
         nendi=nWidth-1;
+    }
+    if(nstartj>nHeight-1)
+    {
+        nstartj=nHeight-1;
     }
 
     Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);

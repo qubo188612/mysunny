@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              76
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              80
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -279,6 +279,12 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MIN          0
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_MAX          255
 #define E2POOM_ALG102_LASERIMAGEPOS_PINGPOWENGDING_DIS_USE          4
+#define E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_MIN                 0
+#define E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_MAX                 1
+#define E2POOM_ALG102_LASERIMAGEPOS_B_XIELVOPEN_USE                 1
+#define E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_MIN                 0
+#define E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_MAX                 255
+#define E2POOM_ALG102_LASERIMAGEPOS_XIELVFANWEI_USE                 10
 
 //算法103参数
 #define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                20
@@ -573,6 +579,8 @@ public:
     Int16 als102_xuexijuli;
     Int16 als102_b_pingpowending;
     Int16 als102_pingpowending_dis;
+    Int16 als102_b_xielvopen;
+    Int16 als102_xielvfanwei;
 
     void write_als102_para();				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -679,6 +687,12 @@ public:
     Int16 als102_pingpowending_dis_min;
     Int16 als102_pingpowending_dis_max;
     Int16 als102_pingpowending_dis_use;
+    Int16 als102_b_xielvopen_min;
+    Int16 als102_b_xielvopen_max;
+    Int16 als102_b_xielvopen_use;
+    Int16 als102_xielvfanwei_min;
+    Int16 als102_xielvfanwei_max;
+    Int16 als102_xielvfanwei_use;
     
 
 /****************************/
