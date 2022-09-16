@@ -248,12 +248,12 @@ private:
 
   void _modbus(int port);
   bool b_modbusconnect;
-
+/*
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_camera_get;
   void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
   int picwidth;
   int picheight;
-
+*/
 };
 
 }  // namespace line_center_reconstruction

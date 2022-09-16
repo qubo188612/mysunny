@@ -320,7 +320,7 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 : Node("line_center_reconstruction_node", options)
 {
   b_modbusconnect=false;
-
+/*
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
 
   picheight=PIC_IMAGE_HEIGHT;
@@ -329,6 +329,7 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
   auto parameters_future = _param_camera_get->get_parameters(
                 {"width","height"},
                 std::bind(&LineCenterReconstruction::callbackGlobalParam, this, std::placeholders::_1));
+                */
 
   _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
 
@@ -415,7 +416,7 @@ Params LineCenterReconstruction::_update_parameters()
   for (const auto & p : vp) {
     if (p.get_name() == "homography_matrix") {
       pm.homography_matrix = p.as_double_array();
-
+/*
       if(picwidth!=PIC_IMAGE_WIDTH||picheight!=PIC_IMAGE_HEIGHT)
       {
          auto _homo = cv::Mat(pm.homography_matrix, true).reshape(1, 3);
@@ -436,6 +437,7 @@ Params LineCenterReconstruction::_update_parameters()
          transform.convertTo(transform,CV_64FC1);
          pm.homography_matrix=convertMat2Vector<double>(transform);
       }
+      */
     }
     // if (p.get_name() == "camera_matrix") {
     //   pm.camera_matrix = p.as_double_array();
@@ -588,7 +590,7 @@ void LineCenterReconstruction::_push_back_future_task100_199(std::future<IfAlgor
   lk.unlock();
   _task100_199_futures_con.notify_one();
 }
-
+/*
 void LineCenterReconstruction::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
 {
     auto result = future.get();
@@ -604,6 +606,7 @@ void LineCenterReconstruction::callbackGlobalParam(std::shared_future<std::vecto
       RCLCPP_ERROR(this->get_logger(), "Get camer info error.");
     }
 }
+*/
 
 }  // namespace line_center_reconstruction
 
