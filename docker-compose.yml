@@ -13,7 +13,8 @@ services:
     volumes:
       - ros2_log:/root/.ros/log
       - config_data:/workspace/sunny/install/config_tis/share/config_tis/config
-
+      - SAVE_data:/SAVE
 volumes:
   ros2_log:
   config_data:
+  SAVE_data:

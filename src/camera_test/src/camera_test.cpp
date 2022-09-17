@@ -67,6 +67,22 @@ void timer_callback()
     */
   #endif
 
+    if(pThis->b_modbusconnect==true)
+    {
+        auto stamp = image_msg->header.stamp;
+        time_t t;
+        u_int16_t msec = image_msg->header.stamp.nanosec/1000000;
+        struct tm *p;
+        t=stamp.sec;
+        p=gmtime(&t);  
+        u_int16_t tab_reg[4];
+        tab_reg[0]=(p->tm_hour+8)%24;
+        tab_reg[1]=p->tm_min;
+        tab_reg[2]=p->tm_sec;
+        tab_reg[3]=msec;
+        int rc=modbus_write_registers(pThis->ctx,0x0d,4,tab_reg);
+    }
+
     pThis->_pub->publish(std::move(image_msg));
 
   
