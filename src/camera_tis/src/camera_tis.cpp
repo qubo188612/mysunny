@@ -125,6 +125,7 @@ CameraTis::~CameraTis()
   #ifdef SHOW_OUTPUT_FPS
     _threadmodbus.join();
   #endif
+    _handle.reset();
     gst_element_set_state(_pipeline, GST_STATE_NULL);
     _thread.join();
     gst_object_unref(_pipeline);

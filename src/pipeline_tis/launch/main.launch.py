@@ -70,7 +70,7 @@ def generate_launch_description():
         parameters=[params['rotate_image_node']],
         extra_arguments=[{'use_intra_process_comms': True}])
 
-    params['laser_imagepos_node']['workers'] = 1
+    #params['laser_imagepos_node']['workers'] = 1
     laser_imagepos_node = ComposableNode(
         package='laser_imagepos',
         plugin='laser_imagepos::LaserImagePos',

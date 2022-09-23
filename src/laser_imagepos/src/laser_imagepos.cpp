@@ -30,7 +30,9 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   _pub = this->create_publisher<IfAlgorhmitmsg>(_pub_name, rclcpp::SensorDataQoS());
 
 
-  _workers = workers(options);
+  //_workers = workers(options);
+  _workers=1;
+  
   for (int i = 0; i < _workers; ++i) {
     _threads.push_back(std::thread(&LaserImagePos::_worker, this));
   }

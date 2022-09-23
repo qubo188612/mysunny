@@ -205,10 +205,10 @@ struct Params
   int als102_dimianpangdingjuli=15;//底面判定距离
   int als102_dimianpingjunshunum=10;//底面平均数统计个数
   int als102_dis_center_st2=5;
-  int als102_dis_center_ed2=100;
+  int als102_dis_center_ed2=15;
   int als102_dis_center_st3=5;
-  int als102_dis_center_ed3=100;
-  int als102_xuexijuli=15;
+  int als102_dis_center_ed3=500;
+  int als102_xuexijuli=30;
   int als102_b_pingpowending=1;
   int als102_pingpowending_dis=4;
   int als102_b_xielvopen=1;

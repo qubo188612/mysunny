@@ -29,7 +29,7 @@ std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 
 namespace line_center_reconstruction
 {
-
+  using rcl_interfaces::msg::SetParametersResult;
 /**
  * @brief Construct a vector of points from ROS point cloud message.
  *
@@ -369,15 +369,35 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
-
+/*
+  _handle = this->add_on_set_parameters_callback(
+    [this](const std::vector<rclcpp::Parameter> & parameters) {
+      SetParametersResult result;
+      result.successful = true;
+      for (const auto & p : parameters) {
+        if (p.get_name() == "homography_matrix") {
+          auto ret = this->_set_homography_matrix(p.as_double_array());
+          if (ret) {
+            result.successful = false;
+            result.reason = "Failed to set homography_matrix";
+            return result;
+          }
+        } 
+      }
+      return result;
+    }
+  );
+*/
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
 
 LineCenterReconstruction::~LineCenterReconstruction()
 {
   try {
+//  _handle.reset();
     _thread.join();
     _sub.reset();
+    _param_camera_get.reset();
     _sub_task100_199.reset();
     _points_con.notify_all();
     _task100_199_con.notify_all();
@@ -400,6 +420,16 @@ LineCenterReconstruction::~LineCenterReconstruction()
     RCLCPP_ERROR(this->get_logger(), "Exception in destructor: unknown");
   }
 }
+/*
+int _set_homography_matrix(std::vector<double> homography_matrix)
+{
+    if(homography_matrix.size()!=9)
+    {
+      return 1;
+    }
+    return 0;
+}
+*/
 
 void LineCenterReconstruction::_declare_parameters()
 {

@@ -254,6 +254,9 @@ private:
   int picwidth;
   int picheight;
 
+//OnSetParametersCallbackHandle::SharedPtr _handle;
+//int _set_homography_matrix(std::vector<double> homography_matrix);
+
 };
 
 }  // namespace line_center_reconstruction
