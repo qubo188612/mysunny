@@ -527,6 +527,7 @@ void LineCenterReconstruction::_worker()
     } else {
       _points_con.wait(lk);
     }
+    sleep(0);
   }
 }
 
@@ -546,6 +547,7 @@ void LineCenterReconstruction::_task100_199_worker()
     } else {
       _task100_199_con.wait(lk);
     }
+    sleep(0);
   }
 }
 
@@ -562,6 +564,7 @@ void LineCenterReconstruction::_manager()
     } else {
       _futures_con.wait(lk);
     }
+    sleep(0);
   }
 }
 
@@ -578,6 +581,7 @@ void LineCenterReconstruction::_task100_199_manager()
     } else {
       _task100_199_futures_con.wait(lk);
     }
+    sleep(0);
   }
 }
 

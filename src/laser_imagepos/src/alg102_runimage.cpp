@@ -800,8 +800,9 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    Myhalcv2::Myconnection(m_brygujia,&ImageConect,5,1,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//先去掉离散点
-    Myhalcv2::Myregion_to_bin(&ImageConect,&m_brygujia,255);
+//  Myhalcv2::Myconnection(m_brygujia,&ImageConect,5,1,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//先去掉离散点
+//  Myhalcv2::Myregion_to_bin(&ImageConect,&m_brygujia,255);
+    Myhalcv2::Mydeleteconnection(m_brygujia,&m_brygujia,5,1,Myhalcv2::MHC_8LT);
     Myhalcv2::Myconnection(m_brygujia,&ImageConect,15,1,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//求联通大于102的区域,联通距离10
     if(ImageConect.AllMarkPointCount==0)
     {
@@ -1092,6 +1093,13 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     clock_gettime(CLOCK_REALTIME, &timest);
 #endif 
     //判断两直线距离
+    if(endfindED.y>midfindST.y)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+    #endif
+        return 1;
+    }
     minj=(midfindST.y+endfindED.y)/2;
     MyGetLineXpos(tileline,minj,&j);
     MyGetLineXpos(endline,minj,&i);
@@ -1418,9 +1426,9 @@ con:
         {
             nendi=nWidth-1;
         }
-        if(nstartj>nHeight-1)
+        if(nstartj<0)
         {
-            nstartj=nHeight-1;
+            nstartj=0;
         }
         if(nendj>nHeight-1)
         {
@@ -1650,6 +1658,13 @@ con:
         return 1;
     }
     minj=resultfocal3.y;
+    if(minj+6>X_Lineendy-6||minj+6<=X_Linestarty)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+    #endif
+        return 1;
+    }
     zhengshunum=0;
     stepfind=0;
     for(j=X_Lineendy-6;j>=minj+6;j--)
@@ -1779,9 +1794,13 @@ con:
     {
         nendi=nWidth-1;
     }
-    if(nstartj>nHeight-1)
+    if(nstartj<0)
     {
-        nstartj=nHeight-1;
+        nstartj=0;
+    }
+    if(nendj>nHeight-1)
+    {
+        nendj=nHeight-1;
     }
 
     Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
