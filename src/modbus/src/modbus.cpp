@@ -43,11 +43,13 @@ TCPServer jsontcp;
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
 {
+  sleep(1);
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
   _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
+
 
   this->declare_parameter("robotsetport", 1501);    //机器人型号设置及通信端口
   auto robotsetport = this->get_parameter("robotsetport").as_int();
@@ -131,6 +133,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   mb_mapping->tab_registers[1] = 0xff;
   mb_mapping->tab_registers[0x102] = (u_int16_t)e2proomdata.task_num;
   _task_numberset(e2proomdata.task_num);
+  RCLCPP_INFO(this->get_logger(), "task=%d",e2proomdata.task_num);
 
   mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
   if (!mb_forwardmapping) {

@@ -183,6 +183,7 @@ void LaserImagePos::_declare_parameters()
   this->declare_parameter("task_num", pm.task_num);
   this->declare_parameter("show_step", pm.show_step);
   this->declare_parameter("start", 0);
+  RCLCPP_INFO(this->get_logger(), "pmtask=%d",pm.task_num);
 }
 
 Params LaserImagePos::_update_parameters()
