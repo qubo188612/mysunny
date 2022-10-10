@@ -5,6 +5,7 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "opencv2/opencv.hpp"
 #include <TCP/TCPServer.h>
+#include "opencv2/imgcodecs/legacy/constants_c.h"
 
 namespace image_tcpip
 {

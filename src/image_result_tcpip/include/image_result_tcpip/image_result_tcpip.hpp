@@ -5,6 +5,7 @@
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "opencv2/opencv.hpp"
 #include <TCP/TCPServer.h>
+#include "opencv2/imgcodecs/legacy/constants_c.h"
 
 namespace image_result_tcpip
 {
