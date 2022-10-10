@@ -30,7 +30,7 @@ FROM zhuoqiw/ros-tis:0.14.0 AS tiscamera
 FROM ros:galactic AS runtime
 
 COPY --from=tiscamera /tiscamera.deb /tiscamera.deb
-COPY --from=opencv /opt/opencv /opt/opencv
+COPY --from=opencv /setup/opt/opencv /opt/opencv
 COPY ./tools/ros2_numpy /usr/lib/python3/dist-packages/ros2_numpy
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
