@@ -151,6 +151,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _thread = std::thread(&Modbus::_modbus, this, port);
 
 
+  b_threadforward=false;
+  b_jsontcpthread=false;
   switch(e2proomdata.robot_mod)
   {
   case E2POOM_ROBOT_MOD_NULL:
@@ -165,10 +167,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
         return;
       }
       _threadforward = std::thread(&Modbus::_modbusforward, this, robot_port);
+      b_threadforward = true;
       break;
   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
       num_client=0;
       _jsontcpthread = std::thread(&Modbus::_json, this, robot_port);
+      b_jsontcpthread = true;
       break;
   default:
       break;
@@ -182,8 +186,10 @@ Modbus::~Modbus()
     _thread_robotset.join();
     _thread_parameterport.join();
     _thread.join();
-    _jsontcpthread.join();
-    _threadforward.join();
+    if(b_jsontcpthread==true)
+      _jsontcpthread.join();
+    if(b_threadforward==true)
+      _threadforward.join();
     _param_gpio.reset();
     _param_camera.reset();
     _param_camera_get.reset();

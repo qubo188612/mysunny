@@ -108,13 +108,29 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container_mt',
         composable_node_descriptions=[
-            camera_tis_node,
-        #   camera_test_node,
+        #   camera_tis_node,
+            camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
         #   laser_line_center_node,
         #   laser_line_filter_node,
             line_center_reconstruction_node])
+
+    image_tcpip = Node(                                 
+         package='image_tcpip',             
+         executable='image_tcpip_node',
+         remappings=[('~/image', '/camera_tis_node/image')])
+
+    image_result_tcpip = Node(                                 
+         package='image_result_tcpip',             
+         executable='image_result_tcpip_node',
+         remappings=[('~/result', '/laser_imagepos_node/result')])
+
+    cloud_result_tcpip = Node(                                 
+         package='cloud_result_tcpip',             
+         executable='cloud_result_tcpip_node',
+         remappings=[('~/cloudresult', '/line_center_reconstruction_node/cloud_task100_199')])
+
 
     seam_tracking_node = Node(
         package='seam_tracking',
@@ -139,7 +155,10 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         container,
+    #   image_tcpip,
+        image_result_tcpip,
+    #   cloud_result_tcpip,
     #   seam_tracking_node,
         modbus_node,
-        gpio_raspberry_node,
+    #   gpio_raspberry_node,
         config_tis_node])

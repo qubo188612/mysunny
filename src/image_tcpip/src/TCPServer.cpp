@@ -51,7 +51,6 @@ void* TCPServer::Task(void *arg)
 	}
 	cerr << "exit thread: " << this_thread::get_id() << endl;
 	pthread_exit(NULL);
-	
 	return 0;
 }
 

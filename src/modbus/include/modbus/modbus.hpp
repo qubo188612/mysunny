@@ -300,10 +300,12 @@ private:
   std::thread _thread_robotset;
 
   std::thread _threadforward;
+
+  bool b_jsontcpthread;
+  bool b_threadforward;
 };
 
 void close_app(int s);
-void* send_client(void * m);
 void* received(void * m);
 
 }  // namespace modbus
