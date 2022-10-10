@@ -116,10 +116,10 @@ def generate_launch_description():
         #   laser_line_filter_node,
             line_center_reconstruction_node])
 
-    image_tcpip = Node(                                 
-         package='image_tcpip',             
-         executable='image_tcpip_node',
-         remappings=[('~/image', '/camera_tis_node/image')])
+#   image_tcpip = Node(                                 
+#        package='image_tcpip',             
+ #       executable='image_tcpip_node',
+  #      remappings=[('~/image', '/camera_tis_node/image')])
 
     image_result_tcpip = Node(                                 
          package='image_result_tcpip',             

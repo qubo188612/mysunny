@@ -17,7 +17,6 @@
   <depend>laser_line_center</depend>
   <depend>laser_line_filter</depend>
   <depend>line_center_reconstruction</depend>
-  <depend>image_tcpip</depend>
   <depend>image_result_tcpip</depend>
   <depend>seam_tracking</depend>
   <depend>modbus</depend>
