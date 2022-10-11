@@ -138,21 +138,20 @@ void * send_client(void * m) {
 		{
             if(b_updatafinish==1&&b_open==1)
             {
-                /*
                 std::vector<uchar> data_encode;
                 std::vector<int> quality;
                 quality.push_back(cv::IMWRITE_JPEG_QUALITY);
                 if(cv_image_result.rows>384&&cv_image_result.cols>256)
                 {
-                    quality.push_back(50);//进行50%的压缩
+                    quality.push_back(1);//进行50%的压缩
                 }
                 else
                 {
-                    quality.push_back(100);//进行50%的压缩
+                    quality.push_back(20);//进行50%的压缩
                 }
                 cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
-                imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
-                */
+                imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id); 
+                /*
                 std::vector<uchar> data_encode;
                 data_encode.resize(5);
                 data_encode[0]=cv_image_result.channels();
@@ -163,7 +162,65 @@ void * send_client(void * m) {
                 data_encode.insert(data_encode.end(), cv_image_result.data, 
                                     cv_image_result.data + cv_image_result.cols*cv_image_result.rows*cv_image_result.channels());
                 imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
-                
+                */
+
+                /*
+                int Size=cv_image_result.cols*cv_image_result.rows*cv_image_result.channels();
+                const int everysent=998;
+                int totalgropu=Size/everysent;
+                int yushu=Size%everysent;
+                int j;
+                uchar *add=cv_image_result.data;
+                if(yushu!=0)
+                {
+                    totalgropu=totalgropu+1;
+                }
+                std::vector<uchar> data_encode;
+                data_encode.resize(9);
+                data_encode[0]=0;
+                data_encode[1]=0;
+                data_encode[2]=0;
+                data_encode[3]=0;
+                data_encode[4]=cv_image_result.channels();
+                data_encode[5]=(cv_image_result.cols>>8);
+                data_encode[6]=(cv_image_result.cols&0x00ff);
+                data_encode[7]=(cv_image_result.rows>>8);
+                data_encode[8]=(cv_image_result.rows&0x00ff);
+                imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                usleep(10);
+                for(j=1;j<Size/everysent+1;j++)
+                {
+                    std::vector<uchar> data_encode;
+                    data_encode.reserve(everysent+6);
+                    data_encode.resize(6);
+                    data_encode[0]=((((j-1)*everysent+1)&0xff000000)>>24);
+                    data_encode[1]=((((j-1)*everysent+1)&0x00ff0000)>>16);
+                    data_encode[2]=((((j-1)*everysent+1)&0x0000ff00)>>8);
+                    data_encode[3]=(((j-1)*everysent+1)&0x000000ff);
+                    data_encode[4]=((everysent+6)>>8);
+                    data_encode[5]=((everysent+6)&0x00ff);
+                    data_encode.insert(data_encode.end(), add, add + everysent);
+                    imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                    add=add+everysent;
+                    usleep(10);
+                }
+                if(yushu!=0)
+                {
+                    std::vector<uchar> data_encode;
+                    data_encode.reserve(yushu+6);
+                    data_encode.resize(6);
+                    data_encode[0]=((((j-1)*everysent+1)&0xff000000)>>24);
+                    data_encode[1]=((((j-1)*everysent+1)&0x00ff0000)>>16);
+                    data_encode[2]=((((j-1)*everysent+1)&0x0000ff00)>>8);
+                    data_encode[3]=(((j-1)*everysent+1)&0x000000ff);
+                    data_encode[4]=((yushu+6)>>8);
+                    data_encode[5]=((yushu+6)&0x00ff);
+                    data_encode.insert(data_encode.end(), add, add + yushu);
+                    imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                    add=add+yushu;
+                    usleep(10);
+                }
+                */
                 b_updatafinish=0;
             }
             
