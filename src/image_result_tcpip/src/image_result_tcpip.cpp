@@ -120,9 +120,21 @@ void * send_client(void * m) {
 			std::vector<uchar> data_encode;
             std::vector<int> quality;
             quality.push_back(cv::IMWRITE_JPEG_QUALITY);
-            quality.push_back(50);//进行50%的压缩
+        //  quality.push_back(95);//进行50%的压缩
             cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
             imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+            /*
+            std::vector<uchar> data_encode;
+            data_encode.resize(5);
+            data_encode[0]=cv_image_result.channels();
+            data_encode[1]=(cv_image_result.cols>>8);
+            data_encode[2]=(cv_image_result.cols&0x00ff);
+            data_encode[3]=(cv_image_result.rows>>8);
+            data_encode[4]=(cv_image_result.rows&0x00ff);
+            data_encode.insert(data_encode.end(), cv_image_result.data, 
+                                cv_image_result.data + cv_image_result.cols*cv_image_result.rows*cv_image_result.channels());
+            imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+            */
 		}
         b_fuzhi=0;
 		sleep(0);
