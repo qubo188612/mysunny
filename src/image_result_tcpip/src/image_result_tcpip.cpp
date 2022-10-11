@@ -111,6 +111,21 @@ void close_imageresulttcp(int s)
 
 void * send_client(void * m) {
         struct descript_socket *desc = (struct descript_socket*) m;
+/*
+        int sendBufLen = 1536*1024;
+        int tmp;
+        socklen_t optlen = sizeof(int);
+        setsockopt(desc->id,SOL_SOCKET, SO_SNDBUF,&sendBufLen, sizeof(int));
+        getsockopt(desc->id,SOL_SOCKET, SO_SNDBUF,(int *)&tmp, &optlen);
+        if(tmp==sendBufLen)
+        {
+            cerr << "Set SO_SNDBUF succeed" << endl;
+        }
+        else
+        {
+            cerr << "Set SO_SNDBUF unsucceed: " <<  tmp << endl;
+        }
+*/
 	while(1) {
 		if(!imageresulttcp.is_online() && imageresulttcp.get_last_closed_sockets() == desc->id) {
 			cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->ip << " )"<< endl;
@@ -123,6 +138,7 @@ void * send_client(void * m) {
 		{
             if(b_updatafinish==1&&b_open==1)
             {
+                /*
                 std::vector<uchar> data_encode;
                 std::vector<int> quality;
                 quality.push_back(cv::IMWRITE_JPEG_QUALITY);
@@ -136,20 +152,21 @@ void * send_client(void * m) {
                 }
                 cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
                 imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                */
+                std::vector<uchar> data_encode;
+                data_encode.resize(5);
+                data_encode[0]=cv_image_result.channels();
+                data_encode[1]=(cv_image_result.cols>>8);
+                data_encode[2]=(cv_image_result.cols&0x00ff);
+                data_encode[3]=(cv_image_result.rows>>8);
+                data_encode[4]=(cv_image_result.rows&0x00ff);
+                data_encode.insert(data_encode.end(), cv_image_result.data, 
+                                    cv_image_result.data + cv_image_result.cols*cv_image_result.rows*cv_image_result.channels());
+                imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                
                 b_updatafinish=0;
             }
-            /*
-            std::vector<uchar> data_encode;
-            data_encode.resize(5);
-            data_encode[0]=cv_image_result.channels();
-            data_encode[1]=(cv_image_result.cols>>8);
-            data_encode[2]=(cv_image_result.cols&0x00ff);
-            data_encode[3]=(cv_image_result.rows>>8);
-            data_encode[4]=(cv_image_result.rows&0x00ff);
-            data_encode.insert(data_encode.end(), cv_image_result.data, 
-                                cv_image_result.data + cv_image_result.cols*cv_image_result.rows*cv_image_result.channels());
-            imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
-            */
+            
 		}
         b_fuzhi=0;
 		sleep(0);

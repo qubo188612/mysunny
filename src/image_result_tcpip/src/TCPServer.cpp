@@ -78,7 +78,21 @@ int TCPServer::setup(int port, vector<int> opts)
 		cerr << "Errore bind" << endl;
 		return -1;
 	}
-	
+/*
+	int sendBufLen = 1536*1024;
+	int tmp;
+	socklen_t optlen = sizeof(int);
+	setsockopt(sockfd,SOL_SOCKET, SO_SNDBUF,&sendBufLen, sizeof(int));
+	getsockopt(sockfd,SOL_SOCKET, SO_SNDBUF,(int *)&tmp, &optlen);
+	if(tmp==sendBufLen)
+	{
+		cerr << "Set SO_SNDBUF succeed" << endl;
+	}
+	else
+	{
+		cerr << "Set SO_SNDBUF unsucceed: " <<  tmp << endl;
+	}
+*/	
  	if(listen(sockfd,5) < 0){
 		cerr << "Errore listen" << endl;
 		return -1;
