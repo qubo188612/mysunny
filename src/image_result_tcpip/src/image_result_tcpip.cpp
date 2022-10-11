@@ -130,6 +130,10 @@ void * send_client(void * m) {
                 {
                     quality.push_back(50);//进行50%的压缩
                 }
+                else
+                {
+                    quality.push_back(100);//进行50%的压缩
+                }
                 cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
                 imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
                 b_updatafinish=0;
