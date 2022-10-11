@@ -11,7 +11,7 @@ bool TCPClient::setup(string address , int port)
 {
   	if(sock == -1)
 	{
-		sock = socket(AF_INET , SOCK_STREAM , MSG_NOSIGNAL);
+		sock = socket(AF_INET , SOCK_STREAM , 0);
 		if (sock == -1)
 		{
       			cout << "Could not create socket" << endl;
@@ -52,7 +52,7 @@ bool TCPClient::Send(string data)
 {
 	if(sock != -1) 
 	{
-		if( send(sock , data.c_str() , strlen( data.c_str() ) , 0) < 0)
+		if( send(sock , data.c_str() , strlen( data.c_str() ) , MSG_NOSIGNAL) < 0)
 		{
 			cout << "Send failed : " << data << endl;
 			return false;

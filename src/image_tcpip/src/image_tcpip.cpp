@@ -8,11 +8,13 @@ pthread_t msg1[MAX_CLIENT];
 int num_message = 0;
 cv::Mat cv_image;
 volatile int b_fuzhi;
+volatile int b_updatafinish;
 
 Image_Tcpip::Image_Tcpip(const rclcpp::NodeOptions & options)
 : Node("image_tcpip_node", options)
 {
     b_fuzhi=0;
+    b_updatafinish=0;
     ptr_cv_image=&cv_image;
 
     this->declare_parameter("image_port", 1497);  //image_port协议端口
@@ -68,6 +70,7 @@ void Image_Tcpip::image_callback(const sensor_msgs::msg::Image msg)  const
         b_fuzhi=1;
         (*ptr_cv_image)=src.clone();
         b_fuzhi=0;
+        b_updatafinish=1;
     }
 }
 
@@ -134,12 +137,16 @@ void * send_client(void * m) {
         b_fuzhi=1;
         if (!cv_image.empty())    //如果照片为空则退出
 		{
-			std::vector<uchar> data_encode;
-            std::vector<int> quality;
-            quality.push_back(cv::IMWRITE_JPEG_QUALITY);
-        //  quality.push_back(50);//进行50%的压缩
-            cv::imencode(".jpg", cv_image, data_encode,quality);//将图像编码
-            imagetcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+            if(b_updatafinish==1)
+            {
+                std::vector<uchar> data_encode;
+                std::vector<int> quality;
+                quality.push_back(cv::IMWRITE_JPEG_QUALITY);
+                quality.push_back(50);//进行50%的压缩
+                cv::imencode(".jpg", cv_image, data_encode,quality);//将图像编码
+                imagetcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                b_updatafinish=0;
+            }
 		}
         b_fuzhi=0;
 		sleep(0);

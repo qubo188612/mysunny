@@ -7,11 +7,13 @@ TCPServer clouldresulttcp;
 pthread_t msg1[MAX_CLIENT];
 int num_message = 0;
 volatile int b_fuzhi;
+volatile int b_updatafinish;
 
 Cloud_Result_Tcpip::Cloud_Result_Tcpip(const rclcpp::NodeOptions & options)
 : Node("cloud_result_tcpip_node", options)
 {
     b_fuzhi=0;
+    b_updatafinish=0;
     this->declare_parameter("clould_result_port", 1499);  //clould_result_port协议端口
     clould_result_port = this->get_parameter("clould_result_port").as_int(); 
 
@@ -40,6 +42,7 @@ void Cloud_Result_Tcpip::cloud_result_callback(const tutorial_interfaces::msg::I
 
 
         b_fuzhi=0;
+        b_updatafinish=1;
     } 
 }
 
@@ -104,6 +107,12 @@ void * send_client(void * m) {
 		cerr << date << endl;
 		clouldresulttcp.Send(date, desc->id);
         */
+        if(b_updatafinish==1)
+        {
+
+            
+            b_updatafinish=0;
+        }
         b_fuzhi=0;
 
 		sleep(0);

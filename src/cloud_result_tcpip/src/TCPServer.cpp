@@ -112,12 +112,20 @@ vector<descript_socket*> TCPServer::getMessage()
 
 void TCPServer::Send(string msg, int id)
 {
-	send(newsockfd[id]->socket,msg.c_str(),msg.length(),MSG_NOSIGNAL);
+	if(send(newsockfd[id]->socket,msg.c_str(),msg.length(),MSG_NOSIGNAL)==-1)
+	{
+		clean(newsockfd[id]->socket);
+		close(newsockfd[id]->socket);
+	}
 }
 
 void TCPServer::Send(char *msg, int length, int id)
 {
-	send(newsockfd[id]->socket,msg,length,MSG_NOSIGNAL);
+	if(send(newsockfd[id]->socket,msg,length,MSG_NOSIGNAL)==-1)
+	{
+		clean(newsockfd[id]->socket);
+		close(newsockfd[id]->socket);
+	}
 }
 
 int TCPServer::get_last_closed_sockets()

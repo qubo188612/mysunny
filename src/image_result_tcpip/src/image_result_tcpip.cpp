@@ -8,11 +8,15 @@ pthread_t msg1[MAX_CLIENT];
 int num_message = 0;
 cv::Mat cv_image_result;
 volatile int b_fuzhi;
+volatile int b_updatafinish;
+volatile int b_open;
 
 Image_Result_Tcpip::Image_Result_Tcpip(const rclcpp::NodeOptions & options)
 : Node("image_result_tcpip_node", options)
 {
     b_fuzhi=0;
+    b_updatafinish=0;
+    b_open=0;
     ptr_cv_image_result=&cv_image_result;
 
     this->declare_parameter("image_result_port", 1498);  //image_result_port协议端口
@@ -69,6 +73,7 @@ void Image_Result_Tcpip::image_result_callback(const tutorial_interfaces::msg::I
         b_fuzhi=1;
         (*ptr_cv_image_result)=src.clone();
         b_fuzhi=0;
+        b_updatafinish=1;
     } 
 }
 
@@ -106,7 +111,6 @@ void close_imageresulttcp(int s)
 
 void * send_client(void * m) {
         struct descript_socket *desc = (struct descript_socket*) m;
-
 	while(1) {
 		if(!imageresulttcp.is_online() && imageresulttcp.get_last_closed_sockets() == desc->id) {
 			cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->ip << " )"<< endl;
@@ -117,12 +121,19 @@ void * send_client(void * m) {
         b_fuzhi=1;
         if (!cv_image_result.empty())    //如果照片为空则退出
 		{
-			std::vector<uchar> data_encode;
-            std::vector<int> quality;
-            quality.push_back(cv::IMWRITE_JPEG_QUALITY);
-        //  quality.push_back(95);//进行50%的压缩
-            cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
-            imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+            if(b_updatafinish==1&&b_open==1)
+            {
+                std::vector<uchar> data_encode;
+                std::vector<int> quality;
+                quality.push_back(cv::IMWRITE_JPEG_QUALITY);
+                if(cv_image_result.rows>384&&cv_image_result.cols>256)
+                {
+                    quality.push_back(50);//进行50%的压缩
+                }
+                cv::imencode(".jpg", cv_image_result, data_encode,quality);//将图像编码
+                imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                b_updatafinish=0;
+            }
             /*
             std::vector<uchar> data_encode;
             data_encode.resize(5);
@@ -163,12 +174,21 @@ void* received_imageresulttcp(void *m)
                   num_message++;
                   // start message background thread
                 }
-                cout << "id:      " << _p->desc_imageresult[i]->id      << endl
+                cerr << "id:      " << _p->desc_imageresult[i]->id      << endl
                     << "ip:      " << _p->desc_imageresult[i]->ip      << endl
                     << "message: " << _p->desc_imageresult[i]->message << endl
                     << "socket:  " << _p->desc_imageresult[i]->socket  << endl
                     << "enable:  " << _p->desc_imageresult[i]->enable_message_runtime << endl;
-
+                if(_p->desc_imageresult[i]->message[0]==1)
+                {
+                    b_open=1;
+                    cerr << "open_imgresult_tcp"<< endl;
+                }
+                else if(_p->desc_imageresult[i]->message[0]==0)
+                {
+                    b_open=0;
+                    cerr << "close_imgresult_tcp"<< endl;
+                }
                 
                 imageresulttcp.clean(i);
             }
