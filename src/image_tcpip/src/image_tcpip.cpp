@@ -142,7 +142,7 @@ void * send_client(void * m) {
                 std::vector<uchar> data_encode;
                 std::vector<int> quality;
                 quality.push_back(cv::IMWRITE_JPEG_QUALITY);
-                quality.push_back(100);//进行50%的压缩
+                quality.push_back(1);//进行50%的压缩
                 cv::imencode(".webp", cv_image, data_encode,quality);//将图像编码
                 imagetcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
                 b_updatafinish=0;

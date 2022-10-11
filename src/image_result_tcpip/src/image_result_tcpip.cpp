@@ -143,11 +143,11 @@ void * send_client(void * m) {
                 quality.push_back(cv::IMWRITE_WEBP_QUALITY);
                 if(cv_image_result.rows>384&&cv_image_result.cols>256)
                 {
-                    quality.push_back(100);//进行50%的压缩
+                    quality.push_back(1);//进行50%的压缩
                 }
                 else
                 {
-                    quality.push_back(100);//进行50%的压缩
+                    quality.push_back(10);//进行50%的压缩
                 }
                 cv::imencode(".webp", cv_image_result, data_encode,quality);//将图像编码
                 imageresulttcp.Send((char*)data_encode.data(),data_encode.size(),desc->id); 
