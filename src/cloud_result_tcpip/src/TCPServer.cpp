@@ -41,8 +41,8 @@ void* TCPServer::Task(void *arg)
 	                std::lock_guard<std::mutex> guard(mt);
 			Message.push_back( desc );
 		}
-		usleep(600);
-	//	sleep(0);
+	//	usleep(600);
+		sleep(0);
     }
 	if(desc != NULL)
 	{
