@@ -132,23 +132,24 @@ void * send_client(void * m) {
 		cerr << date << endl;
 		imagetcp.Send(date, desc->id);
         */
-        if(b_fuzhi!=0)
-            continue;
-        b_fuzhi=1;
-        if (!cv_image.empty())    //如果照片为空则退出
-		{
-            if(b_updatafinish==1)
+        if(b_fuzhi==0)
+        {
+            b_fuzhi=1;
+            if (!cv_image.empty())    //如果照片为空则退出
             {
-                std::vector<uchar> data_encode;
-                std::vector<int> quality;
-                quality.push_back(cv::IMWRITE_JPEG_QUALITY);
-                quality.push_back(1);//进行50%的压缩
-                cv::imencode(".webp", cv_image, data_encode,quality);//将图像编码
-                imagetcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
-                b_updatafinish=0;
+                if(b_updatafinish==1)
+                {
+                    std::vector<uchar> data_encode;
+                    std::vector<int> quality;
+                    quality.push_back(cv::IMWRITE_JPEG_QUALITY);
+                    quality.push_back(1);//进行50%的压缩
+                    cv::imencode(".webp", cv_image, data_encode,quality);//将图像编码
+                    imagetcp.Send((char*)data_encode.data(),data_encode.size(),desc->id);
+                    b_updatafinish=0;
+                }
             }
-		}
-        b_fuzhi=0;
+            b_fuzhi=0;
+        }
 		sleep(0);
 	}
 	pthread_exit(NULL);

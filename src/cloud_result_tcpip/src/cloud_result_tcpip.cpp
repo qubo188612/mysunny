@@ -87,34 +87,34 @@ void * send_client(void * m) {
 			break;
 		}
 
-        if(b_fuzhi!=0)
-            continue;
-        b_fuzhi=1;
-        /*
-		std::time_t t = std::time(0);
-		std::tm* now = std::localtime(&t);
-		int hour = now->tm_hour;
-		int min  = now->tm_min;
-		int sec  = now->tm_sec;
-
-		std::string date = 
-			    to_string(now->tm_year + 1900) + "-" +
-			    to_string(now->tm_mon + 1)     + "-" +
-			    to_string(now->tm_mday)        + " " +
-			    to_string(hour)                + ":" +
-			    to_string(min)                 + ":" +
-			    to_string(sec)                 + "\r\n";
-		cerr << date << endl;
-		clouldresulttcp.Send(date, desc->id);
-        */
-        if(b_updatafinish==1)
+        if(b_fuzhi==0)
         {
+            b_fuzhi=1;
+            /*
+            std::time_t t = std::time(0);
+            std::tm* now = std::localtime(&t);
+            int hour = now->tm_hour;
+            int min  = now->tm_min;
+            int sec  = now->tm_sec;
 
-            
-            b_updatafinish=0;
+            std::string date = 
+                    to_string(now->tm_year + 1900) + "-" +
+                    to_string(now->tm_mon + 1)     + "-" +
+                    to_string(now->tm_mday)        + " " +
+                    to_string(hour)                + ":" +
+                    to_string(min)                 + ":" +
+                    to_string(sec)                 + "\r\n";
+            cerr << date << endl;
+            clouldresulttcp.Send(date, desc->id);
+            */
+            if(b_updatafinish==1)
+            {
+
+                
+                b_updatafinish=0;
+            }
+            b_fuzhi=0;
         }
-        b_fuzhi=0;
-
 		sleep(0);
 	}
 	pthread_exit(NULL);
