@@ -131,6 +131,7 @@ namespace modbus
 #define ALS102_B_XIELVOPEN_REG_ADD             0x0062
 #define ALS102_XIELVFANWEI_REG_ADD             0x0063
 #define ALS102_UPLONG2_REG_ADD                 0x0064
+#define ALS102_CEBANKONGDONGDIS_REG_ADD        0x0065
 
 #define ALS102_INIT_REG_ADD                    0x006f
 

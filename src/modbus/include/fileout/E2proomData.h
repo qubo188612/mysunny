@@ -288,6 +288,10 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_UPLONG2_MIN                     1
 #define E2POOM_ALG102_LASERIMAGEPOS_UPLONG2_USE                     15
 #define E2POOM_ALG102_LASERIMAGEPOS_UPLONG2_MAX                     500
+#define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_MIN            0
+#define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_USE            100
+#define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_MAX            500
+
 
 //算法103参数
 #define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                20
@@ -585,6 +589,7 @@ public:
     Int16 als102_b_xielvopen;
     Int16 als102_xielvfanwei;
     Int16 als102_Uplong2;
+    Int16 als102_cebankongdongdis;
 
     void write_als102_para();				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -700,7 +705,9 @@ public:
     Int16 als102_Uplong2_min;
     Int16 als102_Uplong2_max;
     Int16 als102_Uplong2_use;
-    
+    Int16 als102_cebankongdongdis_min;
+    Int16 als102_cebankongdongdis_max;
+    Int16 als102_cebankongdongdis_use;
 
 /****************************/
     //任务103参数

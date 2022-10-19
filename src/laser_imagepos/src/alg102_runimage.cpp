@@ -45,6 +45,7 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_b_xielvopen", pm.als102_b_xielvopen);
     this->declare_parameter("als102_xielvfanwei", pm.als102_xielvfanwei);
     this->declare_parameter("als102_Uplong2", pm.als102_Uplong2);
+    this->declare_parameter("als102_cebankongdongdis", pm.als102_cebankongdongdis);  
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -161,6 +162,10 @@ void LaserImagePos::alg102_update_parameters()
     else if (p.get_name() == "als102_Uplong2") {
       pm.als102_Uplong2 = p.as_int();
     }
+    else if (p.get_name() == "als102_cebankongdongdis") {
+      pm.als102_cebankongdongdis = p.as_int();
+    }
+    
   }
 }
 
@@ -390,6 +395,12 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als102_Uplong2=p.as_int();
             return 1;}} 
+    else if(p.get_name() == "als102_cebankongdongdis") {
+        auto k = p.as_int();
+        if (k < 0 || k > 500) {
+            return -1;}
+        else{pm.als102_cebankongdongdis=p.as_int();
+            return 1;}} 
 
     return 0;
 }
@@ -493,6 +504,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 b_xielvopen=pm.als102_b_xielvopen;//1//斜率限制
     Int32 xielvfanwei=pm.als102_xielvfanwei;//10//斜率范围
     Int32 Uplong2=pm.als102_Uplong2;//在坡度时上半段直线检测长度
+    Int32 cebankongdongdis=pm.als102_cebankongdongdis;//侧板跨孔洞的激光最短距离
     
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
@@ -1706,7 +1718,7 @@ con:
             {
                 latsj=j;
             }
-            if(m32_filterIma.ptr_int[j]>Downdifmin)
+            if(m32_filterIma.ptr_int[j]>Downdifmin&&(midfindED.y-j)>cebankongdongdis)
             {
                 int st=latsj;
                 stepfind=2;
