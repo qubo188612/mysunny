@@ -44,6 +44,7 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_pingpowending_dis", pm.als102_pingpowending_dis);
     this->declare_parameter("als102_b_xielvopen", pm.als102_b_xielvopen);
     this->declare_parameter("als102_xielvfanwei", pm.als102_xielvfanwei);
+    this->declare_parameter("als102_Uplong2", pm.als102_Uplong2);
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -156,6 +157,9 @@ void LaserImagePos::alg102_update_parameters()
     }
     else if (p.get_name() == "als102_xielvfanwei") {
       pm.als102_xielvfanwei = p.as_int();
+    }
+    else if (p.get_name() == "als102_Uplong2") {
+      pm.als102_Uplong2 = p.as_int();
     }
   }
 }
@@ -380,6 +384,13 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als102_xielvfanwei=p.as_int();
             return 1;}} 
+    else if(p.get_name() == "als102_Uplong2") {
+        auto k = p.as_int();
+        if (k < 1 || k > 500) {
+            return -1;}
+        else{pm.als102_Uplong2=p.as_int();
+            return 1;}} 
+
     return 0;
 }
 
@@ -481,6 +492,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 pingpowending_dis=pm.als102_pingpowending_dis;//4;//平坡处稳定距离
     Int32 b_xielvopen=pm.als102_b_xielvopen;//1//斜率限制
     Int32 xielvfanwei=pm.als102_xielvfanwei;//10//斜率范围
+    Int32 Uplong2=pm.als102_Uplong2;//在坡度时上半段直线检测长度
     
 #ifdef DEBUG_ALG
     struct timespec timest = {0, 0};
@@ -1160,7 +1172,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
             if(stepfind==2)
             {
                 //再判断下长度
-                if(stepfindED.y-stepfindST.y<Uplong)
+                if(stepfindED.y-stepfindST.y<Uplong2)
                 {
                     stepfind=0;
                     zhengshunum=0;
@@ -1202,14 +1214,14 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         stepfindED.x=X_line[stepfindED.y]>>1;
         stepfindST.y=MAX(stepfindST.y,minj-dis_center_ed2);
         stepfindST.x=X_line[stepfindST.y]>>1;
-        if(stepfindED.y-stepfindST.y<Uplong)
+        if(stepfindED.y-stepfindST.y<Uplong2)
         {
             canleranfield=1;
             goto con;
         }
         /**************************************/
         linedistance1=sqrt((double)(stepfindED.x-stepfindST.x)*(stepfindED.x-stepfindST.x)+(stepfindED.y-stepfindST.y)*(stepfindED.y-stepfindST.y));
-        if(linedistance1<Uplong)//线太短寻找失败了
+        if(linedistance1<Uplong2)//线太短寻找失败了
         {
             canleranfield=1;
             goto con;

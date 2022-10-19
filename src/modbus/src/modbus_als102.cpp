@@ -194,6 +194,11 @@ int Modbus::als102_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_xielvfanwei", num)});
             return 1;
         break;
+        case ALS102_UPLONG2_REG_ADD:
+            e2proomdata.als102_Uplong2=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als102_Uplong2", num)});
+            return 1;
+        break;
 
         case ALS102_INIT_REG_ADD:
             if(num==1)
@@ -248,7 +253,7 @@ void Modbus::init_als102_parameter()
     parameterport_mapping->tab_registers[ALS102_PINGPOWENGDING_DIS_REG_ADD]=e2proomdata.als102_pingpowending_dis;
     parameterport_mapping->tab_registers[ALS102_B_XIELVOPEN_REG_ADD]=e2proomdata.als102_b_xielvopen;
     parameterport_mapping->tab_registers[ALS102_XIELVFANWEI_REG_ADD]=e2proomdata.als102_xielvfanwei;
-
+    parameterport_mapping->tab_registers[ALS102_UPLONG2_REG_ADD]=e2proomdata.als102_Uplong2;
 }
 
 }
