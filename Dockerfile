@@ -25,7 +25,8 @@
 # Build enviroments
 FROM qubo188612/ros-opencv:latest AS opencv
 
-FROM zhuoqiw/ros-tis:0.14.0 AS tiscamera
+#FROM zhuoqiw/ros-tis:0.14.0 AS tiscamera
+FROM qubo188612/ros-tis:latest AS tiscamera
 
 FROM ros:galactic AS runtime
 

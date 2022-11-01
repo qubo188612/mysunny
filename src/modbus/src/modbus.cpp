@@ -743,7 +743,6 @@ void Modbus::_modbusparameterport(int port)
       }
     }
   }
-
   close(sock);
   modbus_mapping_free(parameterport_mapping);
   modbus_free(ctx_parameterport);
