@@ -918,7 +918,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
             {
                 latsj=j;
             }
-            if(m32_filterIma.ptr_int[j]>Downdifmin)
+            if(m32_filterIma.ptr_int[j]>Downdifmin&&(midfindED2.y-j)>cebankongdongdis)
             {
                 int st=latsj;
                 stepfind=2;
