@@ -479,7 +479,7 @@ void Modbus::_modbus(int port)
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-            break;
+          //break;
           }
         }
       }
@@ -607,7 +607,7 @@ void Modbus::_modbusrobotset(int port)
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-            break;
+          //break;
           }
         }
       }
@@ -737,7 +737,7 @@ void Modbus::_modbusparameterport(int port)
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-            break;
+          //break;
           }
         }
       }
@@ -918,7 +918,7 @@ void Modbus::_modbusforward(int port)
           if (ret == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-            break;
+          //break;
           }
         }
       }
