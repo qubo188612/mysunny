@@ -43,7 +43,7 @@ TCPServer jsontcp;
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
 {
-  sleep(1);
+  sleep(3);
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
