@@ -174,7 +174,7 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              84
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              88
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -291,6 +291,9 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_MIN            0
 #define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_USE            180
 #define E2POOM_ALG102_LASERIMAGEPOS_CEBANKONGDONGDIS_MAX            500
+#define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_MIN                 0
+#define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_USE                 15
+#define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_MAX                 30
 
 
 //算法103参数
@@ -590,6 +593,7 @@ public:
     Int16 als102_xielvfanwei;
     Int16 als102_Uplong2;
     Int16 als102_cebankongdongdis;
+    Int16 als102_qiatouquweijuli;
 
     void write_als102_para();				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -708,6 +712,9 @@ public:
     Int16 als102_cebankongdongdis_min;
     Int16 als102_cebankongdongdis_max;
     Int16 als102_cebankongdongdis_use;
+    Int16 als102_qiatouquweijuli_min;
+    Int16 als102_qiatouquweijuli_max;
+    Int16 als102_qiatouquweijuli_use;
 
 /****************************/
     //任务103参数
