@@ -1497,9 +1497,13 @@ con:
                     }
                 }
             }
-            if(maxXn!=0)
+            if(maxXn!=0&&max!=0)
             {
                 m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(((maxX<<1)/maxXn)>>1)]=255;
+            }
+            else if(maxXn!=0&&max==0)
+            {
+                m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(X_line[j>>2]<<1)]=255;
             }
         }
     #ifdef DEBUG_ALG;
@@ -1863,9 +1867,13 @@ con:
                 }
             }
         }
-        if(maxXn!=0)
+        if(maxXn!=0&&max!=0)
         {
             m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(((maxX<<1)/maxXn)>>1)]=255;
+        }
+        else if(maxXn!=0&&max==0)
+        {
+            m_brygujia.ptr_uchar[j*m_brygujia.nWidth+(X_line[j>>2]<<1)]=255;
         }
     }
 #ifdef DEBUG_ALG;
