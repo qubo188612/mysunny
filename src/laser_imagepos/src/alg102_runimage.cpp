@@ -1866,17 +1866,35 @@ con:
     {
         Myhalcv2::Myintersection(imageBry,m_matMask,&imageBry);
         Myhalcv2::Myconnection(imageBry,&ImageConect,1,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
-        for(j=0;j<ImageConect.AllMarkPointCount;j++)
+        Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_TOP_TOPTOBOTTOM_PAIXU);
+        for(j=0;j<ImageConectlong.AllMarkPointCount;j++)
         {
-            int topj=ImageConect.AllMarkPoint[j].top;
-            int deepj=ImageConect.AllMarkPoint[j].bottom;
-            for(i=0;i<ImageConect.AllMarkPoint[j].PointArea;i++)
+            if(j==0)
             {
-                int x=ImageConect.AllMarkPoint[j].point[i].x;
-                int y=ImageConect.AllMarkPoint[j].point[i].y;
-                if(y<topj+qiatouquweijuli||y>deepj-qiatouquweijuli)
+                int topj=ImageConectlong.AllMarkPoint[j].top;
+                int deepj=ImageConectlong.AllMarkPoint[j].bottom;
+                for(i=0;i<ImageConectlong.AllMarkPoint[j].PointArea;i++)
                 {
-                    imageBry.data[y*imageBry.nWidth+x]=0;
+                    int x=ImageConectlong.AllMarkPoint[j].point[i].x;
+                    int y=ImageConectlong.AllMarkPoint[j].point[i].y;
+                    if(y>deepj-qiatouquweijuli)
+                    {
+                        imageBry.data[y*imageBry.nWidth+x]=0;
+                    }
+                }
+            }
+            else if(j>0)
+            {
+                int topj=ImageConectlong.AllMarkPoint[j].top;
+                int deepj=ImageConectlong.AllMarkPoint[j].bottom;
+                for(i=0;i<ImageConectlong.AllMarkPoint[j].PointArea;i++)
+                {
+                    int x=ImageConectlong.AllMarkPoint[j].point[i].x;
+                    int y=ImageConectlong.AllMarkPoint[j].point[i].y;
+                    if(y<topj+qiatouquweijuli||y>deepj-qiatouquweijuli)
+                    {
+                        imageBry.data[y*imageBry.nWidth+x]=0;
+                    }
                 }
             }
         }

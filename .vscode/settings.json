@@ -71,5 +71,6 @@
         "variant": "cpp",
         "bit": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/build/tutorial_interfaces/tutorial_interfaces__py"
 }
