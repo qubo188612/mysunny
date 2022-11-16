@@ -1279,6 +1279,10 @@ con:
         jishuST_y=0;
         jishuED_x=0;
         jishuED_y=0;
+
+        fuzhuxielv=0;
+        jishuxielv=0;
+        b_fuzhuxielv=0;
     }
     if(canleranfield==1||canlearn==0)
     {
@@ -1598,6 +1602,7 @@ con:
                                                             jishuNum,jishuST_x,jishuST_y,jishuED_x,jishuED_y);
                         #endif 
                         }
+                        
                         jishuxielv=jishuxielv+headlinehough.theta;
                         if(jishuNum>dimianpingjunshunum)
                         {
@@ -1607,8 +1612,8 @@ con:
                     }
                     else
                     {
-                        if(headlinehough.theta<fuzhuxielv+xielvfanwei||
-                            headlinehough.theta>fuzhuxielv-xielvfanwei)
+                        if((int)headlinehough.theta<fuzhuxielv+xielvfanwei||
+                           (int)headlinehough.theta>fuzhuxielv-xielvfanwei)
                         {
                             jishuNum++;
                             jishuST_x=jishuST_x+headline.st.x;
