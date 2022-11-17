@@ -12,6 +12,7 @@
   <depend>rclcpp</depend>
   <depend>tutorial_interfaces</depend>
   <depend>camera_tis</depend>
+  <depend>camera_test</depend>
   <depend>rotate_image</depend>
   <depend>laser_imagepos</depend>
   <depend>laser_line_center</depend>
