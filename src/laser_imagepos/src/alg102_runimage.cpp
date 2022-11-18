@@ -1176,7 +1176,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
                 {
                     zhengshunum=0;
                 }
-                if(zhengshunum==3)
+                if(zhengshunum>=3&&j<midfindED.y-cebankongdongdis)
                 {
                     stepfind=1;
                     stepfindED.x=(X_line[j]>>1);	//直线起点
@@ -1322,7 +1322,7 @@ con:
                     {
                         zhengshunum=0;
                     }
-                    if(zhengshunum==3)
+                    if(zhengshunum>=3&&j<midfindED.y-cebankongdongdis)
                     {
                         stepfind=1;
                         stepfindED.x=(X_line[j]>>1);	//直线起点
@@ -1581,6 +1581,7 @@ con:
         {
             if(canlearn==1&&pingmianjuli>xuexijuli) //两直线距离远
             {
+                /*
                 static Int32 olddimianpingjunshunum=0;
                 if(olddimianpingjunshunum!=dimianpingjunshunum)
                 {
@@ -1616,7 +1617,7 @@ con:
                     linegroup.line[jishuNum]=headline;
                     jishuNum++;
                 }
-                /*
+                */
                 if(b_xielvopen==1)
                 {
                     if(b_fuzhuxielv==0)
@@ -1691,7 +1692,6 @@ con:
                     #endif 
                     }
                 }
-                */
             }
         } 
     #ifdef DEBUG_ALG;
