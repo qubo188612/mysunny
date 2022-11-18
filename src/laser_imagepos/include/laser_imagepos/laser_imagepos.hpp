@@ -16,6 +16,8 @@
 //#define DEBUG_ALG       //输出算法步骤
 #define QUICK_TRANSMIT    //快速传输
 
+#define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MAX         500
+
 namespace laser_imagepos
 {
 
@@ -397,6 +399,7 @@ private:
   Int32 jishuST_x,jishuST_y,jishuED_x,jishuED_y,jishuNum;
   Int32 firstdimian;
   Int32 fuzhuxielv,b_fuzhuxielv,jishuxielv;
+  Myhalcv2::MyCountLine linegroup,linegroupout;
 
   Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)
 

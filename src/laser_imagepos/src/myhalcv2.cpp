@@ -24347,7 +24347,14 @@ namespace Myhalcv2
                     Int32 x2=LineIn->line[Index].ed.x;
                     Int32 y1=LineIn->line[Index].st.y;
                     Int32 y2=LineIn->line[Index].ed.y;
-                    paixu[Index].value=(float)(y1-y2)/(x1-x2);
+                    if(x1-x2==0)
+                    {
+                        paixu[Index].value=FLT_MAX;
+                    }
+                    else
+                    {
+                        paixu[Index].value=(float)(y1-y2)/(x1-x2);
+                    }
                     paixu[Index].i=Index;
                 }
                 QuickSortC(paixu,LineIn->linenum);

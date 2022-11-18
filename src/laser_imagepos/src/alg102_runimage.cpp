@@ -1581,6 +1581,42 @@ con:
         {
             if(canlearn==1&&pingmianjuli>xuexijuli) //两直线距离远
             {
+                static Int32 olddimianpingjunshunum=0;
+                if(olddimianpingjunshunum!=dimianpingjunshunum)
+                {
+                    olddimianpingjunshunum=dimianpingjunshunum;
+                    jishuNum=0;
+                }
+                if(jishuNum>=dimianpingjunshunum)
+                {
+                    int count;
+                    linegroup.linenum=dimianpingjunshunum;
+                    linegroup.nHeight=imageIn.nHeight;
+                    linegroup.nWidth=imageIn.nWidth;
+                    linegroup.startx=imageIn.startx;
+                    linegroup.starty=imageIn.starty;
+                    linegroup.width=imageIn.width;
+                    linegroup.height=imageIn.height;
+                    Myhalcv2::Mysort_line(&linegroup,&linegroupout,Myhalcv2::MHC_K_LINEPAIXU);
+
+                    firstdimian=1;
+                    fuzhufindST.x=linegroupout.line[dimianpingjunshunum/2].st.x;
+                    fuzhufindST.y=linegroupout.line[dimianpingjunshunum/2].st.y;
+                    fuzhufindED.x=linegroupout.line[dimianpingjunshunum/2].ed.x;
+                    fuzhufindED.y=linegroupout.line[dimianpingjunshunum/2].ed.y;
+
+                    count=jishuNum%dimianpingjunshunum;
+                    linegroup.houghinfo[count]=headlinehough;
+                    linegroup.line[count]=headline;
+                    jishuNum++;
+                }
+                else
+                {
+                    linegroup.houghinfo[jishuNum]=headlinehough;
+                    linegroup.line[jishuNum]=headline;
+                    jishuNum++;
+                }
+                /*
                 if(b_xielvopen==1)
                 {
                     if(b_fuzhuxielv==0)
@@ -1655,6 +1691,7 @@ con:
                     #endif 
                     }
                 }
+                */
             }
         } 
     #ifdef DEBUG_ALG;
