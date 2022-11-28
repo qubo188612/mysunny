@@ -39,6 +39,8 @@ namespace modbus
 #define CAMER_SIZE_WIDTH_REG_ADD          0x0005
 #define CAMER_SIZE_HEIGHT_REG_ADD         0x0006
 #define CAMER_FPS_REG_ADD                 0x0007
+#define CAMER_SIZE_VIEW_WIDTH_REG_ADD     0x0008
+#define CAMER_SIZE_VIEW_HEIGHT_REG_ADD    0x0009
 
 #define PARAMETER_REGEDIST_NUM                 400
 
@@ -223,6 +225,8 @@ public:
   int camer_width;
   int camer_height;
   int camer_fps;
+  int camer_view_width;
+  int camer_view_height;
   void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
 
   void _camera_set_size(int width,int height);

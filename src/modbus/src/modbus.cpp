@@ -68,10 +68,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   camer_width=1536;
   camer_height=1024;
   camer_fps=30;
+  camer_view_width=3072;
+  camer_view_height=2048;
 
   _param_camera_get->wait_for_service();
   auto parameters_future = _param_camera_get->get_parameters(
-                {"width","height","fps"},
+                {"width","height","fps","view_width","view_height"},
                 std::bind(&Modbus::callbackGlobalParam, this, std::placeholders::_1));
                
 
@@ -220,18 +222,24 @@ void Modbus::_gpio_laser(bool f)
 void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
 {
     auto result = future.get();
-    if(result.size()>=3)
+    if(result.size()>=5)
     {
       auto width = result.at(0);
       auto height = result.at(1);
       auto fps = result.at(2);
+      auto view_width = result.at(3);
+      auto view_height = result.at(4);
       RCLCPP_INFO(this->get_logger(), "width param: %d", width.as_int());
       RCLCPP_INFO(this->get_logger(), "height param: %d", height.as_int());
       RCLCPP_INFO(this->get_logger(), "fps param: %d", fps.as_int());
+      RCLCPP_INFO(this->get_logger(), "view_width param: %d", view_width.as_int());
+      RCLCPP_INFO(this->get_logger(), "view_height param: %d", view_height.as_int());
 
       robot_mapping->tab_registers[CAMER_SIZE_WIDTH_REG_ADD]=(u_int16_t)width.as_int();
       robot_mapping->tab_registers[CAMER_SIZE_HEIGHT_REG_ADD]=(u_int16_t)height.as_int();  
       robot_mapping->tab_registers[CAMER_FPS_REG_ADD]=(u_int16_t)fps.as_int();  
+      robot_mapping->tab_registers[CAMER_SIZE_VIEW_WIDTH_REG_ADD]=(u_int16_t)view_width.as_int();  
+      robot_mapping->tab_registers[CAMER_SIZE_VIEW_HEIGHT_REG_ADD]=(u_int16_t)view_height.as_int();  
     }
     else
     {
@@ -328,6 +336,12 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case CAMER_FPS_REG_ADD:
       _param_camera->set_parameters({rclcpp::Parameter("fps", num)});
+    break;
+    case CAMER_SIZE_VIEW_WIDTH_REG_ADD:
+      _param_camera->set_parameters({rclcpp::Parameter("view_width", num)});
+    break;
+    case CAMER_SIZE_VIEW_HEIGHT_REG_ADD:
+      _param_camera->set_parameters({rclcpp::Parameter("view_height", num)});
     break;
     default:
     break;

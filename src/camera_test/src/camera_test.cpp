@@ -98,11 +98,13 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   _threadmodbus = std::thread(&CameraTest::_modbus, this, 1502);
 #endif
 
-  int WIDTH=1536,HEIGHT=1024,FPS=40,exposure_time=1000;
+  int WIDTH=1536,HEIGHT=1024,FPS=40,exposure_time=1000,VIEW_WIDTH=3072,VIEW_HEIGHT=2048;
   this->declare_parameter("width", WIDTH);
   this->declare_parameter("height", HEIGHT);
   this->declare_parameter("fps", FPS);
   this->declare_parameter("exposure_time", exposure_time);
+  this->declare_parameter("view_width", VIEW_WIDTH);
+  this->declare_parameter("view_height", VIEW_HEIGHT);
 
   pThis=this;
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
