@@ -2,7 +2,7 @@
 #define MYHALCV2_H
 
 
-#define USE_XIMGPROC    1
+//#define USE_XIMGPROC    1
 
 #include "opencv2/opencv.hpp"
 #if USE_XIMGPROC == 1
