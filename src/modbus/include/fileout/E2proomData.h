@@ -882,7 +882,7 @@ public:
 
 /****************************/
     //任务104参数
-    Int16 als104_exposure_time;//曝光值
+    Uint16 als104_exposure_time;//曝光值
     Int16 als104_pingjun;//二值阈值
     Int16 als104_b_yanmofuzhu;//是否使用掩摸辅助
     Int16 als104_b_gudingquyu;//是否固定区域
@@ -925,9 +925,9 @@ public:
     void write_als104_para();				//保存任务104参数
     void init_als104_para();				//初始化任务104参数
 
-    Int16 als104_exposure_time_min;
-    Int16 als104_exposure_time_max;
-    Int16 als104_exposure_time_use;
+    Uint16 als104_exposure_time_min;
+    Uint16 als104_exposure_time_max;
+    Uint16 als104_exposure_time_use;
     Int16 als104_pingjun_min;
     Int16 als104_pingjun_max;
     Int16 als104_pingjun_use;
