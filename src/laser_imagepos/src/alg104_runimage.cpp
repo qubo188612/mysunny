@@ -1198,20 +1198,45 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         endline.st.x=0;
         endline.ed.y=j;
         endline.ed.x=nWidth-1;
-        if(0!=Myhalcv2::MyGetLinefocal(endline,tileline,&resultfocal))
+        if(0!=Myhalcv2::MyGetLinefocal(endline,tileline,&resultfocal2))
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
         }
-        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
+        if(resultfocal2.x<0||resultfocal2.x>=nWidth||resultfocal2.y<0||resultfocal2.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
         }
+        linepoint32ST=resultfocal2;
+        linepoint32ED=resultfocal1;
+        Myhalcv2::MyLinetoPoint(nHeight,nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&ImageConect,cv8uc1_Imagebuff3);
+        stepfind=0;
+        for(i=0;i<ImageConect.AllMarkPoint[0].PointArea;i++)
+        {
+            Uint16 x=ImageConect.AllMarkPoint[0].point[i].x;
+            Uint16 y=ImageConect.AllMarkPoint[0].point[i].y;
+            if(m_brygujia.data[y*m_brygujia.nWidth+x]<=Updif2)
+            {
+                stepfind=1;
+                resultfocal2.x=x;
+                resultfocal2.y=y;
+                break;
+            }
+        }
+        if(stepfind==1)//找到断线，采用断线
+        {
+            resultfocal=resultfocal2;
+        }
+        else//没有断线，采用原交点
+        {
+            resultfocal=resultfocal1;
+        }
+
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1332,43 +1357,19 @@ fuzhu:
             return 0;
         }   
 
-        if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal2))
+        if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
         }
-        if(resultfocal2.x<0||resultfocal2.x>=nWidth||resultfocal2.y<0||resultfocal2.y>=nHeight)
+        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
-        }
-        linepoint32ST=resultfocal2;
-        linepoint32ED=resultfocal1;
-        Myhalcv2::MyLinetoPoint(nHeight,nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&ImageConect,cv8uc1_Imagebuff3);
-        stepfind=0;
-        for(i=0;i<ImageConect.AllMarkPoint[0].PointArea;i++)
-        {
-            Uint16 x=ImageConect.AllMarkPoint[0].point[i].x;
-            Uint16 y=ImageConect.AllMarkPoint[0].point[i].y;
-            if(m_brygujia.data[y*m_brygujia.nWidth+x]<=Updif2)
-            {
-                stepfind=1;
-                resultfocal2.x=x;
-                resultfocal2.y=y;
-                break;
-            }
-        }
-        if(stepfind==1)//找到断线，采用断线
-        {
-            resultfocal=resultfocal2;
-        }
-        else//没有断线，采用原交点
-        {
-            resultfocal=resultfocal1;
         }
 
 
