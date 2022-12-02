@@ -1047,12 +1047,13 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         m_brygujia.data[1*m_brygujia.nWidth+ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].point[j].x]=1;
     }
 
-    for(j=stepfindST.y;j<MIN(stepfindST.y+dis_center_ed2,stepfindED.y);j++)
+    for(j=stepfindST.y;j<MAX(stepfindED.y-dis_center_ed2,stepfindST.y);j++)
     {
         m_brygujia.data[1*m_brygujia.nWidth+j]=0;
     }
-    stepfindST.y=MIN(stepfindST.y+dis_center_ed2,stepfindED.y);
+    stepfindST.y=MAX(stepfindED.y-dis_center_ed2,stepfindST.y);
     stepfindST.x=X_line[stepfindST.y];
+
     for(j=stepfindED.y;j>MAX(stepfindST.y,stepfindED.y-dis_center_st2);j--)
     {
         m_brygujia.data[1*m_brygujia.nWidth+j]=0;
