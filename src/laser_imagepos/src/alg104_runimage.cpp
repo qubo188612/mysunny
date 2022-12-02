@@ -583,6 +583,15 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
+    Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_HEIGHT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
+    if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].bottom!=
+        ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].bottom)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+    #endif
+        return 1;
+    }
     Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,ImageConectlong.AllMarkPointCount-1);
     Myhalcv2::Mysmallest_rectangle(&ImageConectlongPX,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
     if(b_gudingquyu==1)
@@ -1094,6 +1103,13 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        #endif
+            return 1;
+        }
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1117,6 +1133,13 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     else
     {
         if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal1))
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        #endif
+            return 1;
+        }
+        if(resultfocal1.x<0||resultfocal1.x>=nWidth||resultfocal1.y<0||resultfocal1.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1176,6 +1199,13 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         endline.ed.y=j;
         endline.ed.x=nWidth-1;
         if(0!=Myhalcv2::MyGetLinefocal(endline,tileline,&resultfocal))
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        #endif
+            return 1;
+        }
+        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1246,6 +1276,13 @@ fuzhu:
         #endif
             return 1;
         }
+        if(resultfocal1.x<0||resultfocal1.x>=nWidth||resultfocal1.y<0||resultfocal1.y>=nHeight)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        #endif
+            return 1;
+        }
         if(step==22)
         {
             Myhalcv2::MatClone(imageIn,&imageGasupain);
@@ -1278,7 +1315,7 @@ fuzhu:
             return 1;
         }
         Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
-
+        
         if(step==23)
         {
             Myhalcv2::MatClone(imageIn,&imageGasupain);
@@ -1296,6 +1333,13 @@ fuzhu:
         }   
 
         if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        #endif
+            return 1;
+        }
+        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
