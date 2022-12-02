@@ -305,7 +305,7 @@ struct Params
   int als104_dis_center_ed2=120;//100;//30;  //距离中心点此处后停止统计
   int als104_dis_center_st3=150;//5;//0;     //距离中心点此处后开始统计
   int als104_dis_center_ed3=500;//500;//30;  //距离中心点此处后停止统计
-  int als104_xuexijuli=30;//学习距离
+  int als104_xuexijuli=200;//学习距离
   int als104_b_pingpowending=1;//平坡处稳定焊点
   int als104_pingpowending_dis=4;//平坡处稳定距离
   int als104_b_xielvopen=1;//斜率限制

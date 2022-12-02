@@ -364,7 +364,7 @@ int LaserImagePos::alg104_getcallbackParameter(const rclcpp::Parameter &p)
             return 1;}} 
     else if(p.get_name() == "als104_xuexijuli") {
         auto k = p.as_int();
-        if (k < 0 || k > 255) {
+        if (k < 0 || k > 1000) {
             return -1;}
         else{pm.als104_xuexijuli=p.as_int();
             return 1;}}   
@@ -446,7 +446,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_line tileline;	//结果线2以及原图的线,(短的)
     Myhalcv2::L_line headline;	//结果线1以及原图的线,(短的)
     Myhalcv2::L_line endline;	//结果线1以及原图的线,(短的)
-    Myhalcv2::L_Point32 resultfocal1,resultfocal;//交点
+    Myhalcv2::L_Point32 resultfocal1,resultfocal,resultfocal2;//交点
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
@@ -1094,7 +1094,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     }
 
     //求得两直线交点
-    if(nihenum>200)
+    if(nihenum>xuexijuli)
     {
         if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
         {
@@ -1240,7 +1240,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
 
     if(b_opengudingdimian==1)   //固定底面
     {
-        if(nihenum>200)
+        if(nihenum>xuexijuli)
         {
             jishuST_x=headline.st.x;
             jishuST_y=headline.st.y;
@@ -1332,20 +1332,45 @@ fuzhu:
             return 0;
         }   
 
-        if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
+        if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal2))
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
         }
-        if(resultfocal.x<0||resultfocal.x>=nWidth||resultfocal.y<0||resultfocal.y>=nHeight)
+        if(resultfocal2.x<0||resultfocal2.x>=nWidth||resultfocal2.y<0||resultfocal2.y>=nHeight)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         #endif
             return 1;
         }
+        linepoint32ST=resultfocal2;
+        linepoint32ED=resultfocal1;
+        Myhalcv2::MyLinetoPoint(nHeight,nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&ImageConect,cv8uc1_Imagebuff3);
+        stepfind=0;
+        for(i=0;i<ImageConect.AllMarkPoint[0].PointArea;i++)
+        {
+            Uint16 x=ImageConect.AllMarkPoint[0].point[i].x;
+            Uint16 y=ImageConect.AllMarkPoint[0].point[i].y;
+            if(m_brygujia.data[y*m_brygujia.nWidth+x]<=Updif2)
+            {
+                stepfind=1;
+                resultfocal2.x=x;
+                resultfocal2.y=y;
+                break;
+            }
+        }
+        if(stepfind==1)//找到断线，采用断线
+        {
+            resultfocal=resultfocal2;
+        }
+        else//没有断线，采用原交点
+        {
+            resultfocal=resultfocal1;
+        }
+
 
         if(step==1)
         {
