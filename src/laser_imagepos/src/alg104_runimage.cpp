@@ -446,7 +446,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_line tileline;	//结果线2以及原图的线,(短的)
     Myhalcv2::L_line headline;	//结果线1以及原图的线,(短的)
     Myhalcv2::L_line endline;	//结果线1以及原图的线,(短的)
-    Myhalcv2::L_Point32 resultfocal1,resultfocal,resultfocal2;//交点
+    Myhalcv2::L_Point32 resultfocal1,resultfocal,resultfocal2,resultfocal3;//交点
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
@@ -1094,6 +1094,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     }
 
     //求得两直线交点
+    /*
     if(nihenum>xuexijuli)
     {
         if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
@@ -1131,6 +1132,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         }
     }
     else
+    */
     {
         if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal1))
         {
@@ -1174,7 +1176,8 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
             {
                 if(m_brygujia.data[y*m_brygujia.nWidth+x]>Updif2)
                 {
-                    j=y;
+                    resultfocal3.y=y;
+                    resultfocal3.x=x;
                 }
                 else
                 {
@@ -1194,9 +1197,10 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
-        endline.st.y=j;
+        
+        endline.st.y=resultfocal3.y;
         endline.st.x=0;
-        endline.ed.y=j;
+        endline.ed.y=resultfocal3.y;
         endline.ed.x=nWidth-1;
         if(0!=Myhalcv2::MyGetLinefocal(endline,tileline,&resultfocal2))
         {
@@ -1235,6 +1239,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         else//没有断线，采用原交点
         {
             resultfocal=resultfocal1;
+            resultfocal3=resultfocal1;
         }
 
         if(step==1)
@@ -1282,6 +1287,9 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);   
+    cv_point.x=resultfocal3.x;
+    cv_point.y=resultfocal3.y;
+    namepoint.push_back(cv_point); 
 
     return 0;   //C这里return
 
@@ -1405,7 +1413,8 @@ fuzhu:
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point);   
+    namepoint.push_back(cv_point); 
+    namepoint.push_back(cv_point);    
     
     return 0;
 }
