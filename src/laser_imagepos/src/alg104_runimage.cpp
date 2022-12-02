@@ -1265,6 +1265,9 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
             cv_point_st.x=(resultfocal.x>>2);
             cv_point_st.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(0,0,255),1);
+            cv_point_st.x=(resultfocal3.x>>2);
+            cv_point_st.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
         }
     }
 
@@ -1380,7 +1383,7 @@ fuzhu:
             return 1;
         }
 
-
+        resultfocal3=resultfocal;
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1396,6 +1399,9 @@ fuzhu:
             cv_point_ed.x=(tileline.ed.x>>2);
             cv_point_ed.y=(tileline.ed.y>>2);
             cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(0,255,0),1);
+            cv_point_st.x=(resultfocal3.x>>2);
+            cv_point_st.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
             cv_point_st.x=(resultfocal.x>>2);
             cv_point_st.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(0,0,255),1);
@@ -1414,6 +1420,8 @@ fuzhu:
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point); 
+    cv_point.x=resultfocal3.x;
+    cv_point.y=resultfocal3.y;
     namepoint.push_back(cv_point);    
     
     return 0;
