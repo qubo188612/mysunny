@@ -1156,10 +1156,10 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         jiguangDeep=MIN(resultfocal1.y+cutHSize,nHeight-1);
 
         Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft,jiguangTop,jiguangRight-jiguangLeft+1,jiguangDeep-jiguangTop+1);
+        m_brygujia=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);  //重新创建上半截连通图
         Myhalcv2::Mynormalize(m_tempmatIn,&m_brygujia);
         if(step==21)
         {
-            Myhalcv2::MyCutRoiSetZero(&m_brygujia);
             Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
             return 0;
         }
@@ -1169,6 +1169,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
 
         zhengshunum=0;
         stepfind=0;
+        resultfocal3=resultfocal1;
         for(i=0;i<ImageConect.AllMarkPoint[0].PointArea;i++)
         {
             Uint16 x=ImageConect.AllMarkPoint[0].point[i].x;
@@ -1190,13 +1191,6 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
                     }
                 }
             }
-        }
-        if(stepfind==0)
-        {
-        #ifdef QUICK_TRANSMIT
-            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
-        #endif
-            return 1;
         }
         
         endline.st.y=resultfocal3.y;
