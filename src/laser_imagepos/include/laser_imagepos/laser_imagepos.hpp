@@ -302,7 +302,7 @@ struct Params
   int als104_dimianpangdingjuli=30;//两直线平面距离
   int als104_dimianpingjunshunum=30;//底面平均数统计个数//10
   int als104_dis_center_st2=20;//5;//0;     //距离中心点此处后开始统计
-  int als104_dis_center_ed2=120;//100;//30;  //距离中心点此处后停止统计
+  int als104_dis_center_ed2=150;//100;//30;  //距离中心点此处后停止统计
   int als104_dis_center_st3=150;//5;//0;     //距离中心点此处后开始统计
   int als104_dis_center_ed3=500;//500;//30;  //距离中心点此处后停止统计
   int als104_xuexijuli=200;//学习距离
