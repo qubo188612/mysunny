@@ -871,7 +871,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
 
     for(j=X_Linestarty+24;j<X_Lineendy-24;j++)
     {
-        if(m32_filterIma.ptr_int[j]<=Updifmin&&m32_filterIma.ptr_int[j]>=Downdif)
+        if(m32_filterIma.ptr_int[j]<=Downdifmin&&m32_filterIma.ptr_int[j]>=Downdif)
         {
             m_brygujia.data[1*m_brygujia.nWidth+j]=255;
         }
@@ -903,22 +903,22 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     latsj=MAX(X_Lineendy-Ed_Down,X_Linestarty+24);
 
 
-    midfindST.y=ImageConect.AllMarkPoint[0].left;
+    midfindST.y=ImageConectlong.AllMarkPoint[0].left;
     midfindST.x=X_line[midfindST.y];
-    midfindED.y=ImageConect.AllMarkPoint[ImageConect.AllMarkPointCount-1].right;
+    midfindED.y=ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right;
     midfindED.x=X_line[midfindED.y];
 
     m_brygujia=Myhalcv2::MatCreatzero(3,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);  //重新创建下半截连通图
 
-    for(j=ImageConect.AllMarkPointCount-1;j>=0;j--)
+    for(j=ImageConectlong.AllMarkPointCount-1;j>=0;j--)
     {
-        for(i=ImageConect.AllMarkPoint[j].left;i<=ImageConect.AllMarkPoint[j].right;i++)
+        for(i=ImageConectlong.AllMarkPoint[j].left;i<=ImageConectlong.AllMarkPoint[j].right;i++)
         {
             m_brygujia.data[1*m_brygujia.nWidth+i]=255;
         }
-        if(ImageConect.AllMarkPoint[j].left<latsj)
+        if(ImageConectlong.AllMarkPoint[j].left<latsj)
         {
-            midfindST.y=ImageConect.AllMarkPoint[j].left;
+            midfindST.y=ImageConectlong.AllMarkPoint[j].left;
             midfindST.x=X_line[midfindST.y];
             break;
         }
