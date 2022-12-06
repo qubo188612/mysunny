@@ -45,9 +45,8 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_b_xielvopen", pm.als102_b_xielvopen);
     this->declare_parameter("als102_xielvfanwei", pm.als102_xielvfanwei);
     this->declare_parameter("als102_Uplong2", pm.als102_Uplong2);
-    this->declare_parameter("als102_cebankongdongdis", pm.als102_cebankongdongdis);  
-    this->declare_parameter("als102_qiatouquweijuli", pm.als102_qiatouquweijuli); 
-    
+    this->declare_parameter("als102_cebankongdongdis", pm.als102_cebankongdongdis);
+    this->declare_parameter("als102_qiatouquweijuli", pm.als102_qiatouquweijuli);  
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -170,7 +169,6 @@ void LaserImagePos::alg102_update_parameters()
     else if (p.get_name() == "als102_qiatouquweijuli") {
       pm.als102_qiatouquweijuli = p.as_int();
     }
-    
   }
 }
 
@@ -457,41 +455,43 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 
     /*********************/
     //算法参数
-    Int32 pingjun=pm.als102_pingjun;//15;//二值阈值
-    Int32 b_yanmofuzhu=pm.als102_b_yanmofuzhu;//1;//是否使用掩摸辅助
-    Int32 b_gudingquyu=pm.als102_b_gudingquyu;//0;//是否固定区域
-    Int32 widthliantongdis=pm.als102_widthliantongdis;//2;//激光宽度连通距离
-    Int32 highliantongdis=pm.als102_highliantongdis;//15;//激光长度连通距离
-    Int32 gujiaerzhi=pm.als102_gujiaerzhi;//160;//找骨架二值图
-    Int32 jiguanghight=pm.als102_jiguanghight;//50;//整体激光最短长度
-    Int32 jiguanglong=pm.als102_jiguanglong;//20;//单边激光最短长度
-    Int32 jiguangkuandu=pm.als102_jiguangkuandu;//4;//激光粗细
-    Int32 Updif=pm.als102_Updif;//0;//上半段倾斜开始斜度10
-    Int32 Updifmin=pm.als102_Updifmin;//-5;//上半段倾斜终止斜度10
-    Int32 Uplong=pm.als102_Uplong;//5;//上半段直线长度
-    Int32 Downdif=pm.als102_Downdif;//0;//下半段倾斜开始斜度0
-    Int32 Downdifmin=pm.als102_Downdifmin;//5;//下半段倾斜终止斜度0
-    Int32 Downdlong=pm.als102_Downdlong;//5;//下半段直线长度
-    Int32 St_Down=pm.als102_St_Down;//5;//下半段拟合起点
-    Int32 Ed_Down=pm.als102_Ed_Down;//50;//下半段拟合终点
-    Int32 St_Up=pm.als102_St_Up;//5;//上半段拟合起点
-    Int32 Ed_Up=pm.als102_Ed_Up;//50;//上半段拟合终点
-    Int32 Updif2=pm.als102_Updif2;//-2;//上半段倾斜开始斜度10
-    Int32 Updifmin2=pm.als102_Updifmin2;//-5;//上半段倾斜终止斜度10
-    Int32 dis_center_st=pm.als102_dis_center_st;//0;     //距离中心点此处后开始统计
-    Int32 dis_center_ed=pm.als102_dis_center_ed;//30;  //距离中心点此处后停止统计
-    Int32 b_opengudingdimian=pm.als102_b_opengudingdimian;//1;//是否固定底面
-    Int32 dimianpangdingjuli=pm.als102_dimianpangdingjuli;//15;//底面判定距离
-    Int32 dimianpingjunshunum=pm.als102_dimianpingjunshunum;//10;//底面平均数统计个数
+    Int32 pingjun=pm.als102_pingjun;//二值阈值
+    Int32 b_yanmofuzhu=pm.als102_b_yanmofuzhu;//是否使用掩摸辅助
+    Int32 b_gudingquyu=pm.als102_b_gudingquyu;//是否固定区域
+    Int32 widthliantongdis=pm.als102_widthliantongdis;//激光宽度连通距离
+    Int32 highliantongdis=pm.als102_highliantongdis;//激光长度连通距离
+    Int32 gujiaerzhi=pm.als102_gujiaerzhi;//找骨架二值图
+    Int32 jiguanghight=pm.als102_jiguanghight;//整体激光最短长度
+    Int32 jiguanglong=pm.als102_jiguanglong;//单边激光最短长度
+    Int32 jiguangkuandu=pm.als102_jiguangkuandu;//激光粗细
+
+    Int32 Updif=pm.als102_Updif;//上半段倾斜开始斜度10
+    Int32 Updifmin=pm.als102_Updifmin;//上半段倾斜终止斜度10
+    Int32 Uplong=pm.als102_Uplong;//上半段直线长度
+    Int32 Downdif=pm.als102_Downdif;//下半段倾斜开始斜度0
+    Int32 Downdifmin=pm.als102_Downdifmin;//下半段倾斜终止斜度0
+    Int32 Downdlong=pm.als102_Downdlong;//下半段直线长度
+    Int32 St_Down=pm.als102_St_Down;//下半段拟合起点
+    Int32 Ed_Down=pm.als102_Ed_Down;//下半段拟合终点
+    Int32 St_Up=pm.als102_St_Up;//上半段拟合起点
+    Int32 Ed_Up=pm.als102_Ed_Up;//上半段拟合终点
+    Int32 Updif2=pm.als102_Updif2;//上半段倾斜开始斜度10
+    Int32 Updifmin2=pm.als102_Updifmin2;//上半段倾斜终止斜度10
+    Int32 dis_center_st=pm.als102_dis_center_st;     //距离中心点此处后开始统计
+    Int32 dis_center_ed=pm.als102_dis_center_ed;  //距离中心点此处后停止统计
+    Int32 b_opengudingdimian=pm.als102_b_opengudingdimian; //是否固定底面
+    Int32 dimianpangdingjuli=pm.als102_dimianpangdingjuli;//两直线平面距离
+    Int32 dimianpingjunshunum=pm.als102_dimianpingjunshunum;//底面平均数统计个数//10
     Int32 dis_center_st2=pm.als102_dis_center_st2;//5;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed2=pm.als102_dis_center_ed2;//100;//30;  //距离中心点此处后停止统计
     Int32 dis_center_st3=pm.als102_dis_center_st3;//5;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed3=pm.als102_dis_center_ed3;//500;//30;  //距离中心点此处后停止统计
-    Int32 xuexijuli=pm.als102_xuexijuli;//15//学习距离
-    Int32 b_pingpowending=pm.als102_b_pingpowending;//1;//平坡处稳定焊点
-    Int32 pingpowending_dis=pm.als102_pingpowending_dis;//4;//平坡处稳定距离
-    Int32 b_xielvopen=pm.als102_b_xielvopen;//1//斜率限制
-    Int32 xielvfanwei=pm.als102_xielvfanwei;//10//斜率范围
+    Int32 xuexijuli=pm.als102_xuexijuli;//学习距离
+    Int32 b_pingpowending=pm.als102_b_pingpowending;//平坡处稳定焊点
+    Int32 pingpowending_dis=pm.als102_pingpowending_dis;//平坡处稳定距离
+    Int32 b_xielvopen=pm.als102_b_xielvopen;//斜率限制
+    Int32 xielvfanwei=pm.als102_xielvfanwei;//斜率范围
+
     Int32 Uplong2=pm.als102_Uplong2;//在坡度时上半段直线检测长度
     Int32 cebankongdongdis=pm.als102_cebankongdongdis;//侧板跨孔洞的激光最短距离
     Int32 qiatouquweijuli=pm.als102_qiatouquweijuli;//恰头去尾距离
@@ -1008,6 +1008,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Myconnection(m_brygujia,&ImageConect,Uplong,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
+    /*
     //检查如果内部超过两个连通可能是焊点
     if(b_pingpowending==1&&ImageConect.AllMarkPointCount>1)
     {
@@ -1016,6 +1017,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
+    */
 
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);
     if(ImageConectlong.AllMarkPointCount==0)
@@ -1027,13 +1029,14 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     stepfindED.y=ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right;
     stepfindED.x=X_line[stepfindED.y];
 
+    /*
     //检查如果最右边的不是最大的连通就报警
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_MIANJI_PAIXU);
     if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].right!=stepfindED.y)
     {
         goto fuzhu;
     }
-
+    */
     if(step==19)
     {
         Myhalcv2::MatClone(imageIn,&imageGasupain);
@@ -1430,7 +1433,6 @@ fuzhu:
     namepoint.push_back(cv_point);    
     
     return 0;
-
 }
 
 }

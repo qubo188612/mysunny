@@ -1008,6 +1008,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Myconnection(m_brygujia,&ImageConect,Uplong,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
+    /*
     //检查如果内部超过两个连通可能是焊点
     if(b_pingpowending==1&&ImageConect.AllMarkPointCount>1)
     {
@@ -1016,6 +1017,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
+    */
 
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);
     if(ImageConectlong.AllMarkPointCount==0)
@@ -1027,13 +1029,14 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     stepfindED.y=ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right;
     stepfindED.x=X_line[stepfindED.y];
 
+    /*
     //检查如果最右边的不是最大的连通就报警
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_MIANJI_PAIXU);
     if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].right!=stepfindED.y)
     {
         goto fuzhu;
     }
-
+    */
     if(step==19)
     {
         Myhalcv2::MatClone(imageIn,&imageGasupain);
