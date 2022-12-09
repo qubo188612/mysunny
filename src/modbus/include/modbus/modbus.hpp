@@ -15,6 +15,7 @@
 #ifndef MODBUS__MODBUS_HPP
 #define MODBUS__MODBUS_HPP
 
+//#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
 #define USE_PARENTHESES_INSTEAD_QUOTATION      
 #define DEL_SPACE_AND_LINEN
 
@@ -25,6 +26,7 @@
 #include <TCP/TCPServer.h>
 #include <modbus.h>
 #include "fileout/E2proomData.h"
+
 
 namespace modbus
 {
@@ -351,6 +353,7 @@ private:
   std::thread _thread_robotset;
 
   std::thread _threadforward;
+
 
   bool b_jsontcpthread;
   bool b_threadforward;

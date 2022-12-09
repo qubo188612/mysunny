@@ -141,12 +141,17 @@ void* received_cloudresulttcp(void *m)
                   num_message++;
                   // start message background thread
                 }
-                cout << "id:      " << _p->desc_cloudresult[i]->id      << endl
+                
+                std::vector<char> vec=_p->desc_cloudresult[i]->message;
+                vec.push_back('\0');
+                std::string str(vec.begin(), vec.end());
+            #ifdef SHOW_TCPSOCK_RECEIVE 
+                cerr << "id:      " << _p->desc_cloudresult[i]->id      << endl
                     << "ip:      " << _p->desc_cloudresult[i]->ip      << endl
-                    << "message: " << _p->desc_cloudresult[i]->message << endl
+                    << "message: " << str << endl
                     << "socket:  " << _p->desc_cloudresult[i]->socket  << endl
                     << "enable:  " << _p->desc_cloudresult[i]->enable_message_runtime << endl;
-
+            #endif
                 
                 clouldresulttcp.clean(i);
             }

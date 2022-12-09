@@ -30,7 +30,7 @@ struct descript_socket{
 	int socket     = -1;
 	string ip      = "";
 	int id         = -1; 
-	std::string message;
+	std::vector<char> message;
 	bool enable_message_runtime = false;
 };
 

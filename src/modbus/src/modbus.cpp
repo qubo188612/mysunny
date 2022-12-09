@@ -160,9 +160,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   {
   case E2POOM_ROBOT_MOD_NULL:
   break;
-  case E2POOM_ROBOT_MOD_ZHICHANG:
-  case E2POOM_ROBOT_MOD_MOKA_NABOTE:
-      
+  case E2POOM_ROBOT_MOD_ZHICHANG:       //Modbus
+  case E2POOM_ROBOT_MOD_MOKA_NABOTE:    
       ctx_forward = modbus_new_tcp(NULL, robot_port);
       if (!ctx_forward) {
         RCLCPP_ERROR(this->get_logger(), "Failed to create modbusforward context.");
@@ -172,7 +171,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       _threadforward = std::thread(&Modbus::_modbusforward, this, robot_port);
       b_threadforward = true;
       break;
-  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
+  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:    //TCP
+  case E2POOM_ROBOT_MOD_GANGSHANG:         
       num_client=0;
       _jsontcpthread = std::thread(&Modbus::_json, this, robot_port);
       b_jsontcpthread = true;
@@ -472,7 +472,6 @@ void Modbus::_modbus(int port)
             case E2POOM_ROBOT_MOD_NULL:
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
-            case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
               for(int i=0;i<SERVER_REGEDIST_NUM;i++)
               {
                 mb_forwardmapping->tab_registers[i],mb_mapping->tab_registers[i];
@@ -955,7 +954,6 @@ void Modbus::_modbusforward(int port)
   // ofile.close();
 }
 
-
 void Modbus::_json(int port)
 {
     pthread_t msg;
@@ -994,20 +992,26 @@ void* received(void *m)
         {
             if( _p->desc[i] )
             {
-                cout << "id:      " << _p->desc[i]->id      << endl
-                    << "ip:      " << _p->desc[i]->ip      << endl
-                    << "message: " << _p->desc[i]->message << endl
-                    << "socket:  " << _p->desc[i]->socket  << endl
-                    << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
-
-                    Json::Value root;
-                    jsonfuction js;
-                    Json::Value sent_root;
                 switch(_p->e2proomdata.robot_mod)
                 {
                   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
                   {
-                #ifdef USE_PARENTHESES_INSTEAD_QUOTATION
+                    std::vector<char> vec=_p->desc[i]->message;
+                    vec.push_back('\0');
+                    std::string str(vec.begin(), vec.end());
+
+                  #ifdef SHOW_TCPSOCK_RECEIVE  
+                    cerr << "id:      " << _p->desc[i]->id      << endl
+                        << "ip:      " << _p->desc[i]->ip      << endl
+                        << "message: " << str << endl
+                        << "socket:  " << _p->desc[i]->socket  << endl
+                        << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
+                  #endif
+                  
+                    Json::Value root;
+                    jsonfuction js;
+                    Json::Value sent_root;
+                  #ifdef USE_PARENTHESES_INSTEAD_QUOTATION
                     for(unsigned int n=0;n<_p->desc[i]->message.size();n++)
                     {
                         if(_p->desc[i]->message[n]==0x28||_p->desc[i]->message[n]==0x29)   //"
@@ -1015,8 +1019,8 @@ void* received(void *m)
                            _p->desc[i]->message[n]=0x22; 
                         }
                     }
-                #endif
-                    if(0==js.readJsonFromString(_p->desc[i]->message,&root))
+                  #endif
+                    if(0==js.readJsonFromString(str,&root))
                     {
                         Json::Value::Members mem = root.getMemberNames();
                         Json::Value::Members::iterator it = mem.begin(), end = mem.end();
@@ -1222,6 +1226,242 @@ void* received(void *m)
 
                     _p->num_client++;
                   // start message background thread
+                  }
+                  break;
+                  case E2POOM_ROBOT_MOD_GANGSHANG:          //RTU
+                  {
+                  #ifdef SHOW_TCPSOCK_RECEIVE  
+                    std::string s_data;
+                    for(int t=0;t<_p->desc[i]->message.size();t++)
+                    {
+                        std::string str;
+                        u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
+                        str=std::to_string(u8_data)+" ";
+                        s_data=s_data+str;
+                    }
+                    cerr << "id:      " << _p->desc[i]->id      << endl
+                        << "ip:      " << _p->desc[i]->ip      << endl
+                        << "message: " << s_data << endl
+                        << "socket:  " << _p->desc[i]->socket  << endl
+                        << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
+                  #endif
+                    std::vector<u_int8_t> sendbuffer;
+                    if(_p->desc[i]->message.size()>=4)
+                    {
+                        u_int8_t *u8_data=(u_int8_t*)&(_p->desc[i]->message[0]);
+                        if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x01)//设置任务号
+                        {
+                            uint16_t task=u8_data[3];
+                            _p->mb_mapping->tab_registers[0x102]=task;
+                            static int oldtasknum=INT_MAX;
+                            if(oldtasknum!=_p->mb_mapping->tab_registers[0x102])
+                            {
+                              oldtasknum=_p->mb_mapping->tab_registers[0x102];
+                              _p->_task_numberset(oldtasknum);
+                            }
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x01;
+                            send[4]=1;
+                            sendbuffer=send;
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x02&&u8_data[3]==0x01)//激光打开
+                        {
+                            _p->_gpio_laser(true);
+                            _p->_camera_power(true);
+                            _p->mb_mapping->tab_registers[0x101]=0xff; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x02;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x03&&u8_data[3]==0x00)//激光关闭
+                        {
+                            _p->_gpio_laser(false);
+                            _p->_camera_power(false);
+                            _p->mb_mapping->tab_registers[0x101]=0; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x03;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x04&&u8_data[3]==0x01)//开始寻位
+                        {
+                            _p->_gpio_laser(true);
+                            _p->_camera_power(true);
+                            _p->mb_mapping->tab_registers[0x101]=0xff; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x04;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x05&&u8_data[3]==0x00)//停止寻位
+                        {
+                            _p->_gpio_laser(false);
+                            _p->_camera_power(false);
+                            _p->mb_mapping->tab_registers[0x101]=0; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x05;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x06&&u8_data[3]==0x01)//开始跟踪
+                        {
+                            _p->_gpio_laser(true);
+                            _p->_camera_power(true);
+                            _p->mb_mapping->tab_registers[0x101]=0xff; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x06;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x04&&u8_data[1]==0x01&&u8_data[2]==0x07&&u8_data[3]==0x00)//停止跟踪
+                        {
+                            _p->_gpio_laser(false);
+                            _p->_camera_power(false);
+                            _p->mb_mapping->tab_registers[0x101]=0; 
+                            std::vector<u_int8_t> send;
+                            send.resize(5);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x07;
+                            send[4]=1;
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x08&&u8_data[1]==0x01&&u8_data[2]==0x07&&u8_data[3]==0x01)//查询相机状态
+                        {
+                            std::vector<u_int8_t> send;
+                            u_int16_t state=0;
+                            send.resize(7);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x08;
+                            send[4]=1;
+                            if(_p->mb_mapping->tab_registers[0x101]==0)
+                            {
+                                state=0;
+                            }
+                            else
+                            {
+                                state=0x07;
+                            }
+                            send[5]=(state>>8);
+                            send[6]=(state&0x00ff);
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x07&&u8_data[1]==0x06&&u8_data[2]==0x09&&u8_data[3]==0x01)//查询焊缝位置,相机坐标系
+                        {
+                            std::vector<u_int8_t> send;
+                            u_int16_t state=0;
+                            send.resize(17);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x09;
+                            if(_p->mb_mapping->tab_registers[0x02]==0)
+                            {
+                              send[4]=0;    
+                            }
+                            else
+                            {
+                              send[4]=1;
+                            }
+                            u_int16_t X=0,Y,Z,TA=0,TB=0,TC=0;
+                            Y=_p->mb_mapping->tab_registers[0x03];
+                            Z=_p->mb_mapping->tab_registers[0x04];
+                            send[5]=(X>>8);
+                            send[6]=(X&0x00ff);
+                            send[7]=(Y>>8);
+                            send[8]=(Y&0x00ff);
+                            send[9]=(Z>>8);
+                            send[10]=(Z&0x00ff);
+                            send[11]=(TA>>8);
+                            send[12]=(TA&0x00ff);
+                            send[13]=(TB>>8);
+                            send[14]=(TB&0x00ff);
+                            send[15]=(TC>>8);
+                            send[16]=(TC&0x00ff);
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x07&&u8_data[1]==0x06&&u8_data[2]==0x0a&&u8_data[3]==0x01)//查询焊缝位置,光学坐标系
+                        {
+                            std::vector<u_int8_t> send;
+                            u_int16_t state=0;
+                            send.resize(17);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x0a;
+                            if(_p->mb_mapping->tab_registers[0x02]==0)
+                            {
+                              send[4]=0;    
+                            }
+                            else
+                            {
+                              send[4]=1;
+                            }
+                            u_int16_t X=0,Y,Z,TA=0,TB=0,TC=0;
+                            Y=_p->mb_mapping->tab_registers[0x03];
+                            Z=_p->mb_mapping->tab_registers[0x04];
+                            send[5]=(X>>8);
+                            send[6]=(X&0x00ff);
+                            send[7]=(Y>>8);
+                            send[8]=(Y&0x00ff);
+                            send[9]=(Z>>8);
+                            send[10]=(Z&0x00ff);
+                            send[11]=(TA>>8);
+                            send[12]=(TA&0x00ff);
+                            send[13]=(TB>>8);
+                            send[14]=(TB&0x00ff);
+                            send[15]=(TC>>8);
+                            send[16]=(TC&0x00ff);
+                            sendbuffer=send; 
+                        }
+                        else if(u8_data[0]==0x07&&u8_data[1]==0x01&&u8_data[2]==0x0b&&u8_data[3]==0x01)//查询任务号
+                        {
+                            std::vector<u_int8_t> send;
+                            u_int16_t state=0;
+                            send.resize(6);
+                            send[0]=0x52;
+                            send[1]=0x52;  
+                            send[2]=0x54;  
+                            send[3]=0x0b;
+                            send[4]=1;
+                            send[5]=_p->mb_mapping->tab_registers[0x102];
+                            sendbuffer=send; 
+                        }
+                    }
+                    if(sendbuffer.size()>0)
+                    {
+                        jsontcp.Send((char*)&sendbuffer[0], sendbuffer.size(),_p->desc[i]->id);
+                    }
+                     _p->num_client++;
+                  // start message background thread 
                   }
                   break;
                   default:

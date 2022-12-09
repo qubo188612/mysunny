@@ -42,7 +42,8 @@ void E2proomData::check_para()
     if(robot_mod!=E2POOM_ROBOT_MOD_NULL&&
        robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG&&
        robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI&&
-       robot_mod!=E2POOM_ROBOT_MOD_MOKA_NABOTE
+       robot_mod!=E2POOM_ROBOT_MOD_MOKA_NABOTE&&
+       robot_mod!=E2POOM_ROBOT_MOD_GANGSHANG
       )
       robot_mod=E2POOM_ROBOT_MOD_NULL;
 

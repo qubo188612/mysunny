@@ -176,11 +176,18 @@ void* received_imagetcp(void *m)
 					num_message++;
 					// start message background thread
 				}
+
+                std::vector<char> vec=_p->desc_image[i]->message;
+                vec.push_back('\0');
+                std::string str(vec.begin(), vec.end());
+
+            #ifdef SHOW_TCPSOCK_RECEIVE  
                 cerr << "id:      " << _p->desc_image[i]->id      << endl
                     << "ip:      " << _p->desc_image[i]->ip      << endl
                     << "message: " << _p->desc_image[i]->message << endl
                     << "socket:  " << _p->desc_image[i]->socket  << endl
                     << "enable:  " << _p->desc_image[i]->enable_message_runtime << endl;
+            #endif
 
                 imagetcp.clean(i);
             }

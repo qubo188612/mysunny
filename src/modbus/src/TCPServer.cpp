@@ -36,13 +36,16 @@ void* TCPServer::Task(void *arg)
 			   if(num_client>0) num_client--;
 			   break;
 			}
-			msg[n]=0;
-			desc->message = string(msg);
-	                std::lock_guard<std::mutex> guard(mt);
+			desc->message.resize(n);
+			for(int i=0;i<n;i++)
+			{
+				desc->message[i]=msg[i];
+			}
+	        std::lock_guard<std::mutex> guard(mt);
 			Message.push_back( desc );
 		}
-		usleep(600);
-	//	sleep(0);
+	//	usleep(600);
+		sleep(0);
     }
 	if(desc != NULL)
 	{
@@ -154,7 +157,7 @@ void TCPServer::detach(int id)
 	close(newsockfd[id]->socket);
 	newsockfd[id]->ip = "";
 	newsockfd[id]->id = -1;
-	newsockfd[id]->message = "";
+	newsockfd[id]->message.clear();
 } 
 
 void TCPServer::closed() 
