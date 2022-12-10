@@ -20,193 +20,193 @@ int Modbus::als104_task_parameter(int ddr,u_int16_t num)
             return 1;
         break;
         case ALS104_PINGJUN_REG_ADD:
-            e2proomdata.als104_pingjun=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_pingjun", num)});
+            e2proomdata.als104_pingjun=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_pingjun", (int16_t)num)});
             return 1;
         break;
         case ALS104_B_YANMOFUZHU_REG_ADD:
             e2proomdata.als104_b_yanmofuzhu=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_yanmofuzhu", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_yanmofuzhu", (int16_t)num)});
             return 1;
         break;
         case ALS104_B_GUDINGQUYU_REG_ADD:
             e2proomdata.als104_b_gudingquyu=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_gudingquyu", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_gudingquyu", (int16_t)num)});
             return 1;
         break;
         case ALS104_WIDTHLIANTONGDIS_REG_ADD:
             e2proomdata.als104_widthliantongdis=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_widthliantongdis", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_widthliantongdis", (int16_t)num)});
             return 1;
         break;
         case ALS104_HIGHLIANTONGDIS_REG_ADD:
             e2proomdata.als104_highliantongdis=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_highliantongdis", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_highliantongdis", (int16_t)num)});
             return 1;
         break;
         case ALS104_GUJIAERZHI_REG_ADD:
             e2proomdata.als104_gujiaerzhi=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_gujiaerzhi", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_gujiaerzhi", (int16_t)num)});
             return 1;
         break;
         case ALS104_JIGUANGHIGHT_REG_ADD:
             e2proomdata.als104_jiguanghight=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguanghight", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguanghight", (int16_t)num)});
             return 1;
         break;
         case ALS104_JIGUANGLONG_REG_ADD:
             e2proomdata.als104_jiguanglong=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguanglong", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguanglong", (int16_t)num)});
             return 1;
         break;
         case ALS104_JIGUANGKUANDU_REG_ADD:
             e2proomdata.als104_jiguangkuandu=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguangkuandu", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_jiguangkuandu", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPDIF_REG_ADD:
             e2proomdata.als104_Updif=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updif", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updif", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPDIFMIN_REG_ADD:
             e2proomdata.als104_Updifmin=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updifmin", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updifmin", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPLONG_REG_ADD:
             e2proomdata.als104_Uplong=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Uplong", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Uplong", (int16_t)num)});
             return 1;
         break;
         case ALS104_DOWNDIF_REG_ADD:
             e2proomdata.als104_Downdif=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdif", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdif", (int16_t)num)});
             return 1;
         break;
         case ALS104_DOWNDIFMIN_REG_ADD:
             e2proomdata.als104_Downdifmin=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdifmin", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdifmin", (int16_t)num)});
             return 1;
         break;
         case ALS104_DOWNDLONG_REG_ADD:
             e2proomdata.als104_Downdlong=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdlong", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Downdlong", (int16_t)num)});
             return 1;
         break;
         case ALS104_ST_DOWN_REG_ADD:
             e2proomdata.als104_St_Down=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_St_Down", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_St_Down", (int16_t)num)});
             return 1;
         break;
         case ALS104_ED_DOWN_REG_ADD:
             e2proomdata.als104_Ed_Down=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Ed_Down", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Ed_Down", (int16_t)num)});
             return 1;
         break;
         case ALS104_ST_UP_REG_ADD:
             e2proomdata.als104_St_Up=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_St_Up", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_St_Up", (int16_t)num)});
             return 1;
         break;
         case ALS104_ED_UP_REG_ADD:
             e2proomdata.als104_Ed_Up=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Ed_Up", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Ed_Up", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPDIF2_REG_ADD:
             e2proomdata.als104_Updif2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updif2", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updif2", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPDIFMIN2_REG_ADD:
             e2proomdata.als104_Updifmin2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updifmin2", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Updifmin2", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ST_REG_ADD:
             e2proomdata.als104_dis_center_st=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ED_REG_ADD:
             e2proomdata.als104_dis_center_ed=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed", (int16_t)num)});
             return 1;
         break;
         case ALS104_B_OPENGUDINGDIMIAN_REG_ADD:
             e2proomdata.als104_b_opengudingdimian=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_opengudingdimian", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_opengudingdimian", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIMIANPANGDINGJULI_REG_ADD:
             e2proomdata.als104_dimianpangdingjuli=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dimianpangdingjuli", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dimianpangdingjuli", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIMIANPINGJUNSHUNUM_REG_ADD:
             e2proomdata.als104_dimianpingjunshunum=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dimianpingjunshunum", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dimianpingjunshunum", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ST2_REG_ADD:
             e2proomdata.als104_dis_center_st2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st2", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st2", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ED2_REG_ADD:
             e2proomdata.als104_dis_center_ed2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed2", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed2", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ST3_REG_ADD:
             e2proomdata.als104_dis_center_st3=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st3", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_st3", (int16_t)num)});
             return 1;
         break;
         case ALS104_DIS_CENTER_ED3_REG_ADD:
             e2proomdata.als104_dis_center_ed3=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed3", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_dis_center_ed3", (int16_t)num)});
             return 1;
         break;
         case ALS104_XUEXIJULI_REG_ADD:
             e2proomdata.als104_xuexijuli=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_xuexijuli", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_xuexijuli", (int16_t)num)});
             return 1;
         break;
         case ALS104_B_PINGPOWENGDING_REG_ADD:
             e2proomdata.als104_b_pingpowending=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_pingpowending", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_pingpowending", (int16_t)num)});
             return 1;
         break;
         case ALS104_PINGPOWENGDING_DIS_REG_ADD:
             e2proomdata.als104_pingpowending_dis=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_pingpowending_dis", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_pingpowending_dis", (int16_t)num)});
             return 1;
         break;
         case ALS104_B_XIELVOPEN_REG_ADD:
             e2proomdata.als104_b_xielvopen=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_xielvopen", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_b_xielvopen", (int16_t)num)});
             return 1;
         break;
         case ALS104_XIELVFANWEI_REG_ADD:
             e2proomdata.als104_xielvfanwei=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_xielvfanwei", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_xielvfanwei", (int16_t)num)});
             return 1;
         break;
         case ALS104_UPLONG2_REG_ADD:
             e2proomdata.als104_Uplong2=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Uplong2", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_Uplong2", (int16_t)num)});
             return 1;
         break;
         case ALS104_CEBANKONGDONGDIS_REG_ADD:
             e2proomdata.als104_cebankongdongdis=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_cebankongdongdis", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_cebankongdongdis", (int16_t)num)});
             return 1;
         break;
         case ALS104_QIATOUQUWEI_REG_ADD:
             e2proomdata.als104_qiatouquweijuli=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_qiatouquweijuli", num)});
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als104_qiatouquweijuli", (int16_t)num)});
             return 1;
         break;
 

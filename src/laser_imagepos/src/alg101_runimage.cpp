@@ -300,28 +300,28 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
 
     /*********************/
     //算法参数
-    Int32 pingjun=pm.als100_pingjun;//15;//二值阈值
-    Int32 b_yanmofuzhu=pm.als100_b_yanmofuzhu;//1;//是否使用掩摸辅助
-    Int32 b_gudingquyu=pm.als100_b_gudingquyu;//0;//是否固定区域
-    Int32 widthliantongdis=pm.als100_widthliantongdis;//2;//激光宽度连通距离
-    Int32 highliantongdis=pm.als100_highliantongdis;//15;//激光长度连通距离
-    Int32 gujiaerzhi=pm.als100_gujiaerzhi;//160;//找骨架二值图
-    Int32 jiguanghight=pm.als100_jiguanghight;//50;//整体激光最短长度
-    Int32 jiguanglong=pm.als100_jiguanglong;//20;//单边激光最短长度
-    Int32 jiguangkuandu=pm.als100_jiguangkuandu;//4;//激光粗细
-    Int32 Updif=pm.als100_Updif;//0;//上半段倾斜开始斜度10
-    Int32 Updifmin=pm.als100_Updifmin;//-5;//上半段倾斜终止斜度10
-    Int32 Uplong=pm.als100_Uplong;//5;//上半段直线长度
-    Int32 Downdif=pm.als100_Downdif;//0;//下半段倾斜开始斜度0
-    Int32 Downdifmin=pm.als100_Downdifmin;//5;//下半段倾斜终止斜度0
-    Int32 Downdlong=pm.als100_Downdlong;//5;//下半段直线长度
-    Int32 duanxianerzhi=pm.als100_duanxianerzhi;//180;//找断线的二值阈值
-    Int32 erzhisize=pm.als100_erzhisize;//150;//断线二值图的上下阈值尺寸
-    Int32 erzhisize2=pm.als100_erzhisize2;//60;//断线二值图的左右阈值尺寸
-    Int32 searchdectancemax=pm.als100_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
-    Int32 searchdectancemin=pm.als100_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
-    Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
-    Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
+    Int32 pingjun=pm.als101_pingjun;//15;//二值阈值
+    Int32 b_yanmofuzhu=pm.als101_b_yanmofuzhu;//1;//是否使用掩摸辅助
+    Int32 b_gudingquyu=pm.als101_b_gudingquyu;//0;//是否固定区域
+    Int32 widthliantongdis=pm.als101_widthliantongdis;//2;//激光宽度连通距离
+    Int32 highliantongdis=pm.als101_highliantongdis;//15;//激光长度连通距离
+    Int32 gujiaerzhi=pm.als101_gujiaerzhi;//160;//找骨架二值图
+    Int32 jiguanghight=pm.als101_jiguanghight;//50;//整体激光最短长度
+    Int32 jiguanglong=pm.als101_jiguanglong;//20;//单边激光最短长度
+    Int32 jiguangkuandu=pm.als101_jiguangkuandu;//4;//激光粗细
+    Int32 Updif=pm.als101_Updif;//0;//上半段倾斜开始斜度10
+    Int32 Updifmin=pm.als101_Updifmin;//-5;//上半段倾斜终止斜度10
+    Int32 Uplong=pm.als101_Uplong;//5;//上半段直线长度
+    Int32 Downdif=pm.als101_Downdif;//0;//下半段倾斜开始斜度0
+    Int32 Downdifmin=pm.als101_Downdifmin;//5;//下半段倾斜终止斜度0
+    Int32 Downdlong=pm.als101_Downdlong;//5;//下半段直线长度
+    Int32 duanxianerzhi=pm.als101_duanxianerzhi;//180;//找断线的二值阈值
+    Int32 erzhisize=pm.als101_erzhisize;//150;//断线二值图的上下阈值尺寸
+    Int32 erzhisize2=pm.als101_erzhisize2;//60;//断线二值图的左右阈值尺寸
+    Int32 searchdectancemax=pm.als101_searchdectancemax;//160;//搜寻焊缝端点距离中央凹槽最远的距离
+    Int32 searchdectancemin=pm.als101_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
+    Int32 dis_center_st=pm.als101_dis_center_st;//0;     //距离中心点此处后开始统计
+    Int32 dis_center_ed=pm.als101_dis_center_ed;//500;  //距离中心点此处后停止统计
 
 #ifdef DEBUG_ALG
     int debug_alg=1;

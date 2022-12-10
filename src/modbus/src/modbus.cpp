@@ -115,7 +115,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
     {
       oldparameter[i]=parameterport_mapping->tab_registers[i];
-      _task_parameter(i,oldparameter[i]);
+      _task_parameter(i,parameterport_mapping->tab_registers[i]);
     }
   }
 
@@ -743,7 +743,7 @@ void Modbus::_modbusparameterport(int port)
             {
               oldparameter[i]=parameterport_mapping->tab_registers[i];
               u8_temp=1;
-              _task_parameter(i,oldparameter[i]);
+              _task_parameter(i,parameterport_mapping->tab_registers[i]);
             }
           }
           if(u8_temp==1)
