@@ -231,17 +231,17 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     struct tm *p;
     t=stamp.sec;
     p=gmtime(&t);  
-    double dis=sqrt(msg->targetpointoutcloud[1].x*msg->targetpointoutcloud[1].x+
-                    msg->targetpointoutcloud[1].y*msg->targetpointoutcloud[1].y);
-    if(dis!=0)
+    if(msg->targetpointoutcloud[1].u==0&&msg->targetpointoutcloud[1].v==0)
     {
-      msg->targetpointoutcloud[1].x=msg->targetpointoutcloud[1].x/dis;
-      msg->targetpointoutcloud[1].y=msg->targetpointoutcloud[1].y/dis;
+        msg->targetpointoutcloud[1].x=0;
+        msg->targetpointoutcloud[1].y=0;
     }
     else
     {
-      msg->targetpointoutcloud[1].x=0;
-      msg->targetpointoutcloud[1].y=0;
+      double dis=sqrt(msg->targetpointoutcloud[1].x*msg->targetpointoutcloud[1].x+
+                      msg->targetpointoutcloud[1].y*msg->targetpointoutcloud[1].y);
+        msg->targetpointoutcloud[1].x=msg->targetpointoutcloud[1].x/dis;
+        msg->targetpointoutcloud[1].y=msg->targetpointoutcloud[1].y/dis;
     }
 
     tab_reg[0]=0xff;
