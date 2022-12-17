@@ -23616,7 +23616,7 @@ namespace Myhalcv2
                 if(points.size()==0)
                     return 1;
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                if(fabs((double)lines[0])>0.000001)
+                if(fabs((double)lines[0])>0.0006)
                 {
                     K[0]=lines[1]/lines[0];
                     R[0]=-K[0]*lines[2]+lines[3];
@@ -27097,6 +27097,34 @@ namespace Myhalcv2
         {
             return 1;
         }
+
+        return 0;
+    }
+
+    Int8 MyGetLinefocalBisection(L_Point32 focalInP,L_Point32 focalInA,L_Point32 focalInB,L_Point32F *focalOut)
+    {
+        L_Point32F lineA,singA;
+        L_Point32F lineB,singB;
+        L_Point32F lineOut;
+        double disA;
+        double disB;
+        lineA.x=focalInA.x-focalInP.x;
+        lineA.y=focalInA.y-focalInP.y;
+        disA=sqrt((double)(lineA.x*lineA.x+lineA.y*lineA.y));
+        singA.x=lineA.x/disA;
+        singA.y=lineA.y/disA;
+
+        lineB.x=focalInB.x-focalInP.x;
+        lineB.y=focalInB.y-focalInP.y;
+        disB=sqrt((double)(lineB.x*lineB.x+lineB.y*lineB.y));
+        singB.x=lineB.x/disB;
+        singB.y=lineB.y/disB;
+
+        lineOut.x=singA.x+singB.x;
+        lineOut.y=singA.y+singB.y;
+
+        (*focalOut).x=lineOut.x;
+        (*focalOut).y=lineOut.y;
 
         return 0;
     }

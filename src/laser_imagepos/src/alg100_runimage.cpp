@@ -297,6 +297,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed,cv_point;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
+    Myhalcv2::L_Point32F faxian;
 
     /*********************/
     //算法参数
@@ -1184,6 +1185,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     Myline16to32(tileline,&tileline32);
     Myline16to32(headline,&headline32);
+
+    Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
+    Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
+    MyGetLinefocalBisection(resultfocal,linepoint32ST,linepoint32ED,&faxian);
+
     if(step==1)
     {
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -1208,17 +1214,28 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         cv_point_st.x=(resultfocal2.x>>2);
         cv_point_st.y=(resultfocal2.y>>2);
         cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
+        faxian.x=faxian.x*1000+resultfocal.x;
+        faxian.y=faxian.y*1000+resultfocal.y;
+        cv_point_st.x=(resultfocal.x>>2);
+        cv_point_st.y=(resultfocal.y>>2);
+        cv_point_ed.x=(faxian.x/4);
+        cv_point_ed.y=(faxian.y/4);
+        cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
     }
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);
+    cv_point.x=faxian.x;
+    cv_point.y=faxian.y;
+    namepoint.push_back(cv_point);
+
     cv_point.x=resultfocal1.x;
     cv_point.y=resultfocal1.y;
     namepoint.push_back(cv_point);
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
     namepoint.push_back(cv_point);
-
+    
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "finish alg100");
 #endif 

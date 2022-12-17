@@ -1297,7 +1297,10 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point);   
+    namepoint.push_back(cv_point);
+    cv_point.x=0;
+    cv_point.y=0;
+    namepoint.push_back(cv_point);    
     cv_point.x=resultfocal3.x;
     cv_point.y=resultfocal3.y;
     namepoint.push_back(cv_point); 
@@ -1427,6 +1430,9 @@ fuzhu:
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
+    namepoint.push_back(cv_point); 
+    cv_point.x=0;
+    cv_point.y=0;
     namepoint.push_back(cv_point); 
     cv_point.x=resultfocal3.x;
     cv_point.y=resultfocal3.y;

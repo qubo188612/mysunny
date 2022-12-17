@@ -231,12 +231,24 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     struct tm *p;
     t=stamp.sec;
     p=gmtime(&t);  
+    double dis=sqrt(msg->targetpointoutcloud[1].x*msg->targetpointoutcloud[1].x+
+                    msg->targetpointoutcloud[1].y*msg->targetpointoutcloud[1].y);
+    if(dis!=0)
+    {
+      msg->targetpointoutcloud[1].x=msg->targetpointoutcloud[1].x/dis;
+      msg->targetpointoutcloud[1].y=msg->targetpointoutcloud[1].y/dis;
+    }
+    else
+    {
+      msg->targetpointoutcloud[1].x=0;
+      msg->targetpointoutcloud[1].y=0;
+    }
 
     tab_reg[0]=0xff;
     tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
     tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
-    tab_reg[3]=0;//焊缝宽度
-    tab_reg[4]=0;//焊缝高度
+    tab_reg[3]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].x*1000+0.5));
+    tab_reg[4]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].y*1000+0.5));
     tab_reg[5]=(p->tm_hour+8)%24;
     tab_reg[6]=p->tm_min;
     tab_reg[7]=p->tm_sec;
@@ -265,17 +277,17 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
     }
 
-    if(msg->targetpointoutcloud.size()>1)
+    if(msg->targetpointoutcloud.size()>2)
     {
       int num=msg->targetpointoutcloud.size();
-      auto othertab_reg=new u_int16_t [(num-1)*2];
-      for(int i=1;i<num;i++)
+      auto othertab_reg=new u_int16_t [(num-2)*2];
+      for(int i=2;i<num;i++)
       {
-        othertab_reg[(i-1)*2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].x*100+0.5));
-        othertab_reg[(i-1)*2+1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].y*100+0.5));
+        othertab_reg[(i-2)*2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].x*100+0.5));
+        othertab_reg[(i-2)*2+1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[i].y*100+0.5));
       }
-      int rc=modbus_write_registers(ctx,0x50,2*(num-1),othertab_reg);
-      if(rc!=2*(num-1))
+      int rc=modbus_write_registers(ctx,0x50,2*(num-2),othertab_reg);
+      if(rc!=2*(num-2))
       {
         RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x50=%d",rc);
       }

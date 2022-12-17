@@ -389,7 +389,10 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     solderjoints=false;
     cv_point.x=pointcloud[0].x;
     cv_point.y=pointcloud[0].y;
-    namepoint.push_back(cv_point);   
+    namepoint.push_back(cv_point);  
+    cv_point.x=0;
+    cv_point.y=0;
+    namepoint.push_back(cv_point);  
     cv_point.x=pointcloud[pointcloud.size()-1].x;
     cv_point.y=pointcloud[pointcloud.size()-1].y;
     namepoint.push_back(cv_point);  
