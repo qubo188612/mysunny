@@ -1392,6 +1392,8 @@ void* received(void *m)
                               send[4]=1;
                             }
                             u_int16_t X=0,Y,Z,TA=0,TB,TC;
+                            int16_t tempx=-6000;
+                            X=(u_int16_t)tempx;
                             Y=_p->mb_mapping->tab_registers[0x03];
                             Z=_p->mb_mapping->tab_registers[0x04];
                             TB=_p->mb_mapping->tab_registers[0x05];
@@ -1428,6 +1430,8 @@ void* received(void *m)
                               send[4]=1;
                             }
                             u_int16_t X=0,Y,Z,TA=0,TB,TC;
+                            int16_t tempx=-6000;
+                            X=(u_int16_t)tempx;
                             Y=_p->mb_mapping->tab_registers[0x03];
                             Z=_p->mb_mapping->tab_registers[0x04];
                             TB=_p->mb_mapping->tab_registers[0x05];
