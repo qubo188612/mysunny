@@ -48,6 +48,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_gpio = std::make_shared<rclcpp::AsyncParametersClient>(this, "gpio_raspberry_node");
   _param_linecenter = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_line_center_node");
+  _param_linecenter_set = std::make_shared<rclcpp::AsyncParametersClient>(this, "line_center_reconstruction_node");
+  _param_linecenter_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "line_center_reconstruction_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
 
 
@@ -64,6 +66,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
+  
+  _param_linecenter_get->wait_for_service();
+  auto linecenter_future = _param_linecenter_get->get_parameters(
+                {"compensation_dx","compensation_dy","compensation_dz"},
+                std::bind(&Modbus::callbackCenterParam, this, std::placeholders::_1));
+
 
   camer_width=1536;
   camer_height=1024;
@@ -95,6 +103,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   int robot_port;
   this->declare_parameter("robot_port", e2proomdata.robot_port);  //modbustcp协议端口
   robot_port = this->get_parameter("robot_port").as_int(); 
+
 
   parameterport_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
   if (!parameterport_mapping) {
@@ -197,6 +206,8 @@ Modbus::~Modbus()
     _param_camera.reset();
     _param_camera_get.reset();
     _param_linecenter.reset();
+    _param_linecenter_set.reset();
+    _param_linecenter_get.reset();
 //   _handle.reset();
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -245,6 +256,31 @@ void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Paramete
     else
     {
       RCLCPP_ERROR(this->get_logger(), "Get camer info error.");
+    }
+}
+
+void Modbus::callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
+{
+    auto result = future.get();
+    if(result.size()>=3)
+    {
+      auto a_compensation_dx = result.at(0);
+      auto a_compensation_dy = result.at(1);
+      auto a_compensation_dz = result.at(2);
+      int compensation_dx=a_compensation_dx.as_int();
+      int compensation_dy=a_compensation_dy.as_int();
+      int compensation_dz=a_compensation_dz.as_int();
+      RCLCPP_INFO(this->get_logger(), "compensation_dx param: %d", compensation_dx);
+      RCLCPP_INFO(this->get_logger(), "compensation_dy param: %d", compensation_dy);
+      RCLCPP_INFO(this->get_logger(), "compensation_dz param: %d", compensation_dz);
+
+      robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_X]=(u_int16_t)((int16_t)compensation_dx);
+      robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Y]=(u_int16_t)((int16_t)compensation_dy);  
+      robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Z]=(u_int16_t)((int16_t)compensation_dz);  
+    }
+    else
+    {
+      RCLCPP_ERROR(this->get_logger(), "Get compensation info error.");
     }
 }
 
@@ -330,6 +366,15 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     case ROBOT_PORT_REG_ADD:
       e2proomdata.robot_port=num;
       this->set_parameters({rclcpp::Parameter("robot_port", (u_int16_t)e2proomdata.robot_port)});
+    break;
+    case ALSROBOTCAM_COMPENSATION_X:
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("compensation_dx", (int16_t)num)});
+    break;
+    case ALSROBOTCAM_COMPENSATION_Y:
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("compensation_dy", (int16_t)num)});
+    break;
+    case ALSROBOTCAM_COMPENSATION_Z:
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("compensation_dz", (int16_t)num)});
     break;
     case CAMER_SIZE_WIDTH_REG_ADD:
       _param_camera->set_parameters({rclcpp::Parameter("width", num)});
@@ -1391,11 +1436,11 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
-                            u_int16_t X=0,Y,Z,TA=0,TB,TC;
-                            int16_t tempx=-6000;
-                            X=(u_int16_t)tempx;
+                            u_int16_t X,Y,Z,TA,TB,TC;
+                            X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
                             Z=_p->mb_mapping->tab_registers[0x04];
+                            TA=_p->mb_mapping->tab_registers[0x71];
                             TB=_p->mb_mapping->tab_registers[0x05];
                             TC=_p->mb_mapping->tab_registers[0x06];
                             send[5]=(X>>8);
@@ -1429,11 +1474,11 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
-                            u_int16_t X=0,Y,Z,TA=0,TB,TC;
-                            int16_t tempx=-6000;
-                            X=(u_int16_t)tempx;
+                            u_int16_t X,Y,Z,TA,TB,TC;
+                            X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
                             Z=_p->mb_mapping->tab_registers[0x04];
+                            TA=_p->mb_mapping->tab_registers[0x71];
                             TB=_p->mb_mapping->tab_registers[0x05];
                             TC=_p->mb_mapping->tab_registers[0x06];
                             send[5]=(X>>8);

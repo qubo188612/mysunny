@@ -19,6 +19,7 @@ E2proomData::E2proomData()
     robot_port_min=E2POOM_ROBOT_PORT_MIN;
     robot_port_max=E2POOM_ROBOT_PORT_MAX;
     robot_port_use=E2POOM_ROBOT_PORT_USE;
+ 
     
     Init_als100_E2proomData();
     Init_als101_E2proomData();
@@ -104,7 +105,7 @@ void E2proomData::read_para()
     else
     {
       Uint16 *u16_p;
-
+      
       u16_p = (Uint16*)buff;
       robot_mod=*u16_p;
       u16_p++;
@@ -168,6 +169,7 @@ void E2proomData::write_robot_para()
       return;
 
     Uint16 *u16_p;
+    Int16 *i16_p;
 
     u16_p = (Uint16*)buff;
     *u16_p=robot_mod;

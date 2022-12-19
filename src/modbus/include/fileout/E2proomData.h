@@ -471,7 +471,7 @@ public:
     //机器人参数
     Uint16 robot_mod;           //机器人型号
     Uint16 robot_port;          //机器人端口
-
+    
     void write_robot_para();	//保存机器人参数
     void init_robot_para();		//初始化机器人参数
 

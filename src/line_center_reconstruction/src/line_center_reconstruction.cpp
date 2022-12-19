@@ -192,7 +192,16 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       dst.reserve(src.size());
       cv::perspectiveTransform(src, dst, _homo);
   }
+  float ddx=float(centerData.compensation_dx)/100;
+  float ddy=float(centerData.compensation_dy)/100;
+  float ddz=float(centerData.compensation_dz)/100;
+
   auto cloud = to_pc3(dst, src);
+  for(int i=0;i<cloud.size();i++)
+  {
+    cloud[i].x=cloud[i].x+ddy;
+    cloud[i].y=cloud[i].y+ddz;
+  }
   msg->lasertrackoutcloud = cloud;
   
   dst.clear();
@@ -211,8 +220,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   msg->targetpointoutcloud.resize(dst.size());
   for(int i=0;i<dst.size();i++)
   {
-    msg->targetpointoutcloud[i].x=dst[i].x;
-    msg->targetpointoutcloud[i].y=dst[i].y;
+    msg->targetpointoutcloud[i].x=dst[i].x+ddy;
+    msg->targetpointoutcloud[i].y=dst[i].y+ddz;
     msg->targetpointoutcloud[i].u=src[i].x;
     msg->targetpointoutcloud[i].v=src[i].y;
     msg->targetpointoutcloud[i].name=ptr->targetpointout[i].name;
@@ -231,6 +240,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     struct tm *p;
     t=stamp.sec;
     p=gmtime(&t);  
+
+    //如果图像法向量为0则输出法向量0
     if(msg->targetpointoutcloud[1].u==0&&msg->targetpointoutcloud[1].v==0)
     {
         msg->targetpointoutcloud[1].x=0;
@@ -275,6 +286,14 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     if(rc!=10)
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
+    }
+
+    tab_reg[0]=(u_int16_t)centerData.compensation_dx;
+    tab_reg[1]=(u_int16_t)0;
+    rc=modbus_write_registers(ctx,0x70,2,tab_reg);
+    if(rc!=2)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send compensation error 0x70=%d",rc);
     }
 
     if(msg->targetpointoutcloud.size()>2)
@@ -332,6 +351,10 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 : Node("line_center_reconstruction_node", options)
 {
   b_modbusconnect=false;
+  
+  this->declare_parameter("compensation_dx", centerData.compensation_dx);
+  this->declare_parameter("compensation_dy", centerData.compensation_dy);
+  this->declare_parameter("compensation_dz", centerData.compensation_dz);
 
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
 
@@ -340,10 +363,10 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
   _param_camera_get->wait_for_service();
   auto parameters_future = _param_camera_get->get_parameters(
                 {"width","height"},
-                std::bind(&LineCenterReconstruction::callbackGlobalParam, this, std::placeholders::_1));
-                
+                std::bind(&LineCenterReconstruction::callbackGlobalParam, this, std::placeholders::_1));            
 
   _thread = std::thread(&LineCenterReconstruction::_modbus, this, 1502);
+ 
 
   _pub = this->create_publisher<PointCloud2>(_pub_name, rclcpp::SensorDataQoS());
 
@@ -381,25 +404,29 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
-/*
+
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
       SetParametersResult result;
       result.successful = true;
       for (const auto & p : parameters) {
-        if (p.get_name() == "homography_matrix") {
-          auto ret = this->_set_homography_matrix(p.as_double_array());
-          if (ret) {
-            result.successful = false;
-            result.reason = "Failed to set homography_matrix";
-            return result;
-          }
+        if (p.get_name() == "compensation_dx") {
+          centerData.compensation_dx=(Int16)p.as_int();
+          centerData.write_center_para();
         } 
+        else if (p.get_name() == "compensation_dy") {
+          centerData.compensation_dy=(Int16)p.as_int();
+          centerData.write_center_para();
+        }    
+        else if (p.get_name() == "compensation_dz") {
+          centerData.compensation_dz=(Int16)p.as_int();
+          centerData.write_center_para();
+        }
       }
       return result;
     }
   );
-*/
+
   RCLCPP_INFO(this->get_logger(), "Ininitialized successfully");
 }
 
@@ -505,7 +532,7 @@ void LineCenterReconstruction::_modbus(int port)
 {
   while (rclcpp::ok()) 
   {
-    ctx = modbus_new_tcp(NULL, 1502);
+    ctx = modbus_new_tcp(NULL, port);
     if (!ctx) {
       RCLCPP_ERROR(this->get_logger(), "Failed to create modbus context.");
       rclcpp::shutdown();

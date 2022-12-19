@@ -37,7 +37,9 @@ namespace modbus
 #define ROBOT_SET_REGEDIST_NUM            10
 #define ROBOT_MOD_REG_ADD                 0x0000
 #define ROBOT_PORT_REG_ADD                0x0001
-
+#define ALSROBOTCAM_COMPENSATION_X        0x0002  //标定补偿X
+#define ALSROBOTCAM_COMPENSATION_Y        0x0003  //标定补偿Y
+#define ALSROBOTCAM_COMPENSATION_Z        0x0004  //标定补偿Z
 #define CAMER_SIZE_WIDTH_REG_ADD          0x0005
 #define CAMER_SIZE_HEIGHT_REG_ADD         0x0006
 #define CAMER_FPS_REG_ADD                 0x0007
@@ -263,6 +265,7 @@ public:
    *
    */
   void _camera_power(bool);
+  void callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
 
 //void _camera_get_size(int *width,int *height);
 
@@ -333,6 +336,9 @@ private:
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_laserimagepos;
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_robotconfig;
+
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
 
  // OnSetParametersCallbackHandle::SharedPtr _handle;
 

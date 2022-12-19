@@ -20,6 +20,7 @@
 #include <vector>
 #include <modbus.h>
 #include <unistd.h>
+#include "fileout/E2centerData.h"
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -243,9 +244,7 @@ private:
 
   //modbus sock
   modbus_t * ctx;
-
   std::thread _thread;
-
   void _modbus(int port);
   bool b_modbusconnect;
 
@@ -253,6 +252,10 @@ private:
   void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
   int picwidth;
   int picheight;
+
+  E2proomData centerData;
+
+  OnSetParametersCallbackHandle::SharedPtr _handle;
 
 //OnSetParametersCallbackHandle::SharedPtr _handle;
 //int _set_homography_matrix(std::vector<double> homography_matrix);

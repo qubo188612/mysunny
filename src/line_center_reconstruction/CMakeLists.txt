@@ -25,7 +25,7 @@ find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus)
 
-add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp)
+add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp src/E2centerData.cpp src/FileOut.cpp)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
