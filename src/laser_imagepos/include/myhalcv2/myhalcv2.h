@@ -1493,6 +1493,16 @@ namespace Myhalcv2
                           Uint32 nWidth,			//输入直线的矩阵宽度
                           MyCountLine *LineOut);	//输出直线
 
+    //向量转MyCountLine类
+    Int8 Mylinedb_to_gion(double *X_dif,            //输入直线X单位向量分量数组
+                          double *Y_dif,            //输入直线Y单位向量分量数组
+                          double *X_pos,            //输入直线经过的X点数组
+                          double *Y_pos,            //输入直线经过的Y点数组
+                          Int32 num,				//输入数组个数,num需小于MHC_SEARCH_LINENUM
+                          Uint32 nHeight,			//输入直线的矩阵高度
+                          Uint32 nWidth,			//输入直线的矩阵宽度
+                          MyCountLine *LineOut);	//输出直线
+
     //把Mat矩阵里所有非零区域设为value值,一般用于单通道图像(只处理Mat的有效区域)
     Int8 Mymat_to_binself(Mat *matIn_Out,			//输入/输出Mat矩阵
                           double value);			//value为把Mat矩阵中的所有非零值设为value,如果是3通道图像,则3通道都为value值

@@ -20617,6 +20617,62 @@ namespace Myhalcv2
         return 0;
     }
 
+    Int8 Mylinedb_to_gion(double *X_dif,double *Y_dif,double *X_pos,double *Y_pos,Int32 num,Uint32 nHeight,Uint32 nWidth,MyCountLine *LineOut)
+    {
+        Int32 n;
+        Int32 linelong=sqrt((float)(nWidth*nWidth+nHeight*nHeight))+1;
+        double everTheta = CV_PI/MHC_TETARANGE;
+        Mat matIn=MatCreat(nHeight,nWidth,CCV_8UC1,(Uint8*)u8_buffer_x1Temp4);
+
+        LineOut->nHeight=nHeight;
+        LineOut->nWidth=nWidth;
+        LineOut->linenum=num;
+        LineOut->width=nWidth;
+        LineOut->height=nHeight;
+        LineOut->startx=0;
+        LineOut->starty=0;
+
+        for(n=0;n<num;n++)
+        { 
+            L_Point32 pt1,pt2,realpt1,realpt2;
+            Int16 stx,sty,edx,edy;
+
+
+            pt1.x=(X_pos[n]+X_dif[n]*linelong)+0.5;
+            pt1.y=(Y_pos[n]+Y_dif[n]*linelong)+0.5;
+            pt2.x=(X_pos[n]-X_dif[n]*linelong)+0.5;
+            pt2.y=(Y_pos[n]-Y_dif[n]*linelong)+0.5;
+
+            MyLineComperMat4(&matIn,pt1,pt2,CV_LINE_8LT,&realpt1,&realpt2);
+
+            stx=realpt1.x;
+            sty=realpt1.y;
+            edx=realpt2.x;
+            edy=realpt2.y;
+
+            LineOut->line[n].st.x=stx;
+            LineOut->line[n].st.y=sty;
+            LineOut->line[n].ed.x=edx;
+            LineOut->line[n].ed.y=edy;
+
+            if(stx==edx)
+            {
+                double k_In=Y_dif[n]/X_dif[n],b_In=-k_In*X_pos[n]+Y_pos[n];
+                double rand=atan(-1/k_In);
+                double row=sin(rand)*b_In;
+                LineOut->houghinfo[n].theta=(MHC_TETARANGE>>1)+rand/everTheta;
+                LineOut->houghinfo[n].rho=draw_xyrho_to_houghrho(row,nWidth,nHeight);
+            }
+            else
+            {
+                LineOut->houghinfo[n].theta=MHC_TETARANGE/2;
+                LineOut->houghinfo[n].rho=draw_xyrho_to_houghrho(X_pos[n],nWidth,nHeight);
+            }
+        }
+
+        return 0;
+    }
+
     Int8 Mymat_to_binself(Mat *matIn_Out,double value)
     {
         Int32 nnWidth=matIn_Out->nWidth;
@@ -22513,9 +22569,12 @@ namespace Myhalcv2
                         cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
                         if(fabs((double)lines[0])>0.000001)
                         {
-                            K[0]=lines[1]/lines[0];
-                            R[0]=-K[0]*lines[2]+lines[3];
-                            Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                            double X[1],X_dif[1],Y[1],Y_dif[1];
+                            X_dif[0]=lines[0];
+                            Y_dif[0]=lines[1];
+                            X[0]=lines[2];
+                            Y[0]=lines[3];
+                            Mylinedb_to_gion(X_dif,Y_dif,X,Y,1,nnHeight,nnWidth,&linetemp);
                             *lineOut=linetemp.line[0];
                             *houghinfoOut=linetemp.houghinfo[0];
                         }
@@ -22808,9 +22867,12 @@ namespace Myhalcv2
                         cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
                         if(fabs((double)lines[0])>0.000001)
                         {
-                            K[0]=lines[1]/lines[0];
-                            R[0]=-K[0]*lines[2]+lines[3];
-                            Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                            double X[1],X_dif[1],Y[1],Y_dif[1];
+                            X_dif[0]=lines[0];
+                            Y_dif[0]=lines[1];
+                            X[0]=lines[2];
+                            Y[0]=lines[3];
+                            Mylinedb_to_gion(X_dif,Y_dif,X,Y,1,nnHeight,nnWidth,&linetemp);
                             *lineOut=linetemp.line[0];
                             *houghinfoOut=linetemp.houghinfo[0];
                         }
@@ -23085,9 +23147,12 @@ namespace Myhalcv2
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
                 if(fabs((double)lines[0])>0.000001)
                 {
-                    K[0]=lines[1]/lines[0];
-                    R[0]=-K[0]*lines[2]+lines[3];
-                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    double X[1],X_dif[1],Y[1],Y_dif[1];
+                    X_dif[0]=lines[0];
+                    Y_dif[0]=lines[1];
+                    X[0]=lines[2];
+                    Y[0]=lines[3];
+                    Mylinedb_to_gion(X_dif,Y_dif,X,Y,1,nnHeight,nnWidth,&linetemp);
                     *lineOut=linetemp.line[0];
                     *houghinfoOut=linetemp.houghinfo[0];
                 }
@@ -23359,9 +23424,12 @@ namespace Myhalcv2
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
                 if(fabs((double)lines[0])>0.000001)
                 {
-                    K[0]=lines[1]/lines[0];
-                    R[0]=-K[0]*lines[2]+lines[3];
-                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    double X[1],X_dif[1],Y[1],Y_dif[1];
+                    X_dif[0]=lines[0];
+                    Y_dif[0]=lines[1];
+                    X[0]=lines[2];
+                    Y[0]=lines[3];
+                    Mylinedb_to_gion(X_dif,Y_dif,X,Y,1,nnHeight,nnWidth,&linetemp);
                     *lineOut=linetemp.line[0];
                     *houghinfoOut=linetemp.houghinfo[0];
                 }
@@ -23616,11 +23684,14 @@ namespace Myhalcv2
                 if(points.size()==0)
                     return 1;
                 cv::fitLine(points,lines,cv::DIST_L2,0,0.01,0.01);
-                if(fabs((double)lines[0])>0.0006)
+                if(fabs((double)lines[0])>0.000001)
                 {
-                    K[0]=lines[1]/lines[0];
-                    R[0]=-K[0]*lines[2]+lines[3];
-                    Mylinekb_to_gion(K,R,1,nnHeight,nnWidth,&linetemp);
+                    double X[1],X_dif[1],Y[1],Y_dif[1];
+                    X_dif[0]=lines[0];
+                    Y_dif[0]=lines[1];
+                    X[0]=lines[2];
+                    Y[0]=lines[3];
+                    Mylinedb_to_gion(X_dif,Y_dif,X,Y,1,nnHeight,nnWidth,&linetemp);
                     *lineOut=linetemp.line[0];
                     *houghinfoOut=linetemp.houghinfo[0];
                 }
