@@ -452,6 +452,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed;
     cv::Point2f cv_point;
+    Myhalcv2::L_Point32F faxian;
 
     /*********************/
     //算法参数
@@ -1163,6 +1164,10 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
             return 1;
         }
 
+        Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
+        Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
+        MyGetLinefocalBisection(resultfocal1,linepoint32ST,linepoint32ED,&faxian);
+
         jiguangLeft=MAX(resultfocal1.x-cutWSize,0);
         jiguangRight=MIN(resultfocal1.x+cutWSize,nWidth-1);
         jiguangTop=resultfocal1.y;
@@ -1276,6 +1281,13 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
             cv_point_st.x=(resultfocal3.x>>2);
             cv_point_st.y=(resultfocal3.y>>2);
             cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
+            faxian.x=faxian.x*1000+resultfocal.x;
+            faxian.y=faxian.y*1000+resultfocal.y;
+            cv_point_st.x=(resultfocal.x>>2);
+            cv_point_st.y=(resultfocal.y>>2);
+            cv_point_ed.x=(faxian.x/4);
+            cv_point_ed.y=(faxian.y/4);
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
         }
     }
 
@@ -1298,8 +1310,8 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);
-    cv_point.x=0;
-    cv_point.y=0;
+    cv_point.x=faxian.x;
+    cv_point.y=faxian.y;
     namepoint.push_back(cv_point);    
     cv_point.x=resultfocal3.x;
     cv_point.y=resultfocal3.y;
@@ -1393,6 +1405,9 @@ fuzhu:
         #endif
             return 1;
         }
+        Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
+        Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
+        MyGetLinefocalBisection(resultfocal1,linepoint32ST,linepoint32ED,&faxian);
 
         resultfocal3=resultfocal;
         if(step==1)
@@ -1416,6 +1431,13 @@ fuzhu:
             cv_point_st.x=(resultfocal.x>>2);
             cv_point_st.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(0,0,255),1);
+            faxian.x=faxian.x*1000+resultfocal.x;
+            faxian.y=faxian.y*1000+resultfocal.y;
+            cv_point_st.x=(resultfocal.x>>2);
+            cv_point_st.y=(resultfocal.y>>2);
+            cv_point_ed.x=(faxian.x/4);
+            cv_point_ed.y=(faxian.y/4);
+            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
         }
 
     }
@@ -1431,8 +1453,8 @@ fuzhu:
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point); 
-    cv_point.x=0;
-    cv_point.y=0;
+    cv_point.x=faxian.x;
+    cv_point.y=faxian.y;
     namepoint.push_back(cv_point); 
     cv_point.x=resultfocal3.x;
     cv_point.y=resultfocal3.y;

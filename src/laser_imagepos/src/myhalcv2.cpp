@@ -27200,6 +27200,76 @@ namespace Myhalcv2
         return 0;
     }
 
+    Int8 MyGetLinefocalRight(L_Point32 focalInP,L_Point32 focalInA,L_Point32F *focalOut)
+    {
+        Vec3d lineA,lineB,lineC;
+        double disA;
+        lineA.data1=focalInA.x-focalInP.x;
+        lineA.data2=focalInA.y-focalInP.y;
+        lineA.data3=0;
+        if(lineA.data2==0)
+        {
+            return 1;
+        }
+        if(lineA.data2<0)
+        {
+            lineA.data1=-lineA.data1;
+            lineA.data2=-lineA.data2;
+        }
+        disA=sqrt((double)(lineA.data1*lineA.data1+lineA.data2*lineA.data2+lineA.data3*lineA.data3));
+        lineA.data1=lineA.data1/disA;
+        lineA.data2=lineA.data2/disA;
+        lineA.data3=lineA.data3/disA;
+
+        lineB.data1=0;
+        lineB.data2=0;
+        lineB.data3=disA;
+
+        lineC.data1=lineA.data2*lineB.data3-lineA.data3*lineB.data2;
+        lineC.data2=lineA.data3*lineB.data1-lineA.data1*lineB.data3;
+        lineC.data3=lineA.data1*lineB.data2-lineA.data2*lineB.data1;
+
+        (*focalOut).x=lineC.data1;
+        (*focalOut).y=lineC.data2;
+
+        return 0;
+    }
+
+    Int8 MyGetLinefocalLeft(L_Point32 focalInP,L_Point32 focalInA,L_Point32F *focalOut)
+    {
+        Vec3d lineA,lineB,lineC;
+        double disA;
+        lineA.data1=focalInA.x-focalInP.x;
+        lineA.data2=focalInA.y-focalInP.y;
+        lineA.data3=0;
+        if(lineA.data2==0)
+        {
+            return 1;
+        }
+        if(lineA.data2<0)
+        {
+            lineA.data1=-lineA.data1;
+            lineA.data2=-lineA.data2;
+        }
+        disA=sqrt((double)(lineA.data1*lineA.data1+lineA.data2*lineA.data2+lineA.data3*lineA.data3));
+        lineA.data1=lineA.data1/disA;
+        lineA.data2=lineA.data2/disA;
+        lineA.data3=lineA.data3/disA;
+
+        lineB.data1=0;
+        lineB.data2=0;
+        lineB.data3=-disA;
+
+        lineC.data1=lineA.data2*lineB.data3-lineA.data3*lineB.data2;
+        lineC.data2=lineA.data3*lineB.data1-lineA.data1*lineB.data3;
+        lineC.data3=lineA.data1*lineB.data2-lineA.data2*lineB.data1;
+
+        (*focalOut).x=lineC.data1;
+        (*focalOut).y=lineC.data2;
+
+        return 0;
+    }
+
     Int8 MyGetLineXpos(L_line lineIn,Int32 YIn,Int32 *XOut)
     {
         double line_x1=lineIn.st.x;

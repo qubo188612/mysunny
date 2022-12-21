@@ -32,7 +32,8 @@ add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
                                    src/alg101_runimage.cpp
                                    src/alg102_runimage.cpp
                                    src/alg103_runimage.cpp
-                                   src/alg104_runimage.cpp)
+                                   src/alg104_runimage.cpp
+                                   src/alg105_runimage.cpp)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

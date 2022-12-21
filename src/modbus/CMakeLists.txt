@@ -34,11 +34,13 @@ add_library(modbus SHARED src/modbus.cpp
                           src/E2proomData_als102.cpp
                           src/E2proomData_als103.cpp
                           src/E2proomData_als104.cpp
+                          src/E2proomData_als105.cpp
                           src/modbus_als100.cpp
                           src/modbus_als101.cpp
                           src/modbus_als102.cpp
                           src/modbus_als103.cpp
-                          src/modbus_als104.cpp)
+                          src/modbus_als104.cpp
+                          src/modbus_als105.cpp)
 
 target_include_directories(modbus PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 

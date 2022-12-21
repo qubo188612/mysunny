@@ -1976,6 +1976,16 @@ namespace Myhalcv2
                                  L_Point32 focalInB,			//输入B点
                                  L_Point32F *focalOut);         //求得角平分线向量
 
+    //求P点和A点，P点向指向画面右侧且垂直与PA的向量
+    Int8 MyGetLinefocalRight(L_Point32 focalInP,            //输入P点
+                             L_Point32 focalInA,			//输入A点
+                             L_Point32F *focalOut);         //求得画面向右向量
+
+    //求P点和A点，P点向指向画面左侧且垂直与PA的向量
+    Int8 MyGetLinefocalLeft(L_Point32 focalInP,             //输入P点
+                            L_Point32 focalInA,			    //输入A点
+                            L_Point32F *focalOut);          //求得画面向左向量
+
     //求直线上Y轴所对应的X轴坐标,如果斜率为0时,X轴返回0,且函数值返回非0
     Int8 MyGetLineXpos(L_line lineIn,			//输入直线
                        Int32 YIn,				//输入Y轴

@@ -450,6 +450,86 @@
 #define E2POOM_ALG104_LASERIMAGEPOS_QIATOUQUWEI_MAX                 120
 
 
+//算法105参数
+#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              60
+#define E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_105.bsd"
+
+#define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000      //曝光默认值   
+#define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
+#define E2POOM_ALG105_LASERIMAGEPOS_PINGJUN_MIN                     0
+#define E2POOM_ALG105_LASERIMAGEPOS_PINGJUN_USE                     15
+#define E2POOM_ALG105_LASERIMAGEPOS_PINGJUN_MAX                     255
+#define E2POOM_ALG105_LASERIMAGEPOS_B_YANMOFUZHU_MIN                0 
+#define E2POOM_ALG105_LASERIMAGEPOS_B_YANMOFUZHU_USE                1
+#define E2POOM_ALG105_LASERIMAGEPOS_B_YANMOFUZHU_MAX                1
+#define E2POOM_ALG105_LASERIMAGEPOS_WIDTHLIANTONGDIS_MIN            0 
+#define E2POOM_ALG105_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            4
+#define E2POOM_ALG105_LASERIMAGEPOS_WIDTHLIANTONGDIS_MAX            500
+#define E2POOM_ALG105_LASERIMAGEPOS_HIGHLIANTONGDIS_MIN             0 
+#define E2POOM_ALG105_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             15
+#define E2POOM_ALG105_LASERIMAGEPOS_HIGHLIANTONGDIS_MAX             500
+#define E2POOM_ALG105_LASERIMAGEPOS_GUJIAERZHI_MIN                  0 
+#define E2POOM_ALG105_LASERIMAGEPOS_GUJIAERZHI_USE                  160
+#define E2POOM_ALG105_LASERIMAGEPOS_GUJIAERZHI_MAX                  255
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGHIGHT_MIN                0 
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGHIGHT_USE                50
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGHIGHT_MAX                255
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGLONG_MIN                 0 
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGLONG_USE                 20
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGLONG_MAX                 255
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGKUANDU_MIN               0 
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGKUANDU_USE               4
+#define E2POOM_ALG105_LASERIMAGEPOS_JIGUANGKUANDU_MAX               20
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIF_MIN                      -5000 
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIF_USE                       50
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIF_MAX                       5000
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIFMIN_MIN                   -5000 
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIFMIN_USE                   -50
+#define E2POOM_ALG105_LASERIMAGEPOS_UPDIFMIN_MAX                    5000
+#define E2POOM_ALG105_LASERIMAGEPOS_UPLONG_MIN                      1
+#define E2POOM_ALG105_LASERIMAGEPOS_UPLONG_USE                      50
+#define E2POOM_ALG105_LASERIMAGEPOS_UPLONG_MAX                      500
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIF_MIN                    -5000 
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIF_USE                     50
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIF_MAX                     5000
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIFMIN_MIN                 -5000 
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIFMIN_USE                 -50
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDIFMIN_MAX                  5000
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDLONG_MIN                   1
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDLONG_USE                   50
+#define E2POOM_ALG105_LASERIMAGEPOS_DOWNDLONG_MAX                   500
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ST_MIN               0
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ST_USE               20
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ST_MAX               500
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ED_USE               120
+#define E2POOM_ALG105_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
+#define E2POOM_ALG105_LASERIMAGEPOS_B_CUT_MIN                       0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_CUT_USE                       0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_CUT_MAX                       1
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTLEFT_MIN                     0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTLEFT_USE                     0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTLEFT_MAX                     2047
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_MIN                    0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_USE                    1023
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_MAX                    2047
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_MIN                      0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_USE                      0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_MAX                      3071
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_MIN                     0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_USE                     1535
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_MAX                     3071
+#define E2POOM_ALG105_LASERIMAGEPOS_GUAIDIANYUZHI_MIN               0
+#define E2POOM_ALG105_LASERIMAGEPOS_GUAIDIANYUZHI_USE               60
+#define E2POOM_ALG105_LASERIMAGEPOS_GUAIDIANYUZHI_MAX               5000
+#define E2POOM_ALG105_LASERIMAGEPOS_DUANDIANJULI_MIN                0
+#define E2POOM_ALG105_LASERIMAGEPOS_DUANDIANJULI_USE                30
+#define E2POOM_ALG105_LASERIMAGEPOS_DUANDIANJULI_MAX                500
+#define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MIN          0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_USE          1
+#define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MAX          1
+
 
 class E2proomData
 {
@@ -1045,6 +1125,114 @@ public:
     Int16 als104_qiatouquweijuli_use;
 
 /****************************/
+    //任务105参数
+    Int16 als105_exposure_time;//曝光值
+    Int16 als105_pingjun;//二值阈值
+    Int16 als105_b_yanmofuzhu;//是否使用掩摸辅助
+    Int16 als105_widthliantongdis;//激光宽度连通距离
+    Int16 als105_highliantongdis;//激光长度连通距离
+    Int16 als105_gujiaerzhi;//找骨架二值图
+    Int16 als105_jiguanghight;//整体激光最短长度
+    Int16 als105_jiguanglong;//单边激光最短长度
+    Int16 als105_jiguangkuandu;//激光粗细
+    Int16 als105_b_cut;                  //是否使用搜索区域
+    Int16 als105_cutleft;                //搜索区域
+    Int16 als105_cutright;           //搜索区域
+    Int16 als105_cuttop;                 //搜索区域
+    Int16 als105_cutdeep;           //搜索区域
+    Int16 als105_guaidianyuzhi;//拐点阈值
+    Int16 als105_Downdifmin;       //下半段直线斜率限制最大值
+    Int16 als105_Downdif;      //下半段直线斜率限制最小值   //Downdif
+    Int16 als105_Updifmin;          //上半段直线斜率限制最小值     //Updifmin
+    Int16 als105_Updif;  //上半段直线斜率限制最大值//Updif
+    Int16 als105_dis_center_st;     //距离中心点此处后开始统计 //dis_center_st
+    Int16 als105_dis_center_ed;//距离中心点此处后停止统计 //dis_center_st2
+    Int16 als105_Uplong;//上半段直线长度   //设为200时将直接用拟合数据跟踪坡顶
+    Int16 als105_Downdlong;//下半段直线长度
+    Int16 als105_duandianjuli;  //断点向前搜索距离
+    Int16 als105_b_dibufaxiangliang;//是否采用底部平面的法向量
+
+    void write_als105_para();				//保存任务105参数
+    void init_als105_para();				//初始化任务105参数
+
+    Int16 als105_exposure_time_min;
+    Int16 als105_exposure_time_use;
+    Int16 als105_exposure_time_max;
+    Int16 als105_pingjun_min;
+    Int16 als105_pingjun_use;
+    Int16 als105_pingjun_max;
+    Int16 als105_b_yanmofuzhu_min;
+    Int16 als105_b_yanmofuzhu_use;
+    Int16 als105_b_yanmofuzhu_max;
+    Int16 als105_widthliantongdis_min;
+    Int16 als105_widthliantongdis_use;
+    Int16 als105_widthliantongdis_max;
+    Int16 als105_highliantongdis_min;
+    Int16 als105_highliantongdis_use;
+    Int16 als105_highliantongdis_max;
+    Int16 als105_gujiaerzhi_min;
+    Int16 als105_gujiaerzhi_use;
+    Int16 als105_gujiaerzhi_max;
+    Int16 als105_jiguanghight_min;
+    Int16 als105_jiguanghight_use;
+    Int16 als105_jiguanghight_max;
+    Int16 als105_jiguanglong_min;
+    Int16 als105_jiguanglong_use;
+    Int16 als105_jiguanglong_max;
+    Int16 als105_jiguangkuandu_min;
+    Int16 als105_jiguangkuandu_use;
+    Int16 als105_jiguangkuandu_max;
+    Int16 als105_b_cut_min;
+    Int16 als105_b_cut_use;
+    Int16 als105_b_cut_max;
+    Int16 als105_cutleft_min;
+    Int16 als105_cutleft_use;
+    Int16 als105_cutleft_max;
+    Int16 als105_cutright_min;
+    Int16 als105_cutright_use;
+    Int16 als105_cutright_max;
+    Int16 als105_cuttop_min;
+    Int16 als105_cuttop_use;
+    Int16 als105_cuttop_max;
+    Int16 als105_cutdeep_min;
+    Int16 als105_cutdeep_use;
+    Int16 als105_cutdeep_max;
+    Int16 als105_guaidianyuzhi_min;
+    Int16 als105_guaidianyuzhi_use;
+    Int16 als105_guaidianyuzhi_max;
+    Int16 als105_Downdifmin_min;
+    Int16 als105_Downdifmin_use;
+    Int16 als105_Downdifmin_max;
+    Int16 als105_Downdif_min;
+    Int16 als105_Downdif_use;
+    Int16 als105_Downdif_max;
+    Int16 als105_Updifmin_min;
+    Int16 als105_Updifmin_use;
+    Int16 als105_Updifmin_max;
+    Int16 als105_Updif_min;
+    Int16 als105_Updif_use;
+    Int16 als105_Updif_max;
+    Int16 als105_dis_center_st_min;
+    Int16 als105_dis_center_st_use;
+    Int16 als105_dis_center_st_max;
+    Int16 als105_dis_center_ed_min;
+    Int16 als105_dis_center_ed_use;
+    Int16 als105_dis_center_ed_max;
+    Int16 als105_Uplong_min;
+    Int16 als105_Uplong_use;
+    Int16 als105_Uplong_max;
+    Int16 als105_Downdlong_min;
+    Int16 als105_Downdlong_use;
+    Int16 als105_Downdlong_max;
+    Int16 als105_duandianjuli_min;
+    Int16 als105_duandianjuli_use;
+    Int16 als105_duandianjuli_max;
+    Int16 als105_b_dibufaxiangliang_min;
+    Int16 als105_b_dibufaxiangliang_use;
+    Int16 als105_b_dibufaxiangliang_max;
+
+
+/****************************/
     void write();
 private:
     void read_para();				//读取
@@ -1055,18 +1243,21 @@ private:
     void Init_als102_E2proomData();
     void Init_als103_E2proomData();
     void Init_als104_E2proomData();
+    void Init_als105_E2proomData();
     
     void als100_check_para();
     void als101_check_para();
     void als102_check_para();
     void als103_check_para();
     void als104_check_para();
+    void als105_check_para();
 
     void als100_read_para();
     void als101_read_para();
     void als102_read_para();
     void als103_read_para();
     void als104_read_para();
+    void als105_read_para();
 };
 
 #endif // E2PROOMDATA_H
