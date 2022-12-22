@@ -840,19 +840,59 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     nstarti=MAX(jiguangLeft*4-30,0);
     nendi=MIN(jiguangRight*4+30,nWidth-1);
 
-    m_brygujia=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
-    Myhalcv2::MyCutselfRoi(&m_brygujia,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
-    Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
-    Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ED);
+    if(nendj-nstartj<Uplong)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    m_brygujia=Myhalcv2::MatCreatzero(nendj-nstartj+1,nendi-nstarti+1,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+    imageBry=Myhalcv2::MatCreatzero(nendj-nstartj+1,nendi-nstarti+1,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
+    if(0!=Myhalcv2::MyGetLineXpos(headline,nstartj,&linepoint32ST.x))
+    {
+   #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    linepoint32ST.y=nstartj;
+    if(0!=Myhalcv2::MyGetLineXpos(headline,nendj,&linepoint32ED.x))
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    linepoint32ED.y=nendj;
+    linepoint32ST.x=linepoint32ST.x-nstarti;
+    linepoint32ST.y=linepoint32ST.y-nstartj;
+    linepoint32ED.x=linepoint32ED.x-nstarti;
+    linepoint32ED.y=linepoint32ED.y-nstartj;
     Myhalcv2::MyLine(&m_brygujia,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,5);
-
-    imageBry=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
-    Myhalcv2::MyCutselfRoi(&m_brygujia,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
     for(j=nstartj;j<=nendj;j++)
     {
-        if(m_brygujia.data[j*m_brygujia.nWidth+X_line[j]]!=0)
+        if(m_brygujia.data[(j-nstartj)*m_brygujia.nWidth+X_line[j]-nstarti]!=0)
         {
-            imageBry.data[j*imageBry.nWidth+X_line[j]]=255;
+            imageBry.data[(j-nstartj)*imageBry.nWidth+X_line[j]-nstarti]=255;
         }
     }
     if(step==20)
@@ -860,7 +900,6 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
         return 0;
     }
-
     Myhalcv2::Myconnection(imageBry,&ImageConect,Uplong,1,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
     if(ImageConect.AllMarkPointCount!=1)
     {
@@ -875,7 +914,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    resultfocal1.y=ImageConect.AllMarkPoint[0].bottom;
+    resultfocal1.y=ImageConect.AllMarkPoint[0].bottom+nstartj;
     if(0!=MyGetLineXpos(headline,resultfocal1.y,&resultfocal1.x))
     {
     #ifdef QUICK_TRANSMIT
@@ -903,19 +942,59 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     nstarti=MAX(jiguangLeft*4-30,0);
     nendi=MIN(jiguangRight*4+30,nWidth-1);
 
-    m_brygujia=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
-    Myhalcv2::MyCutselfRoi(&m_brygujia,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
-    Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
-    Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
+    if(nendj-nstartj<Downdlong)
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    m_brygujia=Myhalcv2::MatCreatzero(nendj-nstartj+1,nendi-nstarti+1,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+    imageBry=Myhalcv2::MatCreatzero(nendj-nstartj+1,nendi-nstarti+1,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
+    if(0!=Myhalcv2::MyGetLineXpos(tileline,nstartj,&linepoint32ST.x))
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    linepoint32ST.y=nstartj;
+    if(0!=Myhalcv2::MyGetLineXpos(tileline,nendj,&linepoint32ED.x))
+    {
+    #ifdef QUICK_TRANSMIT
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
+    #endif
+        return 1;
+    }
+    linepoint32ED.y=nendj;
+    linepoint32ST.x=linepoint32ST.x-nstarti;
+    linepoint32ST.y=linepoint32ST.y-nstartj;
+    linepoint32ED.x=linepoint32ED.x-nstarti;
+    linepoint32ED.y=linepoint32ED.y-nstartj;
     Myhalcv2::MyLine(&m_brygujia,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,5);
-
-    imageBry=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
-    Myhalcv2::MyCutselfRoi(&m_brygujia,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
     for(j=nstartj;j<=nendj;j++)
     {
-        if(m_brygujia.data[j*m_brygujia.nWidth+X_line[j]]!=0)
+        if(m_brygujia.data[(j-nstartj)*m_brygujia.nWidth+X_line[j]-nstarti]!=0)
         {
-            imageBry.data[j*imageBry.nWidth+X_line[j]]=255;
+            imageBry.data[(j-nstartj)*imageBry.nWidth+X_line[j]-nstarti]=255;
         }
     }
     if(step==22)
@@ -938,7 +1017,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    resultfocal2.y=ImageConect.AllMarkPoint[0].top;
+    resultfocal2.y=ImageConect.AllMarkPoint[0].top+nstartj;
     if(0!=MyGetLineXpos(tileline,resultfocal2.y,&resultfocal2.x))
     {
     #ifdef QUICK_TRANSMIT
