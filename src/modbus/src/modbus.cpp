@@ -1202,7 +1202,6 @@ void* ftpreceived(void *m)
                         cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << _p->ftpdesc[i]->ip << " )"<< endl;
                     }
                     ftptcp.Send(json_file, _p->ftpdesc[i]->id);
-                    cerr << "message: " << json_file << endl;
                 }
 
                 _p->num_ftpclient++;
