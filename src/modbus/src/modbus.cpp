@@ -1189,6 +1189,8 @@ void* ftpreceived(void *m)
                                 }
                             }
                             _p->e2proomdata.savetaskfile(taskname,alsnum);
+                            _p->e2proomdata.taskfilename.clear();
+                            _p->e2proomdata.findtaskfile(&_p->e2proomdata.taskfilename);
                             sent_root["touch"]="ok";
                         }
                     }
@@ -1202,6 +1204,9 @@ void* ftpreceived(void *m)
                         cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << _p->ftpdesc[i]->ip << " )"<< endl;
                     }
                     ftptcp.Send(json_file, _p->ftpdesc[i]->id);
+                  #ifdef SHOW_TCPSOCK_RECEIVE  
+                    cerr << "message: " << json_file << endl;
+                  #endif
                 }
 
                 _p->num_ftpclient++;
