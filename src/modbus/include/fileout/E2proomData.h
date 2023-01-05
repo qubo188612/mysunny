@@ -4,6 +4,16 @@
 #include "fileout/tistdtypes.h"
 #include "fileout/FileOut.h"
 #include "float.h"
+#include <stdio.h> 
+#include <fcntl.h> 
+#include <unistd.h> 
+#include <sys/types.h> 
+#include <sys/stat.h> 
+#include <dirent.h> 
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <vector>
 
 //任务号设置
 #define E2POOM_TASK_NUM_SAVEBUFF           8
@@ -28,6 +38,9 @@
 #define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口
 #define E2POOM_ROBOT_PORT_MAX               65535    //机器人通信最大端口
 
+#define E2POOM_ALG_LASERIMAGEPOS_SYSPATH                "./SAVE"
+#define E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO           "E2P_MEASUREMENT_"
+#define E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF          "./SAVE/E2P_MEASUREMENT_"
 
 //算法100参数
 #define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              54
@@ -49,7 +62,7 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            6
 #define E2POOM_ALG100_LASERIMAGEPOS_WIDTHLIANTONGDIS_MAX            500
 #define E2POOM_ALG100_LASERIMAGEPOS_HIGHLIANTONGDIS_MIN             0 
-#define E2POOM_ALG100_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             15342
+#define E2POOM_ALG100_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             15
 #define E2POOM_ALG100_LASERIMAGEPOS_HIGHLIANTONGDIS_MAX             500
 #define E2POOM_ALG100_LASERIMAGEPOS_GUJIAERZHI_MIN                  0 
 #define E2POOM_ALG100_LASERIMAGEPOS_GUJIAERZHI_USE                  160
@@ -532,6 +545,12 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_USE          1
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MAX          1
 
+class taskinfo
+{
+public:
+    uint16_t taskname;      //任务号
+    uint16_t alsnum;        //算法号
+};
 
 class E2proomData
 {
@@ -588,7 +607,7 @@ public:
     Int16 als100_dis_center_ed;//距离中心点此处后停止统计
       
 
-    void write_als100_para();				//保存任务100参数
+    void write_als100_para(char *filename);				//保存任务100参数
     void init_als100_para();				//初始化任务100参数
     //默认参数
     Uint16 als100_exposure_time_min;    //曝光最小值
@@ -688,7 +707,7 @@ public:
     Int16 als101_dis_center_ed;//距离中心点此处后停止统计
       
 
-    void write_als101_para();				//保存任务101参数
+    void write_als101_para(char *filename);				//保存任务101参数
     void init_als101_para();				//初始化任务101参数
     //默认参数
     Uint16 als101_exposure_time_min;    //曝光最小值
@@ -803,7 +822,7 @@ public:
     Int16 als102_cebankongdongdis;
     Int16 als102_qiatouquweijuli;
 
-    void write_als102_para();				//保存任务102参数
+    void write_als102_para(char *filename);				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
     //默认参数
     Uint16 als102_exposure_time_min;    //曝光最小值
@@ -935,7 +954,7 @@ public:
     Int16 als103_jiguangkuandu;//激光宽度
     Int16 als103_jiguangduibidu;
 
-    void write_als103_para();				//保存任务103参数
+    void write_als103_para(char *filename);				//保存任务103参数
     void init_als103_para();				//初始化任务103参数
     //默认参数
     Uint16 als103_exposure_time_min;    //曝光最小值
@@ -1005,7 +1024,7 @@ public:
     Int16 als104_cebankongdongdis;//侧板跨孔洞的激光最短距离
     Int16 als104_qiatouquweijuli;//恰头去尾距离
 
-    void write_als104_para();				//保存任务104参数
+    void write_als104_para(char *filename);				//保存任务104参数
     void init_als104_para();				//初始化任务104参数
 
     Uint16 als104_exposure_time_min;
@@ -1154,7 +1173,7 @@ public:
     Int16 als105_duandianjuli;  //断点向前搜索距离
     Int16 als105_b_dibufaxiangliang;//是否采用底部平面的法向量
 
-    void write_als105_para();				//保存任务105参数
+    void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
 
     Int16 als105_exposure_time_min;
@@ -1236,6 +1255,12 @@ public:
 
 /****************************/
     void write();
+    void findtaskfile(std::vector<taskinfo> *filename);        //查找文件夹里的任务号文件
+    void savetaskfile(uint16_t tasknum,uint16_t alsnum);    //保存自定义任务号
+    int loadtaskfile(uint16_t tasknum);//任务号返回算法号,返回值als
+
+    std::vector<taskinfo> taskfilename;//当前有几个任务号
+
 private:
     void read_para();				//读取
     void check_para();			//检查参数
@@ -1254,12 +1279,12 @@ private:
     void als104_check_para();
     void als105_check_para();
 
-    void als100_read_para();
-    void als101_read_para();
-    void als102_read_para();
-    void als103_read_para();
-    void als104_read_para();
-    void als105_read_para();
+    void als100_read_para(char *filename);
+    void als101_read_para(char *filename);
+    void als102_read_para(char *filename);
+    void als103_read_para(char *filename);
+    void als104_read_para(char *filename);
+    void als105_read_para(char *filename);
 };
 
 #endif // E2PROOMDATA_H

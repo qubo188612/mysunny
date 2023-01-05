@@ -29,6 +29,13 @@ E2proomData::E2proomData()
     Init_als105_E2proomData();
 
     read_para();
+
+    write_task_num_para();
+    write_robot_para();
+    write();
+
+    taskfilename.clear();
+    findtaskfile(&taskfilename);
 }
 
 E2proomData::~E2proomData()
@@ -122,12 +129,12 @@ void E2proomData::read_para()
       buff=NULL;
     }
 
-    als100_read_para();
-    als101_read_para();
-    als102_read_para();
-    als103_read_para();
-    als104_read_para();
-    als105_read_para();
+    als100_read_para(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO);
+    als101_read_para(E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO);
+    als102_read_para(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO);
+    als103_read_para(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO);
+    als104_read_para(E2POOM_ALG104_LASERIMAGEPOS_SYSPATH_MOTO);
+    als105_read_para(E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO);
     
     check_para();
 
@@ -199,10 +206,187 @@ void E2proomData::init_robot_para()
 
 void E2proomData::write()
 {
-    write_als100_para();
-    write_als101_para();
-    write_als102_para();
-    write_als103_para();
-    write_als104_para();
-    write_als105_para();
+    write_als100_para(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als101_para(E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als102_para(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als103_para(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als104_para(E2POOM_ALG104_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als105_para(E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO);
+}
+
+void E2proomData::findtaskfile(std::vector<taskinfo> *filename)
+{
+  taskinfo sing;
+  DIR *dir = opendir(E2POOM_ALG_LASERIMAGEPOS_SYSPATH);
+	if(dir == NULL) {
+		return;
+	}
+  struct dirent *ent;
+	while((ent = readdir(dir)) != NULL)
+	{
+    if(strcmp(".", ent->d_name) ==0 || strcmp("..", ent->d_name) == 0)
+    {
+      continue;
+    }
+		//在指定的目录下去找APROM开头的文件
+    if (ent->d_type == DT_REG)
+    {
+      //默认任务号
+      if(strncmp(ent->d_name,E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO,strlen(E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO)) == 0)
+      {
+        int lenth=strlen(E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO);
+        char src[50];
+        char *end=strchr(ent->d_name,'.');
+        memcpy(src,ent->d_name+lenth,end-(ent->d_name)-lenth);
+        src[end-(ent->d_name)-lenth]='\0';
+        char *end2=strchr(src,'_');
+        if(end2==NULL)
+        {
+          sing.taskname=atoi(src);
+          sing.alsnum=atoi(src);
+        }
+        else
+        {
+          char src1[50];
+          char alg1[50];
+          memcpy(src1,src,end2-src);
+          src1[end-src]='\0';
+          memcpy(alg1,end2+1,strlen(src)-(end2-src)-1);
+          alg1[strlen(src)-(end2-src)-1]='\0';
+          sing.taskname=atoi(src1);
+          sing.alsnum=atoi(alg1);
+        }
+        
+        filename->push_back(sing);
+      }
+    }
+	}
+  closedir(dir);
+}
+
+void E2proomData::savetaskfile(uint16_t tasknum,uint16_t alsnum)
+{
+  char filename[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF;
+  char filename2[50];
+  
+  if(tasknum<200&&tasknum>=100)//自定义任务号不能在100-200之间
+  {
+    return;
+  }
+  if(alsnum<200&&alsnum>=100)
+  {
+    //删除掉这个任务号
+    char filename3[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO;
+    char filename4[50];
+    sprintf(filename4,"%d_",tasknum);
+    strcat(filename3,filename4);
+    DIR *dir = opendir(E2POOM_ALG_LASERIMAGEPOS_SYSPATH);
+    if(dir == NULL) {
+      return;
+    }
+    struct dirent *ent;
+    while((ent = readdir(dir)) != NULL)
+    {
+      if(strcmp(".", ent->d_name) ==0 || strcmp("..", ent->d_name) == 0)
+      {
+        continue;
+      }
+      //在指定的目录下去找APROM开头的文件
+      if (ent->d_type == DT_REG)
+      {
+        if(strncmp(ent->d_name,filename3,strlen(filename3)) == 0)
+        {
+          char filename5[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH;
+          char filename6[50];
+          sprintf(filename6,"/%s",ent->d_name);
+          strcat(filename5,filename6);
+          remove(filename5);
+        }
+      }
+    }
+
+    sprintf(filename2,"%d_%d.bsd",tasknum,alsnum);
+    strcat(filename,filename2);
+    switch (alsnum)
+    {
+    case 100:
+      write_als100_para(filename);
+      break;
+    case 101:
+      write_als101_para(filename);
+      break;
+    case 102:
+      write_als102_para(filename);
+      break;  
+    case 103:
+      write_als103_para(filename);
+      break;
+    case 104:
+      write_als104_para(filename);
+      break;
+    case 105:
+      write_als105_para(filename);
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+int E2proomData::loadtaskfile(uint16_t tasknum)
+{
+  bool find=false;
+  int als=tasknum;
+  char filename[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF;
+  taskfilename.clear();
+  findtaskfile(&taskfilename);
+  for(int i=0;i<taskfilename.size();i++)
+  {
+    if(taskfilename[i].taskname==tasknum)
+    {
+      find=true;
+      als=taskfilename[i].alsnum;
+      if(tasknum<200&&tasknum>=100)
+      {
+        char filename1[50];
+        sprintf(filename1,"%d.bsd",tasknum);
+        strcat(filename,filename1);
+      }
+      else  //在自定义任务号里
+      {
+        char filename1[50];
+        sprintf(filename1,"%d_%d.bsd",tasknum,als);
+        strcat(filename,filename1);
+      }
+      switch (als)
+      {
+        case 100:
+          als100_read_para(filename);
+          break;
+        case 101:
+          als101_read_para(filename);
+          break;
+        case 102:
+          als102_read_para(filename);
+          break;  
+        case 103:
+          als103_read_para(filename);
+          break;
+        case 104:
+          als104_read_para(filename);
+          break;
+        case 105:
+          als105_read_para(filename);
+          break;
+        default:
+          break;
+      }
+      break;
+    }
+  }  
+  if(find==false)
+  {
+    als=tasknum;
+  }
+  return als;
 }

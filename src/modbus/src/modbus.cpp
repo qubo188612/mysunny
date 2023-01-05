@@ -34,11 +34,14 @@
 // #include <vector>
 // #include <iostream>
 
+static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
+
 namespace modbus
 {
 //using rcl_interfaces::msg::SetParametersResult;
 //tcp sock
 TCPServer jsontcp;
+TCPServer ftptcp;
 
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
@@ -104,6 +107,17 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   this->declare_parameter("robot_port", e2proomdata.robot_port);  //modbustcp协议端口
   robot_port = this->get_parameter("robot_port").as_int(); 
 
+  int ftp_port;
+  this->declare_parameter("ftp_port", 1476);  //ftp协议端口
+  ftp_port = this->get_parameter("ftp_port").as_int(); 
+
+//当前几个任务号
+  for(int i=0;i<e2proomdata.taskfilename.size();i++)
+  {
+    RCLCPP_INFO(this->get_logger(), "taskfile: %d", e2proomdata.taskfilename[i].taskname);
+    RCLCPP_INFO(this->get_logger(), "alg: %d", e2proomdata.taskfilename[i].alsnum);
+  }
+  RCLCPP_INFO(this->get_logger(), "taskfilenum: %d", e2proomdata.taskfilename.size());
 
   parameterport_mapping=modbus_mapping_new(0, 0, PARAMETER_REGEDIST_NUM, 0);
   if (!parameterport_mapping) {
@@ -119,7 +133,6 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   init_als104_parameter();
   init_als105_parameter();
   
-  static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
   {
     if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
@@ -163,6 +176,9 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   _thread = std::thread(&Modbus::_modbus, this, port);
 
+  num_ftpclient=0;
+  _ftpthread = std::thread(&Modbus::_ftp, this, ftp_port);
+
 
   b_threadforward=false;
   b_jsontcpthread=false;
@@ -201,6 +217,7 @@ Modbus::~Modbus()
     _thread_robotset.join();
     _thread_parameterport.join();
     _thread.join();
+    _ftpthread.join();
     if(b_jsontcpthread==true)
       _jsontcpthread.join();
     if(b_threadforward==true)
@@ -330,8 +347,40 @@ void Modbus::_camera_power(bool f)
 
 void Modbus::_task_numberset(u_int16_t num)
 {
-  _param_linecenter->set_parameters({rclcpp::Parameter("task_num", num)}); 
-  _param_laserimagepos->set_parameters({rclcpp::Parameter("task_num", num)}); 
+  u_int16_t num2=e2proomdata.loadtaskfile(num);
+  switch (num2)
+  {
+  case 100:
+    init_als100_parameter();
+    break;
+  case 101:
+    init_als101_parameter();
+    break;
+  case 102:
+    init_als102_parameter();
+    break;
+  case 103:
+    init_als103_parameter();
+    break;
+  case 104:
+    init_als104_parameter();
+    break;
+  case 105:
+    init_als105_parameter();
+    break;
+  default:
+    break;
+  }
+  for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
+  {
+    if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
+    {
+      oldparameter[i]=parameterport_mapping->tab_registers[i];
+      _task_parameter(i,parameterport_mapping->tab_registers[i]);
+    }
+  }
+  _param_linecenter->set_parameters({rclcpp::Parameter("task_num", num2)}); 
+  _param_laserimagepos->set_parameters({rclcpp::Parameter("task_num", num2)}); 
   e2proomdata.task_num=num;
   e2proomdata.write_task_num_para();
 }
@@ -793,7 +842,6 @@ void Modbus::_modbusparameterport(int port)
         {
           ret = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
 
-          static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
           for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
           {
@@ -1050,6 +1098,121 @@ void Modbus::_modbusforward(int port)
   //   ofile << d << "\n";
   // }
   // ofile.close();
+}
+
+void Modbus::_ftp(int port)
+{
+    pthread_t msg;
+    std::signal(SIGINT, closeftp_app);
+    std::vector<int> opts = { SO_REUSEPORT, SO_REUSEADDR };
+    if( ftptcp.setup(port,opts) != 0)
+    {
+          RCLCPP_ERROR(this->get_logger(), "Errore ftp socket.");
+    }
+    else
+    {
+        if( pthread_create(&msg, NULL, ftpreceived, this) == 0)
+        {
+            while(rclcpp::ok()) {
+                ftptcp.accepted();
+                cerr << "Ftp accepted" << endl;
+            }
+        }
+    }
+}
+
+void closeftp_app(int s) 
+{
+    ftptcp.closed();
+    rclcpp::shutdown();
+}
+
+void* ftpreceived(void *m)
+{
+    Modbus *_p=(Modbus*)m;
+    pthread_detach(pthread_self());
+    while(rclcpp::ok())
+    {
+        _p->ftpdesc = ftptcp.getMessage();
+        for(unsigned int i = 0; i < _p->ftpdesc.size(); i++) 
+        {
+            if( _p->ftpdesc[i] )
+            {
+                std::vector<char> vec=_p->ftpdesc[i]->message;
+                vec.push_back('\0');
+                std::string str(vec.begin(), vec.end());
+
+              #ifdef SHOW_TCPSOCK_RECEIVE  
+                cerr << "id:      " << _p->ftpdesc[i]->id      << endl
+                    << "ip:      " << _p->ftpdesc[i]->ip      << endl
+                    << "message: " << str << endl
+                    << "socket:  " << _p->ftpdesc[i]->socket  << endl
+                    << "enable:  " << _p->ftpdesc[i]->enable_message_runtime << endl;
+              #endif
+                Json::Value root;
+                jsonfuction js;
+                Json::Value sent_root;
+                if(0==js.readJsonFromString(str,&root))
+                {
+                    Json::Value::Members mem = root.getMemberNames();
+                    Json::Value::Members::iterator it = mem.begin(), end = mem.end();
+                    for(; it != end; it ++)
+                    {
+                        if(*it=="ls")   
+                        {
+                            if(root[*it].asString()=="task")
+                            {
+                                for(int n=0;n<_p->e2proomdata.taskfilename.size();n++)
+                                {
+                                  Json::Value newIterm; 
+                                  newIterm["taskname"]=_p->e2proomdata.taskfilename[n].taskname;
+                                  newIterm["alsnum"]=_p->e2proomdata.taskfilename[n].alsnum;
+                                  sent_root["ls"].append(newIterm);
+                                }
+                            }
+                        }
+                        else if(*it=="touch")
+                        {
+                            uint16_t taskname;
+                            uint16_t alsnum;
+                            Json::Value::Members objmem = root[*it].getMemberNames();
+                            Json::Value::Members::iterator objit = objmem.begin(), objend = objmem.end();
+                            for(; objit != objend; objit ++)
+                            {
+                                if(*objit=="taskname")   
+                                {
+                                  taskname=root[*it][*objit].asInt();  
+                                }
+                                else if(*objit=="alsnum")
+                                {
+                                  alsnum=root[*it][*objit].asInt(); 
+                                }
+                            }
+                            _p->e2proomdata.savetaskfile(taskname,alsnum);
+                            sent_root["touch"]="ok";
+                        }
+                    }
+                }
+                if(sent_root.size()!=0)
+                {
+                    Json::StreamWriterBuilder builder;
+                    std::string json_file=Json::writeString(builder, sent_root);
+                    if(!ftptcp.is_online() && ftptcp.get_last_closed_sockets() == _p->ftpdesc[i]->id) 
+                    {
+                        cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << _p->ftpdesc[i]->ip << " )"<< endl;
+                    }
+                    ftptcp.Send(json_file, _p->ftpdesc[i]->id);
+                    cerr << "message: " << json_file << endl;
+                }
+
+                _p->num_ftpclient++;
+
+                ftptcp.clean(i);
+            }
+        }
+        sleep(0);
+    }
+    return 0;
 }
 
 void Modbus::_json(int port)

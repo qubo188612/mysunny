@@ -15,7 +15,7 @@
 #ifndef MODBUS__MODBUS_HPP
 #define MODBUS__MODBUS_HPP
 
-#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
+//#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
 #define USE_PARENTHESES_INSTEAD_QUOTATION      
 #define DEL_SPACE_AND_LINEN
 
@@ -225,8 +225,6 @@ namespace modbus
 
 #define ALS_SHOW_STEP_REG_ADD                  0x018f
 
-
-
 /**
  * @brief Modbus protocal wrapped from libmodbus-dev.
  *
@@ -282,6 +280,11 @@ public:
   //total client tcp message
   vector<descript_socket*> desc;
 
+  //tcp number of ftpclient
+  int num_ftpclient;
+
+  vector<descript_socket*> ftpdesc;
+
   /**
    * @brief Control laser on of off.
    *
@@ -326,6 +329,8 @@ public:
   void _task_robot(int ddr,u_int16_t num);
 
   E2proomData e2proomdata;
+
+  
 private:
   
   
@@ -346,6 +351,8 @@ private:
   void _modbusparameterport(int);//框架2数据通信
 
   void _modbusrobotset(int);//机器人类型和端口设置
+
+  void _ftp(int);//服务器数据ftp转发
 
 private:
   /**
@@ -390,6 +397,8 @@ private:
 
   std::thread _threadforward;
 
+  std::thread _ftpthread;
+
 
   bool b_jsontcpthread;
   bool b_threadforward;
@@ -397,6 +406,9 @@ private:
 
 void close_app(int s);
 void* received(void * m);
+
+void closeftp_app(int s);
+void* ftpreceived(void * m);
 
 }  // namespace modbus
 

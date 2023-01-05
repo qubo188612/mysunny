@@ -52,7 +52,7 @@ void E2proomData::als103_check_para()
         als103_jiguangduibidu=als103_jiguangduibidu_use;
 }
 
-void E2proomData::als103_read_para()
+void E2proomData::als103_read_para(char *filename)
 {
     Uint8 *buff=NULL;
     CFileOut fo;
@@ -60,7 +60,7 @@ void E2proomData::als103_read_para()
     buff=new Uint8[E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF];
     if(buff==NULL)
         return;
-    if(0 > fo.ReadFile(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF))
+    if(0 > fo.ReadFile(filename,buff,E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF))
     {
         init_als103_para();
         if(buff!=NULL)
@@ -101,7 +101,7 @@ void E2proomData::als103_read_para()
 
 }
 
-void E2proomData::write_als103_para()
+void E2proomData::write_als103_para(char *filename)
 {
     Uint8 *buff=NULL;
     CFileOut fo;
@@ -134,7 +134,7 @@ void E2proomData::write_als103_para()
     i16_p++;
 
 
-    fo.WriteFile(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO,buff,E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF);
+    fo.WriteFile(filename,buff,E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF);
 
     if(buff!=NULL)
     {
