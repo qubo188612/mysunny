@@ -1258,6 +1258,8 @@ public:
     void findtaskfile(std::vector<taskinfo> *filename);        //查找文件夹里的任务号文件
     void savetaskfile(uint16_t tasknum,uint16_t alsnum);    //保存自定义任务号
     int loadtaskfile(uint16_t tasknum);//任务号返回算法号,返回值als
+    void rmtaskfile(uint16_t tasknum);//删除任务号
+    void rmalltaskfile();//删除全部自定义任务号
 
     std::vector<taskinfo> taskfilename;//当前有几个任务号
 

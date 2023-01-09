@@ -269,7 +269,7 @@ void E2proomData::savetaskfile(uint16_t tasknum,uint16_t alsnum)
   char filename[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF;
   char filename2[50];
   
-  if(tasknum<200&&tasknum>=100)//自定义任务号不能在100-200之间
+  if(tasknum<200||tasknum>1000)//自定义任务号在200-1000之间
   {
     return;
   }
@@ -332,6 +332,84 @@ void E2proomData::savetaskfile(uint16_t tasknum,uint16_t alsnum)
     }
     
   }
+}
+
+void E2proomData::rmalltaskfile()
+{
+  taskinfo sing;
+  DIR *dir = opendir(E2POOM_ALG_LASERIMAGEPOS_SYSPATH);
+	if(dir == NULL) {
+		return;
+	}
+  struct dirent *ent;
+	while((ent = readdir(dir)) != NULL)
+	{
+    if(strcmp(".", ent->d_name) ==0 || strcmp("..", ent->d_name) == 0)
+    {
+      continue;
+    }
+		//在指定的目录下去找APROM开头的文件
+    if (ent->d_type == DT_REG)
+    {
+      //默认任务号
+      if(strncmp(ent->d_name,E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO,strlen(E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO)) == 0)
+      {
+        int lenth=strlen(E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO);
+        char src[50];
+        char *end=strchr(ent->d_name,'.');
+        memcpy(src,ent->d_name+lenth,end-(ent->d_name)-lenth);
+        src[end-(ent->d_name)-lenth]='\0';
+        char *end2=strchr(src,'_');
+        if(end2!=NULL)
+        {
+          char filename5[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH;
+          char filename6[50];
+          sprintf(filename6,"/%s",ent->d_name);
+          strcat(filename5,filename6);
+          remove(filename5);
+        }
+      }
+    }
+	}
+  closedir(dir);
+}
+
+void E2proomData::rmtaskfile(uint16_t tasknum)
+{
+  if(tasknum<200&&tasknum>=100)//自定义任务号不能在100-200之间
+  {
+    return;
+  }
+    //删除掉这个任务号
+  char filename3[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTO;
+  char filename4[50];
+  sprintf(filename4,"%d_",tasknum);
+  strcat(filename3,filename4);
+  DIR *dir = opendir(E2POOM_ALG_LASERIMAGEPOS_SYSPATH);
+  if(dir == NULL) {
+    return;
+  }
+  struct dirent *ent;
+  while((ent = readdir(dir)) != NULL)
+  {
+    if(strcmp(".", ent->d_name) ==0 || strcmp("..", ent->d_name) == 0)
+    {
+      continue;
+    }
+    //在指定的目录下去找APROM开头的文件
+    if (ent->d_type == DT_REG)
+    {
+      if(strncmp(ent->d_name,filename3,strlen(filename3)) == 0)
+      {
+        char filename5[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH;
+        char filename6[50];
+        sprintf(filename6,"/%s",ent->d_name);
+        strcat(filename5,filename6);
+        remove(filename5);
+      }
+    }
+  }  
+  closedir(dir);  
 }
 
 int E2proomData::loadtaskfile(uint16_t tasknum)

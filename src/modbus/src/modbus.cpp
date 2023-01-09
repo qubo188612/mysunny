@@ -1187,11 +1187,42 @@ void* ftpreceived(void *m)
                                 {
                                   alsnum=root[*it][*objit].asInt(); 
                                 }
+                                _p->e2proomdata.savetaskfile(taskname,alsnum);
                             }
-                            _p->e2proomdata.savetaskfile(taskname,alsnum);
                             _p->e2proomdata.taskfilename.clear();
                             _p->e2proomdata.findtaskfile(&_p->e2proomdata.taskfilename);
                             sent_root["touch"]="ok";
+                        }
+                        else if(*it=="rm")
+                        {
+                            uint16_t taskname;
+                            Json::Value::Members objmem = root[*it].getMemberNames();
+                            Json::Value::Members::iterator objit = objmem.begin(), objend = objmem.end();
+                            for(; objit != objend; objit ++)
+                            {
+                              if(*objit=="taskname")   
+                              {
+                                switch(root[*it][*objit].type())
+                                {
+                                  case Json::intValue:
+                                  {
+                                    taskname=root[*it][*objit].asInt();  
+                                    _p->e2proomdata.rmtaskfile(taskname);
+                                  }
+                                  break;
+                                  case Json::stringValue:
+                                  {
+                                    Json::String ms=root[*it][*objit].asString(); 
+                                    if(ms=="all")
+                                      _p->e2proomdata.rmalltaskfile();
+                                  }  
+                                  break;
+                                }
+                              }
+                            }
+                            _p->e2proomdata.taskfilename.clear();
+                            _p->e2proomdata.findtaskfile(&_p->e2proomdata.taskfilename);
+                            sent_root["rm"]="ok";
                         }
                     }
                 }
