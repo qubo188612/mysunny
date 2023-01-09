@@ -1187,8 +1187,8 @@ void* ftpreceived(void *m)
                                 {
                                   alsnum=root[*it][*objit].asInt(); 
                                 }
-                                _p->e2proomdata.savetaskfile(taskname,alsnum);
                             }
+                            _p->e2proomdata.savetaskfile(taskname,alsnum);
                             _p->e2proomdata.taskfilename.clear();
                             _p->e2proomdata.findtaskfile(&_p->e2proomdata.taskfilename);
                             sent_root["touch"]="ok";

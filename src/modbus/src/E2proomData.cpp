@@ -269,7 +269,7 @@ void E2proomData::savetaskfile(uint16_t tasknum,uint16_t alsnum)
   char filename[50]=E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF;
   char filename2[50];
   
-  if(tasknum<200||tasknum>1000)//自定义任务号在200-1000之间
+  if(tasknum<200&&tasknum>=100)//自定义任务号不能在100-200之间
   {
     return;
   }
