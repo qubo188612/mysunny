@@ -140,29 +140,8 @@ const std::vector<std::string> KEYS_ALS104 = {"als104_exposure_time",
                                               "als104_Downdif",
                                               "als104_Downdifmin",
                                               "als104_Downdlong",
-                                              "als104_St_Down",
-                                              "als104_Ed_Down",
-                                              "als104_St_Up",
-                                              "als104_Ed_Up",
-                                              "als104_Updif2",
-                                              "als104_Updifmin2",
                                               "als104_dis_center_st",
-                                              "als104_dis_center_ed",
-                                              "als104_b_opengudingdimian",
-                                              "als104_dimianpangdingjuli",
-                                              "als104_dimianpingjunshunum",
-                                              "als104_dis_center_st2",
-                                              "als104_dis_center_ed2",
-                                              "als104_dis_center_st3",
-                                              "als104_dis_center_ed3",
-                                              "als104_xuexijuli",
-                                              "als104_b_pingpowending",
-                                              "als104_pingpowending_dis",
-                                              "als104_b_xielvopen",
-                                              "als104_xielvfanwei",
-                                              "als104_Uplong2",
-                                              "als104_cebankongdongdis",
-                                              "als104_qiatouquweijuli"};
+                                              "als104_dis_center_ed"};
 
 const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_pingjun",
@@ -301,45 +280,24 @@ struct Params
   int als103_jiguangduibidu=5;//
 /************************************/
 //算法104参数
-  int als104_exposure_time=10000;//曝光值
-  int als104_pingjun=15;//二值阈值
+  int als104_exposure_time = 10000;//曝光值
+  int als104_pingjun = 15;  //二值阈值
   int als104_b_yanmofuzhu=1;//是否使用掩摸辅助
   int als104_b_gudingquyu=0;//是否固定区域
-  int als104_widthliantongdis=5;//激光宽度连通距离
+  int als104_widthliantongdis=2;//激光宽度连通距离
   int als104_highliantongdis=15;//激光长度连通距离
   int als104_gujiaerzhi=160;//找骨架二值图
   int als104_jiguanghight=50;//整体激光最短长度
   int als104_jiguanglong=20;//单边激光最短长度
-  int als104_jiguangkuandu=6;//激光粗细
-  int als104_Updif=2000;//上半段倾斜开始斜度10
-  int als104_Updifmin=-20;//上半段倾斜终止斜度10
-  int als104_Uplong=20;//上半段直线长度
-  int als104_Downdif=-2000;//下半段倾斜开始斜度0
+  int als104_jiguangkuandu=4;//激光粗细
+  int als104_Updif=0;//上半段倾斜开始斜度10
+  int als104_Updifmin=-5;//上半段倾斜终止斜度10
+  int als104_Uplong=5;//上半段直线长度
+  int als104_Downdif=0;//下半段倾斜开始斜度0
   int als104_Downdifmin=5;//下半段倾斜终止斜度0
-  int als104_Downdlong=50;//下半段直线长度
-  int als104_St_Down=5;//下半段拟合起点
-  int als104_Ed_Down=200;//下半段拟合终点
-  int als104_St_Up=5;//上半段拟合起点
-  int als104_Ed_Up=200;//上半段拟合终点
-  int als104_Updif2=160;//上半段倾斜开始斜度10
-  int als104_Updifmin2=-5;//上半段倾斜终止斜度10
-  int als104_dis_center_st=50;     //距离中心点此处后开始统计
-  int als104_dis_center_ed=120;  //距离中心点此处后停止统计
-  int als104_b_opengudingdimian=1; //是否固定底面
-  int als104_dimianpangdingjuli=30;//两直线平面距离
-  int als104_dimianpingjunshunum=30;//底面平均数统计个数//10
-  int als104_dis_center_st2=20;//5;//0;     //距离中心点此处后开始统计
-  int als104_dis_center_ed2=150;//100;//30;  //距离中心点此处后停止统计
-  int als104_dis_center_st3=150;//5;//0;     //距离中心点此处后开始统计
-  int als104_dis_center_ed3=500;//500;//30;  //距离中心点此处后停止统计
-  int als104_xuexijuli=200;//学习距离
-  int als104_b_pingpowending=1;//平坡处稳定焊点
-  int als104_pingpowending_dis=4;//平坡处稳定距离
-  int als104_b_xielvopen=1;//斜率限制
-  int als104_xielvfanwei=10;//斜率范围
-  int als104_Uplong2=60;//在坡度时上半段直线检测长度
-  int als104_cebankongdongdis=180;//侧板跨孔洞的激光最短距离
-  int als104_qiatouquweijuli=0;//恰头去尾距离
+  int als104_Downdlong=5;//下半段直线长度
+  int als104_dis_center_st=0;//距离中心点此处后开始统计
+  int als104_dis_center_ed=500;  //距离中心点此处后停止统计
 /************************************/
 //算法105参数
   int als105_exposure_time=10000;//曝光值

@@ -428,7 +428,7 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
 
     Myhalcv2::Myconnection2(imageBry,&ImageConect,jiguanghight,widthliantongdis,highliantongdis,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
     Myhalcv2::Myselect_shape(&ImageConect,&ImageConect,Myhalcv2::MHC_CONNECT_WIDTH_HEIGHT,jiguanghight,MAX(ImageConect.nHeight,ImageConect.nWidth));
-    Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
+    Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_RIGHT_RIGHTTOLEFT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
     if(ImageConectlong.AllMarkPointCount==0)
     {
     #ifdef QUICK_TRANSMIT
