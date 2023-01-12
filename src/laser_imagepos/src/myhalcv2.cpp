@@ -20657,16 +20657,16 @@ namespace Myhalcv2
 
             if(stx==edx)
             {
+                LineOut->houghinfo[n].theta=MHC_TETARANGE/2;
+                LineOut->houghinfo[n].rho=draw_xyrho_to_houghrho(X_pos[n],nWidth,nHeight);
+            }
+            else
+            {
                 double k_In=Y_dif[n]/X_dif[n],b_In=-k_In*X_pos[n]+Y_pos[n];
                 double rand=atan(-1/k_In);
                 double row=sin(rand)*b_In;
                 LineOut->houghinfo[n].theta=(MHC_TETARANGE>>1)+rand/everTheta;
                 LineOut->houghinfo[n].rho=draw_xyrho_to_houghrho(row,nWidth,nHeight);
-            }
-            else
-            {
-                LineOut->houghinfo[n].theta=MHC_TETARANGE/2;
-                LineOut->houghinfo[n].rho=draw_xyrho_to_houghrho(X_pos[n],nWidth,nHeight);
             }
         }
 

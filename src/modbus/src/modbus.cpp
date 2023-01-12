@@ -132,6 +132,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   init_als103_parameter();
   init_als104_parameter();
   init_als105_parameter();
+  init_als106_parameter();
   
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
   {
@@ -368,6 +369,9 @@ void Modbus::_task_numberset(u_int16_t num)
   case 105:
     init_als105_parameter();
     break;
+  case 106:
+    init_als106_parameter();
+    break;
   default:
     break;
   }
@@ -406,6 +410,8 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
   if(0!=als104_task_parameter(ddr,num))
       return;
   if(0!=als105_task_parameter(ddr,num))
+      return;
+  if(0!=als106_task_parameter(ddr,num))
       return;
 }
 

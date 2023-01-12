@@ -27,6 +27,7 @@ E2proomData::E2proomData()
     Init_als103_E2proomData();
     Init_als104_E2proomData();
     Init_als105_E2proomData();
+    Init_als106_E2proomData();
 
     read_para();
 
@@ -67,6 +68,7 @@ void E2proomData::check_para()
     als103_check_para();
     als104_check_para();
     als105_check_para();
+    als106_check_para();
 }
 
 void E2proomData::read_para()
@@ -135,6 +137,7 @@ void E2proomData::read_para()
     als103_read_para(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO);
     als104_read_para(E2POOM_ALG104_LASERIMAGEPOS_SYSPATH_MOTO);
     als105_read_para(E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO);
+    als106_read_para(E2POOM_ALG106_LASERIMAGEPOS_SYSPATH_MOTO);
     
     check_para();
 
@@ -212,6 +215,7 @@ void E2proomData::write()
     write_als103_para(E2POOM_ALG103_LASERIMAGEPOS_SYSPATH_MOTO);
     write_als104_para(E2POOM_ALG104_LASERIMAGEPOS_SYSPATH_MOTO);
     write_als105_para(E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO);
+    write_als106_para(E2POOM_ALG106_LASERIMAGEPOS_SYSPATH_MOTO);
 }
 
 void E2proomData::findtaskfile(std::vector<taskinfo> *filename)
@@ -326,6 +330,9 @@ void E2proomData::savetaskfile(uint16_t tasknum,uint16_t alsnum)
       break;
     case 105:
       write_als105_para(filename);
+      break;
+    case 106:
+      write_als106_para(filename);
       break;
     default:
       break;
@@ -456,6 +463,9 @@ int E2proomData::loadtaskfile(uint16_t tasknum)
           break;
         case 105:
           als105_read_para(filename);
+          break;
+        case 106:
+          als106_read_para(filename);
           break;
         default:
           break;

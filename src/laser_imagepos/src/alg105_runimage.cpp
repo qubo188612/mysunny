@@ -281,7 +281,6 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
                                     int step)    //输出结果点信息
 {
     Int32 i,j,n;
-    Int32 filenum=0,asfilenum=0;
     Myhalcv2::Mat imageIn,imageGasu,imageGasupain,imageBry,m_tempmatIn,m_matMask;
     Myhalcv2::Mat m_brygujia;
     Int32 nWidth=cvimgIn.cols;	//输入图像宽

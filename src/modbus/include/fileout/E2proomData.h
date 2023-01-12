@@ -496,6 +496,140 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_USE          1
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MAX          1
 
+//算法106参数
+#define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              90
+#define E2POOM_ALG106_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_106.bsd"
+
+#define E2POOM_ALG106_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG106_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000      //曝光默认值   
+#define E2POOM_ALG106_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
+#define E2POOM_ALG106_LASERIMAGEPOS_PINGJUN_MIN                     0
+#define E2POOM_ALG106_LASERIMAGEPOS_PINGJUN_USE                     15
+#define E2POOM_ALG106_LASERIMAGEPOS_PINGJUN_MAX                     255
+#define E2POOM_ALG106_LASERIMAGEPOS_B_YANMOFUZHU_MIN                0 
+#define E2POOM_ALG106_LASERIMAGEPOS_B_YANMOFUZHU_USE                1
+#define E2POOM_ALG106_LASERIMAGEPOS_B_YANMOFUZHU_MAX                1
+#define E2POOM_ALG106_LASERIMAGEPOS_B_GUDINGQUYU_MIN                0 
+#define E2POOM_ALG106_LASERIMAGEPOS_B_GUDINGQUYU_USE                1
+#define E2POOM_ALG106_LASERIMAGEPOS_B_GUDINGQUYU_MAX                1
+#define E2POOM_ALG106_LASERIMAGEPOS_WIDTHLIANTONGDIS_MIN            0 
+#define E2POOM_ALG106_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            4
+#define E2POOM_ALG106_LASERIMAGEPOS_WIDTHLIANTONGDIS_MAX            500
+#define E2POOM_ALG106_LASERIMAGEPOS_HIGHLIANTONGDIS_MIN             0 
+#define E2POOM_ALG106_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             15
+#define E2POOM_ALG106_LASERIMAGEPOS_HIGHLIANTONGDIS_MAX             500
+#define E2POOM_ALG106_LASERIMAGEPOS_GUJIAERZHI_MIN                  0 
+#define E2POOM_ALG106_LASERIMAGEPOS_GUJIAERZHI_USE                  160
+#define E2POOM_ALG106_LASERIMAGEPOS_GUJIAERZHI_MAX                  255
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGHIGHT_MIN                0 
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGHIGHT_USE                50
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGHIGHT_MAX                255
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGLONG_MIN                 0 
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGLONG_USE                 20
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGLONG_MAX                 255
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGKUANDU_MIN               0 
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGKUANDU_USE               4
+#define E2POOM_ALG106_LASERIMAGEPOS_JIGUANGKUANDU_MAX               20
+#define E2POOM_ALG106_LASERIMAGEPOS_B_CUT_MIN                       0
+#define E2POOM_ALG106_LASERIMAGEPOS_B_CUT_USE                       0
+#define E2POOM_ALG106_LASERIMAGEPOS_B_CUT_MAX                       1
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTLEFT_MIN                     0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTLEFT_USE                     0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTLEFT_MAX                     2047
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_USE                    1023
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_MAX                    2047
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_MIN                      0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_USE                      0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_MAX                      3071
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_MIN                     0
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_USE                     1535
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_MAX                     3071
+#define E2POOM_ALG106_LASERIMAGEPOS_DIFMIN_MIN                      0
+#define E2POOM_ALG106_LASERIMAGEPOS_DIFMIN_USE                      150
+#define E2POOM_ALG106_LASERIMAGEPOS_DIFMIN_MAX                      5000
+#define E2POOM_ALG106_LASERIMAGEPOS_SIDELONG_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_SIDELONG_USE                    50
+#define E2POOM_ALG106_LASERIMAGEPOS_SIDELONG_MAX                    2000
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ST_MIN                   0
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ST_USE                   10
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ST_MAX                   200
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ED_MIN                   0
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ED_USE                   10
+#define E2POOM_ALG106_LASERIMAGEPOS_UPBACK_ED_MAX                   200
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ST_MIN                 0
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ST_USE                 10
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ST_MAX                 200
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ED_MIN                 0
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ED_USE                 10
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNBACK_ED_MAX                 200
+#define E2POOM_ALG106_LASERIMAGEPOS_UPMINDIS_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_UPMINDIS_USE                    70
+#define E2POOM_ALG106_LASERIMAGEPOS_UPMINDIS_MAX                    2000
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNMINDIS_MIN                  0
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNMINDIS_USE                  70
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNMINDIS_MAX                  2000
+#define E2POOM_ALG106_LASERIMAGEPOS_UPLONG_MIN                      0
+#define E2POOM_ALG106_LASERIMAGEPOS_UPLONG_USE                      50
+#define E2POOM_ALG106_LASERIMAGEPOS_UPLONG_MAX                      500
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNDLONG_MIN                   0
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNDLONG_USE                   50
+#define E2POOM_ALG106_LASERIMAGEPOS_DOWNDLONG_MAX                   500
+#define E2POOM_ALG106_LASERIMAGEPOS_DISCENTER_ED_MIN                0
+#define E2POOM_ALG106_LASERIMAGEPOS_DISCENTER_ED_USE                120
+#define E2POOM_ALG106_LASERIMAGEPOS_DISCENTER_ED_MAX                500
+#define E2POOM_ALG106_LASERIMAGEPOS_DUANDIANJULI_MIN                0
+#define E2POOM_ALG106_LASERIMAGEPOS_DUANDIANJULI_USE                30
+#define E2POOM_ALG106_LASERIMAGEPOS_DUANDIANJULI_MAX                500
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUMOD_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUMOD_USE                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUMOD_MAX                    1
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIF_MIN                  0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIF_USE                  2000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIF_MAX                  5000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIFMIN_MIN               0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIFMIN_USE               20
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPDIFMIN_MAX               5000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ST_MIN              0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ST_USE              10
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ST_MAX              200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ED_MIN              0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ED_USE              10
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPBACK_ED_MAX              200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIF_MIN               -5000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIF_USE               -2000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIF_MAX                0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIFMIN_MIN            -5000
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIFMIN_USE            -20
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNDIFMIN_MAX             0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ST_MIN            0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ST_USE            10
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ST_MAX            200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ED_MIN            0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ED_USE            10
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNBACK_ED_MAX            200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPLONG_MIN                 0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPLONG_USE                 20
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUUPLONG_MAX                 500
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNLONG_MIN               0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNLONG_USE               20
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDOWNLONG_MAX               500
+#define E2POOM_ALG106_LASERIMAGEPOS_B_POKOUYAOBIAN_MIN              0
+#define E2POOM_ALG106_LASERIMAGEPOS_B_POKOUYAOBIAN_USE              1
+#define E2POOM_ALG106_LASERIMAGEPOS_B_POKOUYAOBIAN_MAX              1
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUYAOBIANHSIZE_MIN           0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUYAOBIANHSIZE_USE           50
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUYAOBIANHSIZE_MAX           200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDUANXIANERZHI_MIN          0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDUANXIANERZHI_USE          130
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUDUANXIANERZHI_MAX          255
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMAX_MIN      0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMAX_USE      25
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMAX_MAX      200
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MIN      0
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_USE      15
+#define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MAX      200
+
 class taskinfo
 {
 public:
@@ -1203,6 +1337,184 @@ public:
     Int16 als105_b_dibufaxiangliang_use;
     Int16 als105_b_dibufaxiangliang_max;
 
+/****************************/
+    //任务106参数
+    Int16 als106_exposure_time;//曝光值
+    Int16 als106_pingjun;//二值阈值
+    Int16 als106_b_yanmofuzhu;//是否使用掩摸辅助
+    Int16 als106_b_gudingquyu;//是否固定区域
+    Int16 als106_widthliantongdis;//激光宽度连通距离
+    Int16 als106_highliantongdis;//激光长度连通距离
+    Int16 als106_gujiaerzhi;//找骨架二值图
+    Int16 als106_jiguanghight;//整体激光最短长度
+    Int16 als106_jiguanglong;//单边激光最短长度
+    Int16 als106_jiguangkuandu;//激光粗细
+    Int16 als106_b_cut;                  //是否使用搜索区域
+    Int16 als106_cutleft;                //搜索区域
+    Int16 als106_cutright;        //搜索区域
+    Int16 als106_cuttop;                 //搜索区域
+    Int16 als106_cutdeep;        //搜索区域
+    Int16 als106_difmin;               //坡口导数判定阈值
+    Int16 als106_Sidelong;              //坡口两侧直线长度
+    Int16 als106_Upback_st;             //上半段坡口统计时上端点回退距离
+    Int16 als106_Upback_ed;             //上半段坡口统计时下端点回退距离
+    Int16 als106_Downback_st;             //下半段坡口统计时上端点回退距离
+    Int16 als106_Downback_ed;             //下半段坡口统计时下端点回退距离
+    Int16 als106_Upmindis;              //上半段拟合最短限制长度b_cut=0时有效
+    Int16 als106_Downmindis;            //下半段拟合最短限制长度b_cut=0时有效
+    Int16 als106_Uplong;//上半段直线长度
+    Int16 als106_Downdlong;//下半段直线长度
+    Int16 als106_dis_center_ed;  //断点向后搜索距离
+    Int16 als106_duandianjuli;    //断点向前搜索距离
+    Int16 als106_pokoumod;           //坡口模式: 0打底,1盖焊
+    Int16 als106_pokouUpdif;           //上半段倾斜开始斜度（坡口模式=0时有效）
+    Int16 als106_pokouUpdifmin;         //上半段倾斜终止斜度（坡口模式=0时有效）
+    Int16 als106_pokouUpback_st;          //上半段坡口统计时上端点回退距离
+    Int16 als106_pokouUpback_ed;          //上半段坡口统计时上端点回退距离
+    Int16 als106_pokouDowndif;           //下半段倾斜开始斜度（坡口模式=0时有效）
+    Int16 als106_pokouDowndifmin;         //下半段倾斜终止斜度（坡口模式=0时有效）
+    Int16 als106_pokouDownback_st;          //下半段坡口统计时上端点回退距离
+    Int16 als106_pokouDownback_ed;          //下半段坡口统计时上端点回退距离
+    Int16 als106_pokouUplong;             //上坡口长度（坡口模式=0时有效）
+    Int16 als106_pokouDownlong;             //下坡口长度（坡口模式=0时有效）
+    Int16 als106_b_pokouyaobian;               //咬边检测（坡口模式=0时有效）
+    Int16 als106_pokouyaobianHsize;       //咬边高度方向检测尺寸（坡口模式=0时有效）
+    Int16 als106_pokouduanxianerzhi;       //咬边二值（坡口模式=0时有效）
+    Int16 als106_pokousearchdectancemax;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
+    Int16 als106_pokousearchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
+
+    void write_als106_para(char *filename);				//保存任务106参数
+    void init_als106_para();				//初始化任务106参数
+
+    Int16 als106_exposure_time_min;
+    Int16 als106_exposure_time_use;
+    Int16 als106_exposure_time_max;
+    Int16 als106_pingjun_min;
+    Int16 als106_pingjun_use;
+    Int16 als106_pingjun_max;
+    Int16 als106_b_yanmofuzhu_min;
+    Int16 als106_b_yanmofuzhu_use;
+    Int16 als106_b_yanmofuzhu_max;
+    Int16 als106_b_gudingquyu_min;
+    Int16 als106_b_gudingquyu_use;
+    Int16 als106_b_gudingquyu_max;
+    Int16 als106_widthliantongdis_min;
+    Int16 als106_widthliantongdis_use;
+    Int16 als106_widthliantongdis_max;
+    Int16 als106_highliantongdis_min;
+    Int16 als106_highliantongdis_use;
+    Int16 als106_highliantongdis_max;
+    Int16 als106_gujiaerzhi_min;
+    Int16 als106_gujiaerzhi_use;
+    Int16 als106_gujiaerzhi_max;
+    Int16 als106_jiguanghight_min;
+    Int16 als106_jiguanghight_use;
+    Int16 als106_jiguanghight_max;
+    Int16 als106_jiguanglong_min;
+    Int16 als106_jiguanglong_use;
+    Int16 als106_jiguanglong_max;
+    Int16 als106_jiguangkuandu_min;
+    Int16 als106_jiguangkuandu_use;
+    Int16 als106_jiguangkuandu_max;
+    Int16 als106_b_cut_min;
+    Int16 als106_b_cut_use;
+    Int16 als106_b_cut_max;
+    Int16 als106_cutleft_min;
+    Int16 als106_cutleft_use;
+    Int16 als106_cutleft_max;
+    Int16 als106_cutright_min;
+    Int16 als106_cutright_use;
+    Int16 als106_cutright_max;
+    Int16 als106_cuttop_min;
+    Int16 als106_cuttop_use;
+    Int16 als106_cuttop_max;
+    Int16 als106_cutdeep_min;
+    Int16 als106_cutdeep_use;
+    Int16 als106_cutdeep_max;
+    Int16 als106_difmin_min;
+    Int16 als106_difmin_use;
+    Int16 als106_difmin_max;
+    Int16 als106_Sidelong_min;
+    Int16 als106_Sidelong_use;
+    Int16 als106_Sidelong_max;
+    Int16 als106_Upback_st_min;
+    Int16 als106_Upback_st_use;
+    Int16 als106_Upback_st_max;
+    Int16 als106_Upback_ed_min;
+    Int16 als106_Upback_ed_use;
+    Int16 als106_Upback_ed_max;
+    Int16 als106_Downback_st_min;
+    Int16 als106_Downback_st_use;
+    Int16 als106_Downback_st_max;
+    Int16 als106_Downback_ed_min;
+    Int16 als106_Downback_ed_use;
+    Int16 als106_Downback_ed_max;
+    Int16 als106_Upmindis_min;
+    Int16 als106_Upmindis_use;
+    Int16 als106_Upmindis_max;
+    Int16 als106_Downmindis_min;
+    Int16 als106_Downmindis_use;
+    Int16 als106_Downmindis_max;
+    Int16 als106_Uplong_min;
+    Int16 als106_Uplong_use;
+    Int16 als106_Uplong_max;
+    Int16 als106_Downdlong_min;
+    Int16 als106_Downdlong_use;
+    Int16 als106_Downdlong_max;
+    Int16 als106_dis_center_ed_min;
+    Int16 als106_dis_center_ed_use;
+    Int16 als106_dis_center_ed_max;
+    Int16 als106_duandianjuli_min;
+    Int16 als106_duandianjuli_use;
+    Int16 als106_duandianjuli_max;
+    Int16 als106_pokoumod_min;
+    Int16 als106_pokoumod_use;
+    Int16 als106_pokoumod_max;
+    Int16 als106_pokouUpdif_min;
+    Int16 als106_pokouUpdif_use;
+    Int16 als106_pokouUpdif_max;
+    Int16 als106_pokouUpdifmin_min;
+    Int16 als106_pokouUpdifmin_use;
+    Int16 als106_pokouUpdifmin_max;
+    Int16 als106_pokouUpback_st_min;
+    Int16 als106_pokouUpback_st_use;
+    Int16 als106_pokouUpback_st_max;
+    Int16 als106_pokouUpback_ed_min;
+    Int16 als106_pokouUpback_ed_use;
+    Int16 als106_pokouUpback_ed_max;
+    Int16 als106_pokouDowndif_min;
+    Int16 als106_pokouDowndif_use;
+    Int16 als106_pokouDowndif_max;
+    Int16 als106_pokouDowndifmin_min;
+    Int16 als106_pokouDowndifmin_use;
+    Int16 als106_pokouDowndifmin_max;
+    Int16 als106_pokouDownback_st_min;
+    Int16 als106_pokouDownback_st_use;
+    Int16 als106_pokouDownback_st_max;
+    Int16 als106_pokouDownback_ed_min;
+    Int16 als106_pokouDownback_ed_use;
+    Int16 als106_pokouDownback_ed_max;
+    Int16 als106_pokouUplong_min;
+    Int16 als106_pokouUplong_use;
+    Int16 als106_pokouUplong_max;
+    Int16 als106_pokouDownlong_min;
+    Int16 als106_pokouDownlong_use;
+    Int16 als106_pokouDownlong_max;
+    Int16 als106_b_pokouyaobian_min;
+    Int16 als106_b_pokouyaobian_use;
+    Int16 als106_b_pokouyaobian_max;
+    Int16 als106_pokouyaobianHsize_min;
+    Int16 als106_pokouyaobianHsize_use;
+    Int16 als106_pokouyaobianHsize_max;
+    Int16 als106_pokouduanxianerzhi_min;
+    Int16 als106_pokouduanxianerzhi_use;
+    Int16 als106_pokouduanxianerzhi_max;
+    Int16 als106_pokousearchdectancemax_min;
+    Int16 als106_pokousearchdectancemax_use;
+    Int16 als106_pokousearchdectancemax_max;
+    Int16 als106_pokousearchdectancemin_min;
+    Int16 als106_pokousearchdectancemin_use;
+    Int16 als106_pokousearchdectancemin_max;
 
 /****************************/
     void write();
@@ -1224,6 +1536,7 @@ private:
     void Init_als103_E2proomData();
     void Init_als104_E2proomData();
     void Init_als105_E2proomData();
+    void Init_als106_E2proomData();
     
     void als100_check_para();
     void als101_check_para();
@@ -1231,6 +1544,7 @@ private:
     void als103_check_para();
     void als104_check_para();
     void als105_check_para();
+    void als106_check_para();
 
     void als100_read_para(char *filename);
     void als101_read_para(char *filename);
@@ -1238,6 +1552,7 @@ private:
     void als103_read_para(char *filename);
     void als104_read_para(char *filename);
     void als105_read_para(char *filename);
+    void als106_read_para(char *filename);
 };
 
 #endif // E2PROOMDATA_H
