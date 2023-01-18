@@ -1232,7 +1232,7 @@ public:
 
 /****************************/
     //任务105参数
-    Int16 als105_exposure_time;//曝光值
+    Uint16 als105_exposure_time;//曝光值
     Int16 als105_pingjun;//二值阈值
     Int16 als105_b_yanmofuzhu;//是否使用掩摸辅助
     Int16 als105_widthliantongdis;//激光宽度连通距离
@@ -1261,9 +1261,9 @@ public:
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
 
-    Int16 als105_exposure_time_min;
-    Int16 als105_exposure_time_use;
-    Int16 als105_exposure_time_max;
+    Uint16 als105_exposure_time_min;
+    Uint16 als105_exposure_time_use;
+    Uint16 als105_exposure_time_max;
     Int16 als105_pingjun_min;
     Int16 als105_pingjun_use;
     Int16 als105_pingjun_max;
@@ -1339,7 +1339,7 @@ public:
 
 /****************************/
     //任务106参数
-    Int16 als106_exposure_time;//曝光值
+    Uint16 als106_exposure_time;//曝光值
     Int16 als106_pingjun;//二值阈值
     Int16 als106_b_yanmofuzhu;//是否使用掩摸辅助
     Int16 als106_b_gudingquyu;//是否固定区域
@@ -1386,9 +1386,9 @@ public:
     void write_als106_para(char *filename);				//保存任务106参数
     void init_als106_para();				//初始化任务106参数
 
-    Int16 als106_exposure_time_min;
-    Int16 als106_exposure_time_use;
-    Int16 als106_exposure_time_max;
+    Uint16 als106_exposure_time_min;
+    Uint16 als106_exposure_time_use;
+    Uint16 als106_exposure_time_max;
     Int16 als106_pingjun_min;
     Int16 als106_pingjun_use;
     Int16 als106_pingjun_max;
