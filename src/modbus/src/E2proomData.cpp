@@ -254,7 +254,7 @@ void E2proomData::findtaskfile(std::vector<taskinfo> *filename)
           char src1[50];
           char alg1[50];
           memcpy(src1,src,end2-src);
-          src1[end-src]='\0';
+          src1[end2-src]='\0';
           memcpy(alg1,end2+1,strlen(src)-(end2-src)-1);
           alg1[strlen(src)-(end2-src)-1]='\0';
           sing.taskname=atoi(src1);
