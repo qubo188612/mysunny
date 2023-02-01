@@ -1,5 +1,5 @@
-#ifndef TCP_SERVER_H
-#define TCP_SERVER_H
+#ifndef TCP_SERVER2_H
+#define TCP_SERVER2_H
 
 #include <iostream>
 #include <vector>
@@ -26,7 +26,7 @@ using namespace std;
 #define MAX_CLIENT 1000
 //#define CODA_MSG 4
 
-struct descript_socket{
+struct descript_socket2{
 	int socket     = -1;
 	string ip      = "";
 	int id         = -1; 
@@ -34,11 +34,11 @@ struct descript_socket{
 	bool enable_message_runtime = false;
 };
 
-class TCPServer
+class TCPServer2
 {
 	public:
 	int setup(int port, vector<int> opts = vector<int>());
-	vector<descript_socket*> getMessage();
+	vector<descript_socket2*> getMessage();
 	void accepted();
 	void Send(string msg, int id);
 	void Send(char *msg, int length, int id);
@@ -55,9 +55,9 @@ class TCPServer
 	struct sockaddr_in clientAddress;
 	pthread_t serverThread[ MAX_CLIENT ];
 
-	static vector<descript_socket*> newsockfd;
+	static vector<descript_socket2*> newsockfd;
 	static char msg[ MAXPACKETSIZE ];
-	static vector<descript_socket*> Message;//[CODA_MSG];
+	static vector<descript_socket2*> Message;//[CODA_MSG];
 
 	static bool isonline;
 	static int last_closed;

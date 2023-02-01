@@ -41,7 +41,7 @@ namespace modbus
 //using rcl_interfaces::msg::SetParametersResult;
 //tcp sock
 TCPServer jsontcp;
-TCPServer ftptcp;
+TCPServer2 ftptcp;
 
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
@@ -1543,7 +1543,8 @@ void* received(void *m)
                     }
                     cerr << "id:      " << _p->desc[i]->id      << endl
                         << "ip:      " << _p->desc[i]->ip      << endl
-                        << "message: " << s_data << endl
+                        << "messagesize: " << _p->desc[i]->message.size() << endl 
+                        << "message: " << s_data << endl                          
                         << "socket:  " << _p->desc[i]->socket  << endl
                         << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                   #endif

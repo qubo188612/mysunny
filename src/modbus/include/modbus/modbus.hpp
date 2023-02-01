@@ -15,7 +15,7 @@
 #ifndef MODBUS__MODBUS_HPP
 #define MODBUS__MODBUS_HPP
 
-//#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
+#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
 #define USE_PARENTHESES_INSTEAD_QUOTATION      
 #define DEL_SPACE_AND_LINEN
 
@@ -24,6 +24,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include <json/jsonfuction.h>
 #include <TCP/TCPServer.h>
+#include <TCP/TCPServer2.h>
 #include <modbus.h>
 #include "fileout/E2proomData.h"
 
@@ -309,7 +310,7 @@ public:
   //tcp number of ftpclient
   int num_ftpclient;
 
-  vector<descript_socket*> ftpdesc;
+  vector<descript_socket2*> ftpdesc;
 
   /**
    * @brief Control laser on of off.
