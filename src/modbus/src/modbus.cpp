@@ -1854,7 +1854,7 @@ void* received(void *m)
                         {
                             _p->_gpio_laser(true);
                             _p->_camera_power(true);
-                            _p->mb_mapping->tab_registers[0x101]=0xff; 
+                          //_p->mb_mapping->tab_registers[0x101]=0xff; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
                             send[0]=0x43;
@@ -1869,7 +1869,7 @@ void* received(void *m)
                         {
                             _p->_gpio_laser(false);
                             _p->_camera_power(false);
-                            _p->mb_mapping->tab_registers[0x101]=0; 
+                          //_p->mb_mapping->tab_registers[0x101]=0; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
                             send[0]=0x43;
@@ -1882,8 +1882,10 @@ void* received(void *m)
                         else if(u8_data[0]==0x45&&u8_data[1]==0x46&&u8_data[2]==0x4f&&u8_data[3]==0x52&&u8_data[4]==0x54
                          &&u8_data[5]==0x01&&u8_data[6]==0x01&&u8_data[7]==0x04&&u8_data[8]==0x01)//开始寻位
                         {
-                            _p->_gpio_laser(true);
-                            _p->_camera_power(true);
+                          //_p->_gpio_laser(true);
+                          //_p->_camera_power(true);
+                            _p->b_search=true;
+                            _p->b_weld=false;
                             _p->mb_mapping->tab_registers[0x101]=0xff; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
@@ -1897,8 +1899,10 @@ void* received(void *m)
                         else if(u8_data[0]==0x45&&u8_data[1]==0x46&&u8_data[2]==0x4f&&u8_data[3]==0x52&&u8_data[4]==0x54
                          &&u8_data[5]==0x01&&u8_data[6]==0x01&&u8_data[7]==0x05&&u8_data[8]==0x00)//停止寻位
                         {
-                            _p->_gpio_laser(false);
-                            _p->_camera_power(false);
+                          //_p->_gpio_laser(false);
+                          //_p->_camera_power(false);
+                            _p->b_search=false;
+                            _p->b_weld=false;
                             _p->mb_mapping->tab_registers[0x101]=0; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
@@ -1912,8 +1916,10 @@ void* received(void *m)
                         else if(u8_data[0]==0x45&&u8_data[1]==0x46&&u8_data[2]==0x4f&&u8_data[3]==0x52&&u8_data[4]==0x54
                          &&u8_data[5]==0x01&&u8_data[6]==0x01&&u8_data[7]==0x06&&u8_data[8]==0x01)//开始跟踪
                         {
-                            _p->_gpio_laser(true);
-                            _p->_camera_power(true);
+                          //_p->_gpio_laser(true);
+                          //_p->_camera_power(true);
+                            _p->b_search=false;
+                            _p->b_weld=true;
                             _p->mb_mapping->tab_registers[0x101]=0xff; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
@@ -1927,8 +1933,10 @@ void* received(void *m)
                         else if(u8_data[0]==0x45&&u8_data[1]==0x46&&u8_data[2]==0x4f&&u8_data[3]==0x52&&u8_data[4]==0x54
                          &&u8_data[5]==0x01&&u8_data[6]==0x01&&u8_data[7]==0x07&&u8_data[8]==0x00)//停止跟踪
                         {
-                            _p->_gpio_laser(false);
-                            _p->_camera_power(false);
+                          //_p->_gpio_laser(false);
+                          //_p->_camera_power(false);
+                            _p->b_search=false;
+                            _p->b_weld=false;
                             _p->mb_mapping->tab_registers[0x101]=0; 
                             std::vector<u_int8_t> send;
                             send.resize(5);
@@ -1950,13 +1958,30 @@ void* received(void *m)
                             send[2]=0x6d;  
                             send[3]=0x08;
                             send[4]=0x01;
-                            if(_p->mb_mapping->tab_registers[0x101]==0)
+                            state=0;
+                            if(_p->b_laser==true&&_p->b_camera==true)
                             {
-                                state=0;
+                              state=(state|0x0001);
                             }
                             else
                             {
-                                state=0x07;
+                              state=(state&0xfffe);
+                            }
+                            if(_p->b_search==true)
+                            {
+                              state=(state|0x0002);
+                            }
+                            else
+                            {
+                              state=(state&0xfffd);
+                            }
+                            if(_p->b_weld==true)
+                            {
+                              state=(state|0x0004);
+                            }
+                            else
+                            {
+                              state=(state&0xfffb);
                             }
                             send[5]=(state>>8);
                             send[6]=(state&0x00ff);
