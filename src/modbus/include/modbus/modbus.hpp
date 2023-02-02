@@ -334,6 +334,11 @@ public:
   int camer_view_height;
   void callbackGlobalParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
 
+  bool b_laser; //激光开关状态
+  bool b_camera;//相机开关状态
+  bool b_search;//寻位状态
+  bool b_weld;//跟踪状态
+
   void _camera_set_size(int width,int height);
 
   void _task_numberset(u_int16_t num);
@@ -396,6 +401,7 @@ private:
    *
    */
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_gpio;
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_gpio_get;
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter;
 
