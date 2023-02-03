@@ -38,7 +38,7 @@ static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
 
 namespace modbus
 {
-//using rcl_interfaces::msg::SetParametersResult;
+using rcl_interfaces::msg::SetParametersResult;
 //tcp sock
 TCPServer jsontcp;
 TCPServer2 ftptcp;
@@ -55,6 +55,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _param_linecenter_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "line_center_reconstruction_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
 
+  b_tcpsockershow=false;
+  this->declare_parameter("b_tcpsockershow",false);
 
   this->declare_parameter("robotsetport", 1501);    //机器人型号设置及通信端口
   auto robotsetport = this->get_parameter("robotsetport").as_int();
@@ -213,6 +215,21 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   default:
       break;
   }
+
+  _handle = this->add_on_set_parameters_callback(
+    [this](const std::vector<rclcpp::Parameter> & parameters) {
+      SetParametersResult result;
+      result.successful = true;
+      for (const auto & p : parameters) {
+        if (p.get_name() == "b_tcpsockershow") {
+            b_tcpsockershow=p.as_bool();
+            return result;
+        } 
+      }
+      return result;
+    }
+  );
+
   RCLCPP_INFO(this->get_logger(), "Initialized successfully");
 }
 
@@ -1156,13 +1173,14 @@ void* ftpreceived(void *m)
                 vec.push_back('\0');
                 std::string str(vec.begin(), vec.end());
 
-              #ifdef SHOW_TCPSOCK_RECEIVE  
+                if(_p->b_tcpsockershow==true)
+                {
                 cerr << "id:      " << _p->ftpdesc[i]->id      << endl
                     << "ip:      " << _p->ftpdesc[i]->ip      << endl
                     << "message: " << str << endl
                     << "socket:  " << _p->ftpdesc[i]->socket  << endl
                     << "enable:  " << _p->ftpdesc[i]->enable_message_runtime << endl;
-              #endif
+                }
                 Json::Value root;
                 jsonfuction js;
                 Json::Value sent_root;
@@ -1249,9 +1267,10 @@ void* ftpreceived(void *m)
                         cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << _p->ftpdesc[i]->ip << " )"<< endl;
                     }
                     ftptcp.Send(json_file, _p->ftpdesc[i]->id);
-                  #ifdef SHOW_TCPSOCK_RECEIVE  
-                    cerr << "message: " << json_file << endl;
-                  #endif
+                    if(_p->b_tcpsockershow==true)
+                    {  
+                      cerr << "message: " << json_file << endl;
+                    }
                 }
 
                 _p->num_ftpclient++;
@@ -1310,13 +1329,14 @@ void* received(void *m)
                     vec.push_back('\0');
                     std::string str(vec.begin(), vec.end());
 
-                  #ifdef SHOW_TCPSOCK_RECEIVE  
+                    if(_p->b_tcpsockershow==true)
+                    {
                     cerr << "id:      " << _p->desc[i]->id      << endl
                         << "ip:      " << _p->desc[i]->ip      << endl
                         << "message: " << str << endl
                         << "socket:  " << _p->desc[i]->socket  << endl
                         << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
-                  #endif
+                    }
                   
                     Json::Value root;
                     jsonfuction js;
@@ -1540,22 +1560,23 @@ void* received(void *m)
                   break;
                   case E2POOM_ROBOT_MOD_GANGSHANG:          //RTU
                   {
-                  #ifdef SHOW_TCPSOCK_RECEIVE  
-                    std::string s_data;
-                    for(int t=0;t<_p->desc[i]->message.size();t++)
-                    {
-                        std::string str;
-                        u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
-                        str=std::to_string(u8_data)+" ";
-                        s_data=s_data+str;
+                    if(_p->b_tcpsockershow==true)
+                    {  
+                      std::string s_data;
+                      for(int t=0;t<_p->desc[i]->message.size();t++)
+                      {
+                          std::string str;
+                          u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
+                          str=std::to_string(u8_data)+" ";
+                          s_data=s_data+str;
+                      }
+                      cerr << "id:      " << _p->desc[i]->id      << endl
+                          << "ip:      " << _p->desc[i]->ip      << endl
+                          << "messagesize: " << _p->desc[i]->message.size() << endl 
+                          << "message: " << s_data << endl                          
+                          << "socket:  " << _p->desc[i]->socket  << endl
+                          << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                     }
-                    cerr << "id:      " << _p->desc[i]->id      << endl
-                        << "ip:      " << _p->desc[i]->ip      << endl
-                        << "messagesize: " << _p->desc[i]->message.size() << endl 
-                        << "message: " << s_data << endl                          
-                        << "socket:  " << _p->desc[i]->socket  << endl
-                        << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
-                  #endif
                     std::vector<u_int8_t> sendbuffer;
                     if(_p->desc[i]->message.size()>=4)
                     {
@@ -1810,21 +1831,22 @@ void* received(void *m)
                   break;
                   case E2POOM_ROBOT_MOD_EFORT:
                   {
-                    #ifdef SHOW_TCPSOCK_RECEIVE  
-                    std::string s_data;
-                    for(int t=0;t<_p->desc[i]->message.size();t++)
-                    {
-                        std::string str;
-                        u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
-                        str=std::to_string(u8_data)+" ";
-                        s_data=s_data+str;
+                    if(_p->b_tcpsockershow==true)
+                    { 
+                      std::string s_data;
+                      for(int t=0;t<_p->desc[i]->message.size();t++)
+                      {
+                          std::string str;
+                          u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
+                          str=std::to_string(u8_data)+" ";
+                          s_data=s_data+str;
+                      }
+                      cerr << "id:      " << _p->desc[i]->id      << endl
+                          << "ip:      " << _p->desc[i]->ip      << endl
+                          << "message: " << s_data << endl
+                          << "socket:  " << _p->desc[i]->socket  << endl
+                          << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                     }
-                    cerr << "id:      " << _p->desc[i]->id      << endl
-                        << "ip:      " << _p->desc[i]->ip      << endl
-                        << "message: " << s_data << endl
-                        << "socket:  " << _p->desc[i]->socket  << endl
-                        << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
-                  #endif
                     std::vector<u_int8_t> sendbuffer;
                     if(_p->desc[i]->message.size()>=9)
                     {

@@ -15,7 +15,6 @@
 #ifndef MODBUS__MODBUS_HPP
 #define MODBUS__MODBUS_HPP
 
-#define SHOW_TCPSOCK_RECEIVE        1       //是否打印接收信息
 #define USE_PARENTHESES_INSTEAD_QUOTATION      
 #define DEL_SPACE_AND_LINEN
 
@@ -364,6 +363,8 @@ public:
 
   E2proomData e2proomdata;
 
+  bool b_tcpsockershow;
+
   
 private:
   
@@ -412,7 +413,7 @@ private:
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
 
- // OnSetParametersCallbackHandle::SharedPtr _handle;
+  OnSetParametersCallbackHandle::SharedPtr _handle;
 
   /**
    * @brief Thread for communication through modbus tcp.
