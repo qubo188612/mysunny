@@ -692,6 +692,8 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
 
+    Myhalcv2::MyGetlanothinNoHough(imageBry,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
+
     if(0!=Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT))
     {
     #ifdef QUICK_TRANSMIT
@@ -1030,14 +1032,14 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     stepfindED.y=ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right;
     stepfindED.x=X_line[stepfindED.y];
 
-    /*
+   
     //检查如果最右边的不是最大的连通就报警
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_MIANJI_PAIXU);
     if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].right!=stepfindED.y)
     {
         goto fuzhu;
     }
-    */
+
     if(step==19)
     {
         Myhalcv2::MatClone(imageIn,&imageGasupain);
