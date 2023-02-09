@@ -785,7 +785,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 
     if(step==13)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
     }
     //膨胀做
     Myhalcv2::Mydilation_circle2(imageBry,&imageBry,2,0,Myhalcv2::MHC_MORPH_RECT);
@@ -825,7 +825,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         {
             if(sum_value!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.data[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)]=128;
             }
         }
     }
