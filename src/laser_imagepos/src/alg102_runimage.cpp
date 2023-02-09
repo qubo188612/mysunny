@@ -1011,7 +1011,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Myconnection(m_brygujia,&ImageConect,Uplong,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
-    /*
+   
     //检查如果内部超过两个连通可能是焊点
     if(b_pingpowending==1&&ImageConect.AllMarkPointCount>1)
     {
@@ -1020,7 +1020,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    */
+
 
     Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);
     if(ImageConectlong.AllMarkPointCount==0)
