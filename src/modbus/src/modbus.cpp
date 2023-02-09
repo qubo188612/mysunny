@@ -2018,7 +2018,7 @@ void* received(void *m)
                             send[0]=0x43;
                             send[1]=0x61;  
                             send[2]=0x6d;  
-                            send[3]=0x08;
+                            send[3]=0x09;
                             if(_p->mb_mapping->tab_registers[0x02]==0)
                             {
                               send[4]=0x00;    
