@@ -588,7 +588,7 @@ void Modbus::_modbus(int port)
               _gpio_laser(false);
             }
           }
-          ret = modbus_reply(ctx, query, ret, mb_mapping);
+          int rc = modbus_reply(ctx, query, ret, mb_mapping);
 
           static int oldtasknum=INT_MAX;
           if(oldtasknum!=mb_mapping->tab_registers[0x102])
@@ -630,7 +630,7 @@ void Modbus::_modbus(int port)
           }
           
 
-          if (ret == -1) 
+          if (rc == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
           //break;
@@ -735,7 +735,7 @@ void Modbus::_modbusrobotset(int port)
         } 
         else if (ret > 0) 
         {
-          ret = modbus_reply(ctx_robot, query, ret, robot_mapping);
+          int rc = modbus_reply(ctx_robot, query, ret, robot_mapping);
           
           static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
@@ -758,7 +758,7 @@ void Modbus::_modbusrobotset(int port)
           e2proomdata.robot_port=(Uint16)robot_mapping->tab_registers[1];
           e2proomdata.write_robot_para();
         */
-          if (ret == -1) 
+          if (rc == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
           //break;
@@ -871,7 +871,7 @@ void Modbus::_modbusparameterport(int port)
         } 
         else if (ret > 0) 
         {
-          ret = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
+          int rc = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
 
           u_int8_t u8_temp=0;
           for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
@@ -887,7 +887,7 @@ void Modbus::_modbusparameterport(int port)
           {
             e2proomdata.write();
           }
-          if (ret == -1) 
+          if (rc == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
           //break;
@@ -994,7 +994,7 @@ void Modbus::_modbusforward(int port)
         } 
         else if (ret > 0) 
         {
-          ret = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
+          int rc = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
 
           switch(e2proomdata.robot_mod)
           {
@@ -1108,7 +1108,7 @@ void Modbus::_modbusforward(int port)
             default:
             break;
           }
-          if (ret == -1) 
+          if (rc == -1) 
           {
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
           //break;
