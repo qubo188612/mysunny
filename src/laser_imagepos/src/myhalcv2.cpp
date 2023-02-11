@@ -25549,7 +25549,7 @@ namespace Myhalcv2
                     case MHC_FLIP_Y:
                         for(j=0;j<nnHeight;j++)
                         {
-                            memcpy(&matOut->ptr_Vec3b[j*nnWidth],&temp.data[(nnHeight-j-1)*nnWidth],nnWidth*sizeof(Vec3b));
+                            memcpy(&matOut->ptr_Vec3b[j*nnWidth],&temp.ptr_Vec3b[(nnHeight-j-1)*nnWidth],nnWidth*sizeof(Vec3b));
                         }
                     break;
                     default:
