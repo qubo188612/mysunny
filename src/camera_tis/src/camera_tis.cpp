@@ -349,6 +349,7 @@ void CameraTis::_spin()
           }
       }
     #endif
+    /*
       if(b_modbusconnect==true)
       {
           auto stamp = ptr->header.stamp;
@@ -364,6 +365,7 @@ void CameraTis::_spin()
           tab_reg[3]=msec;
           int rc=modbus_write_registers(ctx,0x0d,4,tab_reg);
       }
+    */
       _pub->publish(std::move(ptr));
       gst_buffer_unmap(buffer, &info);
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "line_center_reconstruction/line_center_reconstruction.hpp"
+#include "line_center_reconstruction/TimeFunction.h"
 
 #include <memory>
 #include <utility>
@@ -150,6 +151,21 @@ PointCloud2::UniquePtr LineCenterReconstruction::execute(PointCloud2::UniquePtr 
 
 IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm)
 {
+  u_int16_t Y,m,d,H,M,S,ms;
+  if(b_modbusconnect==true)
+  {
+      TimeFunction time;
+      time.get_time_ms(Y,m,d,H,M,S,ms);
+      u_int16_t tab_reg[4];
+      tab_reg[0]=H;
+      tab_reg[1]=M;
+      tab_reg[2]=S;
+      tab_reg[3]=ms;
+      int rc=modbus_write_registers(ctx,0x0d,4,tab_reg);
+
+      u_int16_t u_res=0;
+      rc=modbus_write_registers(ctx,0x11,1,&u_res);
+  }
   if (ptr->imageout.header.frame_id == "-1" 
    || ptr->targetpointout.size()==0
    || ptr->result==false) 
@@ -162,8 +178,59 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         u_int16_t tab_reg[1];
         tab_reg[0]=0;
         int rc=modbus_write_registers(ctx,0x02,1,tab_reg);
+        int16_t i_res=-1;
+        u_int16_t u_res=(u_int16_t)i_res;
+        rc=modbus_write_registers(ctx,0x11,1,&u_res);
       }
+      if(ptr->imageout.header.frame_id != "-1")
+      {
+        u_int16_t tab_reg[4];
+        auto stamp = msg->header.stamp;
+        time_t t;
+        u_int16_t msec = msg->header.stamp.nanosec/1000000;
+        struct tm *p;
+        t=stamp.sec;
+        p=gmtime(&t);  
+        
+        tab_reg[0]=(p->tm_hour+8)%24;
+        tab_reg[1]=p->tm_min;
+        tab_reg[2]=p->tm_sec;
+        tab_reg[3]=msec;
+        static double oldtime=0;
+        double nowtime;
+        struct timespec timerun = {0, 0};
+        clock_gettime(CLOCK_REALTIME, &timerun);
+        if(oldtime!=0)
+        {
+          nowtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
+          double fps=1.0/(nowtime-oldtime);
+          tab_reg[4]=(u_int16_t)(fps*100.0);
+          oldtime=nowtime;
+        }
+        else
+        {
+          oldtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
+          tab_reg[4]=0;
+        }
+        int rc=modbus_write_registers(ctx,0x07,5,tab_reg);
+        if(rc!=5)
+        {
+          RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x05=%d",rc);
+        }
 
+        long nowmstime=(long)ms+(long)S*1000+(long)M*60*1000+(long)H*60*60*1000;
+        long fpsmstime=(long)msec+(long)p->tm_sec*1000+(long)p->tm_min*60*1000+(long)((p->tm_hour+8)%24)*60*60*1000;
+        if(nowmstime<fpsmstime)
+        {
+          nowmstime=nowmstime+24*60*60*1000;
+        }
+        u_int16_t msadd=(u_int16_t)(nowmstime-fpsmstime);
+        rc=modbus_write_registers(ctx,0x01,1,&msadd);
+        if(rc!=1)
+        {
+          RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x01=%d",rc);
+        }
+      }
       return msg;
    }
 
@@ -313,6 +380,19 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       delete othertab_reg;
     }
 
+    long nowmstime=(long)ms+(long)S*1000+(long)M*60*1000+(long)H*60*60*1000;
+    long fpsmstime=(long)msec+(long)p->tm_sec*1000+(long)p->tm_min*60*1000+(long)((p->tm_hour+8)%24)*60*60*1000;
+    if(nowmstime<fpsmstime)
+    {
+      nowmstime=nowmstime+24*60*60*1000;
+    }
+    u_int16_t msadd=(u_int16_t)(nowmstime-fpsmstime);
+    rc=modbus_write_registers(ctx,0x01,1,&msadd);
+    if(rc!=1)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x01=%d",rc);
+    }
+
     if(msg->solderjoints==true)
     {
       tab_reg[0]=0xff;
@@ -326,6 +406,9 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x60=%d",rc);
     }
+
+    u_int16_t u_res=1;
+    rc=modbus_write_registers(ctx,0x11,1,&u_res);
   }
 
   return msg;

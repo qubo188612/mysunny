@@ -55,7 +55,8 @@ void E2proomData::check_para()
        robot_mod!=E2POOM_ROBOT_MOD_MOKA_NABOTE&&
        robot_mod!=E2POOM_ROBOT_MOD_GANGSHANG&&
        robot_mod!=E2POOM_ROBOT_MOD_EFORT&&
-       robot_mod!=E2POOM_ROBOT_MOD_MOKA
+       robot_mod!=E2POOM_ROBOT_MOD_MOKA&&
+       robot_mod!=E2POOM_ROBOT_MOD_ZEGE_2
       )
       robot_mod=E2POOM_ROBOT_MOD_NULL;
 

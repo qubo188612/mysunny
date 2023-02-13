@@ -36,6 +36,8 @@
 
 static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
 
+long ZEGEstarttimems=0;
+
 namespace modbus
 {
 using rcl_interfaces::msg::SetParametersResult;
@@ -196,6 +198,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   case E2POOM_ROBOT_MOD_ZHICHANG:       //Modbus
   case E2POOM_ROBOT_MOD_MOKA_NABOTE:    
   case E2POOM_ROBOT_MOD_MOKA:
+  case E2POOM_ROBOT_MOD_ZEGE_2:
       ctx_forward = modbus_new_tcp(NULL, robot_port);
       if (!ctx_forward) {
         RCLCPP_ERROR(this->get_logger(), "Failed to create modbusforward context.");
@@ -622,8 +625,50 @@ void Modbus::_modbus(int port)
               {
                 mb_forwardmapping->tab_registers[i]=mb_mapping->tab_registers[i];
               }
+              mb_forwardmapping->tab_registers[0x005]=mb_mapping->tab_registers[0x61];
+              mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x62];
               mb_forwardmapping->tab_registers[0x011]=1;
               mb_forwardmapping->tab_registers[0x102]=mb_mapping->tab_registers[0x102];  
+            break;
+            case E2POOM_ROBOT_MOD_ZEGE_2:
+              mb_forwardmapping->tab_registers[0x000]=6;
+              for(int i=1;i<5;i++)
+              {
+                mb_forwardmapping->tab_registers[i]=mb_mapping->tab_registers[i];
+              }
+              mb_forwardmapping->tab_registers[0x005]=mb_mapping->tab_registers[0x61];
+              mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x62];
+              static bool ZEGEstart=0;
+              if(ZEGEstart==0&&mb_mapping->tab_registers[0x07]!=0&&mb_mapping->tab_registers[0x08]!=0&&mb_mapping->tab_registers[0x09]!=0&&mb_mapping->tab_registers[0xa]!=0)
+              {
+                ZEGEstart=1;
+                ZEGEstarttimems=(long)(mb_mapping->tab_registers[0x0a])+
+                                (long)(mb_mapping->tab_registers[0x09])*1000+
+                                (long)(mb_mapping->tab_registers[0x08])*60*1000+
+                                (long)(mb_mapping->tab_registers[0x07])*60*60*1000;
+              }
+              else
+              {
+                long  ZEGEresulttimems= (long)(mb_mapping->tab_registers[0x0a])+
+                                        (long)(mb_mapping->tab_registers[0x09])*1000+
+                                        (long)(mb_mapping->tab_registers[0x08])*60*1000+
+                                        (long)(mb_mapping->tab_registers[0x07])*60*60*1000;
+                long  ZEGEsystemtimems= (long)(mb_mapping->tab_registers[0x10])+
+                                        (long)(mb_mapping->tab_registers[0x0f])*1000+
+                                        (long)(mb_mapping->tab_registers[0x0e])*60*1000+
+                                        (long)(mb_mapping->tab_registers[0x0d])*60*60*1000;
+                int time2=ZEGEresulttimems-ZEGEstarttimems;
+                int time1=ZEGEsystemtimems-ZEGEstarttimems;
+                mb_forwardmapping->tab_registers[0x007]=(u_int16_t)(time1>>16);
+                mb_forwardmapping->tab_registers[0x008]=(u_int16_t)(time1&0xffff);
+                mb_forwardmapping->tab_registers[0x009]=(u_int16_t)(time2>>16);
+                mb_forwardmapping->tab_registers[0x00a]=(u_int16_t)(time2&0xffff);
+
+//              RCLCPP_INFO(this->get_logger(), "ZEGEresulttimems: %d", time2);
+//              RCLCPP_INFO(this->get_logger(), "ZEGEsystemtimems: %d", time1);
+              }
+              mb_forwardmapping->tab_registers[0x00b]=mb_mapping->tab_registers[0x11];
+
             break;
             default:
             break;
@@ -1102,6 +1147,51 @@ void Modbus::_modbusforward(int port)
                   oldcamera_power=0;
                   _camera_power(false);
                 }
+              }
+            }
+            break;
+            case E2POOM_ROBOT_MOD_ZEGE_2:
+            {
+              static int oldtasknum=INT_MAX;
+              if(oldtasknum!=mb_forwardmapping->tab_registers[0x102])
+              {
+                oldtasknum=mb_forwardmapping->tab_registers[0x102];
+                mb_mapping->tab_registers[0x102]=oldtasknum;
+                _task_numberset(oldtasknum);
+              }
+              static int oldgpio_laser=INT_MAX;
+              if(oldgpio_laser!=mb_forwardmapping->tab_registers[0x100])
+              {
+                oldgpio_laser=mb_forwardmapping->tab_registers[0x100];
+                if(oldgpio_laser==0x0ff)
+                {
+                  _gpio_laser(true);
+                }
+                else if(oldgpio_laser==0x000)
+                {
+                  _gpio_laser(false);
+                }
+              }
+              static int oldcamera_power=INT_MAX;
+              if(oldcamera_power!=mb_forwardmapping->tab_registers[0x101])
+              {
+                oldcamera_power=mb_forwardmapping->tab_registers[0x101];
+                if(oldcamera_power!=0xff)
+                {
+                  oldcamera_power=0xff;
+                  _camera_power(true);
+                }
+                else if(oldcamera_power!=0)
+                {
+                  oldcamera_power=0;
+                  _camera_power(false);
+                }
+              }
+              static int oldres=INT_MAX;
+              if(oldres!=mb_forwardmapping->tab_registers[0x0b])
+              {
+                oldres=mb_forwardmapping->tab_registers[0x0b];
+                mb_mapping->tab_registers[0x11]=mb_forwardmapping->tab_registers[0x0b];
               }
             }
             break;
