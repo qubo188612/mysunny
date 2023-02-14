@@ -550,7 +550,8 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     if(step==13)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
     }
     //膨胀做
     Myhalcv2::Mydilation_circle2(imageBry,&imageBry,2,0,Myhalcv2::MHC_MORPH_RECT);
@@ -584,7 +585,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         {
             if(sum_value!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
     }
@@ -603,10 +606,13 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight);//修复空的线
     if(step==14)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
         for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
         {
-            imageGasupain.data[j*imageGasupain.nWidth+(Int32)X_line[j]]=128;
+            imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+            imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+            imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
@@ -646,12 +652,15 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     if(step==15)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
         for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -689,15 +698,18 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     if(step==16)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
-        linepoint32ST.y=minj;
-        linepoint32ST.x=mini;
-        Myhalcv2::MyCircle(&imageGasupain,linepoint32ST,15,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        linepoint32ST.y=(minj>>2);
+        linepoint32ST.x=(mini>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
         for(j=stepfindST.y;j<=stepfindED.y;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -721,14 +733,21 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     if(step==17)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindST,15,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindED,15,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        linepoint32ST.y=(stepfindST.y>>2);
+        linepoint32ST.x=(stepfindST.x>>2);
+        linepoint32ED.y=(stepfindED.y>>2);
+        linepoint32ED.x=(stepfindED.x>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ED,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
         for(j=stepfindST.y;j<=stepfindED.y;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -767,12 +786,15 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     if(step==18)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
         for(j=X_Linestarty+24;j<X_Lineendy-24;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]==255)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -809,15 +831,18 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     }
     if(step==19)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
-        linepoint32ST.y=minj;
-        linepoint32ST.x=mini;
-        Myhalcv2::MyCircle(&imageGasupain,linepoint32ST,15,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        linepoint32ST.y=(minj>>2);
+        linepoint32ST.x=(mini>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
         for(j=midfindST.y;j<=midfindED.y;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -842,14 +867,21 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     /**************************************/
     if(step==20)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
-        Myhalcv2::MyCircle(&imageGasupain,midfindST,15,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,midfindED,15,128,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        linepoint32ST.y=(midfindST.y>>2);
+        linepoint32ST.x=(midfindST.x>>2);
+        linepoint32ED.y=(midfindED.y>>2);
+        linepoint32ED.x=(midfindED.x>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ED,4,0,255,0,Myhalcv2::CV_CLRCLE_FILL);
         for(j=midfindST.y;j<=midfindED.y;j++)
         {
             if( m_brygujia.data[1*m_brygujia.nWidth+j]!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
             }
         }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
@@ -876,17 +908,34 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
     if(step==21)
     {
-        Myhalcv2::MatClone(imageIn,&imageGasupain);
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        linepoint32ST.y=(stepfindST.y>>2);
+        linepoint32ST.x=(stepfindST.x>>2);
+        linepoint32ED.y=(stepfindED.y>>2);
+        linepoint32ED.x=(stepfindED.x>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,5,0,0,255,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ED,5,0,0,255,Myhalcv2::CV_CLRCLE_FILL);
+        linepoint32ST.y=(midfindST.y>>2);
+        linepoint32ST.x=(midfindST.x>>2);
+        linepoint32ED.y=(midfindED.y>>2);
+        linepoint32ED.x=(midfindED.x>>2);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,5,255,255,0,Myhalcv2::CV_CLRCLE_FILL);
+        Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ED,5,255,255,0,Myhalcv2::CV_CLRCLE_FILL);
         Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
         Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ED);
-        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
+        linepoint32ST.y=(linepoint32ST.y>>2);
+        linepoint32ST.x=(linepoint32ST.x>>2);
+        linepoint32ED.y=(linepoint32ED.y>>2);
+        linepoint32ED.x=(linepoint32ED.x>>2);
+        Myhalcv2::MyLine3col(&imageGasupain,linepoint32ST,linepoint32ED,255,0,0,Myhalcv2::CV_LINE_8LT,1);
         Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
         Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
-        Myhalcv2::MyLine(&imageGasupain,linepoint32ST,linepoint32ED,255,Myhalcv2::CV_LINE_8LT,1);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,stepfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,midfindST,5,128,Myhalcv2::CV_CLRCLE_FILL);
-        Myhalcv2::MyCircle(&imageGasupain,midfindED,5,128,Myhalcv2::CV_CLRCLE_FILL);
+        linepoint32ST.y=(linepoint32ST.y>>2);
+        linepoint32ST.x=(linepoint32ST.x>>2);
+        linepoint32ED.y=(linepoint32ED.y>>2);
+        linepoint32ED.x=(linepoint32ED.x>>2);
+        Myhalcv2::MyLine3col(&imageGasupain,linepoint32ST,linepoint32ED,0,255,0,Myhalcv2::CV_LINE_8LT,1);
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
@@ -896,7 +945,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     if(0!=Myhalcv2::MyGetLinefocal(headline,tileline,&resultfocal))
     {
     #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
         return 1;
     }
@@ -914,7 +963,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     if(centerj<0||centerj>=nHeight||centeri<0||centeri>=nWidth)
     {
     #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
         return 1;
     }
@@ -935,22 +984,22 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         nendj=nHeight-2;
     }
 
-    Myhalcv2::MyCutminRoi(imageIn,&imageGasu,Myhalcv2::MHC_CUTMIN_32,nstarti-1,nstartj-1,nendi-nstarti+3,nendj-nstartj+3);
-    Myhalcv2::Mymedian(imageGasu,&imageGasu);
-    Myhalcv2::MyCutselfRoi(&imageGasu,1,1,imageGasu.width-2,imageGasu.height-2);
-    Myhalcv2::Mynormalize_lineXY_downvalue(imageGasu,&imageGasu,15,255);
+    Myhalcv2::MyCutminRoi(imageIn,&imageBry,Myhalcv2::MHC_CUTMIN_32,nstarti-1,nstartj-1,nendi-nstarti+3,nendj-nstartj+3);
+    Myhalcv2::Mymedian(imageBry,&imageBry);
+    Myhalcv2::MyCutselfRoi(&imageBry,1,1,imageBry.width-2,imageBry.height-2);
+    Myhalcv2::Mynormalize_lineXY_downvalue(imageBry,&imageBry,15,255);
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
     if(step==22)
     {
-      Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+      Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
       return 0;
     }
 
     /**********/
 //断线分割膨胀法
-    Myhalcv2::Mybinary(imageGasu,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
+    Myhalcv2::Mybinary(imageBry,&m_brygujia,Myhalcv2::MHC_BARINY_VALUE_IMG,255,i32_bryvalue,0);
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
@@ -964,7 +1013,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     if(ImageConectlong.AllMarkPointCount==0)
     {
     #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
         return 1;
     }
@@ -982,21 +1031,22 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Myconnection(m_brygujia,&ImageConect,1,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
     Myhalcv2::Myregion_to_label(&ImageConect,&m_brygujia);
     imageBry=Myhalcv2::MatCreatzero(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff4);
-    Myhalcv2::MyAddminRoi(imageBry,m_brygujia,&imageGasu,nstarti-1,nstartj-1);
+    Myhalcv2::MyAddminRoi(imageBry,m_brygujia,&imageBry,nstarti-1,nstartj-1);
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
     if(step==25)
     {
-      Myhalcv2::Mymat_to_bin(imageGasu,&m_brygujia,255);
-      Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
+      Myhalcv2::Mymat_to_bin(imageBry,&m_brygujia,255);
+      Myhalcv2::Mygausspyramid_2levl(m_brygujia,&imageGasupain);
+      Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
       return 0;
     }
     if(b_duanxianmoshi==0)
     {
         Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
         Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
-        Myhalcv2::MyLinetoPoint(imageGasu.nHeight,imageGasu.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
+        Myhalcv2::MyLinetoPoint(imageBry.nHeight,imageBry.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
         resultfocal1.x=resultfocal.x;
         resultfocal1.y=resultfocal.y;
         leijiwrite=0;
@@ -1006,7 +1056,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             Int32 j=Imageheadline.AllMarkPoint[0].point[t].y;
             if(j>resultfocal.y)
             {
-                if(imageGasu.data[j*imageGasu.nWidth+i]==0)
+                if(imageBry.data[j*imageBry.nWidth+i]==0)
                 {
                     //开始检测
                     resultfocal1.x=i;
@@ -1040,7 +1090,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::MyPoint16to32(headline.st,&linepoint32ED);
         Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ST);
-        Myhalcv2::MyLinetoPoint(imageGasu.nHeight,imageGasu.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
+        Myhalcv2::MyLinetoPoint(imageBry.nHeight,imageBry.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
         resultfocal1.x=resultfocal.x;
         resultfocal1.y=resultfocal.y;
         leijiwrite=0;
@@ -1050,7 +1100,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             Int32 j=Imageheadline.AllMarkPoint[0].point[t].y;
             if(j<resultfocal.y)
             {
-                if(imageGasu.data[j*imageGasu.nWidth+i]==0)
+                if(imageBry.data[j*imageBry.nWidth+i]==0)
                 {
                     //开始检测
                     resultfocal1.x=i;
@@ -1083,7 +1133,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::MyPoint16to32(headline.st,&linepoint32ED);
         Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ST);
-        Myhalcv2::MyLinetoPoint(imageGasu.nHeight,imageGasu.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
+        Myhalcv2::MyLinetoPoint(imageBry.nHeight,imageBry.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
         resultfocal2.x=resultfocal.x;
         resultfocal2.y=resultfocal.y;
         leijiwrite=0;
@@ -1093,7 +1143,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             Int32 j=Imageheadline.AllMarkPoint[0].point[t].y;
             if(j<resultfocal.y)
             {
-                if(imageGasu.data[j*imageGasu.nWidth+i]==0)
+                if(imageBry.data[j*imageBry.nWidth+i]==0)
                 {
                     //开始检测
                     resultfocal2.x=i;
@@ -1126,7 +1176,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
         Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ST);
-        Myhalcv2::MyLinetoPoint(imageGasu.nHeight,imageGasu.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
+        Myhalcv2::MyLinetoPoint(imageBry.nHeight,imageBry.nWidth,linepoint32ST,linepoint32ED,Myhalcv2::CV_LINE_8LT,1,&Imageheadline,cv8uc1_Imagebuff3);
         resultfocal2.x=resultfocal.x;
         resultfocal2.y=resultfocal.y;
         leijiwrite=0;
@@ -1136,7 +1186,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
             Int32 j=Imageheadline.AllMarkPoint[0].point[t].y;
             if(j>resultfocal.y)
             {
-                if(imageGasu.data[j*imageGasu.nWidth+i]==0)
+                if(imageBry.data[j*imageBry.nWidth+i]==0)
                 {
                     //开始检测
                     resultfocal2.x=i;
@@ -1171,7 +1221,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
         handianEn=0;	//不是焊点
     }
-    if(imageGasu.data[temp_resultfocal1.y*imageGasu.nWidth+temp_resultfocal1.x]!=imageGasu.data[temp_resultfocal2.y*imageGasu.nWidth+temp_resultfocal2.x])
+    if(imageBry.data[temp_resultfocal1.y*imageBry.nWidth+temp_resultfocal1.x]!=imageBry.data[temp_resultfocal2.y*imageBry.nWidth+temp_resultfocal2.x])
     {
         handianEn=0;	//不是焊点
     }
@@ -1192,7 +1242,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 
     if(step==1)
     {
-        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
         if(cvimgIn.type()==CV_8UC1)
         cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
         cv_point_st.x=(headline32.st.x>>2);
