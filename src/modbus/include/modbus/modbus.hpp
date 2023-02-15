@@ -34,7 +34,7 @@ namespace modbus
 #define SERVER_REGEDIST_NUM               400
 
 
-#define ROBOT_SET_REGEDIST_NUM            10
+#define ROBOT_SET_REGEDIST_NUM            0x10
 #define ROBOT_MOD_REG_ADD                 0x0000
 #define ROBOT_PORT_REG_ADD                0x0001
 #define ALSROBOTCAM_COMPENSATION_X        0x0002  //标定补偿X
@@ -45,6 +45,8 @@ namespace modbus
 #define CAMER_FPS_REG_ADD                 0x0007
 #define CAMER_SIZE_VIEW_WIDTH_REG_ADD     0x0008
 #define CAMER_SIZE_VIEW_HEIGHT_REG_ADD    0x0009
+#define ALSROBOTCAM_REVERSE_Y_REG_ADD     0x000a  //相机Y数据反向
+#define ALSROBOTCAM_REVERSE_Z_REG_ADD     0x000b
 
 #define PARAMETER_REGEDIST_NUM                 400
 

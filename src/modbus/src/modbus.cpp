@@ -76,7 +76,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   
   _param_linecenter_get->wait_for_service();
   auto linecenter_future = _param_linecenter_get->get_parameters(
-                {"compensation_dx","compensation_dy","compensation_dz"},
+                {"compensation_dx","compensation_dy","compensation_dz","reverse_y","reverse_z"},
                 std::bind(&Modbus::callbackCenterParam, this, std::placeholders::_1));
 
 
@@ -309,21 +309,28 @@ void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Paramete
 void Modbus::callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
 {
     auto result = future.get();
-    if(result.size()>=3)
+    if(result.size()>=5)
     {
       auto a_compensation_dx = result.at(0);
       auto a_compensation_dy = result.at(1);
       auto a_compensation_dz = result.at(2);
+      auto a_reverse_y = result.at(3);
+      auto a_reverse_z = result.at(4);
       int compensation_dx=a_compensation_dx.as_int();
       int compensation_dy=a_compensation_dy.as_int();
       int compensation_dz=a_compensation_dz.as_int();
+      int reverse_y=a_reverse_y.as_bool();
+      int reverse_z=a_reverse_z.as_bool();
       RCLCPP_INFO(this->get_logger(), "compensation_dx param: %d", compensation_dx);
       RCLCPP_INFO(this->get_logger(), "compensation_dy param: %d", compensation_dy);
       RCLCPP_INFO(this->get_logger(), "compensation_dz param: %d", compensation_dz);
+      RCLCPP_INFO(this->get_logger(), "reverse_y param: %d", reverse_y);
+      RCLCPP_INFO(this->get_logger(), "reverse_z param: %d", reverse_z);
 
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_X]=(u_int16_t)((int16_t)compensation_dx);
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Y]=(u_int16_t)((int16_t)compensation_dy);  
-      robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Z]=(u_int16_t)((int16_t)compensation_dz);  
+      robot_mapping->tab_registers[ALSROBOTCAM_REVERSE_Y_REG_ADD]=(u_int16_t)((int16_t)reverse_y);  
+      robot_mapping->tab_registers[ALSROBOTCAM_REVERSE_Z_REG_ADD]=(u_int16_t)((int16_t)reverse_z);  
     }
     else
     {
@@ -478,6 +485,18 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case CAMER_SIZE_VIEW_HEIGHT_REG_ADD:
       _param_camera->set_parameters({rclcpp::Parameter("view_height", num)});
+    break;
+    case ALSROBOTCAM_REVERSE_Y_REG_ADD:
+      if(num!=0)
+        _param_linecenter_set->set_parameters({rclcpp::Parameter("reverse_y", true)});
+      else
+        _param_linecenter_set->set_parameters({rclcpp::Parameter("reverse_y", false)});
+    break;
+    case ALSROBOTCAM_REVERSE_Z_REG_ADD:
+      if(num!=0)
+        _param_linecenter_set->set_parameters({rclcpp::Parameter("reverse_z", true)});
+      else
+        _param_linecenter_set->set_parameters({rclcpp::Parameter("reverse_z", false)});
     break;
     default:
     break;

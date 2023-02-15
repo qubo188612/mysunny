@@ -264,10 +264,28 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   float ddz=float(centerData.compensation_dz)/100;
 
   auto cloud = to_pc3(dst, src);
+
+  int reverse_y,reverse_z;
+  if(centerData.reverse_y==0)
+  {
+    reverse_y=1;
+  }
+  else
+  {
+    reverse_y=-1;
+  }
+  if(centerData.reverse_z==0)
+  {
+    reverse_z=1;
+  }
+  else
+  {
+    reverse_z=-1;
+  }
   for(int i=0;i<cloud.size();i++)
   {
-    cloud[i].x=cloud[i].x+ddy;
-    cloud[i].y=cloud[i].y+ddz;
+    cloud[i].x=cloud[i].x*reverse_y+ddy;
+    cloud[i].y=cloud[i].y*reverse_z+ddz;
   }
   msg->lasertrackoutcloud = cloud;
   
@@ -287,8 +305,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   msg->targetpointoutcloud.resize(dst.size());
   for(int i=0;i<dst.size();i++)
   {
-    msg->targetpointoutcloud[i].x=dst[i].x+ddy;
-    msg->targetpointoutcloud[i].y=dst[i].y+ddz;
+    msg->targetpointoutcloud[i].x=dst[i].x*reverse_y+ddy;
+    msg->targetpointoutcloud[i].y=dst[i].y*reverse_z+ddz;
     msg->targetpointoutcloud[i].u=src[i].x;
     msg->targetpointoutcloud[i].v=src[i].y;
     msg->targetpointoutcloud[i].name=ptr->targetpointout[i].name;
@@ -438,6 +456,14 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
   this->declare_parameter("compensation_dx", centerData.compensation_dx);
   this->declare_parameter("compensation_dy", centerData.compensation_dy);
   this->declare_parameter("compensation_dz", centerData.compensation_dz);
+  if(centerData.reverse_y==0)
+    this->declare_parameter("reverse_y", false);
+  else
+    this->declare_parameter("reverse_y", true);
+  if(centerData.reverse_z==0)
+    this->declare_parameter("reverse_z", false);
+  else
+    this->declare_parameter("reverse_z", true);
 
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
 
@@ -503,6 +529,14 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
         }    
         else if (p.get_name() == "compensation_dz") {
           centerData.compensation_dz=(Int16)p.as_int();
+          centerData.write_center_para();
+        }
+        else if (p.get_name() == "reverse_y") {
+          centerData.reverse_y=(Int16)p.as_bool();
+          centerData.write_center_para();
+        }
+        else if (p.get_name() == "reverse_z") {
+          centerData.reverse_z=(Int16)p.as_bool();
           centerData.write_center_para();
         }
       }

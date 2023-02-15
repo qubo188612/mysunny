@@ -21,6 +21,8 @@ public:
     Int16 compensation_dx;   //标定补偿X
     Int16 compensation_dy;   //标定补偿Y
     Int16 compensation_dz;   //标定补偿Z
+    Int16 reverse_y;         //反向Y
+    Int16 reverse_z;         //反向Z
 
     void write_center_para();	//保存补偿参数
     void init_center_para();		//初始化补偿参数

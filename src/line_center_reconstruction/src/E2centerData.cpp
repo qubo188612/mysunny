@@ -15,6 +15,8 @@ E2proomData::E2proomData()
     compensation_dx=0;
     compensation_dy=0;
     compensation_dz=0;
+    reverse_y=0;
+    reverse_z=0;
 
     read_para();
 }
@@ -56,6 +58,10 @@ void E2proomData::read_para()
       i16_p++;
       compensation_dz=*i16_p;
       i16_p++;
+      reverse_y=*i16_p;
+      i16_p++;
+      reverse_z=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -86,6 +92,10 @@ void E2proomData::write_center_para()
     i16_p++;
     *i16_p=compensation_dz;
     i16_p++;
+    *i16_p=reverse_y;
+    i16_p++;
+    *i16_p=reverse_z;
+    i16_p++;
 
     fo.WriteFile(E2POOM_CENTER_SYSPATH_MOTO,buff,E2POOM_CENTER_SAVEBUFF);
 
@@ -101,4 +111,6 @@ void E2proomData::init_center_para()
     compensation_dx=0;
     compensation_dy=0;
     compensation_dz=0;
+    reverse_y=0;
+    reverse_z=0;
 }
