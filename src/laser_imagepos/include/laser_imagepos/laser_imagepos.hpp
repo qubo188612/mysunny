@@ -18,6 +18,9 @@
 
 #define E2POOM_ALG102_LASERIMAGEPOS_DIMIANPINGJUNSHUNUM_MAX         500
 
+#define PIC_IMAGE_HEIGHT 1536
+#define PIC_IMAGE_WIDTH  1024
+
 namespace laser_imagepos
 {
 
@@ -211,6 +214,16 @@ const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pokouduanxianerzhi",
                                               "als106_pokousearchdectancemax",
                                               "als106_pokousearchdectancemin"};
+
+const std::vector<std::string> KEYS_ALS108 = {"als108_exposure_time",
+                                              "als108_center_x",
+                                              "als108_center_y",  
+                                              "als108_search_w",  
+                                              "als108_search_h",
+                                              "als108_STC_alpha",
+                                              "als108_STC_beta",  
+                                              "als108_STC_rho",
+                                              "als108_STC_sigma"};
                                               
 /**
  * @brief To zip related parameters together.
@@ -353,9 +366,9 @@ struct Params
   int als105_jiguangkuandu=6;//激光粗细
   int als105_b_cut=0;                  //是否使用搜索区域
   int als105_cutleft=0;                //搜索区域
-  int als105_cutright=1023;           //搜索区域
+  int als105_cutright=PIC_IMAGE_WIDTH-1;           //搜索区域
   int als105_cuttop=0;                 //搜索区域
-  int als105_cutdeep=1535;           //搜索区域
+  int als105_cutdeep=PIC_IMAGE_HEIGHT-1;           //搜索区域
   int als105_guaidianyuzhi=60;//拐点阈值
   int als105_Downdifmin=-50;       //下半段直线斜率限制最大值
   int als105_Downdif=50;      //下半段直线斜率限制最小值   //Downdif
@@ -382,9 +395,9 @@ struct Params
   int als106_jiguangkuandu=6;//激光粗细
   int als106_b_cut=0;                  //是否使用搜索区域
   int als106_cutleft=0;                //搜索区域
-  int als106_cutright=1023;           //搜索区域
+  int als106_cutright=PIC_IMAGE_WIDTH-1;           //搜索区域
   int als106_cuttop=0;                 //搜索区域
-  int als106_cutdeep=1535;           //搜索区域
+  int als106_cutdeep=PIC_IMAGE_HEIGHT-1;           //搜索区域
   int als106_difmin=150;               //坡口导数判定阈值
   int als106_Sidelong=50;              //坡口两侧直线长度
   int als106_Upback_st=10;             //上半段坡口统计时上端点回退距离
@@ -413,6 +426,18 @@ struct Params
   int als106_pokouduanxianerzhi=130;       //咬边二值（坡口模式=0时有效）
   int als106_pokousearchdectancemax=25;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
   int als106_pokousearchdectancemin=15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
+/************************************/
+//算法108参数
+  int als108_exposure_time=10000;//曝光值
+  int als108_center_x=PIC_IMAGE_WIDTH/2;//特征点位置
+  int als108_center_y=PIC_IMAGE_HEIGHT/2; //特征点位置
+  int als108_search_w=150;//宽度搜索区域
+  int als108_search_h=150;//高度搜索区域
+  int als108_STC_alpha=2250;//尺度因子，推荐2.25*1000
+  int als108_STC_beta=1000;//形状因子，推荐1*1000  
+  int als108_STC_rho=75;//学习率,推荐0.075*1000
+  int als108_STC_sigma=500;//高斯权重，推荐0.5*1000
+
 /************************************/
   int task_num = 0;
   int show_step = 0;      
@@ -510,6 +535,7 @@ private:
   void alg104_declare_parameters();
   void alg105_declare_parameters();
   void alg106_declare_parameters();
+  void alg108_declare_parameters();
 
   void alg100_update_parameters();
   void alg101_update_parameters();
@@ -518,6 +544,7 @@ private:
   void alg104_update_parameters();
   void alg105_update_parameters();
   void alg106_update_parameters();
+  void alg108_update_parameters();
 
   int alg100_getcallbackParameter(const rclcpp::Parameter &p);
   int alg101_getcallbackParameter(const rclcpp::Parameter &p);
@@ -526,6 +553,7 @@ private:
   int alg104_getcallbackParameter(const rclcpp::Parameter &p);
   int alg105_getcallbackParameter(const rclcpp::Parameter &p);
   int alg106_getcallbackParameter(const rclcpp::Parameter &p);
+  int alg108_getcallbackParameter(const rclcpp::Parameter &p);
 
 
   Params pm;
@@ -619,6 +647,10 @@ private:
                       bool &solderjoints,//是否焊点
                       int step);
   int alg106_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
+                      std::vector <cv::Point2f> &namepoint,
+                      bool &solderjoints,//是否焊点
+                      int step);
+  int alg108_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);

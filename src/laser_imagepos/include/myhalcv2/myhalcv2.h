@@ -2,7 +2,7 @@
 #define MYHALCV2_H
 
 
-//#define USE_XIMGPROC    1
+#define USE_XIMGPROC    0
 
 #include "opencv2/opencv.hpp"
 #if USE_XIMGPROC == 1
@@ -476,7 +476,6 @@ namespace Myhalcv2
         L_Point32 vec2;		//向量2
         L_Point32 vec3;		//向量3
     }Vec3v;
-
 
     //椭圆结构体
     typedef struct ROTATEDRECT
@@ -1983,8 +1982,9 @@ namespace Myhalcv2
 
     //求P点和A点，P点向指向画面左侧且垂直与PA的向量
     Int8 MyGetLinefocalLeft(L_Point32 focalInP,             //输入P点
-                            L_Point32 focalInA,			    //输入A点
+                            L_Point32 focalInA,             //输入A点
                             L_Point32F *focalOut);          //求得画面向左向量
+
 
     //求直线上Y轴所对应的X轴坐标,如果斜率为0时,X轴返回0,且函数值返回非0
     Int8 MyGetLineXpos(L_line lineIn,			//输入直线
@@ -2333,7 +2333,6 @@ namespace Myhalcv2
                                     Bool circleMod);				//circleMod=TRUE表示为头尾相接的数组(value[0]与value[valuenum-1]是相邻的),circleMod=FALSE,表示不相邻
 
 
-
     /**************以下是其他返回值的函数********************************/
     //生成随机数
     Int32 My_rand(void);
@@ -2573,6 +2572,27 @@ namespace Myhalcv2
                                                Int32 bry_value,				//二值化阈值
                                                binarysidemod bry_mod,		//二值化模式
                                                Int32 size_value);			//窄部区域阈值
+
+    //STC跟踪法初始化
+    Int8 MySTC_init(Mat matIn,      //输入图像(会处理全部矩阵区域，只支持CV_8UC1类型）
+                    L_Point32 point,//输入特征点(特征点应该在矩形区域中)
+                    Int32 left,		//输入矩形左边
+                    Int32 right,	//输入矩形右边
+                    Int32 top,		//输入矩形上边
+                    Int32 deep, 	//输入矩形下边
+                    double alpha,    //尺度因子，推荐2.25
+                    double beta,     //形状因子，推荐1
+                    double rho,      //学习率，推荐0.075
+                    double sigma);   //高斯权重，推荐0.5
+
+
+    //STC跟踪
+    Int8 MySTC_tracker(Mat matIn,           //输入图像(会处理全部矩阵区域，只支持CV_8UC1类型)
+                       L_Point32 *pointOut, //输出特征点
+                       Int32 *left,         //输出矩形左边
+                       Int32 *right,        //输出矩形右边
+                       Int32 *top,          //输出矩形上边
+                       Int32 *deep);        //输出矩形下边
 
 }
 

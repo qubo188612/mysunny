@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <vector>
 
+
+#define PIC_IMAGE_HEIGHT 1536
+#define PIC_IMAGE_WIDTH  1024
+
 //任务号设置
 #define E2POOM_TASK_NUM_SAVEBUFF           8
 #define E2POOM_TASK_NUM_SYSPATH_MOTO       "./SAVE/E2P_TASK_NUM_DLG.bsd" 
@@ -479,13 +483,13 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTLEFT_USE                     0
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTLEFT_MAX                     2047
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_MIN                    0
-#define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_USE                    1023
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_USE                    PIC_IMAGE_WIDTH-1
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTRIGHT_MAX                    2047
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_MIN                      0
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_USE                      0
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTTOP_MAX                      3071
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_MIN                     0
-#define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_USE                     1535
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_USE                     PIC_IMAGE_HEIGHT-1
 #define E2POOM_ALG105_LASERIMAGEPOS_CUTDEEP_MAX                     3071
 #define E2POOM_ALG105_LASERIMAGEPOS_GUAIDIANYUZHI_MIN               0
 #define E2POOM_ALG105_LASERIMAGEPOS_GUAIDIANYUZHI_USE               60
@@ -538,13 +542,13 @@
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTLEFT_USE                     0
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTLEFT_MAX                     2047
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_MIN                    0
-#define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_USE                    1023
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_USE                    PIC_IMAGE_WIDTH-1
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTRIGHT_MAX                    2047
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_MIN                      0
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_USE                      0
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTTOP_MAX                      3071
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_MIN                     0
-#define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_USE                     1535
+#define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_USE                     PIC_IMAGE_HEIGHT-1
 #define E2POOM_ALG106_LASERIMAGEPOS_CUTDEEP_MAX                     3071
 #define E2POOM_ALG106_LASERIMAGEPOS_DIFMIN_MIN                      0
 #define E2POOM_ALG106_LASERIMAGEPOS_DIFMIN_USE                      150
@@ -630,6 +634,37 @@
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MIN      0
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_USE      15
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MAX      200
+
+//算法108参数
+#define E2POOM_ALG108_LASERIMAGEPOS_SAVEBUFF              20
+#define E2POOM_ALG108_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_108.bsd"
+#define E2POOM_ALG108_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20                  //曝光最小值
+#define E2POOM_ALG108_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000               //曝光默认值   
+#define E2POOM_ALG108_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535               //曝光最大值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_X_MIN                    0                   //特征点位置X最小值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_X_USE                    PIC_IMAGE_WIDTH/2   //特征点位置X默认值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_X_MAX                    PIC_IMAGE_WIDTH-1   //特征点位置X最大值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_Y_MIN                    0                   //特征点位置X最小值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_Y_USE                    PIC_IMAGE_HEIGHT/2  //特征点位置Y默认值
+#define E2POOM_ALG108_LASERIMAGEPOS_CENTER_Y_MAX                    PIC_IMAGE_HEIGHT-1  //特征点位置Y最大值
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_W_MIN                    30
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_W_USE                    150
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_W_MAX                    500
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_H_MIN                    30
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_H_USE                    150
+#define E2POOM_ALG108_LASERIMAGEPOS_SEARCT_H_MAX                    500
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_ALPHA_MIN                   0
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_ALPHA_USE                   2250
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_ALPHA_MAX                   10000
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_BETA_MIN                    0
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_BETA_USE                    1000
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_BETA_MAX                    10000
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_RHO_MIN                     0
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_RHO_USE                     75
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_RHO_MAX                     10000
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_SIGMA_MIN                   0
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_SIGMA_USE                   500
+#define E2POOM_ALG108_LASERIMAGEPOS_STC_SIGMA_MAX                   10000
 
 class taskinfo
 {
@@ -1518,6 +1553,50 @@ public:
     Int16 als106_pokousearchdectancemin_max;
 
 /****************************/
+    //任务108参数
+    Uint16 als108_exposure_time;//曝光值
+    Int16 als108_center_x;//特征点位置
+    Int16 als108_center_y; //特征点位置
+    Int16 als108_search_w;//宽度搜索区域
+    Int16 als108_search_h;//高度搜索区域
+    Int16 als108_STC_alpha;//尺度因子，推荐2.25*1000
+    Int16 als108_STC_beta;//形状因子，推荐1*1000  
+    Int16 als108_STC_rho;//学习率,推荐0.075*1000
+    Int16 als108_STC_sigma;//高斯权重，推荐0.5*1000
+
+    void write_als108_para(char *filename);				//保存任务108参数
+    void init_als108_para();				//初始化任务108参数
+
+    Uint16 als108_exposure_time_min;
+    Uint16 als108_exposure_time_use;
+    Uint16 als108_exposure_time_max;
+    Int16 als108_center_x_min;
+    Int16 als108_center_x_use;
+    Int16 als108_center_x_max;
+    Int16 als108_center_y_min;
+    Int16 als108_center_y_use;
+    Int16 als108_center_y_max;
+    Int16 als108_search_w_min;
+    Int16 als108_search_w_use;
+    Int16 als108_search_w_max;
+    Int16 als108_search_h_min;
+    Int16 als108_search_h_use;
+    Int16 als108_search_h_max;
+    Int16 als108_STC_alpha_min;
+    Int16 als108_STC_alpha_use;
+    Int16 als108_STC_alpha_max;
+    Int16 als108_STC_beta_min;
+    Int16 als108_STC_beta_use; 
+    Int16 als108_STC_beta_max;
+    Int16 als108_STC_rho_min;
+    Int16 als108_STC_rho_use;
+    Int16 als108_STC_rho_max;
+    Int16 als108_STC_sigma_min;
+    Int16 als108_STC_sigma_use;
+    Int16 als108_STC_sigma_max;
+
+
+/****************************/
     void write();
     void findtaskfile(std::vector<taskinfo> *filename);        //查找文件夹里的任务号文件
     void savetaskfile(uint16_t tasknum,uint16_t alsnum);    //保存自定义任务号
@@ -1538,6 +1617,7 @@ private:
     void Init_als104_E2proomData();
     void Init_als105_E2proomData();
     void Init_als106_E2proomData();
+    void Init_als108_E2proomData();
     
     void als100_check_para();
     void als101_check_para();
@@ -1546,6 +1626,7 @@ private:
     void als104_check_para();
     void als105_check_para();
     void als106_check_para();
+    void als108_check_para();
 
     void als100_read_para(char *filename);
     void als101_read_para(char *filename);
@@ -1554,6 +1635,7 @@ private:
     void als104_read_para(char *filename);
     void als105_read_para(char *filename);
     void als106_read_para(char *filename);
+    void als108_read_para(char *filename);
 };
 
 #endif // E2PROOMDATA_H

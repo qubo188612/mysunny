@@ -80,8 +80,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
                 std::bind(&Modbus::callbackCenterParam, this, std::placeholders::_1));
 
 
-  camer_width=1536;
-  camer_height=1024;
+  camer_width=PIC_IMAGE_HEIGHT; //这里用相机翻转前的尺寸
+  camer_height=PIC_IMAGE_WIDTH; //这里用相机翻转前的尺寸
   camer_fps=30;
   camer_view_width=3072;
   camer_view_height=2048;
@@ -141,6 +141,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   init_als104_parameter();
   init_als105_parameter();
   init_als106_parameter();
+  init_als108_parameter();
   
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
   {
@@ -407,6 +408,9 @@ void Modbus::_task_numberset(u_int16_t num)
   case 106:
     init_als106_parameter();
     break;
+  case 108:
+    init_als108_parameter();
+    break;
   default:
     break;
   }
@@ -447,6 +451,8 @@ void Modbus::_task_parameter(int ddr,u_int16_t num)
   if(0!=als105_task_parameter(ddr,num))
       return;
   if(0!=als106_task_parameter(ddr,num))
+      return;
+  if(0!=als108_task_parameter(ddr,num))
       return;
 }
 

@@ -24,6 +24,11 @@ namespace Myhalcv2
     peaktrough_Que32FC *u8_peaktrough_Que32FC;
     Uint8 *u8_peaktrough_temp_1,*u8_peaktrough_temp_2;
     Uint8 *u8_ver_temp_1;
+    double STC_alpha=2.25,STC_beta=1,STC_rho=0.075,STC_sigma=0.5;
+    L_Point32 STC_center;
+    cv::Rect STC_cxtRegion;
+    cv::Mat STC_cxtPriorPro,STC_cxtPosteriorPro,STC_STModel,STC_STCModel,STC_hammingWin,STC_hammingWin_adapt;			// spatio-temporal context model
+    Int32 STC_hammingWin_up_dis,STC_hammingWin_down_dis,STC_hammingWin_left_dis,STC_hammingWin_right_dis;
 
     Uint8 gaussian_3x3[9] =
     {
@@ -27270,6 +27275,7 @@ namespace Myhalcv2
         return 0;
     }
 
+
     Int8 MyGetLineXpos(L_line lineIn,Int32 YIn,Int32 *XOut)
     {
         double line_x1=lineIn.st.x;
@@ -45157,4 +45163,297 @@ namespace Myhalcv2
         return 0;
     }
 
+    void createHammingWin()
+    {
+        for (int i = 0; i < STC_hammingWin.rows; i++)
+        {
+            for (int j = 0; j < STC_hammingWin.cols; j++)
+            {
+                STC_hammingWin.at<double>(i, j) = (0.54 - 0.46 * cos( 2 * CV_PI * i / STC_hammingWin.rows ))
+                                            * (0.54 - 0.46 * cos( 2 * CV_PI * j / STC_hammingWin.cols ));
+            }
+        }
+    }
+
+    void createHammingWin_adapt(const cv::Mat frame,const cv::Rect box)
+    {
+        if (0.5*box.width-box.x>0)
+        {
+            STC_hammingWin_left_dis=0.5*box.width-box.x;
+        }else STC_hammingWin_left_dis=0;
+        if (1.5*box.width+box.x>frame.cols)
+        {
+            STC_hammingWin_right_dis=1.5*box.width+box.x-frame.cols;
+        }else STC_hammingWin_right_dis=0;
+        if (0.5*box.height-box.y>0)
+        {
+            STC_hammingWin_up_dis=0.5*box.height-box.y;
+        }else STC_hammingWin_up_dis=0;
+        if (1.5*box.height+box.y>frame.rows)
+        {
+            STC_hammingWin_down_dis=1.5*box.height+box.y-frame.rows;
+        }else STC_hammingWin_down_dis=0;
+
+        STC_hammingWin_adapt= STC_hammingWin(cv::Range(STC_hammingWin_up_dis,STC_hammingWin_up_dis+STC_cxtRegion.height),cv::Range(STC_hammingWin_left_dis,STC_hammingWin_left_dis+STC_cxtRegion.width));  //行  列
+    }
+
+    void getCxtPriorPosteriorModel(const cv::Mat image)
+    {
+        //CV_Assert(image.size == cxtPriorPro.size);
+
+        double sum_prior(0), sum_post(0);
+        for (int i = 0; i < STC_cxtRegion.height; i++)
+        {
+            for (int j = 0; j < STC_cxtRegion.width; j++)
+            {
+                double x = j + STC_cxtRegion.x;
+                double y = i + STC_cxtRegion.y;
+                double dist = sqrt((STC_center.x - x) * (STC_center.x - x) + (STC_center.y - y) * (STC_center.y - y));//与中心点的距离
+
+                // equation (5) in the paper   3.1
+                STC_cxtPriorPro.at<double>(i, j) = exp(- dist * dist / (2 * STC_sigma * STC_sigma));
+                sum_prior += STC_cxtPriorPro.at<double>(i, j);
+
+                // equation (6) in the paper  pow就是求次幂的,写法是 pow(a, b),意思是a的b次方   置信图3.2
+                STC_cxtPosteriorPro.at<double>(i, j) = exp(- pow(dist / sqrt(STC_alpha), STC_beta));
+                sum_post += STC_cxtPosteriorPro.at<double>(i, j);
+            }
+        }
+        STC_cxtPriorPro.convertTo(STC_cxtPriorPro, -1, 1.0/sum_prior);//这个对比对/偏置参数到底怎么设置的
+        STC_cxtPriorPro = STC_cxtPriorPro.mul(image);
+        STC_cxtPosteriorPro.convertTo(STC_cxtPosteriorPro, -1, 1.0/sum_post);
+    }
+
+    void complexOperation(const cv::Mat src1, const cv::Mat src2, cv::Mat &dst, int flag)
+    {   //CV_Assert计算括号内表达式  ，如果其值为假（即为 0），那么它先向 stderr 打印一条出错信息，然后通过调用 abort 来终止程序运行。
+    //  CV_Assert(src1.size == src2.size);//判断src1和src2尺寸是否相等
+    //  CV_Assert(src1.channels() == 2);//判断src1通道数
+
+        cv::Mat A_Real, A_Imag, B_Real, B_Imag, R_Real, R_Imag;
+        std::vector<cv::Mat> planes;//MAT类型的数组
+        cv::split(src1, planes);//分离src1的通道给planes
+        planes[0].copyTo(A_Real);
+        planes[1].copyTo(A_Imag);
+
+        cv::split(src2, planes);
+        planes[0].copyTo(B_Real);
+        planes[1].copyTo(B_Imag);
+
+
+       /*CV_ - this is just a prefix
+         64 -表示双精度
+         32-表示单精度
+         F - 浮点
+         Cx - 通道数,例如RGB就是三通道 */
+        dst.create(src1.rows, src1.cols, CV_64FC2);//重新分配矩阵数据
+        cv::split(dst, planes);
+        R_Real = planes[0];
+        R_Imag = planes[1];
+
+        for (int i = 0; i < A_Real.rows; i++)
+        {
+            for (int j = 0; j < A_Real.cols; j++)
+            {
+                double a = A_Real.at<double>(i, j);
+                double b = A_Imag.at<double>(i, j);
+                double c = B_Real.at<double>(i, j);
+                double d = B_Imag.at<double>(i, j);
+
+                if (flag)
+                {
+                    // division: (a+bj) / (c+dj)
+                    R_Real.at<double>(i, j) = (a * c + b * d) / (c * c + d * d + 0.000001);//实部与虚部被分开了
+                    R_Imag.at<double>(i, j) = (b * c - a * d) / (c * c + d * d + 0.000001);
+                }
+                else
+                {
+                    // multiplication: (a+bj) * (c+dj)
+                    R_Real.at<double>(i, j) = a * c - b * d;
+                    R_Imag.at<double>(i, j) = b * c + a * d;
+                }
+            }
+        }
+        /*merge() 函数用于将 2 个有序序列合并为 1 个有序序列，前提是这 2 个有序序列的排序规则相同
+        （要么都是升序，要么都是降序）。并且最终借助该函数获得的新有序序列，其排序规则也和这 2 个有序序列相同。*/
+        cv::merge(planes, dst);
+    }
+
+    void learnSTCModel(const cv::Mat image)
+    {
+        // step 1: Get context prior and posterior probability 获取上下文先验概率和后验概率
+        getCxtPriorPosteriorModel(image);
+
+        // step 2-1: Execute 2D DFT for prior probability  为先验概率执行2D DFT  3..3
+        cv::Mat priorFourier;
+        cv::Mat planes1[] = {STC_cxtPriorPro, cv::Mat::zeros(STC_cxtPriorPro.size(), CV_64F)};
+        cv::merge(planes1, 2, priorFourier);//
+        cv::dft(priorFourier, priorFourier);//实现二维离散傅里叶变换
+
+        // step 2-2: Execute 2D DFT for posterior probability
+        cv::Mat postFourier;
+        cv::Mat planes2[] = {STC_cxtPosteriorPro, cv::Mat::zeros(STC_cxtPosteriorPro.size(), CV_64F)};
+        cv::merge(planes2, 2, postFourier);
+        cv::dft(postFourier, postFourier);
+
+        // step 3: Calculate the division 计算除法
+        cv::Mat conditionalFourier;
+        complexOperation(postFourier, priorFourier, conditionalFourier, 1);//？有一段代码没用
+
+        // step 4: Execute 2D inverse DFT for conditional probability and we obtain STModel
+        //对条件概率执行2D逆DFT，得到STModel
+        cv::dft(conditionalFourier, STC_STModel, cv::DFT_INVERSE | cv::DFT_REAL_OUTPUT | cv::DFT_SCALE);
+
+        // step 5: Use the learned spatial context model to update spatio-temporal context model
+        //使用学习的空间上下文模型更新时空上下文模型
+        cv::addWeighted(STC_STCModel, 1.0 - STC_rho, STC_STModel, STC_rho, 0.0, STC_STCModel);//图像混合
+    }
+
+    Int8 MySTC_init(Mat matIn,L_Point32 point,Int32 left,Int32 right,Int32 top,Int32 deep,double alpha,double beta,double rho,double sigma)
+    {
+        cv::Rect box;
+        cv::Mat gray;
+        if(matIn._type!=CCV_8UC1)
+        {
+            return 1;
+        }
+        if(point.x<=left||point.x>=right||point.y<=top||point.y>=deep)
+        {
+            return 1;
+        }
+        gray=cv::Mat(matIn.nHeight,matIn.nWidth,CV_8UC1);
+        memcpy(gray.data,matIn.data,getsizeof(matIn._type)*matIn.nHeight*matIn.nWidth);
+
+        box.x=left;
+        box.y=top;
+        box.width=right-left+1;
+        box.height=deep-top+1;
+        STC_alpha=alpha;
+        STC_beta=beta;
+        STC_rho=rho;
+        STC_sigma=sigma * (box.width + box.height);
+
+        STC_center.x = box.x + 0.5 * box.width;
+        STC_center.y = box.y + 0.5 * box.height;
+        STC_cxtRegion.width = 2 * box.width;
+        STC_cxtRegion.height = 2 * box.height;
+        STC_cxtRegion.x = STC_center.x - STC_cxtRegion.width * 0.5;
+        STC_cxtRegion.y = STC_center.y - STC_cxtRegion.height * 0.5;
+        STC_cxtRegion &= cv::Rect(0, 0, gray.cols, gray.rows);
+
+        STC_cxtPriorPro = cv::Mat::zeros(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);//先验
+        STC_cxtPosteriorPro = cv::Mat::zeros(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);//后验
+        STC_STModel = cv::Mat::zeros(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);//条件
+        STC_STCModel = cv::Mat::zeros(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);//上下文
+        STC_hammingWin = cv::Mat::zeros(2 * box.height, 2 * box.width, CV_64FC1);
+        createHammingWin();
+
+        // normalized by subtracting the average intensity of that region
+        //通过减去该区域的平均强度进行归一化
+        cv::Scalar average = mean(gray(STC_cxtRegion));// mean计算数组元素的平均值
+        cv::Mat context;
+        gray(STC_cxtRegion).convertTo(context, CV_64FC1, 1.0, - average[0]);//通过缩放将GpuMat转换为另一种数据类型（非阻塞调用）
+
+        // multiplies a Hamming window to reduce the frequency effect of image boundary
+        //乘以Hamming窗口以减少图像边界的频率效应
+        createHammingWin_adapt(gray,box);
+        context = context.mul(STC_hammingWin_adapt);
+
+        // learn Spatio-Temporal context model from first frame
+        //从第一帧学习时空上下文模型
+        learnSTCModel(context);
+        return 0;
+    }
+
+    Int8 MySTC_tracker(Mat matIn,L_Point32 *pointOut,Int32 *left,Int32 *right,Int32 *top,Int32 *deep)
+    {
+        cv::Mat gray;
+        cv::Rect trackBox;
+        trackBox.x=*left;
+        trackBox.y=*top;
+        trackBox.width=*right-*left+1;
+        trackBox.height=*deep-*top+1;
+
+        gray=cv::Mat(matIn.nHeight,matIn.nWidth,CV_8UC1);
+        memcpy(gray.data,matIn.data,getsizeof(matIn._type)*matIn.nHeight*matIn.nWidth);
+
+        // normalized by subtracting the average intensity of that region
+        //通过减去该区域的平均强度进行归一化
+        cv::Scalar average = cv::mean(gray(STC_cxtRegion));
+        cv::Mat context;
+        gray(STC_cxtRegion).convertTo(context, CV_64FC1, 1.0, - average[0]);
+
+        // multiplies a Hamming window to reduce the frequency effect of image boundary
+        //乘以Hamming窗口以减少图像边界的频率效应
+        createHammingWin_adapt(gray,trackBox);
+        context = context.mul(STC_hammingWin_adapt);
+
+        // step 1: Get context prior probability
+        //获取上下文先验概率
+        getCxtPriorPosteriorModel(context);
+
+        // step 2-1: Execute 2D DFT for prior probability
+        //为先验概率执行2D DFT
+        cv::Mat priorFourier;
+        cv::Mat planes1[] = {STC_cxtPriorPro, cv::Mat::zeros(STC_cxtPriorPro.size(), CV_64F)};
+        cv::merge(planes1, 2, priorFourier);
+        cv::dft(priorFourier, priorFourier);
+
+        // step 2-2: Execute 2D DFT for conditional probability
+        //步骤2-2：对条件概率执行2D DFT
+        cv::Mat STCModelFourier;
+        cv::Mat planes2[] = {STC_STCModel, cv::Mat::zeros(STC_STCModel.size(), CV_64F)};
+        cv::merge(planes2, 2, STCModelFourier);
+        cv::dft(STCModelFourier, STCModelFourier);
+
+        // step 3: Calculate the multiplication 计算乘法
+        cv::Mat postFourier;
+        complexOperation(STCModelFourier, priorFourier, postFourier, 0);
+
+        // step 4: Execute 2D inverse DFT for posterior probability namely confidence map
+        //对后验概率即置信图执行2D逆DFT
+        cv::Mat confidenceMap;
+        cv::dft(postFourier, confidenceMap, cv::DFT_INVERSE | cv::DFT_REAL_OUTPUT| cv::DFT_SCALE);
+
+        // step 5: Find the max position
+        //找到最大位置
+        cv::Point point;
+        cv::minMaxLoc(confidenceMap, 0, 0, 0, &point);//在一个数组中找到全局最小值和全局最大值  4.1
+
+        // step 6-1: update center, trackBox and context region
+        //更新中心、trackBox和上下文区域
+        STC_center.x = STC_cxtRegion.x + point.x;
+        STC_center.y = STC_cxtRegion.y + point.y;
+        trackBox.x = STC_center.x - 0.5 * trackBox.width;
+        trackBox.y = STC_center.y - 0.5 * trackBox.height;
+        trackBox &= cv::Rect(0, 0, gray.cols, gray.rows);
+
+        (*pointOut).x=STC_center.x;
+        (*pointOut).y=STC_center.y;
+
+        STC_cxtRegion.width = 2 * trackBox.width;
+        STC_cxtRegion.height = 2 * trackBox.height;
+        STC_cxtRegion.x = STC_center.x - STC_cxtRegion.width * 0.5;
+        STC_cxtRegion.y = STC_center.y - STC_cxtRegion.height * 0.5;
+        STC_cxtRegion &= cv::Rect(0, 0, gray.cols, gray.rows);
+
+        STC_cxtPriorPro.create(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);
+        STC_cxtPosteriorPro.create(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);
+        STC_STModel.create(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);
+        STC_STCModel.create(STC_cxtRegion.height, STC_cxtRegion.width, CV_64FC1);
+
+        // step 7: learn Spatio-Temporal context model from this frame for tracking next frame
+        //从该帧学习时空上下文模型以跟踪下一帧
+        average = cv::mean(gray(STC_cxtRegion));
+        gray(STC_cxtRegion).convertTo(context, CV_64FC1, 1.0, - average[0]);
+
+        createHammingWin_adapt(gray,trackBox);
+        context = context.mul(STC_hammingWin_adapt);
+        learnSTCModel(context);
+
+        *left=trackBox.x;
+        *right=trackBox.x+trackBox.width-1;
+        *top=trackBox.y;
+        *deep=trackBox.y+trackBox.height-1;
+        return 0;
+    }
 }

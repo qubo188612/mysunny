@@ -462,6 +462,7 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
             {
                 firstsearch_edy=imageGasu.starty+imageGasu.height-1;
             }
+            firstsearch=1;
         }
         else
         {
