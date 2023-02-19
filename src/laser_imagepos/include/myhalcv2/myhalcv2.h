@@ -854,12 +854,12 @@ namespace Myhalcv2
                          Mat *matOut, //输出想要转换的Mat型矩阵
                          type Mod);   //想要转换过去的类型,需要注意转换后的Mat类型是否有足够空间
 
-    //把Mat灰度图转换为彩色RGB图(只作用于有效区域)
+    //把Mat灰度图转换为彩色RGB图(作用于全部区域)
     Int8 MyBRYtoRGB(Mat matIn,		//输入灰度图,仅支持CV_8UC1类型
                     Mat *matOut);	//输出彩色图,类型为CV_8UC3,需要注意转换后的Mat类型是否有足够空间
 
 
-    //把彩色RGB图转换为Mat灰度图图(只作用于有效区域)
+    //把彩色RGB图转换为Mat灰度图图(作用于全部区域)
     Int8 MyRGBtoBRY(Mat matIn,		//输入彩色图,仅支持CV_8UC3类型
                     Mat *matOut);	//输出灰度图,类型为CV_8UC1,需要注意转换后的Mat类型是否有足够空间
 

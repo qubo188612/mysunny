@@ -8054,10 +8054,7 @@ namespace Myhalcv2
     {
         Int32 i,j;
         Int32 nnWidth=matIn.nWidth;
-        Int32 nStartX=matIn.startx;
-        Int32 nStartY=matIn.starty;
-        Int32 nWidth=matIn.width;
-        Int32 nHeight=matIn.height;
+        Int32 nnHeight=matIn.nHeight;
         Mat matIntemp;
 
         matOut->nWidth=matIn.nWidth;
@@ -8069,6 +8066,7 @@ namespace Myhalcv2
         matOut->width=matIn.width;
         matOut->height=matIn.height;
         MyconvertTo(matOut,CCV_8UC3);
+
         if(matIn.data==matOut->data)
         {
             switch(matIn._type)
@@ -8085,12 +8083,13 @@ namespace Myhalcv2
         {
             matIntemp=matIn;
         }
+        
         switch(matIn._type)
         {
             case CCV_8UC1:
-                for(j=nStartY;j<nStartY+nHeight;j++)
+                for(j=0;j<nnHeight;j++)
                 {
-                    for(i=nStartX;i<nStartX+nWidth;i++)
+                    for(i=0;i<nnWidth;i++)
                     {
                         matOut->ptr_Vec3b[j*nnWidth+i].data1=matIntemp.ptr_uchar[j*nnWidth+i];
                         matOut->ptr_Vec3b[j*nnWidth+i].data2=matIntemp.ptr_uchar[j*nnWidth+i];
@@ -8109,10 +8108,7 @@ namespace Myhalcv2
     {
         Int32 i,j;
         Int32 nnWidth=matIn.nWidth;
-        Int32 nStartX=matIn.startx;
-        Int32 nStartY=matIn.starty;
-        Int32 nWidth=matIn.width;
-        Int32 nHeight=matIn.height;
+        Int32 nnHeight=matIn.nHeight;
 
         matOut->nWidth=matIn.nWidth;
         matOut->nHeight=matIn.nHeight;
@@ -8126,9 +8122,9 @@ namespace Myhalcv2
         switch(matIn._type)
         {
             case CCV_8UC3:
-                for(j=nStartY;j<nStartY+nHeight;j++)
+                for(j=0;j<nnHeight;j++)
                 {
-                    for(i=nStartX;i<nStartX+nWidth;i++)
+                    for(i=0;i<nnWidth;i++)
                     {
                         Int32 color;
                         Int32 colorR=matIn.ptr_Vec3b[j*nnWidth+i].data1;
