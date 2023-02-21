@@ -45218,6 +45218,7 @@ namespace Myhalcv2
         STC_cxtPriorPro.convertTo(STC_cxtPriorPro, -1, 1.0/sum_prior);//这个对比对/偏置参数到底怎么设置的
         STC_cxtPriorPro = STC_cxtPriorPro.mul(image);
         STC_cxtPosteriorPro.convertTo(STC_cxtPosteriorPro, -1, 1.0/sum_post);
+        STC_cxtPosteriorPro = STC_cxtPosteriorPro.mul(image);
     }
 
     void complexOperation(const cv::Mat src1, const cv::Mat src2, cv::Mat &dst, int flag)

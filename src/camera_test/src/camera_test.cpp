@@ -11,6 +11,20 @@ using rcl_interfaces::msg::SetParametersResult;
 
 void timer_callback()
 { 
+#ifdef TEST_VIDEO
+  pThis->capture >> pThis->cv_image;
+  if(!pThis->cv_image.empty())
+  {
+    cv::cvtColor(pThis->cv_image, pThis->cv_image, cv::COLOR_BGR2GRAY);
+    rotate(pThis->cv_image, pThis->cv_image, cv::ROTATE_90_COUNTERCLOCKWISE);
+    cv::resize(pThis->cv_image,pThis->cv_image,cv::Size(PIC_IMAGE_HEIGHT,PIC_IMAGE_WIDTH));
+  }
+  else
+  {
+    pThis->capture.set(cv::CAP_PROP_POS_FRAMES, 0);
+    return;
+  }
+#endif
   if(!pThis->cv_image.empty())
   {
     sensor_msgs::msg::Image::UniquePtr image_msg(new sensor_msgs::msg::Image());
@@ -109,8 +123,13 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   pThis=this;
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
   timer_ = this->create_wall_timer(25ms, std::bind(&camera_test::timer_callback));
-  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test102.bmp");
+#ifdef TEST_VIDEO
+  capture.open("/home/qubo/mysunny/src/camera_test/bmp/test108.avi");//导入视频
+#else
+  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test106_0.bmp");
   cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2GRAY);
+#endif
+
 
   RCLCPP_INFO(this->get_logger(), "Initialized successfully");
 }

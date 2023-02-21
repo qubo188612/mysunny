@@ -139,6 +139,12 @@ int Modbus::als105_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_b_dibufaxiangliang", (int16_t)num)});
             return 1;
         break;
+        case ALS105_ANSWERPOINT_REG_ADD:
+            e2proomdata.als105_answerpoint=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_answerpoint", (int16_t)num)});
+            return 1;
+        break;
+
         case ALS105_INIT_REG_ADD:
             if(num==1)
             {
@@ -181,6 +187,7 @@ void Modbus::init_als105_parameter()
     parameterport_mapping->tab_registers[ALS105_GUAIDIANYUZHI_REG_ADD]=e2proomdata.als105_guaidianyuzhi;
     parameterport_mapping->tab_registers[ALS105_DUANDIANJULI_REG_ADD]=e2proomdata.als105_duandianjuli;
     parameterport_mapping->tab_registers[ALS105_B_DIBUFAXIANGLIANG_REG_ADD]=e2proomdata.als105_b_dibufaxiangliang;
+    parameterport_mapping->tab_registers[ALS105_ANSWERPOINT_REG_ADD]=e2proomdata.als105_answerpoint;
 }
 
 }

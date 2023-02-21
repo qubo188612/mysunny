@@ -47,6 +47,7 @@ void LaserImagePos::alg102_declare_parameters()
     this->declare_parameter("als102_Uplong2", pm.als102_Uplong2);
     this->declare_parameter("als102_cebankongdongdis", pm.als102_cebankongdongdis);
     this->declare_parameter("als102_qiatouquweijuli", pm.als102_qiatouquweijuli);  
+    this->declare_parameter("als102_answerpoint", pm.als102_answerpoint);
 }
 
 void LaserImagePos::alg102_update_parameters()
@@ -168,6 +169,9 @@ void LaserImagePos::alg102_update_parameters()
     }
     else if (p.get_name() == "als102_qiatouquweijuli") {
       pm.als102_qiatouquweijuli = p.as_int();
+    }
+    else if (p.get_name() == "als102_answerpoint") {
+      pm.als102_answerpoint = p.as_int();
     }
   }
 }
@@ -409,7 +413,13 @@ int LaserImagePos::alg102_getcallbackParameter(const rclcpp::Parameter &p)
         if (k < 0 || k > 120) {
             return -1;}
         else{pm.als102_qiatouquweijuli=p.as_int();
-            return 1;}}                                          
+            return 1;}}      
+    else if(p.get_name() == "als102_answerpoint") {
+        auto k = p.as_int();
+        if (k < 0 || k > 20) {
+            return -1;}
+        else{pm.als102_answerpoint=p.as_int();
+            return 1;}}                                    
 
     return 0;
 }
@@ -452,7 +462,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed;
     cv::Point2f cv_point;
-    Myhalcv2::L_Point32F faxian;
+    Myhalcv2::L_Point32F faxian,faxian3;
 
     /*********************/
     //算法参数
@@ -496,6 +506,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Int32 Uplong2=pm.als102_Uplong2;//在坡度时上半段直线检测长度
     Int32 cebankongdongdis=pm.als102_cebankongdongdis;//侧板跨孔洞的激光最短距离
     Int32 qiatouquweijuli=pm.als102_qiatouquweijuli;//恰头去尾距离
+    Int32 answerpoint=pm.als102_answerpoint;
     
     if(step==2)
     {
@@ -1298,6 +1309,20 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
             resultfocal3=resultfocal1;
         }
 
+        faxian3=faxian;
+
+        if(answerpoint=2)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian3;
+            faxian3=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal3;
+            resultfocal3=p_temp;
+        }
+
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1473,6 +1498,21 @@ fuzhu:
         MyGetLinefocalBisection(resultfocal1,linepoint32ST,linepoint32ED,&faxian);
 
         resultfocal3=resultfocal;
+
+        faxian3=faxian;
+
+        if(answerpoint==2)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian3;
+            faxian3=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal3;
+            resultfocal3=p_temp;
+        }
+
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);

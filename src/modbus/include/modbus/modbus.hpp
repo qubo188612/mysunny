@@ -75,6 +75,8 @@ namespace modbus
 #define ALS100_SEARCHDECTANCEMIN_REG_ADD       0x0014
 #define ALS100_DIS_CENTER_ST_REG_ADD           0x0015
 #define ALS100_DIS_CENTER_ED_REG_ADD           0x0016
+#define ALS100_ANSWERPOINT_REG_ADD             0x0017
+
 
 #define ALS100_INIT_REG_ADD                    0x001f
 
@@ -101,6 +103,7 @@ namespace modbus
 #define ALS101_SEARCHDECTANCEMIN_REG_ADD       0x0034
 #define ALS101_DIS_CENTER_ST_REG_ADD           0x0035
 #define ALS101_DIS_CENTER_ED_REG_ADD           0x0036
+#define ALS101_ANSWERPOINT_REG_ADD             0x0037
 
 #define ALS101_INIT_REG_ADD                    0x003f
 
@@ -143,6 +146,7 @@ namespace modbus
 #define ALS102_UPLONG2_REG_ADD                 0x0064
 #define ALS102_CEBANKONGDONGDIS_REG_ADD        0x0065
 #define ALS102_QIATOUQUWEI_REG_ADD             0x0066
+#define ALS102_ANSWERPOINT_REG_ADD             0x0067
 
 #define ALS102_INIT_REG_ADD                    0x006f
 
@@ -203,6 +207,7 @@ namespace modbus
 #define ALS105_GUAIDIANYUZHI_REG_ADD           0x00c6
 #define ALS105_DUANDIANJULI_REG_ADD            0x00c7
 #define ALS105_B_DIBUFAXIANGLIANG_REG_ADD      0x00c8
+#define ALS105_ANSWERPOINT_REG_ADD             0x00c9
 
 #define ALS105_INIT_REG_ADD                    0x00cf
 
@@ -249,6 +254,7 @@ namespace modbus
 #define ALS106_POKOUDUANXIANERZHI_REG_ADD      0x00f8
 #define ALS106_POKOUSEARCHDECTANCEMAX_REG_ADD  0x00f9
 #define ALS106_POKOUSEARCHDECTANCEMIN_REG_ADD  0x00fa
+#define ALS106_ANSWERPOINT_REG_ADD             0x00fb
 
 
 #define ALS106_INIT_REG_ADD                    0x00ff

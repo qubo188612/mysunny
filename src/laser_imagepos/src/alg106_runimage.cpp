@@ -51,6 +51,7 @@ void LaserImagePos::alg106_declare_parameters()
     this->declare_parameter("als106_pokouduanxianerzhi", pm.als106_pokouduanxianerzhi);
     this->declare_parameter("als106_pokousearchdectancemax", pm.als106_pokousearchdectancemax);
     this->declare_parameter("als106_pokousearchdectancemin", pm.als106_pokousearchdectancemin);
+    this->declare_parameter("als106_answerpoint", pm.als106_answerpoint);
 }
 
 void LaserImagePos::alg106_update_parameters()
@@ -143,7 +144,9 @@ void LaserImagePos::alg106_update_parameters()
       pm.als106_pokousearchdectancemax = p.as_int();
     } else if (p.get_name() == "als106_pokousearchdectancemin") {
       pm.als106_pokousearchdectancemin = p.as_int();
-    }     
+    } else if (p.get_name() == "als106_answerpoint") {
+      pm.als106_answerpoint = p.as_int();
+    }   
   }
 }
 
@@ -408,8 +411,13 @@ int LaserImagePos::alg106_getcallbackParameter(const rclcpp::Parameter &p)
         if (k < 0 || k > 200) {
             return -1;}
         else{pm.als106_pokousearchdectancemin=p.as_int();
-            return 1;}}                       
-
+            return 1;}}    
+    else if(p.get_name() == "als106_answerpoint") {
+        auto k = p.as_int();
+        if (k < 0 || k > 20) {
+            return -1;}
+        else{pm.als106_answerpoint=p.as_int();
+            return 1;}}                   
     return 0;
 }
 
@@ -449,7 +457,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyConect ImageConect,ImageConectlong;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed,cv_point;
-    Myhalcv2::L_Point32F faxian;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
 
     /*********************/
     //算法参数
@@ -495,6 +503,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     Int32 pokouduanxianerzhi=pm.als106_pokouduanxianerzhi;//130;       //咬边二值（坡口模式=0时有效）
     Int32 pokousearchdectancemax=pm.als106_pokousearchdectancemax;//25;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
     Int32 pokousearchdectancemin=pm.als106_pokousearchdectancemin;//15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
+    Int32 answerpoint=pm.als106_answerpoint;
     
     if(step==2)
     {
@@ -1815,6 +1824,31 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
                 solderjoints=false;
             }
         }
+        faxian1=faxian;
+        faxian2=faxian;
+
+        if(answerpoint==2)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian1;
+            faxian1=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal1;
+            resultfocal1=p_temp;
+        }
+        else if(answerpoint==3)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian2;
+            faxian2=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal2;
+            resultfocal2=p_temp;
+        }
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1829,7 +1863,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
-            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,255),1);
+        //  cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,255),1);
             faxian.x=faxian.x*1000+resultfocal.x;
             faxian.y=faxian.y*1000+resultfocal.y;
             cv_point_st.x=(resultfocal.x>>2);
@@ -1876,6 +1910,32 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
         resultfocal.x=X_line[center.y];
         resultfocal.y=center.y;
         solderjoints=true;
+
+        faxian1=faxian;
+        faxian2=faxian;
+
+        if(answerpoint==2)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian1;
+            faxian1=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal1;
+            resultfocal1=p_temp;
+        }
+        else if(answerpoint==3)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian2;
+            faxian2=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal2;
+            resultfocal2=p_temp;
+        }
         if(step==1)
         {
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -1890,7 +1950,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
-            cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,255),1);
+        //  cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,0,255),1);
             faxian.x=faxian.x*1000+resultfocal.x;
             faxian.y=faxian.y*1000+resultfocal.y;
             cv_point_st.x=(resultfocal.x>>2);

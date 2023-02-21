@@ -52,7 +52,7 @@ int LaserImagePos::alg108_getcallbackParameter(const rclcpp::Parameter &p)
         if (k <20 || k>65535) {
             return -1;}
         else{pm.als108_exposure_time=k;
-            if(pm.task_num==106){
+            if(pm.task_num==108){
                 _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als108_exposure_time)});}
             return 1;}}
     else if(p.get_name() == "als108_center_x") {

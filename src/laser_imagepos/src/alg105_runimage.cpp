@@ -33,6 +33,7 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_guaidianyuzhi", pm.als105_guaidianyuzhi);
     this->declare_parameter("als105_duandianjuli", pm.als105_duandianjuli);
     this->declare_parameter("als105_b_dibufaxiangliang", pm.als105_b_dibufaxiangliang);
+    this->declare_parameter("als105_answerpoint", pm.als105_answerpoint);
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -112,6 +113,9 @@ void LaserImagePos::alg105_update_parameters()
     }
     else if (p.get_name() == "als105_b_dibufaxiangliang") {
       pm.als105_b_dibufaxiangliang = p.as_int();
+    }
+    else if (p.get_name() == "als105_answerpoint") {
+      pm.als105_answerpoint = p.as_int();
     }
   }
 }
@@ -270,7 +274,12 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als105_b_dibufaxiangliang=p.as_int();
             return 1;}}                          
-
+    else if(p.get_name() == "als105_answerpoint") {
+        auto k = p.as_int();
+        if (k < 0 || k > 20) {
+            return -1;}
+        else{pm.als105_answerpoint=p.as_int();
+            return 1;}}
     return 0;
 }
 
@@ -308,7 +317,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     cv::Point cv_point_st,cv_point_ed,cv_point;
     Int32 nstarti,nendi,nstartj,nendj;
 
-    Myhalcv2::L_Point32F faxian;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
 
     /*********************/
     //算法参数
@@ -336,6 +345,8 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 Downdlong=pm.als105_Downdlong;//下半段直线长度
     Int32 duandianjuli=pm.als105_duandianjuli;  //断点向前搜索距离
     Int32 b_dibufaxiangliang=pm.als105_b_dibufaxiangliang;//是否采用底部平面的法向量
+    Int32 answerpoint=pm.als105_answerpoint;
+    
     
     if(step==2)
     {
@@ -1112,6 +1123,32 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
 
     resultfocal.x=(resultfocal2.x+resultfocal1.x)/2;
     resultfocal.y=(resultfocal2.y+resultfocal1.y)/2;
+
+    faxian1=faxian;
+    faxian2=faxian;
+
+    if(answerpoint==2)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian2;
+        faxian2=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal2;
+        resultfocal2=p_temp;
+    }
+    else if(answerpoint==3)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian2;
+        faxian2=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal2;
+        resultfocal2=p_temp;
+    }
 
     if(step==1)
     {

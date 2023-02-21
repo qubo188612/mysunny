@@ -31,6 +31,7 @@ void LaserImagePos::alg100_declare_parameters()
     this->declare_parameter("als100_searchdectancemin", pm.als100_searchdectancemin);
     this->declare_parameter("als100_dis_center_st", pm.als100_dis_center_st);
     this->declare_parameter("als100_dis_center_ed", pm.als100_dis_center_ed);
+    this->declare_parameter("als100_answerpoint", pm.als100_answerpoint);
 }
 
 void LaserImagePos::alg100_update_parameters()
@@ -104,6 +105,9 @@ void LaserImagePos::alg100_update_parameters()
     }
     else if (p.get_name() == "als100_dis_center_ed") {
       pm.als100_dis_center_ed = p.as_int();
+    }
+    else if (p.get_name() == "als100_answerpoint") {
+      pm.als100_answerpoint = p.as_int();
     }
   }
 }
@@ -250,7 +254,12 @@ int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als100_dis_center_ed=p.as_int();
             return 1;}}     
-
+    else if(p.get_name() == "als100_answerpoint") {
+        auto k = p.as_int();
+        if (k < 0 || k > 20) {
+            return -1;}
+        else{pm.als100_answerpoint=p.as_int();
+            return 1;}}  
     return 0;
 }
 
@@ -297,7 +306,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed,cv_point;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
-    Myhalcv2::L_Point32F faxian;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
 
     /*********************/
     //算法参数
@@ -323,6 +332,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 searchdectancemin=pm.als100_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
     Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
+    Int32 answerpoint=pm.als100_answerpoint;
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
@@ -1240,6 +1250,31 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
     Myhalcv2::MyPoint16to32(tileline.ed,&linepoint32ED);
     MyGetLinefocalBisection(resultfocal,linepoint32ST,linepoint32ED,&faxian);
+    faxian1=faxian;
+    faxian2=faxian;
+
+    if(answerpoint==2)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian1;
+        faxian1=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal1;
+        resultfocal1=p_temp;
+    }
+    else if(answerpoint==3)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian2;
+        faxian2=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal2;
+        resultfocal2=p_temp;
+    }
 
     if(step==1)
     {
@@ -1273,6 +1308,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         cv_point_ed.y=(faxian.y/4);
         cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
     }
+    
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);
@@ -1286,6 +1322,7 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
     namepoint.push_back(cv_point);
+
     
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "finish alg100");

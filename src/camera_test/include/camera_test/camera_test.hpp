@@ -7,8 +7,14 @@
 #include "opencv2/opencv.hpp"
 #include <modbus.h>
 #include <unistd.h>
+#include <opencv2/videoio/videoio.hpp>
 
 #define SHOW_OUTPUT_FPS
+
+#define TEST_VIDEO        //输入视频测试
+
+#define PIC_IMAGE_HEIGHT 1536
+#define PIC_IMAGE_WIDTH  1024
 
 namespace camera_test
 {
@@ -42,6 +48,8 @@ public:
   rclcpp::Publisher<Image>::SharedPtr _pub;
 
   cv::Mat cv_image;
+
+  cv::VideoCapture capture;
 
   std::string mat_type2encoding(int mat_type);
 

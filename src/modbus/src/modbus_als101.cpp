@@ -129,6 +129,11 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_dis_center_ed", (int16_t)num)});
             return 1;
         break;
+        case ALS101_ANSWERPOINT_REG_ADD:
+            e2proomdata.als101_answerpoint=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_answerpoint", (int16_t)num)});
+            return 1;
+        break;
 
 
         case ALS101_INIT_REG_ADD:
@@ -171,6 +176,7 @@ void Modbus::init_als101_parameter()
     parameterport_mapping->tab_registers[ALS101_SEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als101_searchdectancemin;
     parameterport_mapping->tab_registers[ALS101_DIS_CENTER_ST_REG_ADD]=e2proomdata.als101_dis_center_st;
     parameterport_mapping->tab_registers[ALS101_DIS_CENTER_ED_REG_ADD]=e2proomdata.als101_dis_center_ed;
+    parameterport_mapping->tab_registers[ALS101_ANSWERPOINT_REG_ADD]=e2proomdata.als101_answerpoint;
 }
 
 }

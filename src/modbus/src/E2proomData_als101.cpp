@@ -75,6 +75,9 @@ void E2proomData::Init_als101_E2proomData()
     als101_dis_center_ed_min=E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MIN;
     als101_dis_center_ed_use=E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_USE;
     als101_dis_center_ed_max=E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX;
+    als101_answerpoint_min=E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MIN;
+    als101_answerpoint_use=E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_USE;
+    als101_answerpoint_max=E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MAX;
 }
 
 void E2proomData::als101_check_para()
@@ -125,6 +128,8 @@ void E2proomData::als101_check_para()
         als101_dis_center_st=als101_dis_center_st_use;
     if(als101_dis_center_ed<als101_dis_center_ed_min||als101_dis_center_ed>als101_dis_center_ed_max)
         als101_dis_center_ed=als101_dis_center_ed_use;
+    if(als101_answerpoint<als101_answerpoint_min||als101_answerpoint>als101_answerpoint_max)
+        als101_answerpoint=als101_answerpoint_use;
 }
 
 void E2proomData::als101_read_para(char *filename)
@@ -197,7 +202,8 @@ void E2proomData::als101_read_para(char *filename)
       i16_p++;
       als101_dis_center_ed=*i16_p;
       i16_p++;
-
+      als101_answerpoint=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -268,6 +274,8 @@ void E2proomData::write_als101_para(char *filename)
     i16_p++;
     *i16_p=als101_dis_center_ed;
     i16_p++;
+    *i16_p=als101_answerpoint;
+    i16_p++;
 
 
     fo.WriteFile(filename,buff,E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF);
@@ -304,4 +312,5 @@ void E2proomData::init_als101_para()
     als101_searchdectancemin=als101_searchdectancemin_use;
     als101_dis_center_st=als101_dis_center_st_use;
     als101_dis_center_ed=als101_dis_center_ed_use;
+    als101_answerpoint=als101_answerpoint_use;
 }

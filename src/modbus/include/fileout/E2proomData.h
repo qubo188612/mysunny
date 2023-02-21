@@ -48,7 +48,7 @@
 #define E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF          "./SAVE/E2P_MEASUREMENT_"
 
 //算法100参数
-#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              54
+#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              58
 #define E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_100.bsd"
 
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -120,9 +120,12 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
 #define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_USE               500
 #define E2POOM_ALG100_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
+#define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
+#define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_USE                 0
+#define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
 //算法101参数
-#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              54
+#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              58
 #define E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_101.bsd"
 
 #define E2POOM_ALG101_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -194,9 +197,12 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_USE               500
 #define E2POOM_ALG101_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
+#define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
+#define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_USE                 0
+#define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              88
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              92
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -316,6 +322,9 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_MIN                 0
 #define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_USE                 15
 #define E2POOM_ALG102_LASERIMAGEPOS_QIATOUQUWEI_MAX                 120
+#define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
+#define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_USE                 0
+#define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
 //算法103参数
 #define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                20
@@ -422,7 +431,7 @@
 #define E2POOM_ALG104_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法105参数
-#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              60
+#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              64
 #define E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_105.bsd"
 
 #define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -500,9 +509,12 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MIN          0
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_USE          1
 #define E2POOM_ALG105_LASERIMAGEPOS_B_DIBUFAXIANGLIANG_MAX          1
+#define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
+#define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_USE                 0
+#define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
 //算法106参数
-#define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              90
+#define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              94
 #define E2POOM_ALG106_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_106.bsd"
 
 #define E2POOM_ALG106_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -634,6 +646,9 @@
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MIN      0
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_USE      15
 #define E2POOM_ALG106_LASERIMAGEPOS_POKOUSEARCHDECTANCEMIN_MAX      200
+#define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
+#define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_USE                 0
+#define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
 //算法108参数
 #define E2POOM_ALG108_LASERIMAGEPOS_SAVEBUFF              20
@@ -726,6 +741,7 @@ public:
     Int16 als100_searchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离
     Int16 als100_dis_center_st;//距离中心点此处后开始统计
     Int16 als100_dis_center_ed;//距离中心点此处后停止统计
+    Int16 als100_answerpoint;//优先采用点序号
       
 
     void write_als100_para(char *filename);				//保存任务100参数
@@ -800,6 +816,9 @@ public:
     Int16 als100_dis_center_ed_min;
     Int16 als100_dis_center_ed_max;
     Int16 als100_dis_center_ed_use;
+    Int16 als100_answerpoint_min;
+    Int16 als100_answerpoint_max;
+    Int16 als100_answerpoint_use;
 
 /****************************/
     //任务101参数
@@ -826,6 +845,7 @@ public:
     Int16 als101_searchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离
     Int16 als101_dis_center_st;//距离中心点此处后开始统计
     Int16 als101_dis_center_ed;//距离中心点此处后停止统计
+    Int16 als101_answerpoint;
       
 
     void write_als101_para(char *filename);				//保存任务101参数
@@ -900,6 +920,9 @@ public:
     Int16 als101_dis_center_ed_min;
     Int16 als101_dis_center_ed_max;
     Int16 als101_dis_center_ed_use;
+    Int16 als101_answerpoint_min;
+    Int16 als101_answerpoint_max;
+    Int16 als101_answerpoint_use;
 
 /****************************/
     //任务102参数
@@ -942,6 +965,7 @@ public:
     Int16 als102_Uplong2;
     Int16 als102_cebankongdongdis;
     Int16 als102_qiatouquweijuli;
+    Int16 als102_answerpoint;
 
     void write_als102_para(char *filename);				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -1063,6 +1087,9 @@ public:
     Int16 als102_qiatouquweijuli_min;
     Int16 als102_qiatouquweijuli_max;
     Int16 als102_qiatouquweijuli_use;
+    Int16 als102_answerpoint_min;
+    Int16 als102_answerpoint_max;
+    Int16 als102_answerpoint_use;
 
 /****************************/
     //任务103参数
@@ -1293,6 +1320,7 @@ public:
     Int16 als105_Downdlong;//下半段直线长度
     Int16 als105_duandianjuli;  //断点向前搜索距离
     Int16 als105_b_dibufaxiangliang;//是否采用底部平面的法向量
+    Int16 als105_answerpoint;
 
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
@@ -1372,6 +1400,9 @@ public:
     Int16 als105_b_dibufaxiangliang_min;
     Int16 als105_b_dibufaxiangliang_use;
     Int16 als105_b_dibufaxiangliang_max;
+    Int16 als105_answerpoint_min;
+    Int16 als105_answerpoint_max;
+    Int16 als105_answerpoint_use;
 
 /****************************/
     //任务106参数
@@ -1418,6 +1449,7 @@ public:
     Int16 als106_pokouduanxianerzhi;       //咬边二值（坡口模式=0时有效）
     Int16 als106_pokousearchdectancemax;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
     Int16 als106_pokousearchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
+    Int16 als106_answerpoint;
 
     void write_als106_para(char *filename);				//保存任务106参数
     void init_als106_para();				//初始化任务106参数
@@ -1551,6 +1583,9 @@ public:
     Int16 als106_pokousearchdectancemin_min;
     Int16 als106_pokousearchdectancemin_use;
     Int16 als106_pokousearchdectancemin_max;
+    Int16 als106_answerpoint_min;
+    Int16 als106_answerpoint_max;
+    Int16 als106_answerpoint_use;
 
 /****************************/
     //任务108参数

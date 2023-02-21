@@ -31,6 +31,7 @@ void LaserImagePos::alg101_declare_parameters()
     this->declare_parameter("als101_searchdectancemin", pm.als101_searchdectancemin);
     this->declare_parameter("als101_dis_center_st", pm.als101_dis_center_st);
     this->declare_parameter("als101_dis_center_ed", pm.als101_dis_center_ed);
+    this->declare_parameter("als101_answerpoint", pm.als101_answerpoint);
 }
 
 void LaserImagePos::alg101_update_parameters()
@@ -104,6 +105,9 @@ void LaserImagePos::alg101_update_parameters()
     }
     else if (p.get_name() == "als101_dis_center_ed") {
       pm.als101_dis_center_ed = p.as_int();
+    }
+    else if (p.get_name() == "als101_answerpoint") {
+      pm.als101_answerpoint = p.as_int();
     }
   }
 }
@@ -250,6 +254,12 @@ int LaserImagePos::alg101_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als101_dis_center_ed=p.as_int();
             return 1;}}     
+    else if(p.get_name() == "als101_answerpoint") {
+        auto k = p.as_int();
+        if (k < 0 || k > 20) {
+            return -1;}
+        else{pm.als101_answerpoint=p.as_int();
+            return 1;}} 
 
     return 0;
 }
@@ -297,7 +307,7 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed,cv_point;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
-    Myhalcv2::L_Point32F faxian;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
 
     /*********************/
     //算法参数
@@ -323,6 +333,7 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
     Int32 searchdectancemin=pm.als101_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
     Int32 dis_center_st=pm.als101_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als101_dis_center_ed;//500;  //距离中心点此处后停止统计
+    Int32 answerpoint=pm.als100_answerpoint;
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
@@ -1238,6 +1249,32 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ST);
     Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ED);
     MyGetLinefocalBisection(resultfocal,linepoint32ST,linepoint32ED,&faxian);
+
+    faxian1=faxian;
+    faxian2=faxian;
+
+    if(answerpoint==2)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian1;
+        faxian1=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal1;
+        resultfocal1=p_temp;
+    }
+    else if(answerpoint==3)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian2;
+        faxian2=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal2;
+        resultfocal2=p_temp;
+    }
 
     if(step==1)
     {

@@ -52,7 +52,8 @@ const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_searchdectancemax",
                                               "als100_searchdectancemin",
                                               "als100_dis_center_st",
-                                              "als100_dis_center_ed"};
+                                              "als100_dis_center_ed",
+                                              "als100_answerpoint"};
 
 const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_pingjun",
@@ -76,7 +77,8 @@ const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_searchdectancemax",
                                               "als101_searchdectancemin",
                                               "als101_dis_center_st",
-                                              "als101_dis_center_ed"};
+                                              "als101_dis_center_ed",
+                                              "als101_answerpoint"};
 
 const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_pingjun",
@@ -116,7 +118,8 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_xielvfanwei",
                                               "als102_Uplong2",
                                               "als102_cebankongdongdis",
-                                              "als102_qiatouquweijuli"};
+                                              "als102_qiatouquweijuli",
+                                              "als102_answerpoint"};
 
 const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_pingjun",
@@ -170,7 +173,8 @@ const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_Uplong",
                                               "als105_Downdlong",
                                               "als105_duandianjuli",
-                                              "als105_b_dibufaxiangliang"};
+                                              "als105_b_dibufaxiangliang",
+                                              "als105_answerpoint"};
 
 const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pingjun",
@@ -213,7 +217,8 @@ const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pokouyaobianHsize",
                                               "als106_pokouduanxianerzhi",
                                               "als106_pokousearchdectancemax",
-                                              "als106_pokousearchdectancemin"};
+                                              "als106_pokousearchdectancemin",
+                                              "als106_answerpoint"};
 
 const std::vector<std::string> KEYS_ALS108 = {"als108_exposure_time",
                                               "als108_center_x",
@@ -256,6 +261,7 @@ struct Params
   int als100_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
   int als100_dis_center_st=0;//距离中心点此处后开始统计
   int als100_dis_center_ed=500;  //距离中心点此处后停止统计
+  int als100_answerpoint=0;//优先采用点序号
 /************************************/
 //算法101参数
   int als101_exposure_time = 10000;//曝光值
@@ -281,6 +287,7 @@ struct Params
   int als101_searchdectancemin=25;//搜寻焊缝端点距离中央凹槽最近的距离
   int als101_dis_center_st=0;//距离中心点此处后开始统计
   int als101_dis_center_ed=500;  //距离中心点此处后停止统计
+  int als101_answerpoint=0;//优先采用点序号
 /************************************/
 //算法102参数
   int als102_exposure_time=10000;//曝光值
@@ -322,6 +329,7 @@ struct Params
   int als102_Uplong2=60;//在坡度时上半段直线检测长度
   int als102_cebankongdongdis=180;//侧板跨孔洞的激光最短距离
   int als102_qiatouquweijuli=0;//恰头去尾距离
+  int als102_answerpoint=0;//优先采用点序号
   
 /************************************/
 //算法103参数
@@ -380,6 +388,7 @@ struct Params
   int als105_Downdlong=50;//下半段直线长度
   int als105_duandianjuli=30;  //断点向前搜索距离
   int als105_b_dibufaxiangliang=1;//是否采用底部平面的法向量
+  int als105_answerpoint=0;//优先采用点序号
 
 /************************************/
 //算法106参数
@@ -426,6 +435,7 @@ struct Params
   int als106_pokouduanxianerzhi=130;       //咬边二值（坡口模式=0时有效）
   int als106_pokousearchdectancemax=25;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
   int als106_pokousearchdectancemin=15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
+  int als106_answerpoint=0;//优先采用点序号
 /************************************/
 //算法108参数
   int als108_exposure_time=10000;//曝光值
