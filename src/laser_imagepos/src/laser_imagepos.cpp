@@ -21,6 +21,10 @@ int workers(const rclcpp::NodeOptions & options)
 LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
 : Node("laser_imagepos_node", options)
 {
+  updatatask=false;
+
+  InitRunImage();
+
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   
   _declare_parameters();
@@ -62,7 +66,8 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
           }
           else
           {
-            pm.task_num=p.as_int();
+            pm.task_num=p.as_int(); 
+            updatatask=true;
             if(pm.task_num>=100&&pm.task_num<200)
             {
               switch(pm.task_num)
@@ -330,6 +335,12 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
     niheX=new Int32 [bigsize];
     niheY=new Int32 [bigsize];
     RCLCPP_INFO(this->get_logger(), "Image size changed");
+  }
+
+  if(updatatask==true)
+  {
+    updatatask=false;
+    InitRunImage();
   }
 
   switch(pm.task_num)

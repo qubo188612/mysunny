@@ -600,6 +600,8 @@ private:
 
   std::string mat_type2encoding(int mat_type);
 
+  bool updatatask;  //任务切换
+
   void InitRunImage();//初始化算法
   //返回值1检测失败，0检测成功
   int RunImage(cv::Mat &imageIn,

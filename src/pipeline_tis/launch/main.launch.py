@@ -160,5 +160,5 @@ def generate_launch_description():
     #   cloud_result_tcpip,
     #   seam_tracking_node,
         modbus_node,
-        gpio_raspberry_node,
+       gpio_raspberry_node,
         config_tis_node])
