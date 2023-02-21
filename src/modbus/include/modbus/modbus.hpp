@@ -27,8 +27,8 @@
 #include <modbus.h>
 #include "fileout/E2proomData.h"
 
-#define PIC_IMAGE_HEIGHT 1536
-#define PIC_IMAGE_WIDTH  1024
+#define PIC_IMAGE_HEIGHT 3072
+#define PIC_IMAGE_WIDTH  2048
 
 namespace modbus
 {

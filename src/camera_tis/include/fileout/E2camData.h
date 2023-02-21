@@ -5,17 +5,20 @@
 #include "fileout/FileOut.h"
 #include "float.h"
 
+#define PIC_IMAGE_HEIGHT 3072
+#define PIC_IMAGE_WIDTH  2048
+
 //分辨率设置
 #define E2POOM_CAMER_SAVEBUFF              20
 #define E2POOM_CAMER_SYSPATH_MOTO			"./SAVE/E2P_CAMER_DLG.bsd"
 
 //分辨率设置
-#define E2POOM_CAMER_SIZE_WIDTH_MIN         640      //相机最小横向分辨率
-#define E2POOM_CAMER_SIZE_WIDTH_USE         1536     //相机默认横向分辨率
-#define E2POOM_CAMER_SIZE_WIDTH_MAX         1536     //相机最大横向分辨率
-#define E2POOM_CAMER_SIZE_HEIGHT_MIN        480      //相机最小纵向分辨率
-#define E2POOM_CAMER_SIZE_HEIGHT_USE        1024     //相机默认纵向分辨率
-#define E2POOM_CAMER_SIZE_HEIGHT_MAX        1024     //相机最大纵向分辨率   
+#define E2POOM_CAMER_SIZE_WIDTH_MIN         640                  //相机最小横向分辨率
+#define E2POOM_CAMER_SIZE_WIDTH_USE         1536                 //相机默认横向分辨率
+#define E2POOM_CAMER_SIZE_WIDTH_MAX         PIC_IMAGE_HEIGHT     //相机最大横向分辨率
+#define E2POOM_CAMER_SIZE_HEIGHT_MIN        480                  //相机最小纵向分辨率
+#define E2POOM_CAMER_SIZE_HEIGHT_USE        1024                 //相机默认纵向分辨率
+#define E2POOM_CAMER_SIZE_HEIGHT_MAX        PIC_IMAGE_WIDTH      //相机最大纵向分辨率   
 #define E2POOM_CAMER_FPS_MIN                30       //相机最小帧率
 #define E2POOM_CAMER_FPS_USE                30       //相机最大帧率
 #define E2POOM_CAMER_FPS_MAX                250      //相机最大帧率

@@ -16,8 +16,8 @@
 #include <vector>
 
 
-#define PIC_IMAGE_HEIGHT 1536
-#define PIC_IMAGE_WIDTH  1024
+#define PIC_IMAGE_HEIGHT 3072
+#define PIC_IMAGE_WIDTH  2048
 
 //任务号设置
 #define E2POOM_TASK_NUM_SAVEBUFF           8
