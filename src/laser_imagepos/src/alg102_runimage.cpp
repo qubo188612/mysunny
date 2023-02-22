@@ -463,6 +463,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     cv::Point cv_point_st,cv_point_ed;
     cv::Point2f cv_point;
     Myhalcv2::L_Point32F faxian,faxian3;
+    Int32 nstarti,nendi,nstartj,nendj;
 
     /*********************/
     //算法参数
@@ -803,7 +804,21 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     //膨胀做
     Myhalcv2::Mydilation_circle2(imageBry,&imageBry,2,0,Myhalcv2::MHC_MORPH_RECT);
 
-    Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft*4,jiguangTop*4,jiguangRight*4-jiguangLeft*4+1,jiguangDeep*4-jiguangTop*4+1);
+    if(b_gudingquyu==1)
+    {
+        nstartj=MAX(jiguangTop*4,0);
+        nendj=MIN(jiguangDeep*4,nHeight-1);
+        nstarti=MAX(jiguangLeft*4,0);
+        nendi=MIN(jiguangRight*4,nWidth-1);
+    }
+    else
+    {
+        nstartj=MAX(jiguangTop*4,0);
+        nendj=MIN(jiguangDeep*4,nHeight-1);
+        nstarti=MAX(jiguangLeft*4-30,0);
+        nendi=MIN(jiguangRight*4+30,nWidth-1);
+    }
+    Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
 
     for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
     {
