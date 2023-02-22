@@ -17,7 +17,7 @@ void timer_callback()
   {
     cv::cvtColor(pThis->cv_image, pThis->cv_image, cv::COLOR_BGR2GRAY);
     rotate(pThis->cv_image, pThis->cv_image, cv::ROTATE_90_COUNTERCLOCKWISE);
-    cv::resize(pThis->cv_image,pThis->cv_image,cv::Size(PIC_IMAGE_HEIGHT,PIC_IMAGE_WIDTH));
+    cv::resize(pThis->cv_image,pThis->cv_image,cv::Size(VIDEO_PIC_IMAGE_HEIGHT,VIDEO_PIC_IMAGE_WIDTH));
   }
   else
   {
@@ -112,7 +112,7 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   _threadmodbus = std::thread(&CameraTest::_modbus, this, 1502);
 #endif
 
-  int WIDTH=3072,HEIGHT=2048,FPS=40,exposure_time=1000,VIEW_WIDTH=3072,VIEW_HEIGHT=2048;
+  int WIDTH=1536,HEIGHT=1024,FPS=40,exposure_time=1000,VIEW_WIDTH=3072,VIEW_HEIGHT=2048;
   this->declare_parameter("width", WIDTH);
   this->declare_parameter("height", HEIGHT);
   this->declare_parameter("fps", FPS);

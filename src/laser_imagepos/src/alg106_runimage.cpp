@@ -222,25 +222,25 @@ int LaserImagePos::alg106_getcallbackParameter(const rclcpp::Parameter &p)
             return 1;}} 
     else if(p.get_name() == "als106_cutleft") {
         auto k = p.as_int();
-        if (k < 0 || k >= 2048) {
+        if (k < 0 || k >= PIC_IMAGE_WIDTH) {
             return -1;}
         else{pm.als106_cutleft=p.as_int();
             return 1;}} 
     else if(p.get_name() == "als106_cutright") {
         auto k = p.as_int();
-        if (k < 0 || k >= 2048) {
+        if (k < 0 || k >= PIC_IMAGE_WIDTH) {
             return -1;}
         else{pm.als106_cutright=p.as_int();
             return 1;}} 
     else if(p.get_name() == "als106_cuttop") {
         auto k = p.as_int();
-        if (k < 0 || k >= 3072) {
+        if (k < 0 || k >= PIC_IMAGE_HEIGHT) {
             return -1;}
         else{pm.als106_cuttop=p.as_int();
             return 1;}} 
     else if(p.get_name() == "als106_cutdeep") {
         auto k = p.as_int();
-        if (k < 0 || k >= 3072) {
+        if (k < 0 || k >= PIC_IMAGE_HEIGHT) {
             return -1;}
         else{pm.als106_cutdeep=p.as_int();
             return 1;}} 
