@@ -121,6 +121,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     Myhalcv2::Mat m_brygujia;
     Myhalcv2::Mat m_filter;
     Myhalcv2::Mat imageGasupain;
+    Myhalcv2::Mat m_tempmatIn;
     Myhalcv2::MyConect ImageConect,ImageConectlong;
     Int32 nWidth=cvimgIn.cols;	//输入图像宽
     Int32 nHeight=cvimgIn.rows;	//输入图像高
@@ -134,6 +135,8 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     Int32 X_Linestarty=0;
     Int32 X_Lineendy=0;
     cv::Point2f cv_point;
+    Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
+    Int32 nstarti,nendi,nstartj,nendj;
 
 /*********************/
     //算法参数
@@ -212,15 +215,23 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
         return 0;
     }
+    Myhalcv2::Mysmallest_rectangle(&ImageConectlong,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
 
     Myhalcv2::Mydilation_circle2(m_brygujia,&imageBry,2,0,Myhalcv2::MHC_MORPH_RECT);
 
-    for(j=imageIn.starty;j<imageIn.starty+imageIn.height;j++)
+    nstartj=MAX(jiguangTop*4,0);
+    nendj=MIN(jiguangDeep*4,nHeight-1);
+    nstarti=MAX(jiguangLeft*4-30,0);
+    nendi=MIN(jiguangRight*4+30,nWidth-1);
+
+    Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
+
+    for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
     {
         Int32 sum_valuecoor=0;
         Int32 sum_value=0;
 
-        for(i=imageIn.startx;i<imageIn.startx+imageIn.width;i++)
+        for(i=m_tempmatIn.startx;i<m_tempmatIn.startx+m_tempmatIn.width;i++)
         {
             Int32 di=i>>2;
             Int32 dj=j>>2;
