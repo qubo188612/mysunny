@@ -179,7 +179,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
         return 0;
     }
-    m_brygujia=Myhalcv2::MatCreatzero(nHeight/8,nWidth/8,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+    m_brygujia=Myhalcv2::MatCreatzero(nHeight/4,nWidth/4,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
     Myhalcv2::Mynormalize_lineXY(imageGasu,&m_brygujia,jiguangduibidu);
 
     if(step==5)
@@ -215,6 +215,11 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Mydilation_circle2(m_brygujia,&imageBry,2,0,Myhalcv2::MHC_MORPH_RECT);
+    if(step==8)
+    {
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+    }
 
     for(j=imageIn.starty;j<imageIn.starty+imageIn.height;j++)
     {
@@ -223,8 +228,8 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
 
         for(i=imageIn.startx;i<imageIn.startx+imageIn.width;i++)
         {
-            Int32 di=i>>3;
-            Int32 dj=j>>3;
+            Int32 di=i>>2;
+            Int32 dj=j>>2;
             if(imageBry.data[dj*imageBry.nWidth+di]!=0)
             {
                 sum_valuecoor=sum_valuecoor+(Int32)imageIn.data[j*imageIn.nWidth+i]*i;
@@ -245,7 +250,9 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         {
             if(sum_value!=0)
             {
-                imageGasupain.data[j*imageGasupain.nWidth+X_line[j]]=128;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+((Int32)(f_line[j]+0.5)>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+((Int32)(f_line[j]+0.5)>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+((Int32)(f_line[j]+0.5)>>2)].data3=0;
             }
         }
     }
@@ -254,109 +261,11 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
-    /***********************/
-
-    /*
-    //以下的图像几乎都是完美图像,需要检测出结果
-    //以下对高斯图做卷积
-    m16_filterIma=Myhalcv2::MatCreatzero(nHeight/8,nWidth/8,Myhalcv2::CCV_16UC1,cv8uc1_Imagebuff6);
-    m_filter=Myhalcv2::MatCreat(5,5,Myhalcv2::CCV_8UC1,filterdata);
-    Myhalcv2::Myfilter(imageGasu,m_filter,&m16_filterIma,Myhalcv2::CCV_16UC1,0,f_center);
-    memset(X_line,0,sizeof(Int32)*nHeight/8);
-    memset(X_lineMark,0,nHeight/8);
-    X_Linestarty=0;
-    X_Lineendy=0;
-
-    //以下取出二值图结果中每行卷积最大值
-    m_brygujia=Myhalcv2::MatCreatzero(nHeight/8,nWidth/8,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
-    for(j=m16_filterIma.starty;j<m16_filterIma.starty+m16_filterIma.height;j++)
-    {
-        Uint16 max=0;
-        Uint16 maxX=m16_filterIma.startx;
-        Uint16 maxXn=0;
-        for(i=m16_filterIma.startx;i<m16_filterIma.startx+m16_filterIma.width;i++)
-        {
-            if(imageBry.ptr_uchar[j*imageBry.nWidth+i]!=0)
-            {
-                if(max<m16_filterIma.ptr_ushort[j*m16_filterIma.nWidth+i])
-                {
-                    max=m16_filterIma.ptr_ushort[j*m16_filterIma.nWidth+i];
-                    maxXn=1;
-                    maxX=i;
-                }
-                else if(max==m16_filterIma.ptr_ushort[j*m16_filterIma.nWidth+i])
-                {
-                    maxXn++;
-                    maxX=i+maxX;
-                }
-            }
-        }
-        if(maxXn!=0)
-        {
-            X_line[j]=(maxX<<1)/maxXn;
-            if(X_Linestarty==0)
-            {
-                X_Linestarty=j;//骨架起点
-            }
-            X_Lineendy=j;//骨架终点
-            m_brygujia.data[j*imageGasu.nWidth+(X_line[j]>>1)]=255;
-        }
-
-        if(step==8)
-        {
-            if(X_line[j]!=0&&maxX!=imageBry.startx)
-            {
-                imageGasupain.data[j*imageGasu.nWidth+(X_line[j]>>1)]=0;
-            }
-        }
-    }
-    if(step==8)
-    {
-        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
-        return 0;
-    }
-
-    if(X_Lineendy==0)//没找到骨架
-    {
-    #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
-    #endif
-        return 1;
-    }
-    Myhalcv2::Myconnection(m_brygujia,&ImageConect,jiguanglong,1,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//先去掉离散点
-    if(ImageConect.AllMarkPointCount==0)
-    {
-    #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
-    #endif
-        return 1;
-    }
-    for(j=0;j<ImageConect.AllMarkPointCount;j++)
-    {
-        for(i=0;i<ImageConect.AllMarkPoint[j].PointArea;i++)
-        {
-            Int32 y=ImageConect.AllMarkPoint[j].point[i].y;
-            X_lineMark[y]=1;
-        }
-    }
-    Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight/8);//修复空的线
-    m_brygujia=Myhalcv2::MatCreatzero(nHeight/8,nWidth/8,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
-    for(j=X_Linestarty;j<=X_Lineendy;j++)
-    {
-        m_brygujia.data[j*m_brygujia.nWidth+(X_line[j]>>1)]=255;
-    }
-    if(step==9)
-    {
-        Myhalcv2::MatToCvMat(m_brygujia,&cvimgIn);
-        return 0;
-    }
-    */
-/***************************************/
-//  Myhalcv2::Myresizefix2bitdata_4fSize(X_line,X_lineMark,f_line,nHeight/8);
+    
     for(i=0;i<nHeight;i++)
     {
-        Int32 y=(Int32)(((float)i/8)+0.5);
-        Int32 x=(Int32)(f_line[i]/8+0.5);
+        Int32 y=(Int32)(((float)i/4)+0.5);
+        Int32 x=(Int32)(f_line[i]/4+0.5);
         if(x>=0&&x<imageBry.nWidth&&y>=0&&y<imageBry.nHeight)
         {
             if(imageBry.data[y*imageBry.nWidth+x]==0)
@@ -376,8 +285,8 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
         {
             if(f_line[j]>=0)
             {
-                Int32 di=(f_line[j]/8+0.5);
-                Int32 dj=j/8;
+                Int32 di=(f_line[j]/4+0.5);
+                Int32 dj=j/4;
                 if(di>=0&&di<imageGasu.nWidth)
                 {
                     cvimgIn.data[dj*imageGasu.nWidth*3+di*3]=255;
