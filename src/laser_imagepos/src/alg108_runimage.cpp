@@ -144,7 +144,8 @@ int LaserImagePos::alg108_runimage( cv::Mat &cvimgIn,
     imageIn=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff_image);
     Myhalcv2::CvMatToMat(cvimgIn,&imageIn,cv8uc1_Imagebuff_image);
     imageGasu=Myhalcv2::MatCreat(nWidth,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff5);
-    Myhalcv2::Mygausspyramid_2levl(imageIn,&imageGasu);  
+ // Myhalcv2::Mygausspyramid_2levl(imageIn,&imageGasu);  
+    Myhalcv2::Myrescale(imageIn,&imageGasu,0.125);
     if(step!=0)
     {
         imageGasupain=Myhalcv2::MatCreat(nHeight,nWidth,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff8);
@@ -156,16 +157,16 @@ int LaserImagePos::alg108_runimage( cv::Mat &cvimgIn,
     }
     if(firstsearch==0)
     {
-        stepfindST.x=center_x>>2;
-        stepfindST.y=center_y>>2;
+        stepfindST.x=center_x>>3;
+        stepfindST.y=center_y>>3;
         firstsearch_stx=MAX((Int32)(imageIn.startx),center_x-search_w);
         firstsearch_edx=MIN((Int32)(imageIn.startx+imageIn.width-1),center_x+search_w);
         firstsearch_sty=MAX((Int32)(imageIn.starty),center_y-search_h);
         firstsearch_edy=MIN((Int32)(imageIn.starty+imageIn.height-1),center_y+search_h);
-        firstsearch_stx=firstsearch_stx>>2;
-        firstsearch_edx=firstsearch_edx>>2;
-        firstsearch_sty=firstsearch_sty>>2;
-        firstsearch_edy=firstsearch_edy>>2;
+        firstsearch_stx=firstsearch_stx>>3;
+        firstsearch_edx=firstsearch_edx>>3;
+        firstsearch_sty=firstsearch_sty>>3;
+        firstsearch_edy=firstsearch_edy>>3;
         if(step==4)
         {
             Myhalcv2::MatClone(imageGasu,&imageGasupain);
@@ -216,8 +217,8 @@ int LaserImagePos::alg108_runimage( cv::Mat &cvimgIn,
         cv_point.y=stepfindST.y;
         cv::circle(cvimgIn,cv_point,4,cv::Scalar(255,0,255),1);
     }
-    resultfocal.x=stepfindST.x*4;
-    resultfocal.y=stepfindST.y*4;
+    resultfocal.x=stepfindST.x*8;
+    resultfocal.y=stepfindST.y*8;
    
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
