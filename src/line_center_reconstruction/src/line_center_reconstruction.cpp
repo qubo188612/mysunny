@@ -334,10 +334,10 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     }
     else
     {
-      double dis=sqrt(msg->targetpointoutcloud[1].x*msg->targetpointoutcloud[1].x+
-                      msg->targetpointoutcloud[1].y*msg->targetpointoutcloud[1].y);
-        msg->targetpointoutcloud[1].x=msg->targetpointoutcloud[1].x/dis;
-        msg->targetpointoutcloud[1].y=msg->targetpointoutcloud[1].y/dis;
+      double dis=sqrt((msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)*(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)+
+                      (msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)*(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y));
+        msg->targetpointoutcloud[1].x=(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)/dis;
+        msg->targetpointoutcloud[1].y=(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)/dis;
     }
 
     tab_reg[0]=0xff;

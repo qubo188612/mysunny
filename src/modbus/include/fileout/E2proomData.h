@@ -650,6 +650,80 @@
 #define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
 
+//算法107参数
+#define E2POOM_ALG107_LASERIMAGEPOS_SAVEBUFF              50
+#define E2POOM_ALG107_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_107.bsd"
+
+#define E2POOM_ALG107_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
+#define E2POOM_ALG107_LASERIMAGEPOS_EXPOSURE_TIME_USE				10000      //曝光默认值   
+#define E2POOM_ALG107_LASERIMAGEPOS_EXPOSURE_TIME_MAX				65535      //曝光最大值
+#define E2POOM_ALG107_LASERIMAGEPOS_PINGJUN_MIN                     0
+#define E2POOM_ALG107_LASERIMAGEPOS_PINGJUN_USE                     15
+#define E2POOM_ALG107_LASERIMAGEPOS_PINGJUN_MAX                     255
+#define E2POOM_ALG107_LASERIMAGEPOS_B_YANMOFUZHU_MIN                0 
+#define E2POOM_ALG107_LASERIMAGEPOS_B_YANMOFUZHU_USE                1
+#define E2POOM_ALG107_LASERIMAGEPOS_B_YANMOFUZHU_MAX                1
+#define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_MIN                0 
+#define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_USE                1
+#define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_MAX                1
+#define E2POOM_ALG107_LASERIMAGEPOS_WIDTHLIANTONGDIS_MIN            0 
+#define E2POOM_ALG107_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            4
+#define E2POOM_ALG107_LASERIMAGEPOS_WIDTHLIANTONGDIS_MAX            500
+#define E2POOM_ALG107_LASERIMAGEPOS_HIGHLIANTONGDIS_MIN             0 
+#define E2POOM_ALG107_LASERIMAGEPOS_HIGHLIANTONGDIS_USE             15
+#define E2POOM_ALG107_LASERIMAGEPOS_HIGHLIANTONGDIS_MAX             500
+#define E2POOM_ALG107_LASERIMAGEPOS_GUJIAERZHI_MIN                  0 
+#define E2POOM_ALG107_LASERIMAGEPOS_GUJIAERZHI_USE                  160
+#define E2POOM_ALG107_LASERIMAGEPOS_GUJIAERZHI_MAX                  255
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGHIGHT_MIN                0 
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGHIGHT_USE                50
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGHIGHT_MAX                255
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGLONG_MIN                 0 
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGLONG_USE                 20
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGLONG_MAX                 255
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGKUANDU_MIN               0 
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGKUANDU_USE               4
+#define E2POOM_ALG107_LASERIMAGEPOS_JIGUANGKUANDU_MAX               20
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIF_MIN                       0 
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIF_USE                       2000
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIF_MAX                       5000
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIFMIN_MIN                   -2000 
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIFMIN_USE                    0
+#define E2POOM_ALG107_LASERIMAGEPOS_UPDIFMIN_MAX                    2000
+#define E2POOM_ALG107_LASERIMAGEPOS_UPLONG_MIN                      1
+#define E2POOM_ALG107_LASERIMAGEPOS_UPLONG_USE                      50
+#define E2POOM_ALG107_LASERIMAGEPOS_UPLONG_MAX                      500
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIF_MIN                    -5000 
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIF_USE                    -2000
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIF_MAX                     0
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIFMIN_MIN                 -255 
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIFMIN_USE                 -20
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDIFMIN_MAX                  255
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDLONG_MIN                   1
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDLONG_USE                   50
+#define E2POOM_ALG107_LASERIMAGEPOS_DOWNDLONG_MAX                   500
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_DOWN_MIN                     0
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_DOWN_USE                     5
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_DOWN_MAX                     500
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_DOWN_MIN                     0
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_DOWN_USE                     500
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_DOWN_MAX                     1500
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_UP_MIN                       0
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_UP_USE                       5
+#define E2POOM_ALG107_LASERIMAGEPOS_ST_UP_MAX                       500
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_UP_MIN                       0
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_UP_USE                       200              //180
+#define E2POOM_ALG107_LASERIMAGEPOS_ED_UP_MAX                       1500
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST_MIN               0
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST_USE               50
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST_MAX               500
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST2_MIN              0
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST2_MAX              500
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ST2_USE              20
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_MIN              0
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_MAX              500
+#define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_USE              200
+
 //算法108参数
 #define E2POOM_ALG108_LASERIMAGEPOS_SAVEBUFF              20
 #define E2POOM_ALG108_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_108.bsd"
@@ -1588,6 +1662,105 @@ public:
     Int16 als106_answerpoint_use;
 
 /****************************/
+    //任务107参数
+    Uint16 als107_exposure_time;//曝光值
+    Int16 als107_pingjun;//二值阈值
+    Int16 als107_b_yanmofuzhu;//是否使用掩摸辅助
+    Int16 als107_b_gudingquyu;//是否固定区域
+    Int16 als107_widthliantongdis;//激光宽度连通距离
+    Int16 als107_highliantongdis;//激光长度连通距离
+    Int16 als107_gujiaerzhi;//找骨架二值图
+    Int16 als107_jiguanghight;//整体激光最短长度
+    Int16 als107_jiguanglong;//单边激光最短长度
+    Int16 als107_jiguangkuandu;//激光粗细
+    Int16 als107_Updif;  //上半段直线斜率限制最大值//Updif
+    Int16 als107_Updifmin;          //上半段直线斜率限制最小值     //Updifmin
+    Int16 als107_Uplong;//上半段直线长度   //设为200时将直接用拟合数据跟踪坡顶
+    Int16 als107_Downdif;      //下半段直线斜率限制最小值   //Downdif
+    Int16 als107_Downdifmin;       //下半段直线斜率限制最大值
+    Int16 als107_Downdlong;//下半段直线长度
+    Int16 als107_St_Down;//下半段拟合起点
+    Int16 als107_Ed_Down;//下半段拟合终点
+    Int16 als107_St_Up;//上半段拟合起点
+    Int16 als107_Ed_Up;//上半段拟合终点
+    Int16 als107_dis_center_st;     //距离中心点此处后开始统计 //dis_center_st
+    Int16 als107_dis_center_st2;   //距离中心点此处后开始统计 //dis_center_st2
+    Int16 als107_dis_center_ed2;//距离中心点此处后停止统计 //dis_center_st2
+
+    void write_als107_para(char *filename);				//保存任务107参数
+    void init_als107_para();				//初始化任务107参数
+
+    Uint16 als107_exposure_time_min;    //曝光最小值
+    Uint16 als107_exposure_time_max;    //曝光最大值
+    Uint16 als107_exposure_time_use;    //曝光默认值
+    Int16 als107_pingjun_min;
+    Int16 als107_pingjun_max;
+    Int16 als107_pingjun_use;
+    Int16 als107_b_yanmofuzhu_min;
+    Int16 als107_b_yanmofuzhu_max;
+    Int16 als107_b_yanmofuzhu_use;
+    Int16 als107_b_gudingquyu_min;
+    Int16 als107_b_gudingquyu_max;
+    Int16 als107_b_gudingquyu_use;
+    Int16 als107_widthliantongdis_min;
+    Int16 als107_widthliantongdis_max;
+    Int16 als107_widthliantongdis_use;
+    Int16 als107_highliantongdis_min;
+    Int16 als107_highliantongdis_max;
+    Int16 als107_highliantongdis_use;
+    Int16 als107_gujiaerzhi_min;
+    Int16 als107_gujiaerzhi_max;
+    Int16 als107_gujiaerzhi_use;
+    Int16 als107_jiguanghight_min;
+    Int16 als107_jiguanghight_max;
+    Int16 als107_jiguanghight_use;
+    Int16 als107_jiguanglong_min;
+    Int16 als107_jiguanglong_max;
+    Int16 als107_jiguanglong_use;
+    Int16 als107_jiguangkuandu_min;
+    Int16 als107_jiguangkuandu_max;
+    Int16 als107_jiguangkuandu_use;
+    Int16 als107_Updif_min;
+    Int16 als107_Updif_max;
+    Int16 als107_Updif_use;
+    Int16 als107_Updifmin_min;
+    Int16 als107_Updifmin_max;
+    Int16 als107_Updifmin_use;
+    Int16 als107_Uplong_min;
+    Int16 als107_Uplong_max;
+    Int16 als107_Uplong_use;
+    Int16 als107_Downdif_min;
+    Int16 als107_Downdif_max;
+    Int16 als107_Downdif_use;
+    Int16 als107_Downdifmin_min;
+    Int16 als107_Downdifmin_max;
+    Int16 als107_Downdifmin_use;
+    Int16 als107_Downdlong_min;
+    Int16 als107_Downdlong_max;
+    Int16 als107_Downdlong_use;
+    Int16 als107_St_Down_min;
+    Int16 als107_St_Down_max;
+    Int16 als107_St_Down_use;
+    Int16 als107_Ed_Down_min;
+    Int16 als107_Ed_Down_max;
+    Int16 als107_Ed_Down_use;
+    Int16 als107_St_Up_min;
+    Int16 als107_St_Up_max;
+    Int16 als107_St_Up_use;
+    Int16 als107_Ed_Up_min;
+    Int16 als107_Ed_Up_max;
+    Int16 als107_Ed_Up_use;
+    Int16 als107_dis_center_st_min;
+    Int16 als107_dis_center_st_max;
+    Int16 als107_dis_center_st_use;
+    Int16 als107_dis_center_st2_min;
+    Int16 als107_dis_center_st2_max;
+    Int16 als107_dis_center_st2_use;
+    Int16 als107_dis_center_ed2_min;
+    Int16 als107_dis_center_ed2_max;
+    Int16 als107_dis_center_ed2_use;
+
+/****************************/
     //任务108参数
     Uint16 als108_exposure_time;//曝光值
     Int16 als108_center_x;//特征点位置
@@ -1652,6 +1825,7 @@ private:
     void Init_als104_E2proomData();
     void Init_als105_E2proomData();
     void Init_als106_E2proomData();
+    void Init_als107_E2proomData();
     void Init_als108_E2proomData();
     
     void als100_check_para();
@@ -1661,6 +1835,7 @@ private:
     void als104_check_para();
     void als105_check_para();
     void als106_check_para();
+    void als107_check_para();
     void als108_check_para();
 
     void als100_read_para(char *filename);
@@ -1670,6 +1845,7 @@ private:
     void als104_read_para(char *filename);
     void als105_read_para(char *filename);
     void als106_read_para(char *filename);
+    void als107_read_para(char *filename);
     void als108_read_para(char *filename);
 };
 

@@ -93,6 +93,9 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
                 case 106:
                   _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als106_exposure_time)});
                 break;
+                case 107:
+                  _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als107_exposure_time)});
+                break;
                 case 108:
                   _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als108_exposure_time)});
                 break;
@@ -189,6 +192,15 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
             return result;
           }
         }
+        else if(alg_return=alg107_getcallbackParameter(p)!=0)
+        {
+          if(alg_return<0)
+          {
+            result.successful = false;
+            result.reason = "Failed to set alg107_Parameter";
+            return result;
+          }
+        }
         else if(alg_return=alg108_getcallbackParameter(p)!=0)
         {
           if(alg_return<0)
@@ -236,6 +248,7 @@ void LaserImagePos::_declare_parameters()
   alg104_declare_parameters();
   alg105_declare_parameters();
   alg106_declare_parameters();
+  alg107_declare_parameters();
   alg108_declare_parameters();
   this->declare_parameter("task_num", pm.task_num);
   this->declare_parameter("show_step", pm.show_step);
@@ -261,6 +274,7 @@ Params LaserImagePos::_update_parameters()
   alg104_update_parameters();
   alg105_update_parameters();
   alg106_update_parameters();
+  alg107_update_parameters();
   alg108_update_parameters();
   return pm;
 }
@@ -371,6 +385,10 @@ int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图
     break;
     case 106:   //坡口
       if(0!=alg106_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
+        return 1;
+    break;
+    case 107:   //坡口
+      if(0!=alg107_runimage(imageIn,pointcloud,namepoint,solderjoints,step))
         return 1;
     break;
     case 108:   //STC

@@ -245,7 +245,8 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_Point32 temp_resultfocal1,temp_resultfocal2;
     Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX,Imageheadline;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
-    cv::Point cv_point_st,cv_point_ed,cv_point;
+    cv::Point cv_point_st,cv_point_ed;
+    cv::Point2f cv_point;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
     Myhalcv2::L_Point32F faxian;
 
@@ -919,6 +920,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
 
     if(step==1)
     {
+        Myhalcv2::L_POINT32F f_temp;
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         if(cvimgIn.type()==CV_8UC1)
         cv::cvtColor(cvimgIn,cvimgIn,cv::COLOR_GRAY2BGR);
@@ -935,20 +937,20 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
         cv_point_st.x=(resultfocal.x>>2);
         cv_point_st.y=(resultfocal.y>>2);
         cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(0,0,255),1);
-        faxian.x=faxian.x*1000+resultfocal.x;
-        faxian.y=faxian.y*1000+resultfocal.y;
+        f_temp.x=faxian.x*1000+resultfocal.x;
+        f_temp.y=faxian.y*1000+resultfocal.y;
         cv_point_st.x=(resultfocal.x>>2);
         cv_point_st.y=(resultfocal.y>>2);
-        cv_point_ed.x=(faxian.x/4);
-        cv_point_ed.y=(faxian.y/4);
+        cv_point_ed.x=(f_temp.x/4);
+        cv_point_ed.y=(f_temp.y/4);
         cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
     }
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point);
-    cv_point.x=faxian.x;
-    cv_point.y=faxian.y;
+    cv_point.x=faxian.x*1000+resultfocal.x;
+    cv_point.y=faxian.y*1000+resultfocal.y;
     namepoint.push_back(cv_point);
 
 #ifdef DEBUG_ALG;

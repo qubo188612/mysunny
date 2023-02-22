@@ -220,6 +220,30 @@ const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pokousearchdectancemin",
                                               "als106_answerpoint"};
 
+const std::vector<std::string> KEYS_ALS107 = {"als107_exposure_time",
+                                              "als107_pingjun",
+                                              "als107_b_yanmofuzhu",
+                                              "als107_b_gudingquyu",
+                                              "als107_widthliantongdis",
+                                              "als107_highliantongdis",
+                                              "als107_gujiaerzhi",
+                                              "als107_jiguanghight",
+                                              "als107_jiguanglong",
+                                              "als107_jiguangkuandu",
+                                              "als107_Updif",
+                                              "als107_Updifmin",
+                                              "als107_Uplong",
+                                              "als107_Downdif",
+                                              "als107_Downdifmin",
+                                              "als107_Downdlong",
+                                              "als107_St_Down",
+                                              "als107_Ed_Down",
+                                              "als107_St_Up",
+                                              "als107_Ed_Up",
+                                              "als107_dis_center_st",
+                                              "als107_dis_center_st2",
+                                              "als107_dis_center_ed2"};
+
 const std::vector<std::string> KEYS_ALS108 = {"als108_exposure_time",
                                               "als108_center_x",
                                               "als108_center_y",  
@@ -437,6 +461,31 @@ struct Params
   int als106_pokousearchdectancemin=15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
   int als106_answerpoint=0;//优先采用点序号
 /************************************/
+//算法107参数
+  int als107_exposure_time=10000;//曝光值
+  int als107_pingjun=15;//二值阈值
+  int als107_b_yanmofuzhu=1;//是否使用掩摸辅助
+  int als107_b_gudingquyu=0;//是否固定区域
+  int als107_widthliantongdis=5;//激光宽度连通距离
+  int als107_highliantongdis=15;//激光长度连通距离
+  int als107_gujiaerzhi=160;//找骨架二值图
+  int als107_jiguanghight=50;//整体激光最短长度
+  int als107_jiguanglong=20;//单边激光最短长度
+  int als107_jiguangkuandu=6;//激光粗细
+  int als107_Updif=2000;  //上半段直线斜率限制最大值//Updif
+  int als107_Updifmin=0;          //上半段直线斜率限制最小值     //Updifmin
+  int als107_Uplong=50;//上半段直线长度   //设为200时将直接用拟合数据跟踪坡顶
+  int als107_Downdif=-2000;      //下半段直线斜率限制最小值   //Downdif
+  int als107_Downdifmin=-20;       //下半段直线斜率限制最大值
+  int als107_Downdlong=50;//下半段直线长度
+  int als107_St_Down=5;//下半段拟合起点
+  int als107_Ed_Down=500;//下半段拟合终点
+  int als107_St_Up=5;//上半段拟合起点
+  int als107_Ed_Up=200;//上半段拟合终点
+  int als107_dis_center_st=50;     //距离中心点此处后开始统计 //dis_center_st
+  int als107_dis_center_st2=20;   //距离中心点此处后开始统计 //dis_center_st2
+  int als107_dis_center_ed2=200;//距离中心点此处后停止统计 //dis_center_st2
+/************************************/
 //算法108参数
   int als108_exposure_time=10000;//曝光值
   int als108_center_x=PIC_IMAGE_WIDTH/2;//特征点位置
@@ -545,6 +594,7 @@ private:
   void alg104_declare_parameters();
   void alg105_declare_parameters();
   void alg106_declare_parameters();
+  void alg107_declare_parameters();
   void alg108_declare_parameters();
 
   void alg100_update_parameters();
@@ -554,6 +604,7 @@ private:
   void alg104_update_parameters();
   void alg105_update_parameters();
   void alg106_update_parameters();
+  void alg107_update_parameters();
   void alg108_update_parameters();
 
   int alg100_getcallbackParameter(const rclcpp::Parameter &p);
@@ -563,6 +614,7 @@ private:
   int alg104_getcallbackParameter(const rclcpp::Parameter &p);
   int alg105_getcallbackParameter(const rclcpp::Parameter &p);
   int alg106_getcallbackParameter(const rclcpp::Parameter &p);
+  int alg107_getcallbackParameter(const rclcpp::Parameter &p);
   int alg108_getcallbackParameter(const rclcpp::Parameter &p);
 
 
@@ -659,6 +711,10 @@ private:
                       bool &solderjoints,//是否焊点
                       int step);
   int alg106_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
+                      std::vector <cv::Point2f> &namepoint,
+                      bool &solderjoints,//是否焊点
+                      int step);
+  int alg107_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
                       std::vector <cv::Point2f> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);

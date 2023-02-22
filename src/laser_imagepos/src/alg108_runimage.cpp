@@ -116,7 +116,7 @@ int LaserImagePos::alg108_runimage( cv::Mat &cvimgIn,
     Int32 i,j,t,n;
     Myhalcv2::Mat imageIn,imageGasu,imageGasupain;
     Myhalcv2::L_Point32 stepfindST;//结果线1拟合区域,(下方)
-    cv::Point cv_point;
+    cv::Point2f cv_point;
     Myhalcv2::L_Point32F faxian;
     Myhalcv2::L_Point32 resultfocal;
     Int32 nWidth=cvimgIn.cols;	//输入图像宽
@@ -222,8 +222,8 @@ int LaserImagePos::alg108_runimage( cv::Mat &cvimgIn,
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
     namepoint.push_back(cv_point); 
-    cv_point.x=faxian.x;
-    cv_point.y=faxian.y;
+    cv_point.x=faxian.x*1000+resultfocal.x;
+    cv_point.y=faxian.y*1000+resultfocal.y;
     namepoint.push_back(cv_point); 
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
