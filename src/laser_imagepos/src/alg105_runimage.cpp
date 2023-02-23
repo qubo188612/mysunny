@@ -34,6 +34,7 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_duandianjuli", pm.als105_duandianjuli);
     this->declare_parameter("als105_b_dibufaxiangliang", pm.als105_b_dibufaxiangliang);
     this->declare_parameter("als105_answerpoint", pm.als105_answerpoint);
+    this->declare_parameter("als105_usedownliantong", pm.als105_usedownliantong); 
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -117,6 +118,10 @@ void LaserImagePos::alg105_update_parameters()
     else if (p.get_name() == "als105_answerpoint") {
       pm.als105_answerpoint = p.as_int();
     }
+    else if (p.get_name() == "als105_usedownliantong") {
+      pm.als105_usedownliantong = p.as_int();
+    }
+    
   }
 }
 
@@ -280,6 +285,12 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als105_answerpoint=p.as_int();
             return 1;}}
+    else if(p.get_name() == "als105_usedownliantong") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als105_usedownliantong=p.as_int();
+            return 1;}}
     return 0;
 }
 
@@ -347,6 +358,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 duandianjuli=pm.als105_duandianjuli;  //断点向前搜索距离
     Int32 b_dibufaxiangliang=pm.als105_b_dibufaxiangliang;//是否采用底部平面的法向量
     Int32 answerpoint=pm.als105_answerpoint;
+    Int32 b_usedownliantong=pm.als105_usedownliantong;//是否使用最底部连通
     
     
     if(step==2)
@@ -421,22 +433,63 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         return 0;
     }      
 
-    Myhalcv2::Myconnection2(imageBry,&ImageConect,jiguanghight,widthliantongdis,highliantongdis,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
-    Myhalcv2::Myselect_shape(&ImageConect,&ImageConectlong,Myhalcv2::MHC_CONNECT_WIDTH_HEIGHT,jiguanghight,MAX(ImageConect.nHeight,ImageConect.nWidth));
-    if(ImageConectlong.AllMarkPointCount==0)
+    if(b_usedownliantong==0)
     {
-    #ifdef QUICK_TRANSMIT
-        Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
-        if(b_cut==1)
+        Myhalcv2::Myconnection2(imageBry,&ImageConect,jiguanghight,widthliantongdis,highliantongdis,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
+        Myhalcv2::Myselect_shape(&ImageConect,&ImageConectlong,Myhalcv2::MHC_CONNECT_WIDTH_HEIGHT,jiguanghight,MAX(ImageConect.nHeight,ImageConect.nWidth));
+        if(ImageConectlong.AllMarkPointCount==0)
         {
-            cv::Point p1(cutleft>>2,cuttop>>2);
-            cv::Point p2(cutright>>2,cutdeep>>2);
-            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
         }
-    #endif
-        return 1;
+        Myhalcv2::Mysmallest_rectangle(&ImageConectlong,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
+        Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,ImageConectlong.AllMarkPointCount-1);
     }
-    Myhalcv2::Mysmallest_rectangle(&ImageConectlong,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
+    else
+    {
+        Myhalcv2::Myconnection2(imageBry,&ImageConect,jiguanghight,widthliantongdis,highliantongdis,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
+        Myhalcv2::Myselect_shape(&ImageConect,&ImageConect,Myhalcv2::MHC_CONNECT_WIDTH_HEIGHT,jiguanghight,MAX(ImageConect.nHeight,ImageConect.nWidth));
+        Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_TOPTOBOTTOM_PAIXU);//在ImageConect中筛选出高度大于50的联通域
+        if(ImageConectlong.AllMarkPointCount==0)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_HEIGHT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
+        if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].bottom!=
+           ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].bottom)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,ImageConectlong.AllMarkPointCount-1);
+        Myhalcv2::Mysmallest_rectangle(&ImageConectlongPX,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
+
+    }
     Myhalcv2::MyCutRoi(imageGasu,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,jiguangLeft,jiguangTop,jiguangRight-jiguangLeft+1,jiguangDeep-jiguangTop+1);
     Myhalcv2::Mynormalize_lineXY(m_tempmatIn,&imageBry,1);
     if(step==9)

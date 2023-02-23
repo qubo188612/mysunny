@@ -512,6 +512,10 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
 #define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG105_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
+#define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_MIN             0
+#define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_USE             0
+#define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_MAX             1
+
 
 //算法106参数
 #define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              94
@@ -664,7 +668,7 @@
 #define E2POOM_ALG107_LASERIMAGEPOS_B_YANMOFUZHU_USE                1
 #define E2POOM_ALG107_LASERIMAGEPOS_B_YANMOFUZHU_MAX                1
 #define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_MIN                0 
-#define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_USE                1
+#define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_USE                0
 #define E2POOM_ALG107_LASERIMAGEPOS_B_GUDINGQUYU_MAX                1
 #define E2POOM_ALG107_LASERIMAGEPOS_WIDTHLIANTONGDIS_MIN            0 
 #define E2POOM_ALG107_LASERIMAGEPOS_WIDTHLIANTONGDIS_USE            4
@@ -1395,6 +1399,7 @@ public:
     Int16 als105_duandianjuli;  //断点向前搜索距离
     Int16 als105_b_dibufaxiangliang;//是否采用底部平面的法向量
     Int16 als105_answerpoint;
+    Int16 als105_usedownliantong;
 
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
@@ -1477,6 +1482,9 @@ public:
     Int16 als105_answerpoint_min;
     Int16 als105_answerpoint_max;
     Int16 als105_answerpoint_use;
+    Int16 als105_usedownliantong_min;
+    Int16 als105_usedownliantong_max;
+    Int16 als105_usedownliantong_use;
 
 /****************************/
     //任务106参数

@@ -174,7 +174,8 @@ const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_Downdlong",
                                               "als105_duandianjuli",
                                               "als105_b_dibufaxiangliang",
-                                              "als105_answerpoint"};
+                                              "als105_answerpoint",
+                                              "als105_usedownliantong"};
 
 const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pingjun",
@@ -413,6 +414,7 @@ struct Params
   int als105_duandianjuli=30;  //断点向前搜索距离
   int als105_b_dibufaxiangliang=1;//是否采用底部平面的法向量
   int als105_answerpoint=0;//优先采用点序号
+  int als105_usedownliantong=0;//是否使用最底部连通
 
 /************************************/
 //算法106参数

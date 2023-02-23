@@ -11,7 +11,7 @@
 
 #define SHOW_OUTPUT_FPS
 
-//#define TEST_VIDEO        //输入视频测试
+#define TEST_VIDEO        //输入视频测试
 
 #define PIC_IMAGE_HEIGHT 1536
 #define PIC_IMAGE_WIDTH  1024

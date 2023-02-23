@@ -208,6 +208,8 @@ namespace modbus
 #define ALS105_DUANDIANJULI_REG_ADD            0x00c7
 #define ALS105_B_DIBUFAXIANGLIANG_REG_ADD      0x00c8
 #define ALS105_ANSWERPOINT_REG_ADD             0x00c9
+#define ALS105_B_USEDOWNLIANTONG_REG_ADD       0x00ca
+
 
 #define ALS105_INIT_REG_ADD                    0x00cf
 
