@@ -29,6 +29,8 @@ namespace Myhalcv2
     cv::Rect STC_cxtRegion;
     cv::Mat STC_cxtPriorPro,STC_cxtPosteriorPro,STC_STModel,STC_STCModel,STC_hammingWin,STC_hammingWin_adapt;			// spatio-temporal context model
     Int32 STC_hammingWin_up_dis,STC_hammingWin_down_dis,STC_hammingWin_left_dis,STC_hammingWin_right_dis;
+    cv::KalmanFilter KF_2D(2, 2, 0);
+    cv::Mat KF_2Dmeasurement = cv::Mat::zeros(2, 1, CV_32F);
 
     Uint8 gaussian_3x3[9] =
     {
@@ -45451,6 +45453,31 @@ namespace Myhalcv2
         *right=trackBox.x+trackBox.width-1;
         *top=trackBox.y;
         *deep=trackBox.y+trackBox.height-1;
+        return 0;
+    }
+
+    Int8 MyKalman2D_init(Int32 init_Xin,Int32 init_Yin,float fQ,float fR)
+    {
+        KF_2D.transitionMatrix = (cv::Mat_<float>(2, 2) <<1,0,0,1);  //转移矩阵A
+        setIdentity(KF_2D.measurementMatrix);                                             //测量矩阵H
+        setIdentity(KF_2D.processNoiseCov, cv::Scalar::all(fQ));                            //系统噪声方差矩阵Q
+        setIdentity(KF_2D.measurementNoiseCov, cv::Scalar::all(fR));                        //测量噪声方差矩阵R
+        setIdentity(KF_2D.errorCovPost, cv::Scalar::all(1));
+        KF_2D.statePost = (cv::Mat_<float>(2, 1) <<(float)init_Xin,(float)init_Yin);
+        KF_2Dmeasurement = cv::Mat::zeros(2,1,CV_32F);
+        return 0;
+    }
+
+    Int8 MyKalman2D_filter(Int32 Xin,Int32 Yin,Int32 *Xout,Int32 *Yout)
+    {
+        cv::Mat prediction = KF_2D.predict(); 			             //计算测量值
+        KF_2Dmeasurement.at<float>(0) = (float)Xin;
+        KF_2Dmeasurement.at<float>(1) = (float)Yin;
+        //更新
+        KF_2D.correct(KF_2Dmeasurement);
+        *Xout=(Int32)(KF_2D.statePost.at<float>(0)+0.5);
+        *Yout=(Int32)(KF_2D.statePost.at<float>(1)+0.5);
+
         return 0;
     }
 }

@@ -295,6 +295,7 @@ void LaserImagePos::InitRunImage()
   fuzhuxielv=0;
   b_fuzhuxielv=0;
   jishuxielv=0;
+  b_firstKalmanFilter=0;
 }
 
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像

@@ -175,7 +175,10 @@ const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_duandianjuli",
                                               "als105_b_dibufaxiangliang",
                                               "als105_answerpoint",
-                                              "als105_usedownliantong"};
+                                              "als105_usedownliantong",
+                                              "als105_b_KalmanFilter",
+                                              "als105_KalmanQF",
+                                              "als105_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pingjun",
@@ -415,6 +418,10 @@ struct Params
   int als105_b_dibufaxiangliang=1;//是否采用底部平面的法向量
   int als105_answerpoint=0;//优先采用点序号
   int als105_usedownliantong=0;//是否使用最底部连通
+  int als105_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als105_KalmanQF=10;
+  int als105_KalmanRF=50;
+
 
 /************************************/
 //算法106参数
@@ -684,6 +691,7 @@ private:
   Int32 jishuST_x,jishuST_y,jishuED_x,jishuED_y,jishuNum;
   Int32 firstdimian;
   Int32 fuzhuxielv,b_fuzhuxielv,jishuxielv;
+  Int32 b_firstKalmanFilter;
   Myhalcv2::MyCountLine linegroup,linegroupout;
 
   Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)

@@ -35,6 +35,9 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_b_dibufaxiangliang", pm.als105_b_dibufaxiangliang);
     this->declare_parameter("als105_answerpoint", pm.als105_answerpoint);
     this->declare_parameter("als105_usedownliantong", pm.als105_usedownliantong); 
+    this->declare_parameter("als105_b_KalmanFilter", pm.als105_b_KalmanFilter); 
+    this->declare_parameter("als105_KalmanQF", pm.als105_KalmanQF);
+    this->declare_parameter("als105_KalmanRF", pm.als105_KalmanRF);
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -121,7 +124,15 @@ void LaserImagePos::alg105_update_parameters()
     else if (p.get_name() == "als105_usedownliantong") {
       pm.als105_usedownliantong = p.as_int();
     }
-    
+    else if (p.get_name() == "als105_b_KalmanFilter") {
+      pm.als105_b_KalmanFilter = p.as_int();
+    }
+    else if (p.get_name() == "als105_KalmanQF") {
+      pm.als105_KalmanQF = p.as_int();
+    }
+    else if (p.get_name() == "als105_KalmanRF") {
+      pm.als105_KalmanRF = p.as_int();
+    }
   }
 }
 
@@ -291,6 +302,24 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als105_usedownliantong=p.as_int();
             return 1;}}
+    else if(p.get_name() == "als105_b_KalmanFilter") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als105_b_KalmanFilter=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als105_KalmanQF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als105_KalmanQF=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als105_KalmanRF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als105_KalmanRF=p.as_int();
+            return 1;}}        
     return 0;
 }
 
@@ -359,6 +388,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 b_dibufaxiangliang=pm.als105_b_dibufaxiangliang;//是否采用底部平面的法向量
     Int32 answerpoint=pm.als105_answerpoint;
     Int32 b_usedownliantong=pm.als105_usedownliantong;//是否使用最底部连通
+    Int32 b_KalmanFilter=pm.als105_b_KalmanFilter;//是否使用卡尔曼滤波
+    float KalmanQF=pm.als105_KalmanQF/1000.0;//系统噪声方差矩阵Q 
+    float KalmanRF=pm.als105_KalmanRF/1000.0;//系统噪声方差矩阵R 
     
     
     if(step==2)
@@ -1240,6 +1272,22 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         p_temp=resultfocal;
         resultfocal=resultfocal2;
         resultfocal2=p_temp;
+    }
+
+    if(b_KalmanFilter==1)
+    {
+       if(b_firstKalmanFilter==0)
+       {
+            b_firstKalmanFilter=1;
+            Myhalcv2::MyKalman2D_init(resultfocal.x,resultfocal.y,KalmanQF,KalmanRF);
+       } 
+       else
+       {
+            Int32 outx,outy;
+            Myhalcv2::MyKalman2D_filter(resultfocal.x,resultfocal.y,&outx,&outy);
+            resultfocal.x=outx;
+            resultfocal.y=outy;
+       }
     }
 
     if(step==1)

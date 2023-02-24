@@ -431,7 +431,7 @@
 #define E2POOM_ALG104_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
 
 //算法105参数
-#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              64
+#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              70
 #define E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_105.bsd"
 
 #define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -515,7 +515,15 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_MIN             0
 #define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_USE             0
 #define E2POOM_ALG105_LASERIMAGEPOS_USEDOWNLIANTONG_MAX             1
-
+#define E2POOM_ALG105_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_MAX                    10000
 
 //算法106参数
 #define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              94
@@ -1400,6 +1408,9 @@ public:
     Int16 als105_b_dibufaxiangliang;//是否采用底部平面的法向量
     Int16 als105_answerpoint;
     Int16 als105_usedownliantong;
+    Int16 als105_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als105_KalmanQF;
+    Int16 als105_KalmanRF;
 
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
@@ -1485,6 +1496,15 @@ public:
     Int16 als105_usedownliantong_min;
     Int16 als105_usedownliantong_max;
     Int16 als105_usedownliantong_use;
+    Int16 als105_b_KalmanFilter_min;
+    Int16 als105_b_KalmanFilter_max;
+    Int16 als105_b_KalmanFilter_use;
+    Int16 als105_KalmanQF_min;
+    Int16 als105_KalmanQF_max;
+    Int16 als105_KalmanQF_use;
+    Int16 als105_KalmanRF_min;
+    Int16 als105_KalmanRF_max;
+    Int16 als105_KalmanRF_use;
 
 /****************************/
     //任务106参数

@@ -151,6 +151,24 @@ int Modbus::als105_task_parameter(int ddr,u_int16_t num)
             return 1;
         break;
 
+        case ALS105_B_KALMANFILTER_REG_ADD:
+            e2proomdata.als105_b_KalmanFilter=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_b_KalmanFilter", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS105_KALMANQF_REG_ADD:
+            e2proomdata.als105_KalmanQF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_KalmanQF", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS105_KALMANRF_REG_ADD:
+            e2proomdata.als105_KalmanRF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_KalmanRF", (int16_t)num)});
+            return 1;
+        break;
+
         case ALS105_INIT_REG_ADD:
             if(num==1)
             {
@@ -195,6 +213,9 @@ void Modbus::init_als105_parameter()
     parameterport_mapping->tab_registers[ALS105_B_DIBUFAXIANGLIANG_REG_ADD]=e2proomdata.als105_b_dibufaxiangliang;
     parameterport_mapping->tab_registers[ALS105_ANSWERPOINT_REG_ADD]=e2proomdata.als105_answerpoint;
     parameterport_mapping->tab_registers[ALS105_B_USEDOWNLIANTONG_REG_ADD]=e2proomdata.als105_usedownliantong;   
+    parameterport_mapping->tab_registers[ALS105_B_KALMANFILTER_REG_ADD]=e2proomdata.als105_b_KalmanFilter;   
+    parameterport_mapping->tab_registers[ALS105_KALMANQF_REG_ADD]=e2proomdata.als105_KalmanQF;  
+    parameterport_mapping->tab_registers[ALS105_KALMANRF_REG_ADD]=e2proomdata.als105_KalmanRF;  
 }
 
 }

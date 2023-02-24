@@ -2594,6 +2594,19 @@ namespace Myhalcv2
                        Int32 *top,          //输出矩形上边
                        Int32 *deep);        //输出矩形下边
 
+
+    //2D卡尔曼滤波初始化
+    Int8 MyKalman2D_init(Int32 init_Xin,    //输入初始点x
+                         Int32 init_Yin,    //输入初始点y
+                         float fQ,          //系统噪声方差矩阵Q,推荐0.01
+                         float fR);         //系统噪声方差矩阵R,推荐0.05
+
+
+    //2D卡尔曼滤波
+    Int8 MyKalman2D_filter(Int32 Xin,    //输入测量点x
+                           Int32 Yin,    //输入测量点y
+                           Int32 *Xout,  //输出实际点x
+                           Int32 *Yout); //输出实际点y
 }
 
 #endif // MYHALCV2_H
