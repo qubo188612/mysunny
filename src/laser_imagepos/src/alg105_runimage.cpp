@@ -625,7 +625,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
-
+/*
     i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
     for(i=0;i<15;i++)
     {
@@ -642,6 +642,34 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+*/
+
+    i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
+    for(i=0;i<20;i++)
+    {
+        filterdata2[i]=1;
+    }
+    for(i=20;i<40;i++)
+    {
+        filterdata2[i]=-1;
+    }
+    m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
+
+    m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
+    f_center.x=10;
+    f_center.y=0;
+    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+
+    m_brygujia=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,niheX);
+    f_center.x=30;
+    f_center.y=0;
+    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m_brygujia,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+
+    for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
+    {
+        m32_filterIma.ptr_int[j]=m32_filterIma.ptr_int[j]-m_brygujia.ptr_int[j];
+    }
+
 
     //找最大突变点
     zhengshunum=-1;
@@ -1146,6 +1174,10 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     //采用底部平面法向量
     if(b_dibufaxiangliang==1)
     {
+        linepoint32ED.x=tileline.ed.x;
+        linepoint32ED.y=tileline.ed.y;
+        Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ED,&faxian);
+        /*
         if(resultfocal1.x<resultfocal2.x)
         {
             linepoint32ST.x=headline.st.x;
@@ -1158,9 +1190,14 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             linepoint32ED.y=tileline.ed.y;
             Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ED,&faxian);
         }
+        */
     }
     else
     {
+        linepoint32ST.x=headline.st.x;
+        linepoint32ST.y=headline.st.y;
+        Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ST,&faxian);
+        /*
         if(resultfocal1.x<resultfocal2.x)
         {
             linepoint32ED.x=tileline.ed.x;
@@ -1173,6 +1210,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             linepoint32ST.y=headline.st.y;
             Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ST,&faxian);
         }
+        */
     }
 
     resultfocal.x=(resultfocal2.x+resultfocal1.x)/2;
