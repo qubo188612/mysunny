@@ -458,7 +458,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
 
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
     Myhalcv2::MyGetlanothinNoHough(imageBry,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
-    Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
+    Myhalcv2::Myconnection(imageBry,&ImageConect,20,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);//创建8联通区域ImageConect,最小面积120,两区域距离小于2认为同一区域
+    Myhalcv2::Myselect_shape(&ImageConect,&ImageConectlong,Myhalcv2::MHC_CONNECT_WIDTH_HEIGHT,20,MAX(ImageConect.nHeight,ImageConect.nWidth));
+    Myhalcv2::Myregion_to_bin(&ImageConectlong,&imageBry,255);
 
     if(step==8)
     {
