@@ -45455,7 +45455,7 @@ namespace Myhalcv2
         *deep=trackBox.y+trackBox.height-1;
         return 0;
     }
-/*
+
     Int8 MyKalman2D_init(Int32 init_Xin,Int32 init_Yin,float fQ,float fR)
     {
         KF_2D.transitionMatrix = (cv::Mat_<float>(2, 2) <<1,0,0,1);  //转移矩阵A
@@ -45480,5 +45480,5 @@ namespace Myhalcv2
 
         return 0;
     }
-*/
+
 }
