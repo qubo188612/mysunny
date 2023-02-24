@@ -2594,7 +2594,7 @@ namespace Myhalcv2
                        Int32 *top,          //输出矩形上边
                        Int32 *deep);        //输出矩形下边
 
-/*
+
     //2D卡尔曼滤波初始化
     Int8 MyKalman2D_init(Int32 init_Xin,    //输入初始点x
                          Int32 init_Yin,    //输入初始点y
@@ -2607,7 +2607,7 @@ namespace Myhalcv2
                            Int32 Yin,    //输入测量点y
                            Int32 *Xout,  //输出实际点x
                            Int32 *Yout); //输出实际点y
-*/
+
 }
 
 #endif // MYHALCV2_H

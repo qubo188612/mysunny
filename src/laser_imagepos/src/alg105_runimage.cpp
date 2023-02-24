@@ -457,6 +457,8 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     }
 
     Myhalcv2::Myintersection(imageBry,m_brygujia,&imageBry);
+    Myhalcv2::MyGetlanothinNoHough(imageBry,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
+    Myhalcv2::Mydeleteconnection(imageBry,&imageBry,jiguanghight,highliantongdis,Myhalcv2::MHC_8LT);
 
     if(step==8)
     {
@@ -503,6 +505,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+        /*
         Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_HEIGHT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
         if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].bottom!=
            ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].bottom)
@@ -518,6 +521,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+        */
         Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,ImageConectlong.AllMarkPointCount-1);
         Myhalcv2::Mysmallest_rectangle(&ImageConectlongPX,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
     }
@@ -539,6 +543,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+        /*
         Myhalcv2::Mysort_region(&ImageConect,&ImageConectlongPX,Myhalcv2::MHC_HEIGHT_PAIXU);//在ImageConect中筛选出高度大于50的联通域
         if(ImageConectlongPX.AllMarkPoint[ImageConectlongPX.AllMarkPointCount-1].bottom!=
            ImageConectlong.AllMarkPoint[0].bottom)
@@ -554,6 +559,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+        */
         Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,0);
         Myhalcv2::Mysmallest_rectangle(&ImageConectlongPX,&jiguangLeft,&jiguangRight,&jiguangTop,&jiguangDeep);
     }
@@ -692,7 +698,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }
-/*
+
     i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
     for(i=0;i<15;i++)
     {
@@ -709,7 +715,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
-*/
+
 
     i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
     for(i=0;i<20;i++)

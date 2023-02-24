@@ -29,8 +29,8 @@ namespace Myhalcv2
     cv::Rect STC_cxtRegion;
     cv::Mat STC_cxtPriorPro,STC_cxtPosteriorPro,STC_STModel,STC_STCModel,STC_hammingWin,STC_hammingWin_adapt;			// spatio-temporal context model
     Int32 STC_hammingWin_up_dis,STC_hammingWin_down_dis,STC_hammingWin_left_dis,STC_hammingWin_right_dis;
- //   cv::KalmanFilter KF_2D(2, 2, 0);
- //   cv::Mat KF_2Dmeasurement = cv::Mat::zeros(2, 1, CV_32F);
+    cv::KalmanFilter KF_2D(2, 2, 0);
+    cv::Mat KF_2Dmeasurement = cv::Mat::zeros(2, 1, CV_32F);
 
     Uint8 gaussian_3x3[9] =
     {
