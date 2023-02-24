@@ -29,8 +29,8 @@ namespace Myhalcv2
     cv::Rect STC_cxtRegion;
     cv::Mat STC_cxtPriorPro,STC_cxtPosteriorPro,STC_STModel,STC_STCModel,STC_hammingWin,STC_hammingWin_adapt;			// spatio-temporal context model
     Int32 STC_hammingWin_up_dis,STC_hammingWin_down_dis,STC_hammingWin_left_dis,STC_hammingWin_right_dis;
-    cv::KalmanFilter KF_2D(2, 2, 0);
-    cv::Mat KF_2Dmeasurement = cv::Mat::zeros(2, 1, CV_32F);
+ //   cv::KalmanFilter KF_2D(2, 2, 0);
+ //   cv::Mat KF_2Dmeasurement = cv::Mat::zeros(2, 1, CV_32F);
 
     Uint8 gaussian_3x3[9] =
     {
@@ -45455,7 +45455,7 @@ namespace Myhalcv2
         *deep=trackBox.y+trackBox.height-1;
         return 0;
     }
-
+/*
     Int8 MyKalman2D_init(Int32 init_Xin,Int32 init_Yin,float fQ,float fR)
     {
         KF_2D.transitionMatrix = (cv::Mat_<float>(2, 2) <<1,0,0,1);  //转移矩阵A
@@ -45480,4 +45480,5 @@ namespace Myhalcv2
 
         return 0;
     }
+*/
 }

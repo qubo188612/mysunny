@@ -1308,7 +1308,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         resultfocal=resultfocal2;
         resultfocal2=p_temp;
     }
-
+/*
     if(b_KalmanFilter==1)
     {
        if(b_firstKalmanFilter==0)
@@ -1324,7 +1324,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             resultfocal.y=outy;
        }
     }
-
+*/
     if(step==1)
     {
         Myhalcv2::L_POINT32F f_temp;
