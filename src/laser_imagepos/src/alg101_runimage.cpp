@@ -32,6 +32,9 @@ void LaserImagePos::alg101_declare_parameters()
     this->declare_parameter("als101_dis_center_st", pm.als101_dis_center_st);
     this->declare_parameter("als101_dis_center_ed", pm.als101_dis_center_ed);
     this->declare_parameter("als101_answerpoint", pm.als101_answerpoint);
+    this->declare_parameter("als101_b_KalmanFilter", pm.als101_b_KalmanFilter); 
+    this->declare_parameter("als101_KalmanQF", pm.als101_KalmanQF);
+    this->declare_parameter("als101_KalmanRF", pm.als101_KalmanRF);
 }
 
 void LaserImagePos::alg101_update_parameters()
@@ -108,6 +111,15 @@ void LaserImagePos::alg101_update_parameters()
     }
     else if (p.get_name() == "als101_answerpoint") {
       pm.als101_answerpoint = p.as_int();
+    }
+    else if (p.get_name() == "als101_b_KalmanFilter") {
+      pm.als101_b_KalmanFilter = p.as_int();
+    }
+    else if (p.get_name() == "als101_KalmanQF") {
+      pm.als101_KalmanQF = p.as_int();
+    }
+    else if (p.get_name() == "als101_KalmanRF") {
+      pm.als101_KalmanRF = p.as_int();
     }
   }
 }
@@ -212,11 +224,11 @@ int LaserImagePos::alg101_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als101_Downdlong=p.as_int();
             return 1;}}
-     else if(p.get_name() == "als100_duanxianerzhi") {
+     else if(p.get_name() == "als101_duanxianerzhi") {
         auto k = p.as_int();
         if (k < 0 || k > 255) {
             return -1;}
-        else{pm.als100_duanxianerzhi=p.as_int();
+        else{pm.als101_duanxianerzhi=p.as_int();
             return 1;}}
     else if(p.get_name() == "als101_erzhisize") {
         auto k = p.as_int();
@@ -260,7 +272,24 @@ int LaserImagePos::alg101_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als101_answerpoint=p.as_int();
             return 1;}} 
-
+    else if(p.get_name() == "als101_b_KalmanFilter") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als101_b_KalmanFilter=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als101_KalmanQF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als101_KalmanQF=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als101_KalmanRF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als101_KalmanRF=p.as_int();
+            return 1;}}  
     return 0;
 }
 
@@ -334,7 +363,10 @@ int LaserImagePos::alg101_runimage( cv::Mat &cvimgIn,
     Int32 searchdectancemin=pm.als101_searchdectancemin;//25;//搜寻焊缝端点距离中央凹槽最近的距离
     Int32 dis_center_st=pm.als101_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als101_dis_center_ed;//500;  //距离中心点此处后停止统计
-    Int32 answerpoint=pm.als100_answerpoint;
+    Int32 answerpoint=pm.als101_answerpoint;
+    Int32 b_KalmanFilter=pm.als101_b_KalmanFilter;//是否使用卡尔曼滤波
+    float KalmanQF=pm.als101_KalmanQF/1000.0;//系统噪声方差矩阵Q 
+    float KalmanRF=pm.als101_KalmanRF/1000.0;//系统噪声方差矩阵R 
 
 #ifdef DEBUG_ALG
     int debug_alg=1;

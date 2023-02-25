@@ -48,7 +48,7 @@
 #define E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF          "./SAVE/E2P_MEASUREMENT_"
 
 //算法100参数
-#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              58
+#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              64
 #define E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_100.bsd"
 
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -123,9 +123,19 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
 #define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG100_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
+#define E2POOM_ALG100_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG100_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG100_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法101参数
-#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              58
+#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              64
 #define E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_101.bsd"
 
 #define E2POOM_ALG101_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -200,9 +210,19 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
 #define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG101_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
+#define E2POOM_ALG101_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG101_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG101_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法102参数
-#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              92
+#define E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF              98
 #define E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_102.bsd"
 
 #define E2POOM_ALG102_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -325,6 +345,16 @@
 #define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
 #define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
+#define E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法103参数
 #define E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF                20
@@ -357,7 +387,7 @@
 
 
 //算法104参数
-#define E2POOM_ALG104_LASERIMAGEPOS_SAVEBUFF              54
+#define E2POOM_ALG104_LASERIMAGEPOS_SAVEBUFF              60
 #define E2POOM_ALG104_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_104.bsd"
 
 #define E2POOM_ALG104_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -429,6 +459,16 @@
 #define E2POOM_ALG104_LASERIMAGEPOS_DIS_CENTER_ED_MIN               0
 #define E2POOM_ALG104_LASERIMAGEPOS_DIS_CENTER_ED_USE               500
 #define E2POOM_ALG104_LASERIMAGEPOS_DIS_CENTER_ED_MAX               500
+#define E2POOM_ALG104_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG104_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG104_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG104_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法105参数
 #define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              70
@@ -526,7 +566,7 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_MAX                    10000
 
 //算法106参数
-#define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              94
+#define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              100
 #define E2POOM_ALG106_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_106.bsd"
 
 #define E2POOM_ALG106_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -661,9 +701,19 @@
 #define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_MIN                 0
 #define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_USE                 0
 #define E2POOM_ALG106_LASERIMAGEPOS_ANSWERPOINT_MAX                 20
+#define E2POOM_ALG106_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG106_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG106_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG106_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法107参数
-#define E2POOM_ALG107_LASERIMAGEPOS_SAVEBUFF              50
+#define E2POOM_ALG107_LASERIMAGEPOS_SAVEBUFF              56
 #define E2POOM_ALG107_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_107.bsd"
 
 #define E2POOM_ALG107_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -735,6 +785,16 @@
 #define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_MIN              0
 #define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_MAX              500
 #define E2POOM_ALG107_LASERIMAGEPOS_DIS_CENTER_ED2_USE              200
+#define E2POOM_ALG107_LASERIMAGEPOS_B_KALMANFILTER_MIN              0
+#define E2POOM_ALG107_LASERIMAGEPOS_B_KALMANFILTER_USE              0
+#define E2POOM_ALG107_LASERIMAGEPOS_B_KALMANFILTER_MAX              1
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANQF_MIN                    0
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANQF_USE                    10
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANQF_MAX                    10000
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANRF_MIN                    0
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANRF_USE                    50
+#define E2POOM_ALG107_LASERIMAGEPOS_KALMANRF_MAX                    10000
+
 
 //算法108参数
 #define E2POOM_ALG108_LASERIMAGEPOS_SAVEBUFF              20
@@ -828,6 +888,9 @@ public:
     Int16 als100_dis_center_st;//距离中心点此处后开始统计
     Int16 als100_dis_center_ed;//距离中心点此处后停止统计
     Int16 als100_answerpoint;//优先采用点序号
+    Int16 als100_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als100_KalmanQF;
+    Int16 als100_KalmanRF;
       
 
     void write_als100_para(char *filename);				//保存任务100参数
@@ -905,6 +968,15 @@ public:
     Int16 als100_answerpoint_min;
     Int16 als100_answerpoint_max;
     Int16 als100_answerpoint_use;
+    Int16 als100_b_KalmanFilter_min;
+    Int16 als100_b_KalmanFilter_max;
+    Int16 als100_b_KalmanFilter_use;
+    Int16 als100_KalmanQF_min;
+    Int16 als100_KalmanQF_max;
+    Int16 als100_KalmanQF_use;
+    Int16 als100_KalmanRF_min;
+    Int16 als100_KalmanRF_max;
+    Int16 als100_KalmanRF_use;
 
 /****************************/
     //任务101参数
@@ -932,6 +1004,9 @@ public:
     Int16 als101_dis_center_st;//距离中心点此处后开始统计
     Int16 als101_dis_center_ed;//距离中心点此处后停止统计
     Int16 als101_answerpoint;
+    Int16 als101_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als101_KalmanQF;
+    Int16 als101_KalmanRF;
       
 
     void write_als101_para(char *filename);				//保存任务101参数
@@ -1009,6 +1084,15 @@ public:
     Int16 als101_answerpoint_min;
     Int16 als101_answerpoint_max;
     Int16 als101_answerpoint_use;
+    Int16 als101_b_KalmanFilter_min;
+    Int16 als101_b_KalmanFilter_max;
+    Int16 als101_b_KalmanFilter_use;
+    Int16 als101_KalmanQF_min;
+    Int16 als101_KalmanQF_max;
+    Int16 als101_KalmanQF_use;
+    Int16 als101_KalmanRF_min;
+    Int16 als101_KalmanRF_max;
+    Int16 als101_KalmanRF_use;
 
 /****************************/
     //任务102参数
@@ -1052,6 +1136,9 @@ public:
     Int16 als102_cebankongdongdis;
     Int16 als102_qiatouquweijuli;
     Int16 als102_answerpoint;
+    Int16 als102_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als102_KalmanQF;
+    Int16 als102_KalmanRF;
 
     void write_als102_para(char *filename);				//保存任务102参数
     void init_als102_para();				//初始化任务102参数
@@ -1176,6 +1263,15 @@ public:
     Int16 als102_answerpoint_min;
     Int16 als102_answerpoint_max;
     Int16 als102_answerpoint_use;
+    Int16 als102_b_KalmanFilter_min;
+    Int16 als102_b_KalmanFilter_max;
+    Int16 als102_b_KalmanFilter_use;
+    Int16 als102_KalmanQF_min;
+    Int16 als102_KalmanQF_max;
+    Int16 als102_KalmanQF_use;
+    Int16 als102_KalmanRF_min;
+    Int16 als102_KalmanRF_max;
+    Int16 als102_KalmanRF_use;
 
 /****************************/
     //任务103参数
@@ -1257,6 +1353,9 @@ public:
     Int16 als104_Uplong2;//在坡度时上半段直线检测长度
     Int16 als104_cebankongdongdis;//侧板跨孔洞的激光最短距离
     Int16 als104_qiatouquweijuli;//恰头去尾距离
+    Int16 als104_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als104_KalmanQF;
+    Int16 als104_KalmanRF;
 
     void write_als104_para(char *filename);				//保存任务104参数
     void init_als104_para();				//初始化任务104参数
@@ -1378,6 +1477,15 @@ public:
     Int16 als104_qiatouquweijuli_min;
     Int16 als104_qiatouquweijuli_max;
     Int16 als104_qiatouquweijuli_use;
+    Int16 als104_b_KalmanFilter_min;
+    Int16 als104_b_KalmanFilter_max;
+    Int16 als104_b_KalmanFilter_use;
+    Int16 als104_KalmanQF_min;
+    Int16 als104_KalmanQF_max;
+    Int16 als104_KalmanQF_use;
+    Int16 als104_KalmanRF_min;
+    Int16 als104_KalmanRF_max;
+    Int16 als104_KalmanRF_use;
 
 /****************************/
     //任务105参数
@@ -1552,6 +1660,9 @@ public:
     Int16 als106_pokousearchdectancemax;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
     Int16 als106_pokousearchdectancemin;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
     Int16 als106_answerpoint;
+    Int16 als106_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als106_KalmanQF;
+    Int16 als106_KalmanRF;
 
     void write_als106_para(char *filename);				//保存任务106参数
     void init_als106_para();				//初始化任务106参数
@@ -1688,6 +1799,15 @@ public:
     Int16 als106_answerpoint_min;
     Int16 als106_answerpoint_max;
     Int16 als106_answerpoint_use;
+    Int16 als106_b_KalmanFilter_min;
+    Int16 als106_b_KalmanFilter_max;
+    Int16 als106_b_KalmanFilter_use;
+    Int16 als106_KalmanQF_min;
+    Int16 als106_KalmanQF_max;
+    Int16 als106_KalmanQF_use;
+    Int16 als106_KalmanRF_min;
+    Int16 als106_KalmanRF_max;
+    Int16 als106_KalmanRF_use;
 
 /****************************/
     //任务107参数
@@ -1714,6 +1834,9 @@ public:
     Int16 als107_dis_center_st;     //距离中心点此处后开始统计 //dis_center_st
     Int16 als107_dis_center_st2;   //距离中心点此处后开始统计 //dis_center_st2
     Int16 als107_dis_center_ed2;//距离中心点此处后停止统计 //dis_center_st2
+    Int16 als107_b_KalmanFilter;//是否使用卡尔曼滤波
+    Int16 als107_KalmanQF;
+    Int16 als107_KalmanRF;
 
     void write_als107_para(char *filename);				//保存任务107参数
     void init_als107_para();				//初始化任务107参数
@@ -1787,6 +1910,15 @@ public:
     Int16 als107_dis_center_ed2_min;
     Int16 als107_dis_center_ed2_max;
     Int16 als107_dis_center_ed2_use;
+    Int16 als107_b_KalmanFilter_min;
+    Int16 als107_b_KalmanFilter_max;
+    Int16 als107_b_KalmanFilter_use;
+    Int16 als107_KalmanQF_min;
+    Int16 als107_KalmanQF_max;
+    Int16 als107_KalmanQF_use;
+    Int16 als107_KalmanRF_min;
+    Int16 als107_KalmanRF_max;
+    Int16 als107_KalmanRF_use;
 
 /****************************/
     //任务108参数

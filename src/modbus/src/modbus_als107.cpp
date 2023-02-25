@@ -129,6 +129,23 @@ int Modbus::als107_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als107_dis_center_ed2", (int16_t)num)});
             return 1;
         break;
+        case ALS107_B_KALMANFILTER_REG_ADD:
+            e2proomdata.als107_b_KalmanFilter=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als107_b_KalmanFilter", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS107_KALMANQF_REG_ADD:
+            e2proomdata.als107_KalmanQF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als107_KalmanQF", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS107_KALMANRF_REG_ADD:
+            e2proomdata.als107_KalmanRF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als107_KalmanRF", (int16_t)num)});
+            return 1;
+        break;
 
         case ALS107_INIT_REG_ADD:
             if(num==1)
@@ -170,6 +187,9 @@ void Modbus::init_als107_parameter()
     parameterport_mapping->tab_registers[ALS107_DIS_CENTER_ST_REG_ADD]=e2proomdata.als107_dis_center_st;
     parameterport_mapping->tab_registers[ALS107_DIS_CENTER_ST2_REG_ADD]=e2proomdata.als107_dis_center_st2;
     parameterport_mapping->tab_registers[ALS107_DIS_CENTER_ED2_REG_ADD]=e2proomdata.als107_dis_center_ed2;
+    parameterport_mapping->tab_registers[ALS107_B_KALMANFILTER_REG_ADD]=e2proomdata.als107_b_KalmanFilter;   
+    parameterport_mapping->tab_registers[ALS107_KALMANQF_REG_ADD]=e2proomdata.als107_KalmanQF;  
+    parameterport_mapping->tab_registers[ALS107_KALMANRF_REG_ADD]=e2proomdata.als107_KalmanRF;  
 }
 
 }

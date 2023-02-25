@@ -52,6 +52,9 @@ void LaserImagePos::alg106_declare_parameters()
     this->declare_parameter("als106_pokousearchdectancemax", pm.als106_pokousearchdectancemax);
     this->declare_parameter("als106_pokousearchdectancemin", pm.als106_pokousearchdectancemin);
     this->declare_parameter("als106_answerpoint", pm.als106_answerpoint);
+    this->declare_parameter("als106_b_KalmanFilter", pm.als106_b_KalmanFilter); 
+    this->declare_parameter("als106_KalmanQF", pm.als106_KalmanQF);
+    this->declare_parameter("als106_KalmanRF", pm.als106_KalmanRF);
 }
 
 void LaserImagePos::alg106_update_parameters()
@@ -146,7 +149,13 @@ void LaserImagePos::alg106_update_parameters()
       pm.als106_pokousearchdectancemin = p.as_int();
     } else if (p.get_name() == "als106_answerpoint") {
       pm.als106_answerpoint = p.as_int();
-    }   
+    } else if (p.get_name() == "als106_b_KalmanFilter") {
+      pm.als106_b_KalmanFilter = p.as_int();
+    } else if (p.get_name() == "als106_KalmanQF") {
+      pm.als106_KalmanQF = p.as_int();
+    } else if (p.get_name() == "als106_KalmanRF") {
+      pm.als106_KalmanRF = p.as_int();
+    }
   }
 }
 
@@ -417,7 +426,25 @@ int LaserImagePos::alg106_getcallbackParameter(const rclcpp::Parameter &p)
         if (k < 0 || k > 20) {
             return -1;}
         else{pm.als106_answerpoint=p.as_int();
-            return 1;}}                   
+            return 1;}}     
+    else if(p.get_name() == "als106_b_KalmanFilter") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als106_b_KalmanFilter=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als106_KalmanQF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als106_KalmanQF=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als106_KalmanRF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als106_KalmanRF=p.as_int();
+            return 1;}}                
     return 0;
 }
 
@@ -505,6 +532,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     Int32 pokousearchdectancemax=pm.als106_pokousearchdectancemax;//25;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
     Int32 pokousearchdectancemin=pm.als106_pokousearchdectancemin;//15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
     Int32 answerpoint=pm.als106_answerpoint;
+    Int32 b_KalmanFilter=pm.als106_b_KalmanFilter;//是否使用卡尔曼滤波
+    float KalmanQF=pm.als106_KalmanQF/1000.0;//系统噪声方差矩阵Q 
+    float KalmanRF=pm.als106_KalmanRF/1000.0;//系统噪声方差矩阵R 
     
     if(step==2)
     {
@@ -1866,6 +1896,21 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             resultfocal=resultfocal2;
             resultfocal2=p_temp;
         }
+        if(b_KalmanFilter==1)
+        {
+            if(b_firstKalmanFilter==0)
+            {
+                b_firstKalmanFilter=1;
+                Myhalcv2::MyKalman2D_init(resultfocal.x,resultfocal.y,KalmanQF,KalmanRF);
+            } 
+            else
+            {
+                Int32 outx,outy;
+                Myhalcv2::MyKalman2D_filter(resultfocal.x,resultfocal.y,&outx,&outy);
+                resultfocal.x=outx;
+                resultfocal.y=outy;
+            }
+        }
         if(step==1)
         {
             Myhalcv2::L_POINT32F f_temp;
@@ -1953,6 +1998,21 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             p_temp=resultfocal;
             resultfocal=resultfocal2;
             resultfocal2=p_temp;
+        }
+        if(b_KalmanFilter==1)
+        {
+            if(b_firstKalmanFilter==0)
+            {
+                b_firstKalmanFilter=1;
+                Myhalcv2::MyKalman2D_init(resultfocal.x,resultfocal.y,KalmanQF,KalmanRF);
+            } 
+            else
+            {
+                Int32 outx,outy;
+                Myhalcv2::MyKalman2D_filter(resultfocal.x,resultfocal.y,&outx,&outy);
+                resultfocal.x=outx;
+                resultfocal.y=outy;
+            }
         }
         if(step==1)
         {

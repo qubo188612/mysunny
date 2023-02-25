@@ -32,6 +32,9 @@ void LaserImagePos::alg100_declare_parameters()
     this->declare_parameter("als100_dis_center_st", pm.als100_dis_center_st);
     this->declare_parameter("als100_dis_center_ed", pm.als100_dis_center_ed);
     this->declare_parameter("als100_answerpoint", pm.als100_answerpoint);
+    this->declare_parameter("als100_b_KalmanFilter", pm.als100_b_KalmanFilter); 
+    this->declare_parameter("als100_KalmanQF", pm.als100_KalmanQF);
+    this->declare_parameter("als100_KalmanRF", pm.als100_KalmanRF);
 }
 
 void LaserImagePos::alg100_update_parameters()
@@ -108,6 +111,15 @@ void LaserImagePos::alg100_update_parameters()
     }
     else if (p.get_name() == "als100_answerpoint") {
       pm.als100_answerpoint = p.as_int();
+    }
+    else if (p.get_name() == "als100_b_KalmanFilter") {
+      pm.als100_b_KalmanFilter = p.as_int();
+    }
+    else if (p.get_name() == "als100_KalmanQF") {
+      pm.als100_KalmanQF = p.as_int();
+    }
+    else if (p.get_name() == "als100_KalmanRF") {
+      pm.als100_KalmanRF = p.as_int();
     }
   }
 }
@@ -260,6 +272,24 @@ int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als100_answerpoint=p.as_int();
             return 1;}}  
+    else if(p.get_name() == "als100_b_KalmanFilter") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als100_b_KalmanFilter=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als100_KalmanQF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als100_KalmanQF=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als100_KalmanRF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als100_KalmanRF=p.as_int();
+            return 1;}}  
     return 0;
 }
 
@@ -334,6 +364,9 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 dis_center_st=pm.als100_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als100_dis_center_ed;//500;  //距离中心点此处后停止统计
     Int32 answerpoint=pm.als100_answerpoint;
+    Int32 b_KalmanFilter=pm.als100_b_KalmanFilter;//是否使用卡尔曼滤波
+    float KalmanQF=pm.als100_KalmanQF/1000.0;//系统噪声方差矩阵Q 
+    float KalmanRF=pm.als100_KalmanRF/1000.0;//系统噪声方差矩阵R 
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
@@ -1291,6 +1324,22 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         p_temp=resultfocal;
         resultfocal=resultfocal2;
         resultfocal2=p_temp;
+    }
+
+    if(b_KalmanFilter==1)
+    {
+       if(b_firstKalmanFilter==0)
+       {
+            b_firstKalmanFilter=1;
+            Myhalcv2::MyKalman2D_init(resultfocal.x,resultfocal.y,KalmanQF,KalmanRF);
+       } 
+       else
+       {
+            Int32 outx,outy;
+            Myhalcv2::MyKalman2D_filter(resultfocal.x,resultfocal.y,&outx,&outy);
+            resultfocal.x=outx;
+            resultfocal.y=outy;
+       }
     }
 
     if(step==1)

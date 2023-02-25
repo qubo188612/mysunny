@@ -26,6 +26,9 @@ void LaserImagePos::alg104_declare_parameters()
     this->declare_parameter("als104_Downdlong", pm.als104_Downdlong);
     this->declare_parameter("als104_dis_center_st", pm.als104_dis_center_st);
     this->declare_parameter("als104_dis_center_ed", pm.als104_dis_center_ed);
+    this->declare_parameter("als104_b_KalmanFilter", pm.als104_b_KalmanFilter); 
+    this->declare_parameter("als104_KalmanQF", pm.als104_KalmanQF);
+    this->declare_parameter("als104_KalmanRF", pm.als104_KalmanRF);
 }
 
 void LaserImagePos::alg104_update_parameters()
@@ -84,6 +87,15 @@ void LaserImagePos::alg104_update_parameters()
     }
     else if (p.get_name() == "als104_dis_center_ed") {
       pm.als104_dis_center_ed = p.as_int();
+    }
+    else if (p.get_name() == "als104_b_KalmanFilter") {
+      pm.als104_b_KalmanFilter = p.as_int();
+    }
+    else if (p.get_name() == "als104_KalmanQF") {
+      pm.als104_KalmanQF = p.as_int();
+    }
+    else if (p.get_name() == "als104_KalmanRF") {
+      pm.als104_KalmanRF = p.as_int();
     }
   }
 }
@@ -200,7 +212,24 @@ int LaserImagePos::alg104_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als104_dis_center_ed=p.as_int();
             return 1;}}     
-
+    else if(p.get_name() == "als104_b_KalmanFilter") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als104_b_KalmanFilter=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als104_KalmanQF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als104_KalmanQF=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als104_KalmanRF") {
+        auto k = p.as_int();
+        if (k < 0 || k > 10000) {
+            return -1;}
+        else{pm.als104_KalmanRF=p.as_int();
+            return 1;}}  
     return 0;
 }
 
@@ -269,6 +298,9 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Int32 Downdlong=pm.als104_Downdlong;//5;//下半段直线长度
     Int32 dis_center_st=pm.als104_dis_center_st;//0;     //距离中心点此处后开始统计
     Int32 dis_center_ed=pm.als104_dis_center_ed;//500;  //距离中心点此处后停止统计
+    Int32 b_KalmanFilter=pm.als104_b_KalmanFilter;//是否使用卡尔曼滤波
+    float KalmanQF=pm.als104_KalmanQF/1000.0;//系统噪声方差矩阵Q 
+    float KalmanRF=pm.als104_KalmanRF/1000.0;//系统噪声方差矩阵R 
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
@@ -917,6 +949,22 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
     Myhalcv2::MyPoint16to32(tileline.st,&linepoint32ED);
     MyGetLinefocalBisection(resultfocal,linepoint32ST,linepoint32ED,&faxian);
+
+    if(b_KalmanFilter==1)
+    {
+        if(b_firstKalmanFilter==0)
+        {
+                b_firstKalmanFilter=1;
+                Myhalcv2::MyKalman2D_init(resultfocal.x,resultfocal.y,KalmanQF,KalmanRF);
+        } 
+        else
+        {
+                Int32 outx,outy;
+                Myhalcv2::MyKalman2D_filter(resultfocal.x,resultfocal.y,&outx,&outy);
+                resultfocal.x=outx;
+                resultfocal.y=outy;
+        }
+    }
 
     if(step==1)
     {

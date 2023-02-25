@@ -126,6 +126,15 @@ void E2proomData::Init_als102_E2proomData()
     als102_answerpoint_min=E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MIN;
     als102_answerpoint_use=E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_USE;
     als102_answerpoint_max=E2POOM_ALG102_LASERIMAGEPOS_ANSWERPOINT_MAX;
+    als102_b_KalmanFilter_min=E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_MIN;
+    als102_b_KalmanFilter_max=E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_MAX;
+    als102_b_KalmanFilter_use=E2POOM_ALG102_LASERIMAGEPOS_B_KALMANFILTER_USE;
+    als102_KalmanQF_min=E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_MIN;
+    als102_KalmanQF_max=E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_MAX;
+    als102_KalmanQF_use=E2POOM_ALG102_LASERIMAGEPOS_KALMANQF_USE;
+    als102_KalmanRF_min=E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_MIN;
+    als102_KalmanRF_max=E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_MAX;
+    als102_KalmanRF_use=E2POOM_ALG102_LASERIMAGEPOS_KALMANRF_USE;
 }
 
 void E2proomData::als102_check_para()
@@ -210,6 +219,12 @@ void E2proomData::als102_check_para()
         als102_qiatouquweijuli=als102_qiatouquweijuli_use;
     if(als102_answerpoint<als102_answerpoint_min||als102_answerpoint>als102_answerpoint_max)
         als102_answerpoint=als102_answerpoint_use;
+    if(als102_b_KalmanFilter<als102_b_KalmanFilter_min||als102_b_KalmanFilter>als102_b_KalmanFilter_max)
+        als102_b_KalmanFilter=als102_b_KalmanFilter_use;
+    if(als102_KalmanQF<als102_KalmanQF_min||als102_KalmanQF>als102_KalmanQF_max)
+        als102_KalmanQF=als102_KalmanQF_use;
+    if(als102_KalmanRF<als102_KalmanRF_min||als102_KalmanRF>als102_KalmanRF_max)
+        als102_KalmanRF=als102_KalmanRF_use;
 }
 
 void E2proomData::als102_read_para(char *filename)
@@ -316,6 +331,12 @@ void E2proomData::als102_read_para(char *filename)
       i16_p++;
       als102_answerpoint=*i16_p;
       i16_p++;
+      als102_b_KalmanFilter=*i16_p;
+      i16_p++;
+      als102_KalmanQF=*i16_p;
+      i16_p++;
+      als102_KalmanRF=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -420,6 +441,12 @@ void E2proomData::write_als102_para(char *filename)
     i16_p++;
     *i16_p=als102_answerpoint;
     i16_p++;
+    *i16_p=als102_b_KalmanFilter;
+    i16_p++;
+    *i16_p=als102_KalmanQF;
+    i16_p++;
+    *i16_p=als102_KalmanRF;
+    i16_p++;
 
     fo.WriteFile(filename,buff,E2POOM_ALG102_LASERIMAGEPOS_SAVEBUFF);
 
@@ -472,4 +499,7 @@ void E2proomData::init_als102_para()
     als102_cebankongdongdis=als102_cebankongdongdis_use;
     als102_qiatouquweijuli=als102_qiatouquweijuli_use;
     als102_answerpoint=als102_answerpoint_use;
+    als102_b_KalmanFilter=als102_b_KalmanFilter_use;
+    als102_KalmanQF=als102_KalmanQF_use;
+    als102_KalmanRF=als102_KalmanRF_use;
 }

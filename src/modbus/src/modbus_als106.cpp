@@ -234,6 +234,24 @@ int Modbus::als106_task_parameter(int ddr,u_int16_t num)
             _param_laserimagepos->set_parameters({rclcpp::Parameter("als106_answerpoint", (int16_t)num)});
             return 1;
         break;
+        case ALS106_B_KALMANFILTER_REG_ADD:
+            e2proomdata.als106_b_KalmanFilter=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als106_b_KalmanFilter", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS106_KALMANQF_REG_ADD:
+            e2proomdata.als106_KalmanQF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als106_KalmanQF", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS106_KALMANRF_REG_ADD:
+            e2proomdata.als106_KalmanRF=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als106_KalmanRF", (int16_t)num)});
+            return 1;
+        break;
+
 
         case ALS106_INIT_REG_ADD:
             if(num==1)
@@ -296,6 +314,9 @@ void Modbus::init_als106_parameter()
     parameterport_mapping->tab_registers[ALS106_POKOUSEARCHDECTANCEMAX_REG_ADD]=e2proomdata.als106_pokousearchdectancemax;
     parameterport_mapping->tab_registers[ALS106_POKOUSEARCHDECTANCEMIN_REG_ADD]=e2proomdata.als106_pokousearchdectancemin;
     parameterport_mapping->tab_registers[ALS106_ANSWERPOINT_REG_ADD]=e2proomdata.als106_answerpoint;
+    parameterport_mapping->tab_registers[ALS106_B_KALMANFILTER_REG_ADD]=e2proomdata.als106_b_KalmanFilter;   
+    parameterport_mapping->tab_registers[ALS106_KALMANQF_REG_ADD]=e2proomdata.als106_KalmanQF;  
+    parameterport_mapping->tab_registers[ALS106_KALMANRF_REG_ADD]=e2proomdata.als106_KalmanRF;  
 }
 
 }

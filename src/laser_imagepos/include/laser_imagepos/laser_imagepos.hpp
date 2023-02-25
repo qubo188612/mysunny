@@ -53,7 +53,10 @@ const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_searchdectancemin",
                                               "als100_dis_center_st",
                                               "als100_dis_center_ed",
-                                              "als100_answerpoint"};
+                                              "als100_answerpoint",
+                                              "als100_b_KalmanFilter",
+                                              "als100_KalmanQF",
+                                              "als100_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_pingjun",
@@ -78,7 +81,10 @@ const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_searchdectancemin",
                                               "als101_dis_center_st",
                                               "als101_dis_center_ed",
-                                              "als101_answerpoint"};
+                                              "als101_answerpoint",
+                                              "als101_b_KalmanFilter",
+                                              "als101_KalmanQF",
+                                              "als101_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_pingjun",
@@ -119,7 +125,10 @@ const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_Uplong2",
                                               "als102_cebankongdongdis",
                                               "als102_qiatouquweijuli",
-                                              "als102_answerpoint"};
+                                              "als102_answerpoint",
+                                              "als102_b_KalmanFilter",
+                                              "als102_KalmanQF",
+                                              "als102_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_pingjun",
@@ -147,7 +156,10 @@ const std::vector<std::string> KEYS_ALS104 = {"als104_exposure_time",
                                               "als104_Downdifmin",
                                               "als104_Downdlong",
                                               "als104_dis_center_st",
-                                              "als104_dis_center_ed"};
+                                              "als104_dis_center_ed",
+                                              "als104_b_KalmanFilter",
+                                              "als104_KalmanQF",
+                                              "als104_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_pingjun",
@@ -222,7 +234,10 @@ const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pokouduanxianerzhi",
                                               "als106_pokousearchdectancemax",
                                               "als106_pokousearchdectancemin",
-                                              "als106_answerpoint"};
+                                              "als106_answerpoint",
+                                              "als106_b_KalmanFilter",
+                                              "als106_KalmanQF",
+                                              "als106_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS107 = {"als107_exposure_time",
                                               "als107_pingjun",
@@ -246,7 +261,10 @@ const std::vector<std::string> KEYS_ALS107 = {"als107_exposure_time",
                                               "als107_Ed_Up",
                                               "als107_dis_center_st",
                                               "als107_dis_center_st2",
-                                              "als107_dis_center_ed2"};
+                                              "als107_dis_center_ed2",
+                                              "als107_b_KalmanFilter",
+                                              "als107_KalmanQF",
+                                              "als107_KalmanRF"};
 
 const std::vector<std::string> KEYS_ALS108 = {"als108_exposure_time",
                                               "als108_center_x",
@@ -290,6 +308,9 @@ struct Params
   int als100_dis_center_st=0;//距离中心点此处后开始统计
   int als100_dis_center_ed=500;  //距离中心点此处后停止统计
   int als100_answerpoint=0;//优先采用点序号
+  int als100_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als100_KalmanQF=10;
+  int als100_KalmanRF=50;
 /************************************/
 //算法101参数
   int als101_exposure_time = 10000;//曝光值
@@ -316,6 +337,9 @@ struct Params
   int als101_dis_center_st=0;//距离中心点此处后开始统计
   int als101_dis_center_ed=500;  //距离中心点此处后停止统计
   int als101_answerpoint=0;//优先采用点序号
+  int als101_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als101_KalmanQF=10;
+  int als101_KalmanRF=50;
 /************************************/
 //算法102参数
   int als102_exposure_time=10000;//曝光值
@@ -358,7 +382,9 @@ struct Params
   int als102_cebankongdongdis=180;//侧板跨孔洞的激光最短距离
   int als102_qiatouquweijuli=0;//恰头去尾距离
   int als102_answerpoint=0;//优先采用点序号
-  
+  int als102_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als102_KalmanQF=10;
+  int als102_KalmanRF=50;
 /************************************/
 //算法103参数
   int als103_exposure_time=10000;//曝光值
@@ -389,6 +415,9 @@ struct Params
   int als104_Downdlong=5;//下半段直线长度
   int als104_dis_center_st=0;//距离中心点此处后开始统计
   int als104_dis_center_ed=500;  //距离中心点此处后停止统计
+  int als104_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als104_KalmanQF=10;
+  int als104_KalmanRF=50;
 /************************************/
 //算法105参数
   int als105_exposure_time=10000;//曝光值
@@ -469,6 +498,9 @@ struct Params
   int als106_pokousearchdectancemax=25;//搜寻焊缝端点距离中央凹槽最远的距离（坡口模式=0时有效）
   int als106_pokousearchdectancemin=15;//搜寻焊缝端点距离中央凹槽最近的距离（坡口模式=0时有效）
   int als106_answerpoint=0;//优先采用点序号
+  int als106_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als106_KalmanQF=10;
+  int als106_KalmanRF=50;
 /************************************/
 //算法107参数
   int als107_exposure_time=10000;//曝光值
@@ -494,6 +526,9 @@ struct Params
   int als107_dis_center_st=50;     //距离中心点此处后开始统计 //dis_center_st
   int als107_dis_center_st2=20;   //距离中心点此处后开始统计 //dis_center_st2
   int als107_dis_center_ed2=200;//距离中心点此处后停止统计 //dis_center_st2
+  int als107_b_KalmanFilter=1;//是否使用卡尔曼滤波
+  int als107_KalmanQF=10;
+  int als107_KalmanRF=50;
 /************************************/
 //算法108参数
   int als108_exposure_time=10000;//曝光值
