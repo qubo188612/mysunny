@@ -350,7 +350,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_Point32 linepoint32ST,linepoint32ED;
     Myhalcv2::L_line tileline;	//结果线2以及原图的线,(短的)
     Myhalcv2::L_line headline;	//结果线1以及原图的线,(短的)
-    Myhalcv2::L_Point32 resultfocal1,resultfocal,resultfocal2;//交点
+    Myhalcv2::L_Point32 resultfocal1,resultfocal,resultfocal2,resultfocal3;//交点
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
@@ -358,7 +358,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     cv::Point2f cv_point;
     Int32 nstarti,nendi,nstartj,nendj;
 
-    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2,faxian3;
 
     /*********************/
     //算法参数
@@ -1291,8 +1291,73 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     resultfocal.x=(resultfocal2.x+resultfocal1.x)/2;
     resultfocal.y=(resultfocal2.y+resultfocal1.y)/2;
 
+    //计算最底部点
+    nstartj=MIN(resultfocal1.y,resultfocal2.y);
+    nendj=MAX(resultfocal1.y,resultfocal2.y);
+    nstartj=MAX(X_Linestarty+24,nstartj);
+    nendj=MAX(X_Linestarty+24,nendj);
+    nstartj=MIN(X_Lineendy-24,nstartj);
+    nendj=MIN(X_Lineendy-24,nendj);
+    latsi=X_line[nstartj];
+    for(j=nstartj;j<=nendj;j++)
+    {
+        if(latsi>X_line[j])
+        {
+            latsi=X_line[j];
+        }
+    }
+    m_brygujia=Myhalcv2::MatCreatzero(3,nendj-nstartj+1,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+    for(j=nstartj;j<=nendj;j++)
+    {
+        if(latsi==X_line[j])
+        {
+            m_brygujia.data[1*m_brygujia.nWidth+(j-nstartj)]=255;
+        }
+    }
+    if(step==24)
+    {
+        Myhalcv2::MatClone(imageGasu,&imageGasupain);
+        Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+        for(j=nstartj;j<=nendj;j++)
+        {
+            if( m_brygujia.data[1*m_brygujia.nWidth+(j-nstartj)]==255)
+            {
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
+            }
+        }
+        Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+        return 0;
+    }
+    Myhalcv2::Myconnection2(m_brygujia,&ImageConect,1,1,0,Myhalcv2::MHC_MORPH_RECT,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
+    Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_WIDTH_PAIXU);
+    /*
+    if(ImageConectlong.AllMarkPointCount>=2)
+    {
+        //去掉有两块最大最长的最低区域的
+        if(ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right-ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].left+1
+            ==ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-2].right-ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-2].left+1)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+    }
+    */
+    resultfocal3.y=(ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right+ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].left)/2+nstartj;
+    resultfocal3.x=X_line[resultfocal3.y];
+
     faxian1=faxian;
     faxian2=faxian;
+    faxian3=faxian;
 
     if(answerpoint==2)
     {
@@ -1316,6 +1381,18 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         resultfocal=resultfocal2;
         resultfocal2=p_temp;
     }
+    else if(answerpoint==4)
+    {
+        Myhalcv2::L_Point32F f_temp;
+        Myhalcv2::L_Point32 p_temp;
+        f_temp=faxian;
+        faxian=faxian3;
+        faxian3=f_temp;
+        p_temp=resultfocal;
+        resultfocal=resultfocal3;
+        resultfocal3=p_temp;
+    }
+
 /*
     if(b_KalmanFilter==1)
     {
@@ -1366,6 +1443,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         cv_point_st.x=(resultfocal2.x>>2);
         cv_point_st.y=(resultfocal2.y>>2);
         cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(255,0,255),1);
+        cv_point_st.x=(resultfocal3.x>>2);
+        cv_point_st.y=(resultfocal3.y>>2);
+        cv::circle(cvimgIn,cv_point_st,5,cv::Scalar(128,0,255),1);
         if(b_cut==1)
         {
             cv::Point p1(cutleft>>2,cuttop>>2);
@@ -1393,6 +1473,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     namepoint.push_back(cv_point);  
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
+    namepoint.push_back(cv_point);  
+    cv_point.x=resultfocal3.x;
+    cv_point.y=resultfocal3.y;
     namepoint.push_back(cv_point);  
     
     return 0;
