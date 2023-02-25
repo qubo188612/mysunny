@@ -224,6 +224,7 @@ namespace modbus
 #define ALS105_B_KALMANFILTER_REG_ADD          0x00cb
 #define ALS105_KALMANQF_REG_ADD                0x00cc
 #define ALS105_KALMANRF_REG_ADD                0x00cd
+#define ALS105_CUTSIDE_REG_ADD                 0x00ce
 
 #define ALS105_INIT_REG_ADD                    0x00cf
 

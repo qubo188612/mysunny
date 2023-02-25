@@ -38,6 +38,7 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_b_KalmanFilter", pm.als105_b_KalmanFilter); 
     this->declare_parameter("als105_KalmanQF", pm.als105_KalmanQF);
     this->declare_parameter("als105_KalmanRF", pm.als105_KalmanRF);
+    this->declare_parameter("als105_cutside", pm.als105_cutside);
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -132,6 +133,9 @@ void LaserImagePos::alg105_update_parameters()
     }
     else if (p.get_name() == "als105_KalmanRF") {
       pm.als105_KalmanRF = p.as_int();
+    }
+    else if (p.get_name() == "als105_cutside") {
+      pm.als105_cutside = p.as_int();
     }
   }
 }
@@ -319,7 +323,14 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
         if (k < 0 || k > 10000) {
             return -1;}
         else{pm.als105_KalmanRF=p.as_int();
-            return 1;}}        
+            return 1;}}    
+    else if(p.get_name() == "als105_cutside") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1000) {
+            return -1;}
+        else{pm.als105_cutside=p.as_int();
+            return 1;}}
+                
     return 0;
 }
 
@@ -391,7 +402,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 b_KalmanFilter=pm.als105_b_KalmanFilter;//是否使用卡尔曼滤波
     float KalmanQF=pm.als105_KalmanQF/1000.0;//系统噪声方差矩阵Q 
     float KalmanRF=pm.als105_KalmanRF/1000.0;//系统噪声方差矩阵R 
-    
+    Int32 cutside=pm.als105_cutside;//头尾截断距离
     
     if(step==2)
     {
@@ -751,7 +762,22 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     latsj=0;
     if(b_cut==0)
     {
-        for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
+        if(X_Lineendy-X_Linestarty-24*2<=cutside*2)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        nstartj=MIN(X_Linestarty+24+cutside,X_Lineendy-24);
+        nendj=MAX(X_Lineendy-24-cutside,X_Linestarty+24);
+        for(j=nstartj;j<=nendj;j++)
         {
             if(zhengshunum<abs(m32_filterIma.ptr_int[j]))
             {
@@ -827,6 +853,15 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         linepoint32ST.x=(latsi>>2);
         linepoint32ST.y=(latsj>>2);
         Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_UNFILL);
+        if(b_cut==0)
+        {
+            linepoint32ST.x=(X_line[nstartj]>>2);
+            linepoint32ST.y=(nstartj>>2);
+            Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_UNFILL);
+            linepoint32ST.x=(X_line[nendj]>>2);
+            linepoint32ST.y=(nendj>>2);
+            Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_UNFILL);
+        }
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;
     }

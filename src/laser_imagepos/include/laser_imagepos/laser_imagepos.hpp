@@ -190,7 +190,8 @@ const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_usedownliantong",
                                               "als105_b_KalmanFilter",
                                               "als105_KalmanQF",
-                                              "als105_KalmanRF"};
+                                              "als105_KalmanRF",
+                                              "als105_cutside"};
 
 const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pingjun",
@@ -450,6 +451,7 @@ struct Params
   int als105_b_KalmanFilter=1;//是否使用卡尔曼滤波
   int als105_KalmanQF=10;
   int als105_KalmanRF=50;
+  int als105_cutside=100;
 
 
 /************************************/

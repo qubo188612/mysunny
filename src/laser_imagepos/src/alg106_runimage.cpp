@@ -536,6 +536,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     float KalmanQF=pm.als106_KalmanQF/1000.0;//系统噪声方差矩阵Q 
     float KalmanRF=pm.als106_KalmanRF/1000.0;//系统噪声方差矩阵R 
     
+    
     if(step==2)
     {
         return 0;
