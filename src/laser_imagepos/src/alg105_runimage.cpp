@@ -362,7 +362,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_Point32 f_center={-1,-1};
     Int32 X_Linestarty=0;
     Int32 X_Lineendy=0;
-    Myhalcv2::Mat i32_mXline,m_filter2,m32_filterIma;
+    Myhalcv2::Mat i32_mXline,m_filter2,m32_filterIma,m32_filterIma1;
     Int32 zhengshunum=0;
     Myhalcv2::L_Point32 stepfindST,stepfindED;//结果线1拟合区域,(下方)
     Myhalcv2::L_Point32 midfindST,midfindED;//结果线2拟合区域,(上方)
@@ -739,6 +739,90 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+    if(b_cut==0)
+    {
+        //找起点
+        m_brygujia=Myhalcv2::MatCreatzero(3,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+        for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
+        {
+            if(m32_filterIma.ptr_int[j]>=Updifmin&&m32_filterIma.ptr_int[j]<=Updif)
+            {
+                m_brygujia.data[1*m_brygujia.nWidth+j]=255;
+            }
+        }
+        Myhalcv2::Myconnection(m_brygujia,&ImageConect,Uplong,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
+        Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);
+        if(ImageConectlong.AllMarkPointCount==0)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        X_Linestarty=ImageConectlong.AllMarkPoint[0].left;
+        m_brygujia=Myhalcv2::MatCreatzero(3,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);
+        for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
+        {
+            if(m32_filterIma.ptr_int[j]>=Downdifmin&&m32_filterIma.ptr_int[j]<=Downdif)
+            {
+                m_brygujia.data[1*m_brygujia.nWidth+j]=255;
+            }
+        }
+        Myhalcv2::Myconnection(m_brygujia,&ImageConect,Downdlong,0,Myhalcv2::MHC_8LT,cv8uc1_Imagebuff3);
+        Myhalcv2::Mysort_region(&ImageConect,&ImageConectlong,Myhalcv2::MHC_LEFT_LEFTTORIGHT_PAIXU);
+        if(ImageConectlong.AllMarkPointCount==0)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        X_Lineendy=ImageConectlong.AllMarkPoint[ImageConectlong.AllMarkPointCount-1].right;
+        if(X_Lineendy-X_Linestarty<24*2+cutside_Down+cutside_Up)
+        {
+        #ifdef QUICK_TRANSMIT
+            Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
+            if(b_cut==1)
+            {
+                cv::Point p1(cutleft>>2,cuttop>>2);
+                cv::Point p2(cutright>>2,cutdeep>>2);
+                cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+            }
+        #endif
+            return 1;
+        }
+        if(step==15)
+        {
+            Myhalcv2::MatClone(imageGasu,&imageGasupain);
+            Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
+            for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
+            {
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
+                imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data3=0;
+            }
+            linepoint32ST.x=(X_line[X_Linestarty]>>2);
+            linepoint32ST.y=(X_Linestarty>>2);
+            Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_UNFILL);
+            linepoint32ST.x=(X_line[X_Lineendy]>>2);
+            linepoint32ST.y=(X_Lineendy>>2);
+            Myhalcv2::MyCircle3col(&imageGasupain,linepoint32ST,4,0,255,0,Myhalcv2::CV_CLRCLE_UNFILL);
+            Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
+            return 0;
+        }
+    }
 
 
     i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
@@ -752,10 +836,10 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     }
     m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
 
-    m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
+    m32_filterIma1=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,f_line);
     f_center.x=10;
     f_center.y=0;
-    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma1,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
 
     m_brygujia=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,niheX);
     f_center.x=30;
@@ -764,7 +848,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
 
     for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
     {
-        m32_filterIma.ptr_int[j]=m32_filterIma.ptr_int[j]-m_brygujia.ptr_int[j];
+        m32_filterIma1.ptr_int[j]=m32_filterIma1.ptr_int[j]-m_brygujia.ptr_int[j];
     }
 
 
@@ -790,9 +874,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         nendj=MAX(X_Lineendy-24-cutside_Down,X_Linestarty+24);
         for(j=nstartj;j<=nendj;j++)
         {
-            if(zhengshunum<abs(m32_filterIma.ptr_int[j]))
+            if(zhengshunum<abs(m32_filterIma1.ptr_int[j]))
             {
-                zhengshunum=abs(m32_filterIma.ptr_int[j]);
+                zhengshunum=abs(m32_filterIma1.ptr_int[j]);
                 latsj=j;
             }
         }
@@ -817,9 +901,9 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         nendj=MIN(X_Lineendy-24,cutdeep);
         for(j=nstartj;j<=nendj;j++)
         {
-            if(zhengshunum<abs(m32_filterIma.ptr_int[j]))
+            if(zhengshunum<abs(m32_filterIma1.ptr_int[j]))
             {
-                zhengshunum=abs(m32_filterIma.ptr_int[j]);
+                zhengshunum=abs(m32_filterIma1.ptr_int[j]);
                 latsj=j;
             }
         }
@@ -851,7 +935,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             return 1;
         }
     }
-    if(step==15)
+    if(step==16)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -891,7 +975,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             m_brygujia.data[1*m_brygujia.nWidth+j]=255;
         }
     }
-    if(step==16)
+    if(step==17)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -949,7 +1033,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         return 1;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&headline,&headlinehough);
-    if(step==17)
+    if(step==18)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -993,7 +1077,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             m_brygujia.data[1*m_brygujia.nWidth+j]=255;
         }
     }
-    if(step==18)
+    if(step==19)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -1052,7 +1136,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         return 1;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
-    if(step==19)
+    if(step==20)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -1143,7 +1227,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             imageBry.data[(j-nstartj)*imageBry.nWidth+X_line[j]-nstarti]=255;
         }
     }
-    if(step==20)
+    if(step==21)
     {
         Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
         return 0;
@@ -1176,7 +1260,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    if(step==21)
+    if(step==22)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -1248,7 +1332,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             imageBry.data[(j-nstartj)*imageBry.nWidth+X_line[j]-nstarti]=255;
         }
     }
-    if(step==22)
+    if(step==23)
     {
         Myhalcv2::MatToCvMat(imageBry,&cvimgIn);
         return 0;
@@ -1282,7 +1366,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-    if(step==23)
+    if(step==24)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -1360,7 +1444,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
             m_brygujia.data[1*m_brygujia.nWidth+(j-nstartj)]=255;
         }
     }
-    if(step==24)
+    if(step==25)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
