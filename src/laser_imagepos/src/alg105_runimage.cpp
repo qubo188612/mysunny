@@ -38,7 +38,8 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_b_KalmanFilter", pm.als105_b_KalmanFilter); 
     this->declare_parameter("als105_KalmanQF", pm.als105_KalmanQF);
     this->declare_parameter("als105_KalmanRF", pm.als105_KalmanRF);
-    this->declare_parameter("als105_cutside", pm.als105_cutside);
+    this->declare_parameter("als105_cutside_Up", pm.als105_cutside_Up);
+    this->declare_parameter("als105_cutside_Down", pm.als105_cutside_Down);
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -134,8 +135,11 @@ void LaserImagePos::alg105_update_parameters()
     else if (p.get_name() == "als105_KalmanRF") {
       pm.als105_KalmanRF = p.as_int();
     }
-    else if (p.get_name() == "als105_cutside") {
-      pm.als105_cutside = p.as_int();
+    else if (p.get_name() == "als105_cutside_Up") {
+      pm.als105_cutside_Up = p.as_int();
+    }
+    else if (p.get_name() == "als105_cutside_Down") {
+      pm.als105_cutside_Down = p.as_int();
     }
   }
 }
@@ -324,11 +328,17 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als105_KalmanRF=p.as_int();
             return 1;}}    
-    else if(p.get_name() == "als105_cutside") {
+    else if(p.get_name() == "als105_cutside_Up") {
         auto k = p.as_int();
         if (k < 0 || k > 1000) {
             return -1;}
-        else{pm.als105_cutside=p.as_int();
+        else{pm.als105_cutside_Up=p.as_int();
+            return 1;}}
+    else if(p.get_name() == "als105_cutside_Down") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1000) {
+            return -1;}
+        else{pm.als105_cutside_Down=p.as_int();
             return 1;}}
                 
     return 0;
@@ -402,7 +412,8 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 b_KalmanFilter=pm.als105_b_KalmanFilter;//是否使用卡尔曼滤波
     float KalmanQF=pm.als105_KalmanQF/1000.0;//系统噪声方差矩阵Q 
     float KalmanRF=pm.als105_KalmanRF/1000.0;//系统噪声方差矩阵R 
-    Int32 cutside=pm.als105_cutside;//头尾截断距离
+    Int32 cutside_Up=pm.als105_cutside_Up;//头尾截断距离
+    Int32 cutside_Down=pm.als105_cutside_Down;//头尾截断距离
     
     if(step==2)
     {
@@ -762,7 +773,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     latsj=0;
     if(b_cut==0)
     {
-        if(X_Lineendy-X_Linestarty-24*2<=cutside*2)
+        if(X_Lineendy-X_Linestarty-24*2<=cutside_Down+cutside_Up)
         {
         #ifdef QUICK_TRANSMIT
             Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
@@ -775,8 +786,8 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
-        nstartj=MIN(X_Linestarty+24+cutside,X_Lineendy-24);
-        nendj=MAX(X_Lineendy-24-cutside,X_Linestarty+24);
+        nstartj=MIN(X_Linestarty+24+cutside_Up,X_Lineendy-24);
+        nendj=MAX(X_Lineendy-24-cutside_Down,X_Linestarty+24);
         for(j=nstartj;j<=nendj;j++)
         {
             if(zhengshunum<abs(m32_filterIma.ptr_int[j]))

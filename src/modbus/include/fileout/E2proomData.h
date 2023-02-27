@@ -471,7 +471,7 @@
 
 
 //算法105参数
-#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              72
+#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              74
 #define E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_105.bsd"
 
 #define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -564,9 +564,12 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_MIN                    0
 #define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_USE                    50
 #define E2POOM_ALG105_LASERIMAGEPOS_KALMANRF_MAX                    10000
-#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_MIN                     0
-#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_USE                     100
-#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_MAX                     1000
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_UP_MIN                  0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_UP_USE                  100
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_UP_MAX                  1000
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_MIN                0
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_USE                100
+#define E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_MAX                1000
 
 //算法106参数
 #define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              100
@@ -1522,7 +1525,8 @@ public:
     Int16 als105_b_KalmanFilter;//是否使用卡尔曼滤波
     Int16 als105_KalmanQF;
     Int16 als105_KalmanRF;
-    Int16 als105_cutside;
+    Int16 als105_cutside_Up;
+    Int16 als105_cutside_Down;
 
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
@@ -1617,9 +1621,12 @@ public:
     Int16 als105_KalmanRF_min;
     Int16 als105_KalmanRF_max;
     Int16 als105_KalmanRF_use;
-    Int16 als105_cutside_min;
-    Int16 als105_cutside_max;
-    Int16 als105_cutside_use;
+    Int16 als105_cutside_Up_min;
+    Int16 als105_cutside_Up_max;
+    Int16 als105_cutside_Up_use;
+    Int16 als105_cutside_Down_min;
+    Int16 als105_cutside_Down_max;
+    Int16 als105_cutside_Down_use;
 
 /****************************/
     //任务106参数

@@ -169,9 +169,15 @@ int Modbus::als105_task_parameter(int ddr,u_int16_t num)
             return 1;
         break;
 
-        case ALS105_CUTSIDE_REG_ADD:
-            e2proomdata.als105_cutside=(int16_t)num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_cutside", (int16_t)num)});
+        case ALS105_CUTSIDE_UP_REG_ADD:
+            e2proomdata.als105_cutside_Up=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_cutside_Up", (int16_t)num)});
+            return 1;
+        break;
+
+        case ALS105_CUTSIDE_DOWN_REG_ADD:
+            e2proomdata.als105_cutside_Down=(int16_t)num;
+            _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_cutside_Down", (int16_t)num)});
             return 1;
         break;
 
@@ -222,7 +228,8 @@ void Modbus::init_als105_parameter()
     parameterport_mapping->tab_registers[ALS105_B_KALMANFILTER_REG_ADD]=e2proomdata.als105_b_KalmanFilter;   
     parameterport_mapping->tab_registers[ALS105_KALMANQF_REG_ADD]=e2proomdata.als105_KalmanQF;  
     parameterport_mapping->tab_registers[ALS105_KALMANRF_REG_ADD]=e2proomdata.als105_KalmanRF;  
-    parameterport_mapping->tab_registers[ALS105_CUTSIDE_REG_ADD]=e2proomdata.als105_cutside;     
+    parameterport_mapping->tab_registers[ALS105_CUTSIDE_UP_REG_ADD]=e2proomdata.als105_cutside_Up;  
+    parameterport_mapping->tab_registers[ALS105_CUTSIDE_DOWN_REG_ADD]=e2proomdata.als105_cutside_Down;        
 }
 
 }
