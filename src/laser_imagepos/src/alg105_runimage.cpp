@@ -204,13 +204,13 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return 1;}}
     else if(p.get_name() == "als105_Updif") {
         auto k = p.as_int();
-        if (k < 0 || k > 5000) {
+        if (k < -5000 || k > 5000) {
             return -1;}
         else{pm.als105_Updif=p.as_int();
             return 1;}}
     else if(p.get_name() == "als105_Updifmin") {
         auto k = p.as_int();
-        if (k < -2000 || k > 2000) {
+        if (k < -2000 || k > 5000) {
             return -1;}
         else{pm.als105_Updifmin=p.as_int();
             return 1;}}
@@ -222,13 +222,13 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return 1;}}
     else if(p.get_name() == "als105_Downdif") {
         auto k = p.as_int();
-        if (k < -5000 || k > 0) {
+        if (k < -5000 || k > 5000) {
             return -1;}
         else{pm.als105_Downdif=p.as_int();
             return 1;}}
     else if(p.get_name() == "als105_Downdifmin") {
         auto k = p.as_int();
-        if (k < -255 || k > 255) {
+        if (k < -5000 || k > 5000) {
             return -1;}
         else{pm.als105_Downdifmin=p.as_int();
             return 1;}}
