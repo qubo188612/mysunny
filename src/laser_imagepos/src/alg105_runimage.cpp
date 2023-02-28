@@ -358,6 +358,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Uint8 bryvalue;
     Int32 i32_bryvalue;
     Int16 filterdata2[40];
+    Int16 filterdata3[80];
 
     Myhalcv2::L_Point32 f_center={-1,-1};
     Int32 X_Linestarty=0;
@@ -736,6 +737,8 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     {
         filterdata2[i]=-1;
     }
+    f_center.x=-1;
+    f_center.y=-1;
     m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
@@ -826,23 +829,23 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
 
 
     i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
-    for(i=0;i<20;i++)
+    for(i=0;i<40;i++)
     {
-        filterdata2[i]=1;
+        filterdata3[i]=1;
     }
-    for(i=20;i<40;i++)
+    for(i=40;i<80;i++)
     {
-        filterdata2[i]=-1;
+        filterdata3[i]=-1;
     }
-    m_filter2=Myhalcv2::MatCreat(1,40,Myhalcv2::CCV_16SC1,filterdata2);
+    m_filter2=Myhalcv2::MatCreat(1,80,Myhalcv2::CCV_16SC1,filterdata3);
 
     m32_filterIma1=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,f_line);
-    f_center.x=10;
+    f_center.x=20;
     f_center.y=0;
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma1,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
 
     m_brygujia=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,niheX);
-    f_center.x=30;
+    f_center.x=60;
     f_center.y=0;
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m_brygujia,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
 
