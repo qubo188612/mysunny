@@ -60,6 +60,9 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   b_tcpsockershow=false;
   this->declare_parameter("b_tcpsockershow",false);
 
+  b_tcpforwardmappingshow=false;
+  this->declare_parameter("b_tcpforwardmappingshow",false);
+
   this->declare_parameter("robotsetport", 1501);    //机器人型号设置及通信端口
   auto robotsetport = this->get_parameter("robotsetport").as_int();
 
@@ -79,6 +82,9 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
                 {"compensation_dx","compensation_dy","compensation_dz","reverse_y","reverse_z"},
                 std::bind(&Modbus::callbackCenterParam, this, std::placeholders::_1));
 
+  RCLCPP_INFO(this->get_logger(), "zero_pointX: %d", e2proomdata.zero_pointX);
+  RCLCPP_INFO(this->get_logger(), "zero_pointY: %d", e2proomdata.zero_pointY);
+  RCLCPP_INFO(this->get_logger(), "zero_pointZ: %d", e2proomdata.zero_pointZ);
 
   camer_width=PIC_IMAGE_HEIGHT; //这里用相机翻转前的尺寸
   camer_height=PIC_IMAGE_WIDTH; //这里用相机翻转前的尺寸
@@ -201,6 +207,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   case E2POOM_ROBOT_MOD_MOKA_NABOTE:    
   case E2POOM_ROBOT_MOD_MOKA:
   case E2POOM_ROBOT_MOD_ZEGE_2:
+  case E2POOM_ROBOT_MOD_HUACHENG:
       ctx_forward = modbus_new_tcp(NULL, robot_port);
       if (!ctx_forward) {
         RCLCPP_ERROR(this->get_logger(), "Failed to create modbusforward context.");
@@ -228,6 +235,120 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       for (const auto & p : parameters) {
         if (p.get_name() == "b_tcpsockershow") {
             b_tcpsockershow=p.as_bool();
+            return result;
+        } 
+        else if (p.get_name() == "b_tcpforwardmappingshow") {
+            b_tcpforwardmappingshow=p.as_bool();
+            if(b_tcpforwardmappingshow==TRUE)
+            {
+              b_tcpforwardmappingshow=FALSE;
+              switch(e2proomdata.robot_mod)
+              {
+                case E2POOM_ROBOT_MOD_ZHICHANG:
+                {
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x00=%d 版本号",(int16_t)mb_forwardmapping->tab_registers[0x00]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x01=%d 延迟,单位是毫秒(当前时间-数据采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x01]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x02=%#x 搜索状态(0xFF表示找到,0表示找不到)",(int16_t)mb_forwardmapping->tab_registers[0x02]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x03=%0.2f 焊缝y坐标,(point1)",(float)((int16_t)mb_forwardmapping->tab_registers[0x03]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x04=%0.2f 焊缝z坐标,(point1)",(float)((int16_t)mb_forwardmapping->tab_registers[0x04]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x05=%0.3f 焊缝法线y分量,(point1)",(float)((int16_t)mb_forwardmapping->tab_registers[0x05]/1000.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x06=%0.3f 焊缝法线z分量,(point1)",(float)((int16_t)mb_forwardmapping->tab_registers[0x06]/1000.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x07=%d 时(数据帧采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x07]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x08=%d 分(数据帧采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x08]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x09=%d 秒(数据帧采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x09]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0a=%d 毫秒(数据帧采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x0a]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0b=%0.2f 数据帧率",(float)((int16_t)mb_forwardmapping->tab_registers[0x0b]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0c=%0.2f 相机帧率",(float)((int16_t)mb_forwardmapping->tab_registers[0x0c]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0d=%d 时(当前时间)",(int16_t)mb_forwardmapping->tab_registers[0x0d]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0e=%d 分(当前时间)",(int16_t)mb_forwardmapping->tab_registers[0x0e]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0f=%d 秒(当前时间)",(int16_t)mb_forwardmapping->tab_registers[0x0f]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x10=%d 毫秒(当前时间)",(int16_t)mb_forwardmapping->tab_registers[0x10]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x11=%d 传感器状态,0表示正在处理,1表示成功,-1表示失败",(int16_t)mb_forwardmapping->tab_registers[0x11]);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x50=%0.2f 焊缝y坐标,(point2)",(float)((int16_t)mb_forwardmapping->tab_registers[0x50]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x51=%0.2f 焊缝z坐标,(point2)",(float)((int16_t)mb_forwardmapping->tab_registers[0x51]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x52=%0.2f 焊缝y坐标,(point3)",(float)((int16_t)mb_forwardmapping->tab_registers[0x52]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x53=%0.2f 焊缝z坐标,(point3)",(float)((int16_t)mb_forwardmapping->tab_registers[0x53]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x54=%0.2f 焊缝y坐标,(point4)",(float)((int16_t)mb_forwardmapping->tab_registers[0x54]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x55=%0.2f 焊缝z坐标,(point4)",(float)((int16_t)mb_forwardmapping->tab_registers[0x55]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x60=%#x 焊点(0xFF表示焊点,0表示非焊点)",(int16_t)mb_forwardmapping->tab_registers[0x60]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x61=%0.2f 焊缝宽",(float)((int16_t)mb_forwardmapping->tab_registers[0x61])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x62=%0.2f 焊缝高",(float)((int16_t)mb_forwardmapping->tab_registers[0x62])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x70=%0.2f 焊缝x坐标",(float)((int16_t)mb_forwardmapping->tab_registers[0x70])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x71=%0.3f 焊缝法线x分量",(float)((int16_t)mb_forwardmapping->tab_registers[0x71])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x101=%#x 打开激光、跟踪(0xFF),关闭激光、跟踪(0)",(int16_t)mb_forwardmapping->tab_registers[0x101]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x102=%d 任务号",(int16_t)mb_forwardmapping->tab_registers[0x102]);
+                }
+                break;
+                case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+                {
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x00=%d 焊缝设置,1~999,焊缝配置编号",(int16_t)mb_forwardmapping->tab_registers[0x00]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x01=%d 激光控制,1:激光打开;0:激光关闭",(int16_t)mb_forwardmapping->tab_registers[0x01]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x02=%d 寻位控制,1:寻位开始;0:寻位结束",(int16_t)mb_forwardmapping->tab_registers[0x02]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x03=%d 跟踪控制,1:跟踪开始;0:跟踪结束",(int16_t)mb_forwardmapping->tab_registers[0x03]);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x10=%d 检测结果,1:识别正常;0:识别失败",(int16_t)mb_forwardmapping->tab_registers[0x10]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x11=%0.2f 坐标值LX,激光平面坐标系下的X值,2D激光线默认为0",(float)((int16_t)mb_forwardmapping->tab_registers[0x11]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x12=%0.2f 坐标值LY,激光平面坐标系下的Y值",(float)((int16_t)mb_forwardmapping->tab_registers[0x12]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x13=%0.2f 坐标值LZ,激光平面坐标系下的Z值",(float)((int16_t)mb_forwardmapping->tab_registers[0x13]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x14=%0.3f 坐标值LA",(float)((int16_t)mb_forwardmapping->tab_registers[0x14]/1000.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x15=%0.3f 坐标值LB",(float)((int16_t)mb_forwardmapping->tab_registers[0x15]/1000.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x16=%0.3f 坐标值LC",(float)((int16_t)mb_forwardmapping->tab_registers[0x16]/1000.0));
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x20=%d 时",(int16_t)mb_forwardmapping->tab_registers[0x20]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x21=%d 分",(int16_t)mb_forwardmapping->tab_registers[0x21]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x22=%d 秒",(int16_t)mb_forwardmapping->tab_registers[0x22]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x23=%d 毫秒",(int16_t)mb_forwardmapping->tab_registers[0x23]);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x30=%d 跟踪控制,校零",(int16_t)mb_forwardmapping->tab_registers[0x30]);
+                }
+                break;
+                case E2POOM_ROBOT_MOD_MOKA:
+                {
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x00=%d 版本号",(int16_t)mb_forwardmapping->tab_registers[0x00]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x01=%d 延迟,单位是毫秒(当前时间-数据采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x01]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x02=%#x 搜索状态(0xFF表示找到,0表示找不到)",(int16_t)mb_forwardmapping->tab_registers[0x02]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x03=%0.2f 焊缝y坐标",(float)((int16_t)mb_forwardmapping->tab_registers[0x03]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x04=%0.2f 焊缝z坐标",(float)((int16_t)mb_forwardmapping->tab_registers[0x04]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x05=%0.2f 焊缝宽",(float)((int16_t)mb_forwardmapping->tab_registers[0x05])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x06=%0.2f 焊缝高",(float)((int16_t)mb_forwardmapping->tab_registers[0x06])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "");
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x11=%d 状态寄存器(<0错误,=0忙,>0成功)",(int16_t)mb_forwardmapping->tab_registers[0x11]);
+                }
+                break;
+                case E2POOM_ROBOT_MOD_ZEGE_2:
+                {
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x00=%d 版本号",(int16_t)mb_forwardmapping->tab_registers[0x00]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x01=%d 延迟,单位是毫秒(当前时间-数据采集时间)",(int16_t)mb_forwardmapping->tab_registers[0x01]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x02=%#x 搜索状态(0xFF表示找到,0表示找不到)",(int16_t)mb_forwardmapping->tab_registers[0x02]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x03=%0.2f 焊缝y坐标",(float)((int16_t)mb_forwardmapping->tab_registers[0x03]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x04=%0.2f 焊缝z坐标",(float)((int16_t)mb_forwardmapping->tab_registers[0x04]/100.0));
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x05=%0.2f 焊缝宽",(float)((int16_t)mb_forwardmapping->tab_registers[0x05])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x06=%0.2f 焊缝高",(float)((int16_t)mb_forwardmapping->tab_registers[0x06])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x07-0x08=%d 当前系统时间戳,单位为毫秒,开机上电后为0,硬件累加",(((uint32_t)mb_forwardmapping->tab_registers[0x07])<<16)+(uint32_t)mb_forwardmapping->tab_registers[0x08]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x09-0x0a=%d 当前结果帧时间戳,单位为毫秒,由硬件累加",(((uint32_t)mb_forwardmapping->tab_registers[0x09])<<16)+(uint32_t)mb_forwardmapping->tab_registers[0x0a]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x0b=%d 状态寄存器,0表示正在处理,1表示成功,-1表示失败",(int16_t)mb_forwardmapping->tab_registers[0xb]);
+                }
+                break;
+                case E2POOM_ROBOT_MOD_HUACHENG:
+                {
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x00=%0.2f 焊缝的左右偏移",(float)((int16_t)mb_forwardmapping->tab_registers[0x00])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x01=%0.2f 焊缝的高低偏移",(float)((int16_t)mb_forwardmapping->tab_registers[0x01])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x02=%0.2f 焊缝宽度",(float)((int16_t)mb_forwardmapping->tab_registers[0x02])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x03=%0.2f 焊缝深度",(float)((int16_t)mb_forwardmapping->tab_registers[0x03])/100.0);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x04=%#x 激光器的开关,0xff表示开,其他为关",(int16_t)mb_forwardmapping->tab_registers[0x04]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x05=%#x 焊缝跟踪器使能的开关,0xff表示开,其他为关",(int16_t)mb_forwardmapping->tab_registers[0x05]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x06=%d 焊缝多端模式选择(0-15)",(int16_t)mb_forwardmapping->tab_registers[0x06]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x07=%#x 焊缝校准功能0xff为校准焊缝,其他为清零",(int16_t)mb_forwardmapping->tab_registers[0x07]);
+                  RCLCPP_INFO(this->get_logger(), "forwardmapping_0x08=%#x 焊缝对准信号0xff为对准,其他未对准",(int16_t)mb_forwardmapping->tab_registers[0x08]);
+                }
+                break;
+              }
+            }
+
             return result;
         } 
       }
@@ -623,7 +744,11 @@ void Modbus::_modbus(int port)
             }
           }
           int rc = modbus_reply(ctx, query, ret, mb_mapping);
-
+          if (rc == -1) 
+          {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            continue;
+          }
           static int oldtasknum=INT_MAX;
           if(oldtasknum!=mb_mapping->tab_registers[0x102])
           {
@@ -647,9 +772,32 @@ void Modbus::_modbus(int port)
                   mb_forwardmapping->tab_registers[0x0010]=1;
               else 
                   mb_forwardmapping->tab_registers[0x0010]=0;
-              mb_forwardmapping->tab_registers[0x0011]=0;
-              mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03];
-              mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04];
+
+              static int learnzeropoint=0;
+              if(mb_forwardmapping->tab_registers[0x0030]!=1)
+              {
+                if(learnzeropoint!=0)
+                {
+                  learnzeropoint=0;
+                  e2proomdata.write_zeropoint_para();
+                }
+                mb_forwardmapping->tab_registers[0x0011]=mb_mapping->tab_registers[0x70]-e2proomdata.zero_pointX;
+                mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;
+                mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
+              }
+              else
+              {
+                learnzeropoint=1;
+                e2proomdata.zero_pointX=(int16_t)mb_mapping->tab_registers[0x70];
+                e2proomdata.zero_pointY=(int16_t)mb_mapping->tab_registers[0x03];
+                e2proomdata.zero_pointZ=(int16_t)mb_mapping->tab_registers[0x04];
+                mb_forwardmapping->tab_registers[0x0011]=mb_mapping->tab_registers[0x70]-e2proomdata.zero_pointX;
+                mb_forwardmapping->tab_registers[0x0012]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;
+                mb_forwardmapping->tab_registers[0x0013]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
+              }
+              mb_forwardmapping->tab_registers[0x0014]=mb_mapping->tab_registers[0x71];
+              mb_forwardmapping->tab_registers[0x0015]=mb_mapping->tab_registers[0x05];
+              mb_forwardmapping->tab_registers[0x0016]=mb_mapping->tab_registers[0x06];
             break; 
             case E2POOM_ROBOT_MOD_MOKA:
               for(int i=0;i<5;i++)
@@ -658,7 +806,14 @@ void Modbus::_modbus(int port)
               }
               mb_forwardmapping->tab_registers[0x005]=mb_mapping->tab_registers[0x61];
               mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x62];
-              mb_forwardmapping->tab_registers[0x011]=1;
+              if(mb_mapping->tab_registers[0x02]==0xff)
+              {
+                mb_forwardmapping->tab_registers[0x011]=1;
+              }
+              else if(mb_mapping->tab_registers[0x02]==0)
+              {
+                mb_forwardmapping->tab_registers[0x011]=(uint16_t)-1;
+              }
               mb_forwardmapping->tab_registers[0x102]=mb_mapping->tab_registers[0x102];  
             break;
             case E2POOM_ROBOT_MOD_ZEGE_2:
@@ -698,19 +853,62 @@ void Modbus::_modbus(int port)
 //              RCLCPP_INFO(this->get_logger(), "ZEGEresulttimems: %d", time2);
 //              RCLCPP_INFO(this->get_logger(), "ZEGEsystemtimems: %d", time1);
               }
-              mb_forwardmapping->tab_registers[0x00b]=mb_mapping->tab_registers[0x11];
-
+              if(mb_mapping->tab_registers[0x02]==0xff)
+              {
+                mb_forwardmapping->tab_registers[0x00b]=1;
+              }
+              else if(mb_mapping->tab_registers[0x02]==0)
+              {
+                mb_forwardmapping->tab_registers[0x00b]=(uint16_t)-1;
+              }
+            break;
+            case E2POOM_ROBOT_MOD_HUACHENG:
+              {
+                static int learnzeropoint=0;
+                if(mb_forwardmapping->tab_registers[0x007]!=0xff)
+                {
+                  if(learnzeropoint!=0)
+                  {
+                    learnzeropoint=0;
+                    e2proomdata.write_zeropoint_para();
+                  }
+                  mb_forwardmapping->tab_registers[0x000]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;  
+                  mb_forwardmapping->tab_registers[0x001]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
+                  if(mb_forwardmapping->tab_registers[0x000]>150||mb_forwardmapping->tab_registers[0x001]>150)
+                  {
+                    mb_forwardmapping->tab_registers[0x008]=0;
+                  }
+                  else
+                  {
+                    mb_forwardmapping->tab_registers[0x008]=0xff;
+                  }
+                }
+                else
+                {
+                  learnzeropoint=1;
+                  e2proomdata.zero_pointY=(int16_t)mb_mapping->tab_registers[0x03];
+                  e2proomdata.zero_pointZ=(int16_t)mb_mapping->tab_registers[0x04];
+                  mb_forwardmapping->tab_registers[0x000]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;  
+                  mb_forwardmapping->tab_registers[0x001]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
+                  mb_forwardmapping->tab_registers[0x008]=0xff;
+                }
+                mb_forwardmapping->tab_registers[0x002]=mb_mapping->tab_registers[0x61];
+                mb_forwardmapping->tab_registers[0x003]=mb_mapping->tab_registers[0x62];
+                if(b_laser==false)
+                  mb_forwardmapping->tab_registers[0x004]=0;
+                else
+                  mb_forwardmapping->tab_registers[0x004]=0xff;
+                if(b_camera==false)
+                  mb_forwardmapping->tab_registers[0x005]=0;
+                else
+                  mb_forwardmapping->tab_registers[0x005]=0xff;
+                mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x102];
+              }
             break;
             default:
             break;
           }
-          
 
-          if (rc == -1) 
-          {
-            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-          //break;
-          }
         }
       }
     }
@@ -812,7 +1010,11 @@ void Modbus::_modbusrobotset(int port)
         else if (ret > 0) 
         {
           int rc = modbus_reply(ctx_robot, query, ret, robot_mapping);
-          
+          if (rc == -1) 
+          {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            continue;
+          }
           static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
           for(int i=0;i<ROBOT_SET_REGEDIST_NUM;i++)
@@ -834,11 +1036,6 @@ void Modbus::_modbusrobotset(int port)
           e2proomdata.robot_port=(Uint16)robot_mapping->tab_registers[1];
           e2proomdata.write_robot_para();
         */
-          if (rc == -1) 
-          {
-            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-          //break;
-          }
         }
       }
     }
@@ -948,7 +1145,11 @@ void Modbus::_modbusparameterport(int port)
         else if (ret > 0) 
         {
           int rc = modbus_reply(ctx_parameterport, query, ret, parameterport_mapping);
-
+          if (rc == -1) 
+          {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            continue;
+          }
           u_int8_t u8_temp=0;
           for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
           {
@@ -962,12 +1163,7 @@ void Modbus::_modbusparameterport(int port)
           if(u8_temp==1)
           {
             e2proomdata.write();
-          }
-          if (rc == -1) 
-          {
-            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-          //break;
-          }
+          }   
         }
       }
     }
@@ -1071,7 +1267,11 @@ void Modbus::_modbusforward(int port)
         else if (ret > 0) 
         {
           int rc = modbus_reply(ctx_forward, query, ret, mb_forwardmapping);
-
+          if (rc == -1) 
+          {
+            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
+            continue;
+          }
           switch(e2proomdata.robot_mod)
           {
             case E2POOM_ROBOT_MOD_NULL:
@@ -1179,6 +1379,16 @@ void Modbus::_modbusforward(int port)
                   _camera_power(false);
                 }
               }
+              
+              if (query[7] == 0x03)
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd<=0x11&&stadd+num>0x11)//读了状态寄存器
+                {
+                  mb_forwardmapping->tab_registers[0x11]=0;
+                }
+              }
             }
             break;
             case E2POOM_ROBOT_MOD_ZEGE_2:
@@ -1218,22 +1428,76 @@ void Modbus::_modbusforward(int port)
                   _camera_power(false);
                 }
               }
-              static int oldres=INT_MAX;
-              if(oldres!=mb_forwardmapping->tab_registers[0x0b])
+
+              if (query[7] == 0x03)
               {
-                oldres=mb_forwardmapping->tab_registers[0x0b];
-                mb_mapping->tab_registers[0x11]=mb_forwardmapping->tab_registers[0x0b];
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd<=0x0b&&stadd+num>0x0b)//读了状态寄存器
+                {
+                  mb_forwardmapping->tab_registers[0x0b]=0;
+                }
+              }
+            }
+            break;
+            case E2POOM_ROBOT_MOD_HUACHENG:
+            {
+              static int oldtasknum=INT_MAX;
+              if(oldtasknum!=mb_forwardmapping->tab_registers[0x06])
+              {
+                oldtasknum=mb_forwardmapping->tab_registers[0x06];
+                mb_mapping->tab_registers[0x102]=oldtasknum;
+                _task_numberset(oldtasknum);
+              }
+              static int oldgpio_laser=INT_MAX;
+              if(oldgpio_laser!=mb_forwardmapping->tab_registers[0x04])
+              {
+                oldgpio_laser=mb_forwardmapping->tab_registers[0x04];
+                if(oldgpio_laser==0x0ff)
+                {
+                  _gpio_laser(true);
+                }
+                else if(oldgpio_laser==0x000)
+                {
+                  _gpio_laser(false);
+                }
+              }
+              static int oldcamera_power=INT_MAX;
+              if(oldcamera_power!=mb_forwardmapping->tab_registers[0x05])
+              {
+                oldcamera_power=mb_forwardmapping->tab_registers[0x05];
+                if(oldcamera_power!=0xff)
+                {
+                  oldcamera_power=0xff;
+                  _camera_power(true);
+                }
+                else if(oldcamera_power!=0)
+                {
+                  oldcamera_power=0;
+                  _camera_power(false);
+                }
+              }
+              static int search=INT_MAX;
+              if(search!=mb_forwardmapping->tab_registers[0x07])
+              {
+                search=mb_forwardmapping->tab_registers[0x07];
+                if(search!=0xff)
+                {
+                  search=0xff;
+                  _camera_power(true);
+                }
+                else if(search!=0)
+                {
+                  search=0;
+                  _camera_power(false);
+                }
               }
             }
             break;
             default:
             break;
           }
-          if (rc == -1) 
-          {
-            RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
-          //break;
-          }
+          
         }
       }
     }

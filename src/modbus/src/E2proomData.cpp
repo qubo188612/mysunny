@@ -19,7 +19,10 @@ E2proomData::E2proomData()
     robot_port_min=E2POOM_ROBOT_PORT_MIN;
     robot_port_max=E2POOM_ROBOT_PORT_MAX;
     robot_port_use=E2POOM_ROBOT_PORT_USE;
- 
+
+    zero_pointX_use=E2POOM_ZEROPOINT_X_USE;
+    zero_pointY_use=E2POOM_ZEROPOINT_Y_USE;
+    zero_pointZ_use=E2POOM_ZEROPOINT_Z_USE;
     
     Init_als100_E2proomData();
     Init_als101_E2proomData();
@@ -58,7 +61,8 @@ void E2proomData::check_para()
        robot_mod!=E2POOM_ROBOT_MOD_GANGSHANG&&
        robot_mod!=E2POOM_ROBOT_MOD_EFORT&&
        robot_mod!=E2POOM_ROBOT_MOD_MOKA&&
-       robot_mod!=E2POOM_ROBOT_MOD_ZEGE_2
+       robot_mod!=E2POOM_ROBOT_MOD_ZEGE_2&&
+       robot_mod!=E2POOM_ROBOT_MOD_HUACHENG
       )
       robot_mod=E2POOM_ROBOT_MOD_NULL;
 
@@ -136,6 +140,37 @@ void E2proomData::read_para()
       buff=NULL;
     }
 
+    buff=new Uint8[E2POOM_ZEROPOINT_SAVEBUFF];
+    if(buff==NULL)
+        return;
+    if(0 > fo.ReadFile(E2POOM_ZEROPOINT_SYSPATH_MOTO,buff,E2POOM_ZEROPOINT_SAVEBUFF))
+    {
+        init_zeropoint_para();
+        if(buff!=NULL)
+        {
+          delete []buff;
+          buff=NULL;
+        }
+    }
+    else
+    {
+      Int16 *i16_p;
+      
+      i16_p = (Int16*)buff;
+      zero_pointX=*i16_p;
+      i16_p++;
+      zero_pointY=*i16_p;
+      i16_p++;
+      zero_pointZ=*i16_p;
+      i16_p++;
+    }
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+
+
     als100_read_para(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO);
     als101_read_para(E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO);
     als102_read_para(E2POOM_ALG102_LASERIMAGEPOS_SYSPATH_MOTO);
@@ -191,7 +226,6 @@ void E2proomData::write_robot_para()
       return;
 
     Uint16 *u16_p;
-    Int16 *i16_p;
 
     u16_p = (Uint16*)buff;
     *u16_p=robot_mod;
@@ -212,6 +246,42 @@ void E2proomData::init_robot_para()
 {
     robot_mod=E2POOM_ROBOT_MOD_NULL;
     robot_port=E2POOM_ROBOT_PORT_USE;
+}
+
+void E2proomData::write_zeropoint_para()
+{
+    Uint8 *buff=NULL;
+    CFileOut fo;
+
+    check_para();
+    buff=new Uint8[E2POOM_ZEROPOINT_SAVEBUFF];
+    if(buff==NULL)
+      return;
+
+    Int16 *i16_p;
+
+    i16_p = (Int16*)buff;
+    *i16_p=zero_pointX;
+    i16_p++;
+    *i16_p=zero_pointY;
+    i16_p++;
+    *i16_p=zero_pointZ;
+    i16_p++;
+
+    fo.WriteFile(E2POOM_ZEROPOINT_SYSPATH_MOTO,buff,E2POOM_ZEROPOINT_SAVEBUFF);
+
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+}
+
+void E2proomData::init_zeropoint_para()
+{
+    zero_pointX=zero_pointX_use;
+    zero_pointY=zero_pointY_use;
+    zero_pointZ=zero_pointZ_use;
 }
 
 void E2proomData::write()

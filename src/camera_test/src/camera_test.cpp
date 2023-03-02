@@ -124,9 +124,9 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
   timer_ = this->create_wall_timer(25ms, std::bind(&camera_test::timer_callback));
 #ifdef TEST_VIDEO
-  capture.open("/home/qubo/mysunny/src/camera_test/bmp/test108.avi");//导入视频
+  capture.open("/home/qubo/mysunny/src/camera_test/bmp/test105.avi");//导入视频
 #else
-  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test108.bmp");
+  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test102.bmp");
   cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2GRAY);
 #endif
 

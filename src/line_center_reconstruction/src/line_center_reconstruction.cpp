@@ -162,9 +162,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       tab_reg[2]=S;
       tab_reg[3]=ms;
       int rc=modbus_write_registers(ctx,0x0d,4,tab_reg);
-
-      u_int16_t u_res=0;
-      rc=modbus_write_registers(ctx,0x11,1,&u_res);
   }
   if (ptr->imageout.header.frame_id == "-1" 
    || ptr->targetpointout.size()==0
@@ -178,9 +175,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         u_int16_t tab_reg[1];
         tab_reg[0]=0;
         int rc=modbus_write_registers(ctx,0x02,1,tab_reg);
-        int16_t i_res=-1;
-        u_int16_t u_res=(u_int16_t)i_res;
-        rc=modbus_write_registers(ctx,0x11,1,&u_res);
       }
       if(ptr->imageout.header.frame_id != "-1")
       {
@@ -424,9 +418,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x60=%d",rc);
     }
-
-    u_int16_t u_res=1;
-    rc=modbus_write_registers(ctx,0x11,1,&u_res);
   }
 
   return msg;

@@ -441,6 +441,7 @@ public:
   E2proomData e2proomdata;
 
   bool b_tcpsockershow;
+  bool b_tcpforwardmappingshow;
 
   
 private:

@@ -30,6 +30,13 @@
 #define E2POOM_ROBOT_SAVEBUFF              20
 #define E2POOM_ROBOT_SYSPATH_MOTO			"./SAVE/E2P_ROBOT_DLG.bsd"
 
+//零点设置
+#define E2POOM_ZEROPOINT_SAVEBUFF           8
+#define E2POOM_ZEROPOINT_SYSPATH_MOTO       "./SAVE/E2P_ZEROPOINT_DLG.bsd"       
+#define E2POOM_ZEROPOINT_X_USE              0
+#define E2POOM_ZEROPOINT_Y_USE              0
+#define E2POOM_ZEROPOINT_Z_USE              0
+
 #define E2POOM_ROBOT_MOD_NULL               0        //无机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI  2        //智昌川崎机器人
@@ -38,6 +45,7 @@
 #define E2POOM_ROBOT_MOD_EFORT              5        //埃夫特机器人
 #define E2POOM_ROBOT_MOD_MOKA               6        //藦卡机器人
 #define E2POOM_ROBOT_MOD_ZEGE_2             7        //智哥机器人通信协议2
+#define E2POOM_ROBOT_MOD_HUACHENG           8        //华成工控创想
 
 #define E2POOM_ROBOT_PORT_MIN               1503     //机器人通信最小端口
 #define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口
@@ -869,6 +877,20 @@ public:
     Uint16 robot_port_use;      //机器人端口默认值
 
 /****************************/
+    //零点设置
+    Int16 zero_pointX;          //零点X坐标
+    Int16 zero_pointY;          //零点Y坐标
+    Int16 zero_pointZ;          //零点Z坐标
+
+    void write_zeropoint_para();	//保存零点坐标
+    void init_zeropoint_para();     //初始化零点坐标
+
+    Int16 zero_pointX_use;  //零点X坐标默认值
+    Int16 zero_pointY_use;  //零点Y坐标默认值
+    Int16 zero_pointZ_use;  //零点Z坐标默认值
+
+/****************************/
+  
     //任务100参数
     Uint16 als100_exposure_time;  //曝光模式
     Int16 als100_pingjun;//二值阈值
