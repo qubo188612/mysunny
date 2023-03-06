@@ -40,6 +40,7 @@ void LaserImagePos::alg105_declare_parameters()
     this->declare_parameter("als105_KalmanRF", pm.als105_KalmanRF);
     this->declare_parameter("als105_cutside_Up", pm.als105_cutside_Up);
     this->declare_parameter("als105_cutside_Down", pm.als105_cutside_Down);
+    this->declare_parameter("als105_b_erjiedao", pm.als105_b_erjiedao); 
 }
 
 void LaserImagePos::alg105_update_parameters()
@@ -140,6 +141,9 @@ void LaserImagePos::alg105_update_parameters()
     }
     else if (p.get_name() == "als105_cutside_Down") {
       pm.als105_cutside_Down = p.as_int();
+    }
+    else if (p.get_name() == "als105_b_erjiedao") {
+      pm.als105_b_erjiedao = p.as_int();
     }
   }
 }
@@ -340,7 +344,12 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
             return -1;}
         else{pm.als105_cutside_Down=p.as_int();
             return 1;}}
-                
+    else if(p.get_name() == "als105_b_erjiedao") {
+        auto k = p.as_int();
+        if (k < 0 || k > 1) {
+            return -1;}
+        else{pm.als105_b_erjiedao=p.as_int();
+            return 1;}}           
     return 0;
 }
 
@@ -415,6 +424,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     float KalmanRF=pm.als105_KalmanRF/1000.0;//系统噪声方差矩阵R 
     Int32 cutside_Up=pm.als105_cutside_Up;//头尾截断距离
     Int32 cutside_Down=pm.als105_cutside_Down;//头尾截断距离
+    Int32 b_erjiedao=pm.als105_b_erjiedao;//是否开启二阶导
     
     if(step==2)
     {
@@ -827,33 +837,38 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         }
     }
 
-
-    i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
-    for(i=0;i<40;i++)
+    if(b_erjiedao==1)
     {
-        filterdata3[i]=1;
+        i32_mXline=Myhalcv2::MatCreat(1,nHeight,Myhalcv2::CCV_32SC1,X_line);//把线横摆
+        for(i=0;i<40;i++)
+        {
+            filterdata3[i]=1;
+        }
+        for(i=40;i<80;i++)
+        {
+            filterdata3[i]=-1;
+        }
+        m_filter2=Myhalcv2::MatCreat(1,80,Myhalcv2::CCV_16SC1,filterdata3);
+
+        m32_filterIma1=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,f_line);
+        f_center.x=20;
+        f_center.y=0;
+        Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma1,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+
+        m_brygujia=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,niheX);
+        f_center.x=60;
+        f_center.y=0;
+        Myhalcv2::Myfilter(i32_mXline,m_filter2,&m_brygujia,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
+
+        for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
+        {
+            m32_filterIma1.ptr_int[j]=m32_filterIma1.ptr_int[j]-m_brygujia.ptr_int[j];
+        }
     }
-    for(i=40;i<80;i++)
+    else
     {
-        filterdata3[i]=-1;
+        m32_filterIma1=m32_filterIma;
     }
-    m_filter2=Myhalcv2::MatCreat(1,80,Myhalcv2::CCV_16SC1,filterdata3);
-
-    m32_filterIma1=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,f_line);
-    f_center.x=20;
-    f_center.y=0;
-    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma1,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
-
-    m_brygujia=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,niheX);
-    f_center.x=60;
-    f_center.y=0;
-    Myhalcv2::Myfilter(i32_mXline,m_filter2,&m_brygujia,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
-
-    for(j=X_Linestarty+24;j<=X_Lineendy-24;j++)
-    {
-        m32_filterIma1.ptr_int[j]=m32_filterIma1.ptr_int[j]-m_brygujia.ptr_int[j];
-    }
-
 
     //找最大突变点
     zhengshunum=-1;

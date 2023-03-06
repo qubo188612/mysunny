@@ -102,6 +102,9 @@ void E2proomData::Init_als105_E2proomData()
     als105_cutside_Down_min=E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_MIN;
     als105_cutside_Down_max=E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_MAX;
     als105_cutside_Down_use=E2POOM_ALG105_LASERIMAGEPOS_CUTSIDE_DOWN_USE;
+    als105_b_erjiedao_min=E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_MIN;
+    als105_b_erjiedao_use=E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_USE;
+    als105_b_erjiedao_max=E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_MAX;
 }
 
 void E2proomData::als105_check_para()
@@ -170,6 +173,8 @@ void E2proomData::als105_check_para()
         als105_cutside_Up=als105_cutside_Up_use;
     if(als105_cutside_Down<als105_cutside_Down_min||als105_cutside_Down>als105_cutside_Down_max)
         als105_cutside_Down=als105_cutside_Down_use;
+    if(als105_b_erjiedao<als105_b_erjiedao_min||als105_b_erjiedao>als105_b_erjiedao_max)
+        als105_b_erjiedao=als105_b_erjiedao_use;
 }
 
 void E2proomData::als105_read_para(char *filename)
@@ -260,6 +265,8 @@ void E2proomData::als105_read_para(char *filename)
       i16_p++;
       als105_cutside_Down=*i16_p;
       i16_p++;
+      als105_b_erjiedao=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -348,6 +355,8 @@ void E2proomData::write_als105_para(char *filename)
     i16_p++;
     *i16_p=als105_cutside_Down;
     i16_p++;
+    *i16_p=als105_b_erjiedao;
+    i16_p++;
 
     fo.WriteFile(filename,buff,E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF);
 
@@ -392,4 +401,5 @@ void E2proomData::init_als105_para()
     als105_KalmanRF=als105_KalmanRF_use;
     als105_cutside_Up=als105_cutside_Up_use;
     als105_cutside_Down=als105_cutside_Down_use;
+    als105_b_erjiedao=als105_b_erjiedao_use;
 }
