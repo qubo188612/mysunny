@@ -49,60 +49,42 @@ int LaserImagePos::alg108_getcallbackParameter(const rclcpp::Parameter &p)
 {
     if (p.get_name() == "als108_exposure_time") {
         auto k = p.as_int();
-        if (k <20 || k>65535) {
-            return -1;}
-        else{pm.als108_exposure_time=k;
+        pm.als108_exposure_time=k;
             if(pm.task_num==108){
                 _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als108_exposure_time)});}
-            return 1;}}
+            return 1;}
     else if(p.get_name() == "als108_center_x") {
         auto k = p.as_int();
-        if (k <0 || k>=PIC_IMAGE_WIDTH) {
-            return -1;}
-        else{pm.als108_center_x=p.as_int();
-            return 1;}}
+        pm.als108_center_x=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_center_y") {
         auto k = p.as_int();
-        if (k <0 || k>=PIC_IMAGE_HEIGHT) {
-            return -1;}
-        else{pm.als108_center_y=p.as_int();
-            return 1;}}
+        pm.als108_center_y=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_search_w") {
         auto k = p.as_int();
-        if (k <30 || k>500) {
-            return -1;}
-        else{pm.als108_search_w=p.as_int();
-            return 1;}}
+        pm.als108_search_w=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_search_h") {
         auto k = p.as_int();
-        if (k <30 || k>500) {
-            return -1;}
-        else{pm.als108_search_h=p.as_int();
-            return 1;}}
+        pm.als108_search_h=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_STC_alpha") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als108_STC_alpha=p.as_int();
-            return 1;}}
+        pm.als108_STC_alpha=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_STC_beta") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als108_STC_beta=p.as_int();
-            return 1;}}
+        pm.als108_STC_beta=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_STC_rho") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als108_STC_rho=p.as_int();
-            return 1;}}
+        pm.als108_STC_rho=p.as_int();
+            return 1;}
     else if(p.get_name() == "als108_STC_sigma") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als108_STC_sigma=p.as_int();
-            return 1;}}                
+        pm.als108_STC_sigma=p.as_int();
+            return 1;}                
 
     return 0;
 }

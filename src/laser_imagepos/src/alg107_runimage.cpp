@@ -124,162 +124,110 @@ int LaserImagePos::alg107_getcallbackParameter(const rclcpp::Parameter &p)
 {
     if (p.get_name() == "als107_exposure_time") {
         auto k = p.as_int();
-        if (k <20 || k>65535) {
-            return -1;}
-        else{pm.als107_exposure_time=k;
+        pm.als107_exposure_time=k;
             if(pm.task_num==107){
                 _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als107_exposure_time)});}
-            return 1;}}
+            return 1;}
     else if(p.get_name() == "als107_pingjun") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als107_pingjun=p.as_int();
-            return 1;}}
+        pm.als107_pingjun=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_b_yanmofuzhu") {
         auto k = p.as_int();
-        if (k != 0 && k!=1) {
-            return -1;}
-        else{pm.als107_b_yanmofuzhu=p.as_int();
-            return 1;}}
+        pm.als107_b_yanmofuzhu=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_b_gudingquyu") {
         auto k = p.as_int();
-        if (k != 0 && k!=1) {
-            return -1;}
-        else{pm.als107_b_gudingquyu=p.as_int();
-            return 1;}}
+        pm.als107_b_gudingquyu=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_widthliantongdis") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_widthliantongdis=p.as_int();
-            return 1;}}
+        pm.als107_widthliantongdis=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_highliantongdis") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_highliantongdis=p.as_int();
-            return 1;}}
+        pm.als107_highliantongdis=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_gujiaerzhi") {
         auto k = p.as_int();
-        if (k < 0 || k > 255) {
-            return -1;}
-        else{pm.als107_gujiaerzhi=p.as_int();
-            return 1;}}
+        pm.als107_gujiaerzhi=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_jiguanghight") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_jiguanghight=p.as_int();
-            return 1;}}
+        pm.als107_jiguanghight=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_jiguanglong") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_jiguanglong=p.as_int();
-            return 1;}}
+        pm.als107_jiguanglong=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_jiguangkuandu") {
         auto k = p.as_int();
-        if (k < 0 || k > 20) {
-            return -1;}
-        else{pm.als107_jiguangkuandu=p.as_int();
-            return 1;}}
+        pm.als107_jiguangkuandu=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Updif") {
         auto k = p.as_int();
-        if (k < 0 || k > 5000) {
-            return -1;}
-        else{pm.als107_Updif=p.as_int();
-            return 1;}}
+        pm.als107_Updif=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Updifmin") {
         auto k = p.as_int();
-        if (k < -2000 || k > 2000) {
-            return -1;}
-        else{pm.als107_Updifmin=p.as_int();
-            return 1;}}
+        pm.als107_Updifmin=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Uplong") {
         auto k = p.as_int();
-        if (k < 1 || k > 500) {
-            return -1;}
-        else{pm.als107_Uplong=p.as_int();
-            return 1;}}
+        pm.als107_Uplong=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Downdif") {
         auto k = p.as_int();
-        if (k < -5000 || k > 0) {
-            return -1;}
-        else{pm.als107_Downdif=p.as_int();
-            return 1;}}
+        pm.als107_Downdif=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Downdifmin") {
         auto k = p.as_int();
-        if (k < -255 || k > 255) {
-            return -1;}
-        else{pm.als107_Downdifmin=p.as_int();
-            return 1;}}
+        pm.als107_Downdifmin=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Downdlong") {
         auto k = p.as_int();
-        if (k < 1 || k > 500) {
-            return -1;}
-        else{pm.als107_Downdlong=p.as_int();
-            return 1;}}
+        pm.als107_Downdlong=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_St_Down") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_St_Down=p.as_int();
-            return 1;}}
+        pm.als107_St_Down=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Ed_Down") {
         auto k = p.as_int();
-        if (k < 0 || k > 1500) {
-            return -1;}
-        else{pm.als107_Ed_Down=p.as_int();
-            return 1;}}
+        pm.als107_Ed_Down=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_St_Up") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_St_Up=p.as_int();
-            return 1;}}
+        pm.als107_St_Up=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_Ed_Up") {
         auto k = p.as_int();
-        if (k < 0 || k > 1500) {
-            return -1;}
-        else{pm.als107_Ed_Up=p.as_int();
-            return 1;}}   
+        pm.als107_Ed_Up=p.as_int();
+            return 1;}   
     else if(p.get_name() == "als107_dis_center_st") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_dis_center_st=p.as_int();
-            return 1;}}   
+        pm.als107_dis_center_st=p.as_int();
+            return 1;}   
     else if(p.get_name() == "als107_dis_center_st2") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_dis_center_st2=p.as_int();
-            return 1;}}
+        pm.als107_dis_center_st2=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_dis_center_ed2") {
         auto k = p.as_int();
-        if (k < 0 || k > 500) {
-            return -1;}
-        else{pm.als107_dis_center_ed2=p.as_int();
-            return 1;}}                      
+        pm.als107_dis_center_ed2=p.as_int();
+            return 1;}                      
     else if(p.get_name() == "als107_b_KalmanFilter") {
         auto k = p.as_int();
-        if (k < 0 || k > 1) {
-            return -1;}
-        else{pm.als107_b_KalmanFilter=p.as_int();
-            return 1;}}
+        pm.als107_b_KalmanFilter=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_KalmanQF") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als107_KalmanQF=p.as_int();
-            return 1;}}
+        pm.als107_KalmanQF=p.as_int();
+            return 1;}
     else if(p.get_name() == "als107_KalmanRF") {
         auto k = p.as_int();
-        if (k < 0 || k > 10000) {
-            return -1;}
-        else{pm.als107_KalmanRF=p.as_int();
-            return 1;}}  
+        pm.als107_KalmanRF=p.as_int();
+            return 1;}  
     return 0;
 }
 

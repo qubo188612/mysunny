@@ -15,49 +15,76 @@ int Modbus::als108_task_parameter(int ddr,u_int16_t num)
     switch(ddr)
     {
         case ALS108_EXPOSURE_TIME_REG_ADD:
-            e2proomdata.als108_exposure_time=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_exposure_time", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_exposure_time_min&&(int)num<=(int)e2proomdata.als108_exposure_time_max)
+            {
+                e2proomdata.als108_exposure_time=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_exposure_time", num)});
+                return 1;
+            }
         break;
         case ALS108_CENTER_X_REG_ADD:
-            e2proomdata.als108_center_x=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_center_x", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_center_x_min&&(int)num<=(int)e2proomdata.als108_center_x_max)
+            {
+                e2proomdata.als108_center_x=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_center_x", num)});
+                return 1;
+            }
         break;
         case ALS108_CENTER_Y_REG_ADD:
-            e2proomdata.als108_center_y=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_center_y", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_center_y_min&&(int)num<=(int)e2proomdata.als108_center_y_max)
+            {
+                e2proomdata.als108_center_y=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_center_y", num)});
+                return 1;
+            }
         break;
         case ALS108_SEARCT_W_REG_ADD:
-            e2proomdata.als108_search_w=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_search_w", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_search_w_min&&(int)num<=(int)e2proomdata.als108_search_w_max)
+            {
+                e2proomdata.als108_search_w=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_search_w", num)});
+                return 1;
+            }
         break;
         case ALS108_SEARCT_H_REG_ADD:
-            e2proomdata.als108_search_h=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_search_h", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_search_h_min&&(int)num<=(int)e2proomdata.als108_search_h_max)
+            {
+                e2proomdata.als108_search_h=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_search_h", num)});
+                return 1;
+            }
         break;
         case ALS108_STC_ALPHA_REG_ADD:
-            e2proomdata.als108_STC_alpha=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_alpha", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_STC_alpha_min&&(int)num<=(int)e2proomdata.als108_STC_alpha_max)
+            {
+                e2proomdata.als108_STC_alpha=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_alpha", num)});
+                return 1;
+            }
         break;
         case ALS108_STC_BETA_REG_ADD:
-            e2proomdata.als108_STC_beta=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_beta", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_STC_beta_min&&(int)num<=(int)e2proomdata.als108_STC_beta_max)
+            {
+                e2proomdata.als108_STC_beta=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_beta", num)});
+                return 1;
+            }
         break;
         case ALS108_STC_RHO_REG_ADD:
-            e2proomdata.als108_STC_rho=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_rho", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_STC_rho_min&&(int)num<=(int)e2proomdata.als108_STC_rho_max)
+            {
+                e2proomdata.als108_STC_rho=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_rho", num)});
+                return 1;
+            }
         break;
         case ALS108_STC_SIGMA_REG_ADD:
-            e2proomdata.als108_STC_sigma=num;
-            _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_sigma", num)});
-            return 1;
+            if((int)num>=(int)e2proomdata.als108_STC_sigma_min&&(int)num<=(int)e2proomdata.als108_STC_sigma_max)
+            {
+                e2proomdata.als108_STC_sigma=num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als108_STC_sigma", num)});
+                return 1;
+            }
         break;
 
         case ALS108_INIT_REG_ADD:

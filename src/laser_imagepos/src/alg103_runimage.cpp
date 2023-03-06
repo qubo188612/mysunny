@@ -53,54 +53,38 @@ int LaserImagePos::alg103_getcallbackParameter(const rclcpp::Parameter &p)
 {
     if (p.get_name() == "als103_exposure_time") {
         auto k = p.as_int();
-        if (k <20 || k>65535) {
-            return -1;}
-        else{pm.als103_exposure_time=k;
+        pm.als103_exposure_time=k;
             if(pm.task_num==103){
                 _param_camera->set_parameters({rclcpp::Parameter("exposure_time", pm.als103_exposure_time)});}
-            return 1;}}
+            return 1;}
     else if(p.get_name() == "als103_pingjun") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_pingjun=p.as_int();
-            return 1;}}
+        pm.als103_pingjun=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_gujiaerzhi") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_gujiaerzhi=p.as_int();
-            return 1;}}
+        pm.als103_gujiaerzhi=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_widthliantongdis") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_widthliantongdis=p.as_int();
-            return 1;}}
+        pm.als103_widthliantongdis=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_highliantongdis") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_highliantongdis=p.as_int();
-            return 1;}}
+        pm.als103_highliantongdis=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_jiguanglong") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_jiguanglong=p.as_int();
-            return 1;}}
+        pm.als103_jiguanglong=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_jiguangkuandu") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_jiguangkuandu=p.as_int();
-            return 1;}}
+        pm.als103_jiguangkuandu=p.as_int();
+            return 1;}
     else if(p.get_name() == "als103_jiguangduibidu") {
         auto k = p.as_int();
-        if (k <0 || k>255) {
-            return -1;}
-        else{pm.als103_jiguangduibidu=p.as_int();
-            return 1;}}
+        pm.als103_jiguangduibidu=p.as_int();
+            return 1;}
 
     return 0;
 }
