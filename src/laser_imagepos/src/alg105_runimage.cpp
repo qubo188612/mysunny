@@ -1333,7 +1333,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     {
         linepoint32ED.x=tileline.ed.x;
         linepoint32ED.y=tileline.ed.y;
-        Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ED,&faxian);
+        Myhalcv2::MyGetLinefocalRight(resultfocal,linepoint32ED,&faxian);
         /*
         if(resultfocal1.x<resultfocal2.x)
         {
@@ -1353,7 +1353,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     {
         linepoint32ST.x=headline.st.x;
         linepoint32ST.y=headline.st.y;
-        Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ST,&faxian);
+        Myhalcv2::MyGetLinefocalRight(resultfocal,linepoint32ST,&faxian);
         /*
         if(resultfocal1.x<resultfocal2.x)
         {
@@ -1446,11 +1446,11 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         Myhalcv2::L_Point32F f_temp;
         Myhalcv2::L_Point32 p_temp;
         f_temp=faxian;
-        faxian=faxian2;
-        faxian2=f_temp;
+        faxian=faxian1;
+        faxian1=f_temp;
         p_temp=resultfocal;
-        resultfocal=resultfocal2;
-        resultfocal2=p_temp;
+        resultfocal=resultfocal1;
+        resultfocal1=p_temp;
     }
     else if(answerpoint==3)
     {
