@@ -23,7 +23,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_PINGJUN_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_pingjun_min&&(int)num<=(int)e2proomdata.als101_pingjun_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_pingjun_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_pingjun_max)
             {
                 e2proomdata.als101_pingjun=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_pingjun", (int16_t)num)});
@@ -31,7 +31,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_B_YANMOFUZHU_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_b_yanmofuzhu_min&&(int)num<=(int)e2proomdata.als101_b_yanmofuzhu_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_b_yanmofuzhu_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_b_yanmofuzhu_max)
             {
                 e2proomdata.als101_b_yanmofuzhu=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_b_yanmofuzhu", (int16_t)num)});
@@ -39,7 +39,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_B_GUDINGQUYU_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_b_gudingquyu_min&&(int)num<=(int)e2proomdata.als101_b_gudingquyu_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_b_gudingquyu_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_b_gudingquyu_max)
             {
                 e2proomdata.als101_b_gudingquyu=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_b_gudingquyu", (int16_t)num)});
@@ -47,7 +47,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_WIDTHLIANTONGDIS_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_widthliantongdis_min&&(int)num<=(int)e2proomdata.als101_widthliantongdis_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_widthliantongdis_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_widthliantongdis_max)
             {
                 e2proomdata.als101_widthliantongdis=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_widthliantongdis", (int16_t)num)});
@@ -55,7 +55,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_HIGHLIANTONGDIS_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_highliantongdis_min&&(int)num<=(int)e2proomdata.als101_highliantongdis_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_highliantongdis_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_highliantongdis_max)
             {
                 e2proomdata.als101_highliantongdis=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_highliantongdis", (int16_t)num)});
@@ -63,7 +63,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_GUJIAERZHI_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_gujiaerzhi_min&&(int)num<=(int)e2proomdata.als101_gujiaerzhi_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_gujiaerzhi_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_gujiaerzhi_max)
             {
                 e2proomdata.als101_gujiaerzhi=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_gujiaerzhi", (int16_t)num)});
@@ -71,7 +71,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_JIGUANGHIGHT_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_jiguanghight_min&&(int)num<=(int)e2proomdata.als101_jiguanghight_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_jiguanghight_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_jiguanghight_max)
             {
                 e2proomdata.als101_jiguanghight=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_jiguanghight", (int16_t)num)});
@@ -79,7 +79,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_JIGUANGLONG_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_jiguanglong_min&&(int)num<=(int)e2proomdata.als101_jiguanglong_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_jiguanglong_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_jiguanglong_max)
             {
                 e2proomdata.als101_jiguanglong=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_jiguanglong", (int16_t)num)});
@@ -87,7 +87,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_JIGUANGKUANDU_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_jiguangkuandu_min&&(int)num<=(int)e2proomdata.als101_jiguangkuandu_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_jiguangkuandu_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_jiguangkuandu_max)
             {
                 e2proomdata.als101_jiguangkuandu=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_jiguangkuandu", (int16_t)num)});
@@ -95,7 +95,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_UPDIF_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Updif_min&&(int)num<=(int)e2proomdata.als101_Updif_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Updif_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Updif_max)
             {
                 e2proomdata.als101_Updif=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Updif", (int16_t)num)});
@@ -103,7 +103,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_UPDIFMIN_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Updifmin_min&&(int)num<=(int)e2proomdata.als101_Updifmin_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Updifmin_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Updifmin_max)
             {
                 e2proomdata.als101_Updifmin=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Updifmin", (int16_t)num)});
@@ -111,7 +111,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_UPLONG_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Uplong_min&&(int)num<=(int)e2proomdata.als101_Uplong_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Uplong_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Uplong_max)
             {
                 e2proomdata.als101_Uplong=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Uplong", (int16_t)num)});
@@ -119,7 +119,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DOWNDIF_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Downdif_min&&(int)num<=(int)e2proomdata.als101_Downdif_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Downdif_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Downdif_max)
             {
                 e2proomdata.als101_Downdif=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Downdif", (int16_t)num)});
@@ -127,7 +127,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DOWNDIFMIN_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Downdifmin_min&&(int)num<=(int)e2proomdata.als101_Downdifmin_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Downdifmin_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Downdifmin_max)
             {
                 e2proomdata.als101_Downdifmin=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Downdifmin", (int16_t)num)});
@@ -135,7 +135,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DOWNDLONG_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_Downdlong_min&&(int)num<=(int)e2proomdata.als101_Downdlong_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_Downdlong_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_Downdlong_max)
             {
                 e2proomdata.als101_Downdlong=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_Downdlong", (int16_t)num)});
@@ -143,7 +143,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DUANXIANERZHI_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_duanxianerzhi_min&&(int)num<=(int)e2proomdata.als101_duanxianerzhi_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_duanxianerzhi_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_duanxianerzhi_max)
             {
                 e2proomdata.als101_duanxianerzhi=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_duanxianerzhi", (int16_t)num)});
@@ -151,7 +151,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_ERZHISIZE_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_erzhisize_min&&(int)num<=(int)e2proomdata.als101_erzhisize_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_erzhisize_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_erzhisize_max)
             {
                 e2proomdata.als101_erzhisize=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_erzhisize", (int16_t)num)});
@@ -159,7 +159,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_ERZHISIZE2_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_erzhisize2_min&&(int)num<=(int)e2proomdata.als101_erzhisize2_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_erzhisize2_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_erzhisize2_max)
             {
                 e2proomdata.als101_erzhisize2=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_erzhisize2", (int16_t)num)});
@@ -167,7 +167,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_SEARCHDECTANCEMAX_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_searchdectancemax_min&&(int)num<=(int)e2proomdata.als101_searchdectancemax_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_searchdectancemax_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_searchdectancemax_max)
             {
                 e2proomdata.als101_searchdectancemax=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_searchdectancemax", (int16_t)num)});
@@ -175,7 +175,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_SEARCHDECTANCEMIN_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_searchdectancemin_min&&(int)num<=(int)e2proomdata.als101_searchdectancemin_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_searchdectancemin_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_searchdectancemin_max)
             {
                 e2proomdata.als101_searchdectancemin=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_searchdectancemin", (int16_t)num)});
@@ -183,7 +183,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DIS_CENTER_ST_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_dis_center_st_min&&(int)num<=(int)e2proomdata.als101_dis_center_st_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_dis_center_st_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_dis_center_st_max)
             {
                 e2proomdata.als101_dis_center_st=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_dis_center_st", (int16_t)num)});
@@ -191,7 +191,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_DIS_CENTER_ED_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_dis_center_ed_min&&(int)num<=(int)e2proomdata.als101_dis_center_ed_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_dis_center_ed_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_dis_center_ed_max)
             {
                 e2proomdata.als101_dis_center_ed=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_dis_center_ed", (int16_t)num)});
@@ -199,7 +199,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_ANSWERPOINT_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_answerpoint_min&&(int)num<=(int)e2proomdata.als101_answerpoint_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_answerpoint_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_answerpoint_max)
             {
                 e2proomdata.als101_answerpoint=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_answerpoint", (int16_t)num)});
@@ -207,7 +207,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_B_KALMANFILTER_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_b_KalmanFilter_min&&(int)num<=(int)e2proomdata.als101_b_KalmanFilter_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_b_KalmanFilter_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_b_KalmanFilter_max)
             {
                 e2proomdata.als101_b_KalmanFilter=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_b_KalmanFilter", (int16_t)num)});
@@ -215,7 +215,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_KALMANQF_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_KalmanQF_min&&(int)num<=(int)e2proomdata.als101_KalmanQF_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_KalmanQF_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_KalmanQF_max)
             {
                 e2proomdata.als101_KalmanQF=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_KalmanQF", (int16_t)num)});
@@ -223,7 +223,7 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
             }
         break;
         case ALS101_KALMANRF_REG_ADD:
-            if((int)num>=(int)e2proomdata.als101_KalmanRF_min&&(int)num<=(int)e2proomdata.als101_KalmanRF_max)
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_KalmanRF_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_KalmanRF_max)
             {
                 e2proomdata.als101_KalmanRF=(int16_t)num;
                 _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_KalmanRF", (int16_t)num)});
