@@ -445,6 +445,8 @@ public:
   bool b_tcpsockershow;
   bool b_tcpforwardmappingshow;
 
+  bool b_resultreset; //检测结果在读取后清零
+
   
 private:
   

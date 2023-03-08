@@ -170,12 +170,6 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       auto msg = std::make_unique<IfAlgorhmitcloud>();
       msg->header = ptr->imageout.header;
 
-      if(b_modbusconnect==true)
-      {
-        u_int16_t tab_reg[1];
-        tab_reg[0]=0;
-        int rc=modbus_write_registers(ctx,0x02,1,tab_reg);
-      }
       if(ptr->imageout.header.frame_id != "-1")
       {
         u_int16_t tab_reg[4];
@@ -224,6 +218,15 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         {
           RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x01=%d",rc);
         }
+      }
+      if(b_modbusconnect==true)
+      {
+        int rc;
+        u_int16_t tab_reg[1];
+        tab_reg[0]=0;
+        rc=modbus_write_registers(ctx,0x02,1,tab_reg);
+        tab_reg[0]=-1;
+        rc=modbus_write_registers(ctx,0x11,1,tab_reg);
       }
       return msg;
    }
@@ -334,38 +337,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         msg->targetpointoutcloud[1].y=(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)/dis;
     }
 
-    tab_reg[0]=0xff;
-    tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
-    tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
-    tab_reg[3]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].x*1000+0.5));
-    tab_reg[4]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].y*1000+0.5));
-    tab_reg[5]=(p->tm_hour+8)%24;
-    tab_reg[6]=p->tm_min;
-    tab_reg[7]=p->tm_sec;
-    tab_reg[8]=msec;
-
-    static double oldtime=0;
-    double nowtime;
-    struct timespec timerun = {0, 0};
-    clock_gettime(CLOCK_REALTIME, &timerun);
-    if(oldtime!=0)
-    {
-      nowtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
-      double fps=1.0/(nowtime-oldtime);
-      tab_reg[9]=(u_int16_t)(fps*100.0);
-      oldtime=nowtime;
-    }
-    else
-    {
-      oldtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
-      tab_reg[9]=0;
-    }
-
-    int rc=modbus_write_registers(ctx,0x02,10,tab_reg);
-    if(rc!=10)
-    {
-      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
-    }
+    int rc;
 
     tab_reg[0]=(u_int16_t)centerData.compensation_dx;
     tab_reg[1]=(u_int16_t)0;
@@ -417,6 +389,48 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     if(rc!=1)
     {
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x60=%d",rc);
+    }
+
+    tab_reg[0]=0xff;
+    tab_reg[1]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].x*100+0.5));
+    tab_reg[2]=(uint16_t)((int32_t)(msg->targetpointoutcloud[0].y*100+0.5));
+    tab_reg[3]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].x*1000+0.5));
+    tab_reg[4]=(uint16_t)((int32_t)(msg->targetpointoutcloud[1].y*1000+0.5));
+    tab_reg[5]=(p->tm_hour+8)%24;
+    tab_reg[6]=p->tm_min;
+    tab_reg[7]=p->tm_sec;
+    tab_reg[8]=msec;
+
+    static bool b_oldtime=0;
+    static struct timespec oldtime;
+    struct timespec nowtime;
+    struct timespec timerun = {0, 0};
+    clock_gettime(CLOCK_REALTIME, &timerun);
+    if(b_oldtime!=0)
+    {
+      nowtime=timerun;
+      double fps=1.0/((nowtime.tv_sec-oldtime.tv_sec)+(nowtime.tv_nsec-oldtime.tv_nsec)/1000000000.0);
+      tab_reg[9]=(u_int16_t)(fps*100.0);
+      oldtime=nowtime;
+    }
+    else
+    {
+      b_oldtime=1;
+      oldtime=timerun;
+      tab_reg[9]=0;
+    }
+
+    rc=modbus_write_registers(ctx,0x02,10,tab_reg);
+    if(rc!=10)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x02=%d",rc);
+    }
+
+    tab_reg[0]=1;
+    rc=modbus_write_registers(ctx,0x11,1,tab_reg);
+    if(rc!=1)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x11=%d",rc);
     }
   }
 

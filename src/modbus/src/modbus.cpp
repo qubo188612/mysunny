@@ -63,6 +63,9 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   b_tcpforwardmappingshow=false;
   this->declare_parameter("b_tcpforwardmappingshow",false);
 
+  b_resultreset=false;
+  this->declare_parameter("b_resultreset",false);
+
   this->declare_parameter("robotsetport", 1501);    //机器人型号设置及通信端口
   auto robotsetport = this->get_parameter("robotsetport").as_int();
 
@@ -237,6 +240,10 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
             b_tcpsockershow=p.as_bool();
             return result;
         } 
+        else if(p.get_name() == "b_resultreset") {
+            b_resultreset=p.as_bool();
+            return result;
+        }
         else if (p.get_name() == "b_tcpforwardmappingshow") {
             b_tcpforwardmappingshow=p.as_bool();
             if(b_tcpforwardmappingshow==TRUE)
@@ -759,6 +766,27 @@ void Modbus::_modbus(int port)
           switch(e2proomdata.robot_mod)
           {
             case E2POOM_ROBOT_MOD_NULL:
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
+                  {
+                    mb_mapping->tab_registers[0x02]=0;
+                  }
+                }
+              }
+              if (query[7] == 0x03)
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd<=0x11&&stadd+num>0x11)//读了状态寄存器
+                {
+                  mb_mapping->tab_registers[0x11]=0;
+                }
+              }
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
               for(int i=0;i<SERVER_REGEDIST_NUM;i++)
@@ -874,14 +902,6 @@ void Modbus::_modbus(int port)
                   }
                   mb_forwardmapping->tab_registers[0x000]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;  
                   mb_forwardmapping->tab_registers[0x001]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
-                  if(mb_forwardmapping->tab_registers[0x000]>150||mb_forwardmapping->tab_registers[0x001]>150)
-                  {
-                    mb_forwardmapping->tab_registers[0x008]=0;
-                  }
-                  else
-                  {
-                    mb_forwardmapping->tab_registers[0x008]=0xff;
-                  }
                 }
                 else
                 {
@@ -890,7 +910,14 @@ void Modbus::_modbus(int port)
                   e2proomdata.zero_pointZ=(int16_t)mb_mapping->tab_registers[0x04];
                   mb_forwardmapping->tab_registers[0x000]=mb_mapping->tab_registers[0x03]-e2proomdata.zero_pointY;  
                   mb_forwardmapping->tab_registers[0x001]=mb_mapping->tab_registers[0x04]-e2proomdata.zero_pointZ;
+                }
+                if(mb_mapping->tab_registers[0x02]==0xff)
+                {
                   mb_forwardmapping->tab_registers[0x008]=0xff;
+                }
+                else if(mb_mapping->tab_registers[0x02]==0)
+                {
+                  mb_forwardmapping->tab_registers[0x008]=0;
                 }
                 mb_forwardmapping->tab_registers[0x002]=mb_mapping->tab_registers[0x61];
                 mb_forwardmapping->tab_registers[0x003]=mb_mapping->tab_registers[0x62];
@@ -1274,7 +1301,7 @@ void Modbus::_modbusforward(int port)
           }
           switch(e2proomdata.robot_mod)
           {
-            case E2POOM_ROBOT_MOD_NULL:
+            case E2POOM_ROBOT_MOD_NULL: 
             case E2POOM_ROBOT_MOD_ZHICHANG:
             {
               if (ret > 14 && query[7] == 0x10 && query[8] == 0x01 && query[9] == 0x01) {
@@ -1295,6 +1322,27 @@ void Modbus::_modbusforward(int port)
                 oldtasknum=mb_forwardmapping->tab_registers[0x102];
                 mb_mapping->tab_registers[0x102]=oldtasknum;
                 _task_numberset(oldtasknum);
+              }
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
+                  {
+                    mb_forwardmapping->tab_registers[0x02]=0;
+                  }
+                }
+              }
+              if (query[7] == 0x03)
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd<=0x11&&stadd+num>0x11)//读了状态寄存器
+                {
+                  mb_forwardmapping->tab_registers[0x11]=0;
+                }
               }
             }
             break;
@@ -1339,6 +1387,18 @@ void Modbus::_modbusforward(int port)
                   _camera_power(false);
                 }
               }
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x10&&stadd+num>0x10)//读了状态寄存器
+                  {
+                    mb_forwardmapping->tab_registers[0x10]=0;
+                  }
+                }
+              }
             }
             break;
             case E2POOM_ROBOT_MOD_MOKA:
@@ -1379,7 +1439,18 @@ void Modbus::_modbusforward(int port)
                   _camera_power(false);
                 }
               }
-              
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
+                  {
+                    mb_forwardmapping->tab_registers[0x02]=0;
+                  }
+                }
+              }       
               if (query[7] == 0x03)
               {
                 uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
@@ -1388,7 +1459,7 @@ void Modbus::_modbusforward(int port)
                 {
                   mb_forwardmapping->tab_registers[0x11]=0;
                 }
-              }
+              }         
             }
             break;
             case E2POOM_ROBOT_MOD_ZEGE_2:
@@ -1429,6 +1500,18 @@ void Modbus::_modbusforward(int port)
                 }
               }
 
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
+                  {
+                    mb_forwardmapping->tab_registers[0x02]=0;
+                  }
+                }
+              }
               if (query[7] == 0x03)
               {
                 uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
@@ -1490,6 +1573,18 @@ void Modbus::_modbusforward(int port)
                 {
                   search=0;
                   _camera_power(false);
+                }
+              }
+              if(b_resultreset==true)
+              {
+                if (query[7] == 0x03)
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd<=0x08&&stadd+num>0x08)//读了状态寄存器
+                  {
+                    mb_forwardmapping->tab_registers[0x08]=0;
+                  }
                 }
               }
             }
@@ -1830,6 +1925,7 @@ void* received(void *m)
                                             {
                                                 sent_root["getsearchstat"]="failed";
                                             }
+                                            _p->mb_mapping->tab_registers[0x02]=0;
                                         }
                                     }
                                     break;
@@ -1859,6 +1955,7 @@ void* received(void *m)
                                             {
                                                 sent_root["getpos2"]="failed";
                                             }
+                                            _p->mb_mapping->tab_registers[0x02]=0;
                                         }
                                     }
                                     break;
@@ -1888,6 +1985,7 @@ void* received(void *m)
                                             {
                                                 sent_root["getsize2"]="failed";
                                             }
+                                            _p->mb_mapping->tab_registers[0x02]=0;
                                         }
                                     }
                                     break;
@@ -2133,6 +2231,7 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
+                            _p->mb_mapping->tab_registers[0x02]=0;
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
@@ -2171,6 +2270,7 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
+                            _p->mb_mapping->tab_registers[0x02]=0;
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
@@ -2412,6 +2512,7 @@ void* received(void *m)
                             {
                               send[4]=0x01;
                             }
+                            _p->mb_mapping->tab_registers[0x02]=0;
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];

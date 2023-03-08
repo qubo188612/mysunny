@@ -1346,7 +1346,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         {
             linepoint32ED.x=tileline.ed.x;
             linepoint32ED.y=tileline.ed.y;
-            Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ED,&faxian);
+            Myhalcv2::MyGetLinefocalRight(resultfocal2,linepoint32ED,&faxian);
         }
         */
     }
@@ -1366,7 +1366,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         {
             linepoint32ST.x=headline.st.x;
             linepoint32ST.y=headline.st.y;
-            Myhalcv2::MyGetLinefocalRight(resultfocal1,linepoint32ST,&faxian);
+            Myhalcv2::MyGetLinefocalRight(resultfocal2,linepoint32ST,&faxian);
         }
         */
     }
