@@ -206,7 +206,7 @@ int Modbus::als100_task_parameter(int ddr,u_int16_t num)
                 return 1;
             }
         break;
-        case ALS100_B_KALMANFILTER_REG_ADD:
+        case ALS100_B_KALMANFILTER_REG_ADD:   
             if((int)((int16_t)num)>=(int)e2proomdata.als100_b_KalmanFilter_min&&(int)((int16_t)num)<=(int)e2proomdata.als100_b_KalmanFilter_max)
             {
                 e2proomdata.als100_b_KalmanFilter=(int16_t)num;

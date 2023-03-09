@@ -155,11 +155,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   
   for(int i=0;i<PARAMETER_REGEDIST_NUM;i++)
   {
-    if(oldparameter[i]!=parameterport_mapping->tab_registers[i])
-    {
-      oldparameter[i]=parameterport_mapping->tab_registers[i];
-      _task_parameter(i,parameterport_mapping->tab_registers[i]);
-    }
+    oldparameter[i]=parameterport_mapping->tab_registers[i];
+    _task_parameter(i,parameterport_mapping->tab_registers[i]);
   }
 
   ctx_parameterport = modbus_new_tcp(NULL, parameterport);

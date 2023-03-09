@@ -113,7 +113,7 @@ void LaserImagePos::alg100_update_parameters()
       pm.als100_answerpoint = p.as_int();
     }
     else if (p.get_name() == "als100_b_KalmanFilter") {
-      pm.als100_b_KalmanFilter = p.as_int();
+      pm.als100_b_KalmanFilter = p.as_int();   
     }
     else if (p.get_name() == "als100_KalmanQF") {
       pm.als100_KalmanQF = p.as_int();
