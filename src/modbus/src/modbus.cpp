@@ -1922,7 +1922,10 @@ void* received(void *m)
                                             {
                                                 sent_root["getsearchstat"]="failed";
                                             }
-                                            _p->mb_mapping->tab_registers[0x02]=0;
+                                            if(_p->b_resultreset==true)
+                                            {
+                                              _p->mb_mapping->tab_registers[0x02]=0;
+                                            }
                                         }
                                     }
                                     break;
@@ -1952,7 +1955,10 @@ void* received(void *m)
                                             {
                                                 sent_root["getpos2"]="failed";
                                             }
-                                            _p->mb_mapping->tab_registers[0x02]=0;
+                                            if(_p->b_resultreset==true)
+                                            {
+                                              _p->mb_mapping->tab_registers[0x02]=0;
+                                            }
                                         }
                                     }
                                     break;
@@ -1982,7 +1988,10 @@ void* received(void *m)
                                             {
                                                 sent_root["getsize2"]="failed";
                                             }
-                                            _p->mb_mapping->tab_registers[0x02]=0;
+                                            if(_p->b_resultreset==true)
+                                            {
+                                              _p->mb_mapping->tab_registers[0x02]=0;
+                                            }
                                         }
                                     }
                                     break;
@@ -2228,7 +2237,10 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
-                            _p->mb_mapping->tab_registers[0x02]=0;
+                            if(_p->b_resultreset==true)
+                            {
+                              _p->mb_mapping->tab_registers[0x02]=0;
+                            }
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
@@ -2267,7 +2279,10 @@ void* received(void *m)
                             {
                               send[4]=1;
                             }
-                            _p->mb_mapping->tab_registers[0x02]=0;
+                            if(_p->b_resultreset==true)
+                            {
+                              _p->mb_mapping->tab_registers[0x02]=0;
+                            }
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
@@ -2509,7 +2524,10 @@ void* received(void *m)
                             {
                               send[4]=0x01;
                             }
-                            _p->mb_mapping->tab_registers[0x02]=0;
+                            if(_p->b_resultreset==true)
+                            {
+                              _p->mb_mapping->tab_registers[0x02]=0;
+                            }
                             u_int16_t X,Y,Z,TA,TB,TC;
                             X=_p->mb_mapping->tab_registers[0x70];
                             Y=_p->mb_mapping->tab_registers[0x03];
