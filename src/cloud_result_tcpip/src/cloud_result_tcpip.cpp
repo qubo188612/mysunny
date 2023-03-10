@@ -101,6 +101,7 @@ void Cloud_Result_Tcpip::cloud_result_callback(const tutorial_interfaces::msg::I
     {
         b_fuzhi=1;
         rcvmsg=msg;
+        
         b_fuzhi=0;
         b_updatafinish=1;
     } 
