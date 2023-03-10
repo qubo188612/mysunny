@@ -5,10 +5,11 @@
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 #include "opencv2/opencv.hpp"
 #include <TCP/TCPServer.h>
+#include <json/jsonfuction.h>
 
 namespace cloud_result_tcpip
 {
-
+using rcl_interfaces::msg::SetParametersResult;
 using std::placeholders::_1;
 using tutorial_interfaces::msg::IfAlgorhmitcloud;
 
@@ -41,6 +42,8 @@ public:
 
     vector<descript_socket*> desc_cloudresult;
 
+    OnSetParametersCallbackHandle::SharedPtr _handle;
+
 private:
 
     const char * _sub_cloudresult_name = "~/cloudresult";
@@ -54,9 +57,11 @@ private:
     int num_cloudresultclient;
     std::thread _cloudresulttcpthread;
 
-    void _cloudresult(int);
+    void _cloudresult(int);  
+
 };
 
+bool b_tcpsockershow;
 void close_cloudresulttcp(int s);
 void* send_client(void * m);
 void* received_cloudresulttcp(void * m);

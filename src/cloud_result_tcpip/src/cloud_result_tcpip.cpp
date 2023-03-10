@@ -8,12 +8,19 @@ pthread_t msg1[MAX_CLIENT];
 int num_message = 0;
 volatile int b_fuzhi;
 volatile int b_updatafinish;
+tutorial_interfaces::msg::IfAlgorhmitcloud rcvmsg;
+volatile int b_open;
 
 Cloud_Result_Tcpip::Cloud_Result_Tcpip(const rclcpp::NodeOptions & options)
 : Node("cloud_result_tcpip_node", options)
 {
     b_fuzhi=0;
     b_updatafinish=0;
+    b_open=0;
+
+    b_tcpsockershow=false;
+    this->declare_parameter("b_tcpsockershow",false);
+
     this->declare_parameter("clould_result_port", 1499);  //clould_result_port协议端口
     clould_result_port = this->get_parameter("clould_result_port").as_int(); 
 
@@ -22,6 +29,60 @@ Cloud_Result_Tcpip::Cloud_Result_Tcpip(const rclcpp::NodeOptions & options)
 
     subscription_cloud_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>(
         _sub_cloudresult_name, rclcpp::SensorDataQoS(), std::bind(&Cloud_Result_Tcpip::cloud_result_callback, this, _1));
+/*
+Json::Value sent_root;
+Json::Value header;
+Json::Value stamp;
+Json::Value lasertrackoutcloud;
+Json::Value cloud;
+Json::Value targetpointoutcloud;
+Json::Value tarpoint;
+Json::Value solderjoints;
+stamp["sec"]=1;
+stamp["nanosec"]=2;
+header["stamp"]=stamp;
+header["frame_id"]="rcvmsg.header.frame_id";
+sent_root["header"]=header;
+for(int i=0;i<3;i++)
+{
+    cloud["x"]=1.1;
+    cloud["y"]=2.2;
+    cloud["u"]=3;
+    cloud["v"]=4;
+    lasertrackoutcloud.append(cloud);
+}
+sent_root["lasertrackoutcloud"]=lasertrackoutcloud;
+for(int i=0;i<3;i++)
+{
+    tarpoint["x"]=1.1;
+    tarpoint["y"]=2.2;
+    tarpoint["u"]=3;
+    tarpoint["v"]=4;
+    tarpoint["name"]="point1";
+    targetpointoutcloud.append(tarpoint);
+}
+sent_root["targetpointoutcloud"]=targetpointoutcloud;
+sent_root["solderjoints"]=true;
+Json::StreamWriterBuilder builder;
+std::string json_file=Json::writeString(builder, sent_root);
+cerr << "message: " << json_file << endl;
+*/
+
+  _handle = this->add_on_set_parameters_callback(
+    [this](const std::vector<rclcpp::Parameter> & parameters) {
+      SetParametersResult result;
+      result.successful = true;
+      for (const auto & p : parameters) {
+        if (p.get_name() == "b_tcpsockershow") {
+            b_tcpsockershow=p.as_bool();
+            return result;
+        } 
+      }
+      return result;
+    }
+  );
+
+  RCLCPP_INFO(this->get_logger(), "Initialized successfully");
 }
 
 Cloud_Result_Tcpip::~Cloud_Result_Tcpip()
@@ -39,8 +100,7 @@ void Cloud_Result_Tcpip::cloud_result_callback(const tutorial_interfaces::msg::I
     if(b_fuzhi==0)
     {
         b_fuzhi=1;
-
-
+        rcvmsg=msg;
         b_fuzhi=0;
         b_updatafinish=1;
     } 
@@ -107,10 +167,56 @@ void * send_client(void * m) {
             cerr << date << endl;
             clouldresulttcp.Send(date, desc->id);
             */
-            if(b_updatafinish==1)
+            if(b_updatafinish==1&&b_open==1)
             {
+                Json::Value sent_root;
+                Json::Value header;
+                Json::Value stamp;
+                Json::Value lasertrackoutcloud;
+                Json::Value cloud;
+                Json::Value targetpointoutcloud;
+                Json::Value tarpoint;
+                Json::Value solderjoints;
+                stamp["sec"]=rcvmsg.header.stamp.sec;
+                stamp["nanosec"]=rcvmsg.header.stamp.nanosec;
+                header["stamp"]=stamp;
+                header["frame_id"]=rcvmsg.header.frame_id;
+                sent_root["header"]=header;
+                for(int i=0;i<rcvmsg.lasertrackoutcloud.size();i++)
+                {
+                    cloud["x"]=rcvmsg.lasertrackoutcloud[i].x;
+                    cloud["y"]=rcvmsg.lasertrackoutcloud[i].y;
+                    cloud["u"]=rcvmsg.lasertrackoutcloud[i].u;
+                    cloud["v"]=rcvmsg.lasertrackoutcloud[i].v;
+                    lasertrackoutcloud.append(cloud);
+                }
+                sent_root["lasertrackoutcloud"]=lasertrackoutcloud;
+                for(int i=0;i<rcvmsg.targetpointoutcloud.size();i++)
+                {
+                    tarpoint["x"]=rcvmsg.targetpointoutcloud[i].x;
+                    tarpoint["y"]=rcvmsg.targetpointoutcloud[i].y;
+                    tarpoint["u"]=rcvmsg.targetpointoutcloud[i].u;
+                    tarpoint["v"]=rcvmsg.targetpointoutcloud[i].v;
+                    tarpoint["name"]=rcvmsg.targetpointoutcloud[i].name;
+                    targetpointoutcloud.append(tarpoint);
+                }
+                sent_root["targetpointoutcloud"]=targetpointoutcloud;
+                sent_root["solderjoints"]=rcvmsg.solderjoints;
+                if(sent_root.size()!=0)
+                {
+                    Json::StreamWriterBuilder builder;
+                    std::string json_file=Json::writeString(builder, sent_root);
+                    if(!clouldresulttcp.is_online() && clouldresulttcp.get_last_closed_sockets() == desc->id) 
+                    {
+                        cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->id << " )"<< endl;
+                    }
+                    clouldresulttcp.Send(json_file, desc->id);
+                    if(b_tcpsockershow==true)
+                    {  
+                      cerr << "message: " << json_file << endl;
+                    }
+                }
 
-                
                 b_updatafinish=0;
             }
             b_fuzhi=0;
@@ -152,7 +258,16 @@ void* received_cloudresulttcp(void *m)
                     << "socket:  " << _p->desc_cloudresult[i]->socket  << endl
                     << "enable:  " << _p->desc_cloudresult[i]->enable_message_runtime << endl;
             #endif
-                
+                if(_p->desc_cloudresult[i]->message[0]==1)
+                {
+                    b_open=1;
+                    cerr << "open_cloudresult_tcp"<< endl;
+                }
+                else if(_p->desc_cloudresult[i]->message[0]==0)
+                {
+                    b_open=0;
+                    cerr << "close_cloudresult_tcp"<< endl;
+                }
                 clouldresulttcp.clean(i);
             }
         }

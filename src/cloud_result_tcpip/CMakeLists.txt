@@ -24,7 +24,9 @@ find_package(tutorial_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
                                    src/TCPClient.cpp 
-                                   src/TCPServer.cpp )
+                                   src/TCPServer.cpp 
+                                   src/jsoncpp.cpp
+                                   src/jsonfuction.cpp)
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
