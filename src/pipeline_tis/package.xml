@@ -19,6 +19,7 @@
   <depend>line_center_reconstruction</depend>
   <depend>image_tcpip</depend>
   <depend>image_result_tcpip</depend>
+  <depend>cloud_result_tcpip</depend>
   <depend>seam_tracking</depend>
   <depend>modbus</depend>
   <depend>gpio_raspberry</depend>
