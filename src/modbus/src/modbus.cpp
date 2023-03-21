@@ -57,6 +57,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _param_linecenter_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "line_center_reconstruction_node");
   _param_laserimagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
 
+  _pub_robpos = this->create_publisher<IfAlgorhmitrobpos>(_pub_robpos_name, rclcpp::SensorDataQoS());
+
   b_tcpsockershow=false;
   this->declare_parameter("b_tcpsockershow",false);
 
@@ -219,7 +221,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       break;
   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:    //TCP
   case E2POOM_ROBOT_MOD_GANGSHANG:    
-  case E2POOM_ROBOT_MOD_EFORT:     
+  case E2POOM_ROBOT_MOD_EFORT:    
+  case E2POOM_ROBOT_MOD_STEP: 
       num_client=0;
       _jsontcpthread = std::thread(&Modbus::_json, this, robot_port);
       b_jsontcpthread = true;
@@ -380,6 +383,7 @@ Modbus::~Modbus()
     _param_linecenter.reset();
     _param_linecenter_set.reset();
     _param_linecenter_get.reset();
+    _pub_robpos.reset();
 //   _handle.reset();
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -783,6 +787,47 @@ void Modbus::_modbus(int port)
                 {
                   mb_mapping->tab_registers[0x11]=0;
                 }
+              }
+              if (query[7] == 0x06||query[7] == 0x10||query[7] == 0x17)//写了状态寄存器
+              {
+                  auto ptr = std::make_unique<IfAlgorhmitrobpos>();
+                  static int frame = 0;
+                  uint16_t u16_data[2];
+                  int32_t *i32_data=(int32_t*)u16_data;
+
+                  ptr->header.stamp = this->now();
+                  ptr->header.frame_id = std::to_string(frame++);
+                  u16_data[0]=mb_mapping->tab_registers[0x111];
+                  u16_data[1]=mb_mapping->tab_registers[0x112];
+                  ptr->posx=*i32_data/1000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x113];
+                  u16_data[1]=mb_mapping->tab_registers[0x114];
+                  ptr->posy=*i32_data/1000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x115];
+                  u16_data[1]=mb_mapping->tab_registers[0x116];
+                  ptr->posz=*i32_data/1000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x117];
+                  u16_data[1]=mb_mapping->tab_registers[0x118];
+                  ptr->posrx=*i32_data/10000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x119];
+                  u16_data[1]=mb_mapping->tab_registers[0x11a];
+                  ptr->posry=*i32_data/10000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x11b];
+                  u16_data[1]=mb_mapping->tab_registers[0x11c];
+                  ptr->posrz=*i32_data/10000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x11d];
+                  u16_data[1]=mb_mapping->tab_registers[0x11e];
+                  ptr->posout1=*i32_data;
+                  u16_data[0]=mb_mapping->tab_registers[0x11f];
+                  u16_data[1]=mb_mapping->tab_registers[0x120];
+                  ptr->posout2=*i32_data;
+                  u16_data[0]=mb_mapping->tab_registers[0x121];
+                  u16_data[1]=mb_mapping->tab_registers[0x122];
+                  ptr->posout3=*i32_data;
+                  ptr->toolid=mb_mapping->tab_registers[0x123];
+                  ptr->tcpid=mb_mapping->tab_registers[0x124];
+                  ptr->usertcpid=mb_mapping->tab_registers[0x125];
+                  _pub_robpos->publish(std::move(ptr));
               }
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
@@ -2569,6 +2614,29 @@ void* received(void *m)
                         jsontcp.Send((char*)&sendbuffer[0], sendbuffer.size(),_p->desc[i]->id);
                     }
                     _p->num_client++;
+                  }
+                  break;
+                  case E2POOM_ROBOT_MOD_STEP:
+                  {
+                    if(_p->b_tcpsockershow==true)
+                    {  
+                      std::string s_data;
+                      for(int t=0;t<_p->desc[i]->message.size();t++)
+                      {
+                          std::string str;
+                          u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
+                          str=std::to_string(u8_data)+" ";
+                          s_data=s_data+str;
+                      }
+                      cerr << "id:      " << _p->desc[i]->id      << endl
+                          << "ip:      " << _p->desc[i]->ip      << endl
+                          << "messagesize: " << _p->desc[i]->message.size() << endl 
+                          << "message: " << s_data << endl                          
+                          << "socket:  " << _p->desc[i]->socket  << endl
+                          << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
+                    }
+                    std::vector<u_int8_t> sendbuffer;
+                    xmlNodePtr phone_node = NULL;
                   }
                   break;
                   default:

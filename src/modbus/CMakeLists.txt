@@ -20,7 +20,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus)
+find_package(tutorial_interfaces REQUIRED)
+pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus libxml2)
 
 add_library(modbus SHARED src/modbus.cpp 
                           src/jsoncpp.cpp 
@@ -51,7 +52,7 @@ add_library(modbus SHARED src/modbus.cpp
 
 target_include_directories(modbus PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(modbus rclcpp rclcpp_components)
+ament_target_dependencies(modbus rclcpp rclcpp_components tutorial_interfaces)
 
 target_link_libraries(modbus PkgConfig::MODBUS)
 

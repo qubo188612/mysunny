@@ -65,6 +65,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libgstreamer-plugins-base1.0-dev \
     libglib2.0-dev \
     libgirepository1.0-dev \
+    libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 FROM dev AS build

@@ -46,6 +46,7 @@
 #define E2POOM_ROBOT_MOD_MOKA               6        //藦卡机器人
 #define E2POOM_ROBOT_MOD_ZEGE_2             7        //智哥机器人通信协议2
 #define E2POOM_ROBOT_MOD_HUACHENG           8        //华成工控创想
+#define E2POOM_ROBOT_MOD_STEP               9        //新时达
 
 #define E2POOM_ROBOT_PORT_MIN               1503     //机器人通信最小端口
 #define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口

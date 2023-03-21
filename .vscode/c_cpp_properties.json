@@ -12,6 +12,7 @@
                 "/usr/lib/x86_64-linux-gnu/glib-2.0/include",
                 "/home/qubo/hikvision-darknet-demo",
                 "/home/qubo/myRos2test/install/tutorial_interfaces/include",
+                "/usr/include/libxml2",
                 "${workspaceFolder}/src/image_tcpip/include"
             ],
             "defines": [],

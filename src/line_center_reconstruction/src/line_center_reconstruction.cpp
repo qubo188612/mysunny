@@ -377,6 +377,8 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x01=%d",rc);
     }
 
+  //RCLCPP_INFO(this->get_logger(), "msadd: %d", msadd);
+
     if(msg->solderjoints==true)
     {
       tab_reg[0]=0xff;

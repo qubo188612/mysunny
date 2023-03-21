@@ -1095,7 +1095,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         goto fuzhu;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&headline,&headlinehough);
-    if(step==20)
+    if(step==20)////////////////////////yiwen
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
@@ -1113,6 +1113,10 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
         }
         Myhalcv2::MyPoint16to32(headline.st,&linepoint32ST);
         Myhalcv2::MyPoint16to32(headline.ed,&linepoint32ED);
+        linepoint32ST.x=(linepoint32ST.x>>2);
+        linepoint32ST.y=(linepoint32ST.y>>2);
+        linepoint32ED.x=(linepoint32ED.x>>2);
+        linepoint32ED.y=(linepoint32ED.y>>2);
         Myhalcv2::MyLine3col(&imageGasupain,linepoint32ST,linepoint32ED,255,0,0,Myhalcv2::CV_LINE_8LT,1);
         Myhalcv2::MatToCvMat(imageGasupain,&cvimgIn);
         return 0;

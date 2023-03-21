@@ -26,12 +26,17 @@
 #include <TCP/TCPServer2.h>
 #include <modbus.h>
 #include "fileout/E2proomData.h"
+#include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 #define PIC_IMAGE_HEIGHT 1536
 #define PIC_IMAGE_WIDTH  1024
 
 namespace modbus
 {
+
+using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 
 #define SERVER_REGEDIST_NUM               400
 
@@ -494,6 +499,9 @@ private:
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
+
+  const char * _pub_robpos_name = "~/input_robpos";
+  rclcpp::Publisher<IfAlgorhmitrobpos>::SharedPtr _pub_robpos;
 
   OnSetParametersCallbackHandle::SharedPtr _handle;
 
