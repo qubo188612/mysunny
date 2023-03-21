@@ -2636,7 +2636,8 @@ void* received(void *m)
                           << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                     }
                     std::vector<u_int8_t> sendbuffer;
-                    xmlNodePtr phone_node = NULL;
+                    xmlNodePtr xmlRecev = NULL;
+                    
                   }
                   break;
                   default:

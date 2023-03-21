@@ -21,7 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
-pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus libxml2)
+pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus libxml-2.0)
 
 add_library(modbus SHARED src/modbus.cpp 
                           src/jsoncpp.cpp 
