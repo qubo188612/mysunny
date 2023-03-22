@@ -28,6 +28,12 @@
 // #include <climits>
 #include <memory>
 #include <set>
+
+#include <sstream>
+#include <iomanip>
+#include <iostream>
+#include <string>
+
 // #include <fstream>
 // #include <string>
 // #include <utility>
@@ -44,6 +50,12 @@ using rcl_interfaces::msg::SetParametersResult;
 //tcp sock
 TCPServer jsontcp;
 TCPServer2 ftptcp;
+
+std::string to_string_with_precision(float val, int fixed)
+{
+    auto str = std::to_string(val);
+    return str.substr(0, str.find(".") + fixed + 1);
+}
 
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
@@ -2620,24 +2632,250 @@ void* received(void *m)
                   {
                     if(_p->b_tcpsockershow==true)
                     {  
-                      std::string s_data;
-                      for(int t=0;t<_p->desc[i]->message.size();t++)
-                      {
-                          std::string str;
-                          u_int8_t u8_data=(u_int8_t)_p->desc[i]->message[t];
-                          str=std::to_string(u8_data)+" ";
-                          s_data=s_data+str;
-                      }
-                      cerr << "id:      " << _p->desc[i]->id      << endl
+                      std::vector<char> vec=_p->desc[i]->message;
+                      vec.push_back('\0');
+                      std::string str(vec.begin(), vec.end());
+
+                      cerr << "id:     " << _p->desc[i]->id      << endl
                           << "ip:      " << _p->desc[i]->ip      << endl
-                          << "messagesize: " << _p->desc[i]->message.size() << endl 
-                          << "message: " << s_data << endl                          
+                          << "message: " << str << endl                          
                           << "socket:  " << _p->desc[i]->socket  << endl
                           << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                     }
                     std::vector<u_int8_t> sendbuffer;
-                    xmlNodePtr xmlRecev = NULL;
-                    
+                    if(_p->desc[i]->message.size()>0)
+                    {
+                      bool b_cansend=true;//是否可以发送
+                      xmlNodePtr sendcur=NULL;//xml发送节点
+                      xmlDocPtr doc=NULL;   //xml整个文档的树形结构
+                      xmlNodePtr cur=NULL;  //xml节点
+                      char *u8_data=(char*)&(_p->desc[i]->message[0]);
+                      int32_t rcvsize=_p->desc[i]->message.size();
+                      xmlKeepBlanksDefault(0);
+                      doc=xmlParseMemory(u8_data,rcvsize);  //字符串转xml
+                      if(doc!=NULL) 
+                      {  
+                        cur = xmlDocGetRootElement(doc);//获取xml根节点
+                        if(cur != NULL) 
+                        {
+                          if(xmlStrcmp(cur->name, (const xmlChar*)"cmd")==0)
+                          {
+                            sendcur=xmlNewNode(NULL, (xmlChar*)"rep");//创建xml根节点
+                            if(sendcur==NULL)
+                            {
+                              b_cansend=false;
+                            }
+                            xmlChar *tsp = xmlGetProp(cur,(xmlChar*)"tsp"); //获得节点的属性                      
+                            xmlChar *rtsp = xmlGetProp(cur,(xmlChar*)"rtsp"); //获得节点的属性                      
+                            xmlChar *send = xmlGetProp(cur,(xmlChar*)"send"); //获得节点的属性                      
+                            xmlChar *recv = xmlGetProp(cur,(xmlChar*)"recv"); //获得节点的属性                      
+                            xmlNodePtr childcur = NULL;
+                            xmlChar *cmd=NULL;     
+
+                            if(xmlStrcmp(send,(xmlChar*)"Robot")==0&&xmlStrcmp(recv,(xmlChar*)"Sensor")==0)
+                            {
+                              int datatime=(int)_p->mb_mapping->tab_registers[0x01];
+                              int i_tsp=atoi((char*)tsp)+datatime;
+                              std::string s_tsp=std::to_string(i_tsp);
+
+                              //添加属性
+                              xmlNewProp(sendcur,(xmlChar*)"tsp",(xmlChar*)(s_tsp.c_str()));//tsp此属性包含传感器发送命令的当前发送时间
+                              xmlNewProp(sendcur,(xmlChar*)"rtsp",(xmlChar*)tsp);//rtsp此属性包含从传感器接受到的最后回应
+                              xmlNewProp(sendcur,(xmlChar*)"send",(xmlChar*)"Sensor");
+                              xmlNewProp(sendcur,(xmlChar*)"recv",(xmlChar*)"Robot1");
+
+                              childcur = cur->xmlChildrenNode;
+                              if(childcur!=NULL)
+                              {
+                                if(xmlStrcmp(childcur->name, (const xmlChar*)"setPar")==0)//设置参数
+                                {
+                                  int task;
+                                  cmd=xmlGetProp(childcur,(xmlChar*)"p1");//任务号
+                                  task=atoi((char*)cmd);
+                                  _p->mb_mapping->tab_registers[0x102]=task;
+                                  static int oldtasknum=INT_MAX;
+                                  if(oldtasknum!=_p->mb_mapping->tab_registers[0x102])
+                                  {
+                                    oldtasknum=_p->mb_mapping->tab_registers[0x102];
+                                    _p->_task_numberset(oldtasknum);
+                                  }
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"setPar",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed");
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"getPar")==0)//获取参数
+                                {
+                                  int task=_p->mb_mapping->tab_registers[0x102];
+                                  std::string c_task=to_string(task);
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"getPar",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed");
+                                  xmlNodePtr sendchildcur2=xmlNewChild(sendchildcur,NULL,(xmlChar*)"apm",NULL);
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"p1",(xmlChar*)(c_task.c_str()));
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"camOn")==0)//相机打开
+                                {
+                                  _p->_gpio_laser(true);
+                                  _p->_camera_power(true);
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"camOn",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed"); 
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"camEn")==0)//相机启用
+                                {
+                                  _p->mb_mapping->tab_registers[0x101]=0xff; 
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"camEn",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed"); 
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"camDis")==0)//相机停止
+                                {
+                                  _p->mb_mapping->tab_registers[0x101]=0; 
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"camDis",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed"); 
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"camOff")==0)//相机关闭
+                                {
+                                  _p->_gpio_laser(false);
+                                  _p->_camera_power(false);
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"camOff",NULL);
+                                  xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                  xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed"); 
+                                }
+                                else if(xmlStrcmp(childcur->name, (const xmlChar*)"getVal")==0)//获取位置
+                                {
+                                  cmd=xmlGetProp(childcur,(xmlChar*)"num");
+                                  xmlNodePtr sendchildcur=xmlNewChild(sendcur,NULL,(xmlChar*)"getVal",NULL);
+                                  if(_p->mb_mapping->tab_registers[0x02]==0)//检测失败
+                                  {
+                                    xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"-1");
+                                    xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"failed");
+                                  }
+                                  else
+                                  {
+                                    xmlNewProp(sendchildcur,(xmlChar*)"res",(xmlChar*)"1");
+                                    xmlNewProp(sendchildcur,(xmlChar*)"error",(xmlChar*)"succeed");
+                                    if(_p->b_resultreset==true)
+                                    {
+                                      _p->mb_mapping->tab_registers[0x02]=0;
+                                    }
+                                  }
+                                  float X=(int)((int16_t)_p->mb_mapping->tab_registers[0x70])/100.0;
+                                  float Y=(int)((int16_t)_p->mb_mapping->tab_registers[0x03])/100.0;
+                                  float Z=(int)((int16_t)_p->mb_mapping->tab_registers[0x04])/100.0;
+                                  float TA=(int)((int16_t)_p->mb_mapping->tab_registers[0x71])/1000.0;
+                                  float TB=(int)((int16_t)_p->mb_mapping->tab_registers[0x05])/1000.0;
+                                  float TC=(int)((int16_t)_p->mb_mapping->tab_registers[0x06])/1000.0;
+                                  float Y1=(int)((int16_t)_p->mb_mapping->tab_registers[0x50])/100.0;
+                                  float Z1=(int)((int16_t)_p->mb_mapping->tab_registers[0x51])/100.0;
+                                  float Y2=(int)((int16_t)_p->mb_mapping->tab_registers[0x52])/100.0;
+                                  float Z2=(int)((int16_t)_p->mb_mapping->tab_registers[0x53])/100.0;
+                                  float Y3=(int)((int16_t)_p->mb_mapping->tab_registers[0x54])/100.0;
+                                  float Z3=(int)((int16_t)_p->mb_mapping->tab_registers[0x55])/100.0;
+                                  int task=_p->mb_mapping->tab_registers[0x102];
+
+                                  xmlNodePtr sendchildcur2=xmlNewChild(sendchildcur,NULL,(xmlChar*)"opt",NULL);
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"x",(xmlChar*)(to_string_with_precision(X,2).c_str()));
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"y",(xmlChar*)(to_string_with_precision(Y,2).c_str()));
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"z",(xmlChar*)(to_string_with_precision(Z,2).c_str()));
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"a",(xmlChar*)(to_string_with_precision(TA,2).c_str()));
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"b",(xmlChar*)(to_string_with_precision(TB,2).c_str()));
+                                  xmlNewProp(sendchildcur2,(xmlChar*)"c",(xmlChar*)(to_string_with_precision(TC,2).c_str()));
+                                  xmlNodePtr sendchildcur3=xmlNewChild(sendchildcur,NULL,(xmlChar*)"bp",NULL);
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x1",(xmlChar*)(to_string_with_precision(X,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y1",(xmlChar*)(to_string_with_precision(Y1,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z1",(xmlChar*)(to_string_with_precision(Z1,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x2",(xmlChar*)(to_string_with_precision(X,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y2",(xmlChar*)(to_string_with_precision(Y2,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z2",(xmlChar*)(to_string_with_precision(Z2,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x3",(xmlChar*)(to_string_with_precision(X,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y3",(xmlChar*)(to_string_with_precision(Y3,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z3",(xmlChar*)(to_string_with_precision(Z3,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x4",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y4",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z4",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x5",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y5",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z5",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x6",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y6",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z6",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x7",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y7",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z7",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"x8",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"y8",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNewProp(sendchildcur3,(xmlChar*)"z8",(xmlChar*)(to_string_with_precision(0,2).c_str()));
+                                  xmlNodePtr sendchildcur4=xmlNewChild(sendchildcur,NULL,(xmlChar*)"go",NULL);
+                                  xmlNewProp(sendchildcur4,(xmlChar*)"ar",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur4,(xmlChar*)"gp",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur4,(xmlChar*)"ny",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur4,(xmlChar*)"ms",(xmlChar*)"0");
+                                  xmlNodePtr sendchildcur5=xmlNewChild(sendchildcur,NULL,(xmlChar*)"apm",NULL);
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p1",(xmlChar*)(to_string(task).c_str()));
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p2",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p3",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p4",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p5",(xmlChar*)"0");
+                                  xmlNewProp(sendchildcur5,(xmlChar*)"p6",(xmlChar*)"0");
+                                }
+                              }
+                            }
+                            if(_p->b_tcpsockershow==true)
+                            {
+                              cerr << "name:   "<< cur->name << endl
+                                  << "tsp:   "<< tsp << endl
+                                  << "rtsp:   "<< rtsp << endl
+                                  << "send:   "<< send << endl
+                                  << "recv:   "<< recv << endl  
+                                  << "childname:   "<< childcur->name << endl
+                                  << "cmd:   "<< cmd << endl;  
+                            }
+                            if(b_cansend==true)
+                            {
+                              xmlChar *doc_txt_ptr;
+                              char *sendbuffer;
+                              int size;
+                              xmlBuffer * bufferPtr = xmlBufferCreate();
+                              xmlNodeDump(bufferPtr,sendcur->doc,sendcur,0,0);
+                              sendbuffer=(char*)bufferPtr->content;
+                              size=std::strlen(sendbuffer)+1;
+                              if(size>1)
+                              {
+                                  jsontcp.Send((char*)&sendbuffer[0], size,_p->desc[i]->id);
+                              }
+                              xmlBufferFree(bufferPtr);
+                              _p->num_client++;
+                            }
+                            if(tsp != NULL)
+                            {
+                              xmlFree(tsp);
+                            }
+                            if(rtsp != NULL)
+                            {
+                              xmlFree(rtsp);
+                            }
+                            if(send != NULL)
+                            {
+                              xmlFree(send);
+                            } 
+                            if(recv != NULL)
+                            {
+                              xmlFree(recv);
+                            }
+                            if(cmd != NULL)
+                            {
+                              xmlFree(cmd);
+                            }
+                          }
+                        }  
+                      }
+                      if(doc != NULL)
+                      {
+                        xmlFreeDoc(doc);
+                      }
+                    }
                   }
                   break;
                   default:
