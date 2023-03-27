@@ -13,6 +13,7 @@
                 "/home/qubo/hikvision-darknet-demo",
                 "/home/qubo/myRos2test/install/tutorial_interfaces/include",
                 "/usr/include/libxml2",
+                "/usr/include/eigen3",
                 "${workspaceFolder}/src/image_tcpip/include"
             ],
             "defines": [],

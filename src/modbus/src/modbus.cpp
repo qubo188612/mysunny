@@ -41,6 +41,7 @@
 // #include <iostream>
 
 static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
+static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
 
 long ZEGEstarttimems=0;
 
@@ -74,8 +75,9 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   b_tcpsockershow=false;
   this->declare_parameter("b_tcpsockershow",false);
 
-  b_tcpforwardmappingshow=false;
   this->declare_parameter("b_tcpforwardmappingshow",false);
+
+  this->declare_parameter("printPdatanum",1000);
 
   b_resultreset=false;
   this->declare_parameter("b_resultreset",false);
@@ -93,6 +95,14 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
+  
+  this->declare_parameter("P_data_En", (u_int16_t)e2proomdata.P_data_En);
+  this->declare_parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture);
+  this->declare_parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode);
+
+  robot_mapping->tab_registers[P_DATA_EN_REG_ADD]=(u_int16_t)e2proomdata.P_data_En;
+  robot_mapping->tab_registers[P_DATA_CAL_POSTURE_REG_ADD]=(u_int16_t)e2proomdata.P_data_cal_posture;
+  robot_mapping->tab_registers[P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD]=(u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode;
   
   _param_linecenter_get->wait_for_service();
   auto linecenter_future = _param_linecenter_get->get_parameters(
@@ -173,6 +183,11 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     _task_parameter(i,parameterport_mapping->tab_registers[i]);
   }
 
+  for(int i=0;i<ROBOT_SET_REGEDIST_NUM;i++)
+  {
+    oldrobot[i]=INT_MAX;
+  }
+
   ctx_parameterport = modbus_new_tcp(NULL, parameterport);
   if (!ctx_parameterport) {
     RCLCPP_ERROR(this->get_logger(), "Failed to create modbusparameter context.");
@@ -187,8 +202,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
     rclcpp::shutdown();
     return;
   }
+
+  close_pstate();
+
   mb_mapping->tab_registers[1] = 0xff;
   mb_mapping->tab_registers[0x102] = (u_int16_t)e2proomdata.task_num;
+  mb_mapping->tab_registers[0x12a] = 1000;//跟踪p变量
   _task_numberset(e2proomdata.task_num);
   RCLCPP_INFO(this->get_logger(), "task=%d",e2proomdata.task_num);
 
@@ -256,8 +275,41 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
             b_resultreset=p.as_bool();
             return result;
         }
+        else if (p.get_name() == "printPdatanum") {
+            bool b_findID=false;
+            int printPdatanum=p.as_int();
+            for(int i=0;i<e2proomdata.P_data.size();i++)
+            {
+              if(e2proomdata.P_data[i].pID==printPdatanum)
+              {
+                b_findID=true;
+                for(int j=0;j<e2proomdata.P_data[i].pos.size();j++)
+                {
+                  RCLCPP_INFO(this->get_logger(), "P%d:x=%0.3f",j,j<e2proomdata.P_data[i].pos[j].x);
+                  RCLCPP_INFO(this->get_logger(), "P%d:y=%0.3f",j,j<e2proomdata.P_data[i].pos[j].y);
+                  RCLCPP_INFO(this->get_logger(), "P%d:z=%0.3f",j,j<e2proomdata.P_data[i].pos[j].z);
+                  RCLCPP_INFO(this->get_logger(), "P%d:rx=%0.3f",j,j<e2proomdata.P_data[i].pos[j].rx);
+                  RCLCPP_INFO(this->get_logger(), "P%d:ry=%0.3f",j,j<e2proomdata.P_data[i].pos[j].ry);
+                  RCLCPP_INFO(this->get_logger(), "P%d:rz=%0.3f",j,j<e2proomdata.P_data[i].pos[j].rz);
+                  RCLCPP_INFO(this->get_logger(), "P%d:out1=%d",j,j<e2proomdata.P_data[i].pos[j].out1);
+                  RCLCPP_INFO(this->get_logger(), "P%d:out2=%d",j,j<e2proomdata.P_data[i].pos[j].out2);
+                  RCLCPP_INFO(this->get_logger(), "P%d:out3=%d",j,j<e2proomdata.P_data[i].pos[j].out3);
+                  RCLCPP_INFO(this->get_logger(), "P%d:tool=%d",j,j<e2proomdata.P_data[i].pos[j].tool);
+                  RCLCPP_INFO(this->get_logger(), "P%d:tcp=%d",j,j<e2proomdata.P_data[i].pos[j].tcp);
+                  RCLCPP_INFO(this->get_logger(), "P%d:usertcp=%d",j,j<e2proomdata.P_data[i].pos[j].usertcp);
+                  RCLCPP_INFO(this->get_logger(), "P%d:uy=%d",j,j<e2proomdata.P_data[i].pos[j].uy);
+                  RCLCPP_INFO(this->get_logger(), "P%d:vz=%d",j,j<e2proomdata.P_data[i].pos[j].vz);
+                }
+              }
+            }
+            if(b_findID==false)
+            {
+              RCLCPP_INFO(this->get_logger(), "P变量当前没有为%d的点",printPdatanum);
+            }
+            return result;
+        }
         else if (p.get_name() == "b_tcpforwardmappingshow") {
-            b_tcpforwardmappingshow=p.as_bool();
+            bool b_tcpforwardmappingshow=p.as_bool();
             if(b_tcpforwardmappingshow==TRUE)
             {
               b_tcpforwardmappingshow=FALSE;
@@ -367,7 +419,6 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
                 break;
               }
             }
-
             return result;
         } 
       }
@@ -651,9 +702,69 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
       else
         _param_linecenter_set->set_parameters({rclcpp::Parameter("reverse_z", false)});
     break;
+    case P_DATA_EN_REG_ADD:
+      e2proomdata.P_data_En=num;
+      this->set_parameters({rclcpp::Parameter("P_data_En", (u_int16_t)e2proomdata.P_data_En)});
+    break;
+    case P_DATA_CAL_POSTURE_REG_ADD:
+      e2proomdata.P_data_cal_posture=(CAL_POSTURE)num;
+      this->set_parameters({rclcpp::Parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
+    break;
+    case P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD:
+      e2proomdata.P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)num;
+      this->set_parameters({rclcpp::Parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
+    break;
     default:
     break;
   }
+}
+
+void Modbus::close_pstate()
+{
+  b_calibration=false;
+  b_toolcalibration=false;
+  b_movedif=false;
+  b_posevalue=false;
+  b_circleweld=false;
+  b_linemove=false;
+  b_searchpoint=false;
+}
+
+void Modbus::getProb_pinfo(rob_pinfo *pos)
+{
+  uint16_t u16_data[2];
+  int32_t *i32_data=(int32_t*)u16_data;
+
+  u16_data[0]=mb_mapping->tab_registers[0x12b];
+  u16_data[1]=mb_mapping->tab_registers[0x12c];
+  (*pos).x=*i32_data/1000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x12d];
+  u16_data[1]=mb_mapping->tab_registers[0x12e];
+  (*pos).y=*i32_data/1000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x12f];
+  u16_data[1]=mb_mapping->tab_registers[0x130];
+  (*pos).z=*i32_data/1000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x131];
+  u16_data[1]=mb_mapping->tab_registers[0x132];
+  (*pos).rx=*i32_data/10000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x133];
+  u16_data[1]=mb_mapping->tab_registers[0x134];
+  (*pos).ry=*i32_data/10000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x135];
+  u16_data[1]=mb_mapping->tab_registers[0x136];
+  (*pos).rz=*i32_data/10000.0;
+  u16_data[0]=mb_mapping->tab_registers[0x137];
+  u16_data[1]=mb_mapping->tab_registers[0x138];
+  (*pos).out1=*i32_data;
+  u16_data[0]=mb_mapping->tab_registers[0x139];
+  u16_data[1]=mb_mapping->tab_registers[0x13a];
+  (*pos).out2=*i32_data;
+  u16_data[0]=mb_mapping->tab_registers[0x13b];
+  u16_data[1]=mb_mapping->tab_registers[0x13c];
+  (*pos).out3=*i32_data;
+  (*pos).tool=mb_mapping->tab_registers[0x13d];
+  (*pos).tcp=mb_mapping->tab_registers[0x13e];
+  (*pos).usertcp=mb_mapping->tab_registers[0x13f];
 }
 
 /**
@@ -779,6 +890,7 @@ void Modbus::_modbus(int port)
           switch(e2proomdata.robot_mod)
           {
             case E2POOM_ROBOT_MOD_NULL:
+            {
               if(b_resultreset==true)
               {
                 if (query[7] == 0x03)
@@ -841,14 +953,205 @@ void Modbus::_modbus(int port)
                   ptr->usertcpid=mb_mapping->tab_registers[0x125];
                   _pub_robpos->publish(std::move(ptr));
               }
+              /******************************/
+              //P变量
+              bool b_Pchange=false;//是否写了P变量
+              if (query[7] == 0x06)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                if(stadd==0x12a)//写了状态寄存器
+                {
+                  b_Pchange=true;
+                }
+              }
+              else if(query[7] == 0x10)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
+                {
+                  b_Pchange=true;
+                }
+              }
+              else if(query[7] == 0x17)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
+                uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
+                if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
+                {
+                  b_Pchange=true;
+                }
+              }
+              if(b_Pchange==true)//写了P变量
+              {
+                if(mb_mapping->tab_registers[0x12a]==0)//开启标定
+                {
+                  close_pstate();
+                  b_calibration=true;
+
+                  for(int i=0;i<e2proomdata.P_data.size();i++)
+                  {
+                    if(e2proomdata.P_data[i].pID==0)//找到P0点
+                    {
+                      pIDnum_calibration=i;
+                      e2proomdata.P_data[pIDnum_calibration].pos.clear();
+                    }
+                  }
+                }
+                else if(mb_mapping->tab_registers[0x12a]==1)//工具坐标矩阵
+                {
+                  close_pstate();
+                  b_toolcalibration=true;
+                }
+                else if(mb_mapping->tab_registers[0x12a]==2)//偏移量
+                {
+                  close_pstate();
+                  b_movedif=true;
+                }
+                else if(mb_mapping->tab_registers[0x12a]==3)//姿态值
+                {
+                  close_pstate();
+                  b_posevalue=true;
+                }
+                else if(mb_mapping->tab_registers[0x12a]==11)//圆孔跟踪
+                {
+                  close_pstate();
+                  b_circleweld=true;
+                }
+                else if(mb_mapping->tab_registers[0x12a]==1000)//跟踪p变量
+                {
+                  close_pstate();
+                }
+                else if(mb_mapping->tab_registers[0x12a]==1001)//直线走点
+                {
+                  close_pstate();
+                  b_linemove=true;
+                }
+                else if(mb_mapping->tab_registers[0x12a]==1002)//单点寻位
+                {
+                  close_pstate();
+                  b_searchpoint=true;
+                }
+                else//切换了其他p变量
+                {
+                  close_pstate();
+                }
+              }
+              else
+              {
+                /******************************/
+                //P变量点位内容
+                bool b_Pinfochange=false;//是否写了P变量点位内容
+                if (query[7] == 0x06)//写了状态寄存器
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  if(stadd>=0x12b&&stadd<=0x13f)//写了状态寄存器
+                  {
+                    b_Pinfochange=true;
+                  }
+                }
+                else if(query[7] == 0x10)//写了状态寄存器
+                {
+                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                  if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
+                  {
+                    b_Pinfochange=true;
+                  }
+                }
+                else if(query[7] == 0x17)//写了状态寄存器
+                {
+                  uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
+                  uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
+                  if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
+                  {
+                    b_Pinfochange=true;
+                  }
+                }
+                if(b_Pinfochange==true)//写了P变量点位内容
+                {
+                  if(b_calibration==true)
+                  {
+                    rob_pinfo pos;
+                    getProb_pinfo(&pos);
+                    e2proomdata.P_data[pIDnum_calibration].pos.push_back(pos);
+                    e2proomdata.write_P_data_para();
+                    if(e2proomdata.P_data[pIDnum_calibration].pos.size()>=4)//大于等于4个点后做手眼标定
+                    {
+                      
+                    }
+                  }
+                  else if(b_toolcalibration==true)
+                  {
+
+                  }
+                  else if(b_movedif==true)
+                  {
+
+                  }
+                  else if(b_posevalue==true)
+                  {
+
+                  }
+                  else if(b_circleweld==true)
+                  {
+
+                  }
+                  else if(b_linemove==true)
+                  {
+
+                  }
+                  else if(b_searchpoint==true)
+                  {
+
+                  }
+                  else
+                  {
+                    uint16_t p=mb_mapping->tab_registers[0x12a];
+                    if(p!=1000)//非跟踪p变量,添加其他P变量点
+                    {
+                      bool b_find=false;
+                      int pID;
+                      for(int i=0;i<e2proomdata.P_data.size();i++)
+                      {
+                        if(e2proomdata.P_data[i].pID==(int)p)
+                        {
+                          pID=i;
+                          b_find=true;
+                          break;
+                        }
+                      }
+                      if(b_find==true)
+                      {
+                        e2proomdata.P_data[pID].pos.resize(1);
+                        getProb_pinfo(&e2proomdata.P_data[pID].pos[0]);
+                      }
+                      else
+                      {
+                        rob_group singl;
+                        singl.pID=p;
+                        singl.pos.resize(1);
+                        getProb_pinfo(&singl.pos[0]);
+                        e2proomdata.P_data.push_back(singl);
+                        e2proomdata.write_P_data_para();
+                      }
+                    }
+                  }
+                }
+                /********************************/
+              }
+            }
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
+            {
               for(int i=0;i<SERVER_REGEDIST_NUM;i++)
               {
                 mb_forwardmapping->tab_registers[i]=mb_mapping->tab_registers[i];
               }
+            }
             break;
             case E2POOM_ROBOT_MOD_MOKA_NABOTE:
+            {
               mb_forwardmapping->tab_registers[0x0000]=mb_mapping->tab_registers[0x102];
               if(mb_mapping->tab_registers[0x02]==0xff)
                   mb_forwardmapping->tab_registers[0x0010]=1;
@@ -880,8 +1183,10 @@ void Modbus::_modbus(int port)
               mb_forwardmapping->tab_registers[0x0014]=mb_mapping->tab_registers[0x71];
               mb_forwardmapping->tab_registers[0x0015]=mb_mapping->tab_registers[0x05];
               mb_forwardmapping->tab_registers[0x0016]=mb_mapping->tab_registers[0x06];
+            }
             break; 
             case E2POOM_ROBOT_MOD_MOKA:
+            {
               for(int i=0;i<5;i++)
               {
                 mb_forwardmapping->tab_registers[i]=mb_mapping->tab_registers[i];
@@ -897,8 +1202,10 @@ void Modbus::_modbus(int port)
                 mb_forwardmapping->tab_registers[0x011]=(uint16_t)-1;
               }
               mb_forwardmapping->tab_registers[0x102]=mb_mapping->tab_registers[0x102];  
+            }
             break;
             case E2POOM_ROBOT_MOD_ZEGE_2:
+            {
               mb_forwardmapping->tab_registers[0x000]=6;
               for(int i=1;i<5;i++)
               {
@@ -943,9 +1250,10 @@ void Modbus::_modbus(int port)
               {
                 mb_forwardmapping->tab_registers[0x00b]=(uint16_t)-1;
               }
+            }
             break;
             case E2POOM_ROBOT_MOD_HUACHENG:
-              {
+            {
                 static int learnzeropoint=0;
                 if(mb_forwardmapping->tab_registers[0x007]!=0xff)
                 {
@@ -984,7 +1292,7 @@ void Modbus::_modbus(int port)
                 else
                   mb_forwardmapping->tab_registers[0x005]=0xff;
                 mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x102];
-              }
+            }
             break;
             default:
             break;
@@ -1096,7 +1404,6 @@ void Modbus::_modbusrobotset(int port)
             RCLCPP_ERROR(this->get_logger(), "Failed to reply.");
             continue;
           }
-          static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
           u_int8_t u8_temp=0;
           for(int i=0;i<ROBOT_SET_REGEDIST_NUM;i++)
           {
@@ -1110,13 +1417,8 @@ void Modbus::_modbusrobotset(int port)
           if(u8_temp==1)
           {
             e2proomdata.write_robot_para();
+            e2proomdata.write_P_data_set_para();
           }
-          
-         /*
-          e2proomdata.robot_mod=(Uint16)robot_mapping->tab_registers[0];
-          e2proomdata.robot_port=(Uint16)robot_mapping->tab_registers[1];
-          e2proomdata.write_robot_para();
-        */
         }
       }
     }

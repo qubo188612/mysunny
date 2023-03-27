@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
+#include "fileout/calibration.h"
 
 
 #define PIC_IMAGE_HEIGHT 1536
@@ -36,6 +37,16 @@
 #define E2POOM_ZEROPOINT_X_USE              0
 #define E2POOM_ZEROPOINT_Y_USE              0
 #define E2POOM_ZEROPOINT_Z_USE              0
+
+//P变量模式设置
+#define E2POOM_P_DATA_SET_SAVEBUFF                      8
+#define E2POOM_P_DATA_SET_SYSPATH_MOTO                  "./SAVE/E2P_P_DATA_SET_DLG.bsd"
+#define E2POOM_P_DATA_EN_MIN                            0
+#define E2POOM_P_DATA_EN_USE                            0
+#define E2POOM_P_DATA_EN_MAX                            1
+
+//P变量设置
+#define E2POOM_P_DATA_SYSPATH_MOTO          "./SAVE/E2P_P_DATA_DLG.bsd"
 
 #define E2POOM_ROBOT_MOD_NULL               0        //无机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
@@ -845,6 +856,35 @@
 #define E2POOM_ALG108_LASERIMAGEPOS_STC_SIGMA_USE                   500
 #define E2POOM_ALG108_LASERIMAGEPOS_STC_SIGMA_MAX                   10000
 
+class rob_pinfo //机器人P变量
+{
+public:
+  float x;
+  float y;
+  float z;
+  float rx;
+  float ry;
+  float rz;
+  int32_t out1;
+  int32_t out2;
+  int32_t out3;
+  uint16_t tool;
+  uint16_t tcp;
+  uint16_t usertcp;
+
+//激光器平面
+  float uy;
+  float vz;
+  rob_pinfo();
+};
+
+class rob_group
+{
+public:
+  std::vector<rob_pinfo> pos;
+  int pID;
+};
+
 class taskinfo
 {
 public:
@@ -892,6 +932,25 @@ public:
     Int16 zero_pointX_use;  //零点X坐标默认值
     Int16 zero_pointY_use;  //零点Y坐标默认值
     Int16 zero_pointZ_use;  //零点Z坐标默认值
+
+/****************************/
+    //P变量模式设置
+    Int8 P_data_En;                //寄存器功能开关
+    CAL_POSTURE P_data_cal_posture; //P变量姿态内外旋
+    Eye_Hand_calibrationmode P_data_eye_hand_calibrationmode;//P寄存器激光器安装方式
+
+    void write_P_data_set_para();
+    void init_P_data_set_para();     //初始化零点坐标
+
+    Int8 P_data_En_min;
+    Int8 P_data_En_max;
+    Int8 P_data_En_use;
+/****************************/
+    //P变量存储
+    std::vector<rob_group> P_data; //P变量
+    void read_P_data();
+    void init_P_data();
+    void write_P_data_para();
 
 /****************************/
   
@@ -2019,6 +2078,7 @@ public:
     std::vector<taskinfo> taskfilename;//当前有几个任务号
 
 private:
+
     void read_para();				//读取
     void check_para();			//检查参数
 

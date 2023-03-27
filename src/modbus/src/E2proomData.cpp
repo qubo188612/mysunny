@@ -3,6 +3,25 @@
 #include <sys/types.h>
 #include <dirent.h>  
 #include <unistd.h>
+#include <json/jsonfuction.h>
+
+rob_pinfo::rob_pinfo()
+{
+  x=0;
+  y=0;
+  z=0;
+  rx=0;
+  ry=0;
+  rz=0;
+  out1=0;
+  out2=0;
+  out3=0;
+  tool=0;
+  tcp=0;
+  usertcp=0;
+  uy=0;
+  vz=0;
+}
 
 E2proomData::E2proomData()
 {
@@ -23,6 +42,10 @@ E2proomData::E2proomData()
     zero_pointX_use=E2POOM_ZEROPOINT_X_USE;
     zero_pointY_use=E2POOM_ZEROPOINT_Y_USE;
     zero_pointZ_use=E2POOM_ZEROPOINT_Z_USE;
+
+    P_data_En_min=E2POOM_P_DATA_EN_MIN;
+    P_data_En_max=E2POOM_P_DATA_EN_MAX;
+    P_data_En_use=E2POOM_P_DATA_EN_USE;
     
     Init_als100_E2proomData();
     Init_als101_E2proomData();
@@ -38,6 +61,8 @@ E2proomData::E2proomData()
 
     write_task_num_para();
     write_robot_para();
+    write_P_data_set_para();
+    write_P_data_para();
     write();
 
     taskfilename.clear();
@@ -69,6 +94,9 @@ void E2proomData::check_para()
 
     if(robot_port<robot_port_min||robot_port>robot_port_max)
         robot_port=robot_port_use;
+
+    if(P_data_En<P_data_En_min||P_data_En>P_data_En_max)
+        P_data_En=P_data_En_use;
 
     als100_check_para();
     als101_check_para();
@@ -171,6 +199,37 @@ void E2proomData::read_para()
       buff=NULL;
     }
 
+    buff=new Uint8[E2POOM_P_DATA_SET_SAVEBUFF];
+    if(buff==NULL)
+        return;
+    if(0 > fo.ReadFile(E2POOM_P_DATA_SET_SYSPATH_MOTO,buff,E2POOM_P_DATA_SET_SAVEBUFF))
+    {
+        init_P_data_set_para();
+        if(buff!=NULL)
+        {
+          delete []buff;
+          buff=NULL;
+        }
+    }
+    else
+    {
+      Int8 *i8_p;
+      
+      i8_p = (Int8*)buff;
+      P_data_En=*i8_p;
+      i8_p++;
+      P_data_cal_posture=(CAL_POSTURE)*i8_p;
+      i8_p++;
+      P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)*i8_p;
+      i8_p++;
+    }
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+
+    read_P_data();
 
     als100_read_para(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO);
     als101_read_para(E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO);
@@ -283,6 +342,229 @@ void E2proomData::init_zeropoint_para()
     zero_pointX=zero_pointX_use;
     zero_pointY=zero_pointY_use;
     zero_pointZ=zero_pointZ_use;
+}
+
+void E2proomData::write_P_data_set_para()
+{
+    Uint8 *buff=NULL;
+    CFileOut fo;
+
+    check_para();
+    buff=new Uint8[E2POOM_P_DATA_SET_SAVEBUFF];
+    if(buff==NULL)
+      return;
+
+    Int8 *i8_p;
+
+    i8_p = (Int8*)buff;
+    *i8_p=P_data_En;
+    i8_p++;
+    *i8_p=P_data_cal_posture;
+    i8_p++;
+    *i8_p=P_data_eye_hand_calibrationmode;
+    i8_p++;
+
+    fo.WriteFile(E2POOM_P_DATA_SET_SYSPATH_MOTO,buff,E2POOM_P_DATA_SET_SAVEBUFF);
+
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+}
+
+void E2proomData::init_P_data_set_para()
+{
+  P_data_En=P_data_En_use;
+  P_data_cal_posture=CAL_ROBOT_YASKAWA;
+  P_data_eye_hand_calibrationmode=HAND_IN_EYE;
+}
+
+void E2proomData::init_P_data()
+{
+  rob_pinfo pos;
+  rob_group singl;
+  /*******/
+  P_data.clear();
+  //这里添加存储的标定点
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=0;
+  P_data.push_back(singl);
+  
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=1;
+  P_data.push_back(singl);
+
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=3;
+  P_data.push_back(singl);
+
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=11;
+  P_data.push_back(singl);
+
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=1001;
+  P_data.push_back(singl);
+
+  singl.pos.clear();
+  singl.pos.resize(1);
+  singl.pID=1002;
+  P_data.push_back(singl);
+}
+
+//把P变量初始化
+void E2proomData::read_P_data()
+{
+  jsonfuction jsonf;
+  Json::Value root;
+  Json::Value j_Pdata;
+  Json::Value temp;
+  if(0!=jsonf.readJsonFile(E2POOM_P_DATA_SYSPATH_MOTO,&root))
+  {
+    init_P_data();
+    return;
+  }
+  /**************************/
+  //读取P点
+  j_Pdata=root.get("P_data","NULL"); 
+  if(j_Pdata=="NULL")
+  {
+    init_P_data();
+    return;
+  }
+  P_data.resize(j_Pdata.size());
+  for(int i=0;i<j_Pdata.size();i++)
+  {
+    rob_pinfo pos;
+    rob_group singl;
+    Json::Value j_pos=j_Pdata[i].get("pos","NULL");
+    if(j_pos=="NULL")
+    {
+      init_P_data();
+      return;
+    }
+    temp=j_Pdata[i].get("pID","NULL");
+    if(temp=="NULL")
+    {
+      init_P_data();
+      return;
+    }
+    P_data[i].pID=temp.asInt();
+    P_data[i].pos.resize(j_pos.size());
+    for(int j=0;j<j_pos.size();j++)
+    {
+      temp=j_pos[j].get("x","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].x=temp.asFloat();
+      }
+      temp=j_pos[j].get("y","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].y=temp.asFloat();
+      }
+      temp=j_pos[j].get("z","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].z=temp.asFloat();
+      }
+      temp=j_pos[j].get("rx","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].rx=temp.asFloat();
+      }
+      temp=j_pos[j].get("ry","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].ry=temp.asFloat();
+      }
+      temp=j_pos[j].get("rz","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].rz=temp.asFloat();
+      }
+      temp=j_pos[j].get("out1","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].out1=temp.asInt();
+      }
+      temp=j_pos[j].get("out2","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].out2=temp.asInt();
+      }
+      temp=j_pos[j].get("out3","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].out3=temp.asInt();
+      }
+      temp=j_pos[j].get("tcp","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].tcp=temp.asFloat();
+      }
+      temp=j_pos[j].get("tool","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].tool=temp.asFloat();
+      }
+      temp=j_pos[j].get("usertcp","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].usertcp=temp.asFloat();
+      }
+      temp=j_pos[j].get("uy","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].uy=temp.asFloat();
+      }
+      temp=j_pos[j].get("vz","NULL");
+      if(temp!="NULL")
+      {
+        P_data[i].pos[j].vz=temp.asFloat();
+      }
+    }
+  }
+  /***************************/
+}
+
+void E2proomData::write_P_data_para()
+{
+  jsonfuction jsonf;
+  Json::Value root;
+  for(int i=0;i<P_data.size();i++)
+  {
+    Json::Value j_sing;
+    j_sing["pID"]=P_data[i].pID;
+    for(int j=0;j<P_data[i].pos.size();j++)
+    {
+      Json::Value j_sing_data;
+      j_sing_data["x"]=P_data[i].pos[j].x;
+      j_sing_data["y"]=P_data[i].pos[j].y;
+      j_sing_data["z"]=P_data[i].pos[j].z;
+      j_sing_data["rx"]=P_data[i].pos[j].rx;
+      j_sing_data["ry"]=P_data[i].pos[j].ry;
+      j_sing_data["rz"]=P_data[i].pos[j].rz;
+      j_sing_data["out1"]=P_data[i].pos[j].out1;
+      j_sing_data["out2"]=P_data[i].pos[j].out2;
+      j_sing_data["out3"]=P_data[i].pos[j].out3;
+      j_sing_data["tool"]=P_data[i].pos[j].tool;
+      j_sing_data["tcp"]=P_data[i].pos[j].tcp;
+      j_sing_data["usertcp"]=P_data[i].pos[j].usertcp;
+      j_sing_data["uy"]=P_data[i].pos[j].uy;
+      j_sing_data["vz"]=P_data[i].pos[j].vz;
+      j_sing["pos"].append(j_sing_data);
+    } 
+    root["P_data"].append(j_sing);
+  }
+
+  jsonf.writeJsonFile(E2POOM_P_DATA_SYSPATH_MOTO,root);
 }
 
 void E2proomData::write()

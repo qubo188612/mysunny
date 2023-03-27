@@ -66,6 +66,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libglib2.0-dev \
     libgirepository1.0-dev \
     libxml2-dev \
+    libeigen3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 FROM dev AS build

@@ -29,6 +29,7 @@
 #include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include "fileout/calibration.h"
 
 #define PIC_IMAGE_HEIGHT 1536
 #define PIC_IMAGE_WIDTH  1024
@@ -41,19 +42,22 @@ using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 #define SERVER_REGEDIST_NUM               400
 
 
-#define ROBOT_SET_REGEDIST_NUM            0x10
-#define ROBOT_MOD_REG_ADD                 0x0000
-#define ROBOT_PORT_REG_ADD                0x0001
-#define ALSROBOTCAM_COMPENSATION_X        0x0002  //标定补偿X
-#define ALSROBOTCAM_COMPENSATION_Y        0x0003  //标定补偿Y
-#define ALSROBOTCAM_COMPENSATION_Z        0x0004  //标定补偿Z
-#define CAMER_SIZE_WIDTH_REG_ADD          0x0005
-#define CAMER_SIZE_HEIGHT_REG_ADD         0x0006
-#define CAMER_FPS_REG_ADD                 0x0007
-#define CAMER_SIZE_VIEW_WIDTH_REG_ADD     0x0008
-#define CAMER_SIZE_VIEW_HEIGHT_REG_ADD    0x0009
-#define ALSROBOTCAM_REVERSE_Y_REG_ADD     0x000a  //相机Y数据反向
-#define ALSROBOTCAM_REVERSE_Z_REG_ADD     0x000b
+#define ROBOT_SET_REGEDIST_NUM                      0x10
+#define ROBOT_MOD_REG_ADD                           0x0000
+#define ROBOT_PORT_REG_ADD                          0x0001
+#define ALSROBOTCAM_COMPENSATION_X                  0x0002  //标定补偿X
+#define ALSROBOTCAM_COMPENSATION_Y                  0x0003  //标定补偿Y
+#define ALSROBOTCAM_COMPENSATION_Z                  0x0004  //标定补偿Z
+#define CAMER_SIZE_WIDTH_REG_ADD                    0x0005
+#define CAMER_SIZE_HEIGHT_REG_ADD                   0x0006
+#define CAMER_FPS_REG_ADD                           0x0007
+#define CAMER_SIZE_VIEW_WIDTH_REG_ADD               0x0008
+#define CAMER_SIZE_VIEW_HEIGHT_REG_ADD              0x0009
+#define ALSROBOTCAM_REVERSE_Y_REG_ADD               0x000a  //相机Y数据反向
+#define ALSROBOTCAM_REVERSE_Z_REG_ADD               0x000b
+#define P_DATA_EN_REG_ADD                           0x000c
+#define P_DATA_CAL_POSTURE_REG_ADD                  0x000d
+#define P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD     0x000e      
 
 #define PARAMETER_REGEDIST_NUM                 400
 
@@ -331,6 +335,7 @@ using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 
 #define ALS_SHOW_STEP_REG_ADD                  0x018f
 
+
 /**
  * @brief Modbus protocal wrapped from libmodbus-dev.
  *
@@ -361,6 +366,20 @@ public:
    * Throw no exception.
    */
   ~Modbus();
+
+  void close_pstate();
+
+  bool b_calibration;//是否在校准
+  bool b_toolcalibration;
+  bool b_movedif;
+  bool b_posevalue;
+  bool b_circleweld;
+  bool b_linemove;
+  bool b_searchpoint;
+
+  int pIDnum_calibration; //校准位于P变量的下标
+
+  void getProb_pinfo(rob_pinfo *pos);//获取P变量机器人信息
 
   //modbus sock
   modbus_t * ctx;
@@ -448,7 +467,6 @@ public:
   E2proomData e2proomdata;
 
   bool b_tcpsockershow;
-  bool b_tcpforwardmappingshow;
 
   bool b_resultreset; //检测结果在读取后清零
 
