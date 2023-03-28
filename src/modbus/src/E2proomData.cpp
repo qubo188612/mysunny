@@ -31,6 +31,9 @@ E2proomData::E2proomData()
       mkdir("./SAVE",S_IRWXU);
     }
 
+    matrix_camera2plane=cv::Mat::zeros(3,3,CV_64F);
+    matrix_plane2robot=cv::Mat::zeros(3,3,CV_64F);
+
     task_num_min=E2POOM_TASK_NUM_MIN;
     task_num_use=E2POOM_TASK_NUM_USE;
     task_num_max=E2POOM_TASK_NUM_MAX;
@@ -63,6 +66,7 @@ E2proomData::E2proomData()
     write_robot_para();
     write_P_data_set_para();
     write_P_data_para();
+    write_demdlg_para();
     write();
 
     taskfilename.clear();
@@ -230,6 +234,7 @@ void E2proomData::read_para()
     }
 
     read_P_data();
+    read_demdlg_para();
 
     als100_read_para(E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO);
     als101_read_para(E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO);
@@ -565,6 +570,114 @@ void E2proomData::write_P_data_para()
   }
 
   jsonf.writeJsonFile(E2POOM_P_DATA_SYSPATH_MOTO,root);
+}
+
+void E2proomData::read_demdlg_para()
+{
+  jsonfuction jsonf;
+  Json::Value root;
+  Json::Value arrData1;
+  Json::Value arrData2;
+  Json::Value arrData3;
+  Json::Value arrData4;
+  if(0!=jsonf.readJsonFile(E2POOM_DEMDLG_SYSPATH_MOTO,&root))
+  {
+    return;
+  } 
+
+  arrData1=root.get("demdlg_R","NULL"); 
+  if(arrData1!="NULL")
+  {
+    if(arrData1.size()==9)
+    {
+      int n=0;
+      for(int j=0;j<3;j++)
+      {
+        for(int i=0;i<3;i++)
+        {
+            demdlg_R(j,i)=arrData1[n++].asDouble();
+        }
+      }
+    }
+  }
+
+  arrData2=root.get("demdlg_T","NULL"); 
+  if(arrData2.size()==3)
+  {
+    for(int i=0;i<3;i++)
+    {
+        demdlg_T(i)=arrData2[i].asDouble();
+    }
+  }
+  
+  arrData3=root.get("matrix_camera2plane","NULL"); 
+  if(arrData3.size()==9)
+  {
+    int n=0;
+    for(int j=0;j<3;j++)
+    {
+        double *d= matrix_camera2plane.ptr<double>(j);
+        for(int i=0;i<3;i++)
+        {
+          d[i]=arrData3[n++].asDouble();
+        }
+    }
+  }
+  
+  arrData4=root.get("matrix_plane2robot","NULL"); 
+  if(arrData4.size()==9)
+  {
+    int n=0;
+    for(int j=0;j<3;j++)
+    {
+        double *d= matrix_plane2robot.ptr<double>(j);
+        for(int i=0;i<3;i++)
+        {
+          d[i]=arrData4[n++].asDouble();
+        }
+    }
+  }
+}
+
+void E2proomData::write_demdlg_para()
+{
+  jsonfuction jsonf;
+  Json::Value root;
+  Json::Value arrData1;
+
+  for (int j=0;j<3;j++)
+    for(int i=0;i<3;i++)
+      arrData1.append(demdlg_R(j,i));
+  root["demdlg_R"]=arrData1;
+
+  Json::Value arrData2;
+    for (int i=0;i<3;i++)
+        arrData2.append(demdlg_T(i));
+  root["demdlg_T"]=arrData2;
+
+  Json::Value arrData3;
+  for (int j=0;j<3;j++)
+  {
+      double *d= matrix_camera2plane.ptr<double>(j);
+      for (int i=0;i<3;i++)
+      {
+          arrData3.append(d[i]);
+      }
+  }
+  root["matrix_camera2plane"]=arrData3;
+
+  Json::Value arrData4;
+  for (int j=0;j<3;j++)
+  {
+      double *d= matrix_plane2robot.ptr<double>(j);
+      for (int i=0;i<3;i++)
+      {
+          arrData4.append(d[i]);
+      }
+  }
+  root["matrix_plane2robot"]=arrData4;
+
+  jsonf.writeJsonFile(E2POOM_DEMDLG_SYSPATH_MOTO,root);
 }
 
 void E2proomData::write()

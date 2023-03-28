@@ -632,6 +632,26 @@ Params LineCenterReconstruction::_update_parameters()
       }
       
     }
+    else if(p.get_name()=="pData_En")
+    {
+
+    }
+    else if(p.get_name()=="pData_demdlg_R")
+    {
+
+    }
+    else if(p.get_name()=="pData_demdlg_T")
+    {
+
+    }
+    else if(p.get_name()=="pData_matrix_camera2plane")
+    {
+
+    }
+    else if(p.get_name()=="pData_matrix_plane2robot")
+    {
+
+    }
     // if (p.get_name() == "camera_matrix") {
     //   pm.camera_matrix = p.as_double_array();
     // } else if (p.get_name() == "distort_coeffs") {

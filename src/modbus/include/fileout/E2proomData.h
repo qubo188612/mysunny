@@ -48,6 +48,9 @@
 //P变量设置
 #define E2POOM_P_DATA_SYSPATH_MOTO          "./SAVE/E2P_P_DATA_DLG.bsd"
 
+//P变量标定矩阵设置
+#define E2POOM_DEMDLG_SYSPATH_MOTO          "./SAVE/E2P_DEMDLG.bsd"
+
 #define E2POOM_ROBOT_MOD_NULL               0        //无机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI  2        //智昌川崎机器人
@@ -952,6 +955,15 @@ public:
     void init_P_data();
     void write_P_data_para();
 
+/****************************/
+    //P变量标定矩阵
+    Eigen::Matrix3d demdlg_R;          //眼在手外旋转矩阵
+    Eigen::Vector3d demdlg_T;          //眼在手外平移变量
+    cv::Mat matrix_camera2plane;        //眼在手上旋转矩阵1
+    cv::Mat matrix_plane2robot;         //眼在手上旋转矩阵2
+
+    void read_demdlg_para();
+    void write_demdlg_para();
 /****************************/
   
     //任务100参数

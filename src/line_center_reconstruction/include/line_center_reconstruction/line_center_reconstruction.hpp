@@ -41,7 +41,12 @@ using tutorial_interfaces::msg::IfAlgorhmitcloud;
  * @brief List of parameter names.
  *
  */
-const std::vector<std::string> KEYS = {"homography_matrix"};
+const std::vector<std::string> KEYS = {"homography_matrix",
+                                       "pData_En",
+                                       "pData_demdlg_R",
+                                       "pData_demdlg_T",
+                                       "pData_matrix_camera2plane",
+                                       "pData_matrix_plane2robot"};
 // const std::vector<std::string> KEYS = {"camera_matrix", "distort_coeffs", "homography_matrix"};
 
 /**
