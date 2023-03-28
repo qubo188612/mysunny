@@ -470,7 +470,8 @@ public:
 
   bool b_resultreset; //检测结果在读取后清零
 
-  
+  std::vector<double> homography_matrix;  //相机内参矩阵
+
 private:
   
   
@@ -494,7 +495,6 @@ private:
 
   void _ftp(int);//服务器数据ftp转发
 
-private:
   /**
    * @brief Parameter client for camera.
    *
@@ -517,6 +517,11 @@ private:
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
+
+  rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr _param_event_sub;
+  void on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event);
+  static std::mutex mt;
+  
 
   const char * _pub_robpos_name = "~/input_robpos";
   rclcpp::Publisher<IfAlgorhmitrobpos>::SharedPtr _pub_robpos;

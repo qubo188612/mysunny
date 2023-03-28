@@ -19,6 +19,12 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+//主板类型
+#define RASPBERRY_PI  0 //树莓派
+#define RK3588S       1 //RK3588S
+
+#define MOTHERBOARD_TYPE    RASPBERRY_PI
+
 struct gpiod_chip;
 struct gpiod_line;
 

@@ -51,12 +51,14 @@ std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 	return (std::vector<_Tp>)(mat.reshape(1, 1));//通道数不变，按行转为一行
 }
 
+
 namespace modbus
 {
 using rcl_interfaces::msg::SetParametersResult;
 //tcp sock
 TCPServer jsontcp;
 TCPServer2 ftptcp;
+std::mutex Modbus::mt;
 
 std::string to_string_with_precision(float val, int fixed)
 {
@@ -138,8 +140,11 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   
   _param_linecenter_get->wait_for_service();
   auto linecenter_future = _param_linecenter_get->get_parameters(
-                {"compensation_dx","compensation_dy","compensation_dz","reverse_y","reverse_z"},
+                {"compensation_dx","compensation_dy","compensation_dz","reverse_y","reverse_z","homography_matrix"},
                 std::bind(&Modbus::callbackCenterParam, this, std::placeholders::_1));
+
+  _param_event_sub = _param_linecenter_get->on_parameter_event(std::bind(&Modbus::on_parameter_event_callback, this, std::placeholders::_1));
+
 
   RCLCPP_INFO(this->get_logger(), "zero_pointX: %d", e2proomdata.zero_pointX);
   RCLCPP_INFO(this->get_logger(), "zero_pointY: %d", e2proomdata.zero_pointY);
@@ -535,33 +540,86 @@ void Modbus::callbackGlobalParam(std::shared_future<std::vector<rclcpp::Paramete
 void Modbus::callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
 {
     auto result = future.get();
-    if(result.size()>=5)
+    if(result.size()>=6)
     {
       auto a_compensation_dx = result.at(0);
       auto a_compensation_dy = result.at(1);
       auto a_compensation_dz = result.at(2);
       auto a_reverse_y = result.at(3);
       auto a_reverse_z = result.at(4);
+      auto a_homography_matrix = result.at(5);
       int compensation_dx=a_compensation_dx.as_int();
       int compensation_dy=a_compensation_dy.as_int();
       int compensation_dz=a_compensation_dz.as_int();
       int reverse_y=a_reverse_y.as_bool();
       int reverse_z=a_reverse_z.as_bool();
+      std::vector<double> d_data=a_homography_matrix.as_double_array();
       RCLCPP_INFO(this->get_logger(), "compensation_dx param: %d", compensation_dx);
       RCLCPP_INFO(this->get_logger(), "compensation_dy param: %d", compensation_dy);
       RCLCPP_INFO(this->get_logger(), "compensation_dz param: %d", compensation_dz);
       RCLCPP_INFO(this->get_logger(), "reverse_y param: %d", reverse_y);
       RCLCPP_INFO(this->get_logger(), "reverse_z param: %d", reverse_z);
+      RCLCPP_INFO(this->get_logger(), "homography_matrix[%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f]",
+      d_data[0],d_data[1],d_data[2],d_data[3],d_data[4],d_data[5],d_data[6],d_data[7]);
 
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_X]=(u_int16_t)((int16_t)compensation_dx);
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Y]=(u_int16_t)((int16_t)compensation_dy);  
       robot_mapping->tab_registers[ALSROBOTCAM_REVERSE_Y_REG_ADD]=(u_int16_t)((int16_t)reverse_y);  
       robot_mapping->tab_registers[ALSROBOTCAM_REVERSE_Z_REG_ADD]=(u_int16_t)((int16_t)reverse_z);  
+      homography_matrix=d_data;
     }
     else
     {
       RCLCPP_ERROR(this->get_logger(), "Get compensation info error.");
     }
+}
+
+void Modbus::on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event)
+{
+  std::lock_guard<std::mutex> l(mt);
+  
+  for (auto & changed_parameter : event->changed_parameters) {
+    const auto & type = changed_parameter.value.type;
+    const auto & name = changed_parameter.name;
+    const auto & value = changed_parameter.value;
+
+    if(name=="homography_matrix")
+    {
+      std::vector<double> d_data=value.double_array_value;
+      homography_matrix=d_data;
+    }
+
+/*
+    if (type == rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE) {
+      // Trajectory
+      if (name == "walk_distance") {
+        walk_distance_ = value.double_value;
+        RCLCPP_INFO(this->get_logger(), "update walk_distance: %.3f ", walk_distance_);
+      }
+    }
+    else if(type == rcl_interfaces::msg::ParameterType::PARAMETER_INTEGER)
+    {
+      if (name == "execute_frequency") {
+        execute_frequency_ = value.integer_value;//不会改变定时器执行频率，仅作为演示用
+        RCLCPP_INFO(this->get_logger(), "update execute_frequency: %d ", execute_frequency_);
+      }
+    }
+    else if (type == rcl_interfaces::msg::ParameterType::PARAMETER_BOOL)
+    {
+      if (name == "print_execute_duration") {
+        print_execute_duration_ = value.bool_value;
+        RCLCPP_INFO(this->get_logger(), "update print_execute_duration: %d ",print_execute_duration_);
+      }
+    }
+    else if (type == rcl_interfaces::msg::ParameterType::PARAMETER_STRING)
+    {
+      if (name == "show_str") {
+        show_str_ = value.string_value;
+        RCLCPP_INFO(this->get_logger(), "update show_str: %s ",show_str_.c_str());
+      }
+    }
+    */
+  }
 }
 
 /*
@@ -740,11 +798,11 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case P_DATA_CAL_POSTURE_REG_ADD:
       e2proomdata.P_data_cal_posture=(CAL_POSTURE)num;
-    //  this->set_parameters({rclcpp::Parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("PData_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
     break;
     case P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD:
       e2proomdata.P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)num;
-    //  this->set_parameters({rclcpp::Parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("PData_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
     break;
     default:
     break;
@@ -2254,6 +2312,76 @@ void* ftpreceived(void *m)
                             _p->e2proomdata.taskfilename.clear();
                             _p->e2proomdata.findtaskfile(&_p->e2proomdata.taskfilename);
                             sent_root["rm"]="ok";
+                        }
+                        else if(*it=="cat")
+                        {
+                          Json::Value data;
+                          for(int t=0;t<root[*it].size();t++)
+                          {
+                            if(root[*it][t].asString()=="homography_matrix")
+                            {   
+                                Json::Value newIterm; 
+                                for(int i=0;i<_p->homography_matrix.size();i++)
+                                {
+                                    newIterm.append(_p->homography_matrix[i]);
+                                }  
+                                data["homography_matrix"]=newIterm;
+                            }
+                            else if(root[*it][t].asString()=="pData_demdlg_R")
+                            {
+                                std::vector<double> pData_demdlg_R(9);
+                                int n=0;
+                                for(int j=0;j<3;j++)
+                                {
+                                  for(int i=0;i<3;i++)
+                                  {
+                                      pData_demdlg_R[n++]=_p->e2proomdata.demdlg_R(j,i);
+                                  }
+                                }
+                                Json::Value newIterm; 
+                                for(int i=0;i<pData_demdlg_R.size();i++)
+                                {
+                                    newIterm.append(pData_demdlg_R[i]);
+                                } 
+                                data["pData_demdlg_R"]=newIterm;
+                            }
+                            else if(root[*it][t].asString()=="pData_demdlg_T")
+                            {
+                                std::vector<double> pData_demdlg_T(3);
+                                int n=0;
+                                for(int i=0;i<3;i++)
+                                {
+                                    pData_demdlg_T[n++]=_p->e2proomdata.demdlg_T(i);
+                                }
+                                Json::Value newIterm; 
+                                for(int i=0;i<pData_demdlg_T.size();i++)
+                                {
+                                    newIterm.append(pData_demdlg_T[i]);
+                                } 
+                                data["pData_demdlg_T"]=newIterm;
+                            }
+                            else if(root[*it][t].asString()=="pData_matrix_camera2plane")
+                            {
+                                std::vector<double> pData_matrix_camera2plane=convertMat2Vector<double>(_p->e2proomdata.matrix_camera2plane);
+                                Json::Value newIterm; 
+                                for(int i=0;i<pData_matrix_camera2plane.size();i++)
+                                {
+                                    newIterm.append(pData_matrix_camera2plane[i]);
+                                } 
+                                data["pData_matrix_camera2plane"]=newIterm;
+                            }
+                            else if(root[*it][t].asString()=="pData_matrix_plane2robot")
+                            {
+                                std::vector<double> pData_matrix_plane2robot=convertMat2Vector<double>(_p->e2proomdata.matrix_plane2robot);
+                                Json::Value newIterm; 
+                                for(int i=0;i<pData_matrix_plane2robot.size();i++)
+                                {
+                                    newIterm.append(pData_matrix_plane2robot[i]);
+                                } 
+                                data["pData_matrix_plane2robot"]=newIterm; 
+                            }
+                            sent_root["cat"]=data;
+                          }
                         }
                     }
                 }

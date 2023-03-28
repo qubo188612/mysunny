@@ -626,8 +626,8 @@ void LineCenterReconstruction::_declare_parameters()
   this->declare_parameter("pData_demdlg_T", pData_demdlg_T);
   this->declare_parameter("pData_matrix_camera2plane", matrix_camera2plane);
   this->declare_parameter("pData_matrix_plane2robot", matrix_plane2robot);
-  this->declare_parameter("PData_cal_posture", (int)pm.PData_cal_posture);
-  this->declare_parameter("PData_eye_hand_calibrationmode", (int)pm.PData_eye_hand_calibrationmode);
+  this->declare_parameter("PData_cal_posture", (u_int16_t)pm.PData_cal_posture);
+  this->declare_parameter("PData_eye_hand_calibrationmode", (u_int16_t)pm.PData_eye_hand_calibrationmode);
 }
 
 Params LineCenterReconstruction::_update_parameters()
