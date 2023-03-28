@@ -596,10 +596,38 @@ int _set_homography_matrix(std::vector<double> homography_matrix)
 
 void LineCenterReconstruction::_declare_parameters()
 {
+  int n=0;
   Params pm;
   // this->declare_parameter("camera_matrix", pm.camera_matrix);
   // this->declare_parameter("distort_coeffs", pm.distort_coeffs);
   this->declare_parameter("homography_matrix", pm.homography_matrix);
+
+  pm.pData_matrix_camera2plane=cv::Mat::zeros(3,3,CV_64F);
+  pm.pData_matrix_plane2robot=cv::Mat::zeros(3,3,CV_64F);  
+  std::vector<double> pData_demdlg_R(9);
+  std::vector<double> pData_demdlg_T(3);
+  std::vector<double> matrix_camera2plane=convertMat2Vector<double>(pm.pData_matrix_camera2plane);
+  std::vector<double> matrix_plane2robot=convertMat2Vector<double>(pm.pData_matrix_plane2robot);
+  n=0;
+  for(int j=0;j<3;j++)
+  {
+    for(int i=0;i<3;i++)
+    {
+        pData_demdlg_R[n++]=pm.pData_demdlg_R(j,i);
+    }
+  }
+  n=0;
+  for(int i=0;i<3;i++)
+  {
+      pData_demdlg_T[n++]=pm.pData_demdlg_T(i);
+  }
+  this->declare_parameter("pData_En", pm.pData_En);
+  this->declare_parameter("pData_demdlg_R", pData_demdlg_R);
+  this->declare_parameter("pData_demdlg_T", pData_demdlg_T);
+  this->declare_parameter("pData_matrix_camera2plane", matrix_camera2plane);
+  this->declare_parameter("pData_matrix_plane2robot", matrix_plane2robot);
+  this->declare_parameter("PData_cal_posture", (int)pm.PData_cal_posture);
+  this->declare_parameter("PData_eye_hand_calibrationmode", (int)pm.PData_eye_hand_calibrationmode);
 }
 
 Params LineCenterReconstruction::_update_parameters()
@@ -634,23 +662,46 @@ Params LineCenterReconstruction::_update_parameters()
     }
     else if(p.get_name()=="pData_En")
     {
-
+      pm.pData_En = p.as_int();
     }
     else if(p.get_name()=="pData_demdlg_R")
     {
-
+      int n=0;
+      std::vector<double> d_data=p.as_double_array();
+      for(int j=0;j<3;j++)
+      {
+        for(int i=0;i<3;i++)
+        {
+            pm.pData_demdlg_R(j,i)=d_data[n++];
+        }
+      }
     }
     else if(p.get_name()=="pData_demdlg_T")
     {
-
+      int n=0;
+      std::vector<double> d_data=p.as_double_array();
+      for(int i=0;i<3;i++)
+      {
+          pm.pData_demdlg_T(i)=d_data[n++];
+      }
     }
     else if(p.get_name()=="pData_matrix_camera2plane")
     {
-
+      std::vector<double> d_data=p.as_double_array();
+      pm.pData_matrix_camera2plane = cv::Mat(d_data, true).reshape(1, 3);
     }
     else if(p.get_name()=="pData_matrix_plane2robot")
     {
-
+      std::vector<double> d_data=p.as_double_array();
+      pm.pData_matrix_plane2robot = cv::Mat(d_data, true).reshape(1, 3);
+    }
+    else if(p.get_name()=="PData_cal_posture")
+    {
+      pm.PData_cal_posture=(CAL_POSTURE)p.as_int();
+    }
+    else if(p.get_name()=="PData_eye_hand_calibrationmode")
+    {
+      pm.PData_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)p.as_int();
     }
     // if (p.get_name() == "camera_matrix") {
     //   pm.camera_matrix = p.as_double_array();

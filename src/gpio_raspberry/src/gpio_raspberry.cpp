@@ -27,8 +27,8 @@ using rcl_interfaces::msg::SetParametersResult;
 GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions & options)
 : Node("gpio_raspberry_node", options),
   _chip(gpiod_chip_open_by_name("gpiochip1"), gpiod_chip_close),
-  _line_26(gpiod_chip_get_line(_chip.get(), 36), gpiod_line_release),
-  _line_22(gpiod_chip_get_line(_chip.get(), 40), gpiod_line_release)
+  _line_26(gpiod_chip_get_line(_chip.get(), 4), gpiod_line_release),
+  _line_22(gpiod_chip_get_line(_chip.get(), 8), gpiod_line_release)
 {
   // To enforce start with laser off
   this->declare_parameter("laser", false, ParameterDescriptor(), true);

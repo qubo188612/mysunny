@@ -45,6 +45,12 @@ static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
 
 long ZEGEstarttimems=0;
 
+template<typename _Tp>
+std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
+{
+	return (std::vector<_Tp>)(mat.reshape(1, 1));//通道数不变，按行转为一行
+}
+
 namespace modbus
 {
 using rcl_interfaces::msg::SetParametersResult;
@@ -61,6 +67,7 @@ std::string to_string_with_precision(float val, int fixed)
 Modbus::Modbus(const rclcpp::NodeOptions & options)
 : Node("modbus_node", options)
 {
+  int n=0;
   sleep(5);
   _param_camera = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
   _param_camera_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "camera_tis_node");
@@ -96,9 +103,34 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
   
-  this->declare_parameter("P_data_En", (u_int16_t)e2proomdata.P_data_En);
-  this->declare_parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture);
-  this->declare_parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode);
+
+/**********************************/
+//P变量ROS2节点
+  std::vector<double> pData_demdlg_R(9);
+  std::vector<double> pData_demdlg_T(3);
+  std::vector<double> matrix_camera2plane=convertMat2Vector<double>(e2proomdata.matrix_camera2plane);
+  std::vector<double> matrix_plane2robot=convertMat2Vector<double>(e2proomdata.matrix_plane2robot);
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_En", e2proomdata.P_data_En)});
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_camera2plane", matrix_camera2plane)});
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_plane2robot", matrix_plane2robot)});
+  n=0;
+  for(int j=0;j<3;j++)
+  {
+    for(int i=0;i<3;i++)
+    {
+        pData_demdlg_R[n++]=e2proomdata.demdlg_R(j,i);
+    }
+  }
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_R", pData_demdlg_R)}); 
+  n=0;
+  for(int i=0;i<3;i++)
+  {
+      pData_demdlg_T[n++]=e2proomdata.demdlg_T(i);
+  }
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)});
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("PData_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
+  _param_linecenter_set->set_parameters({rclcpp::Parameter("PData_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
+/*************************************/
 
   robot_mapping->tab_registers[P_DATA_EN_REG_ADD]=(u_int16_t)e2proomdata.P_data_En;
   robot_mapping->tab_registers[P_DATA_CAL_POSTURE_REG_ADD]=(u_int16_t)e2proomdata.P_data_cal_posture;
@@ -704,15 +736,15 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
     break;
     case P_DATA_EN_REG_ADD:
       e2proomdata.P_data_En=num;
-      this->set_parameters({rclcpp::Parameter("P_data_En", (u_int16_t)e2proomdata.P_data_En)});
+      _param_linecenter_set->set_parameters({rclcpp::Parameter("P_data_En", (u_int16_t)e2proomdata.P_data_En)});
     break;
     case P_DATA_CAL_POSTURE_REG_ADD:
       e2proomdata.P_data_cal_posture=(CAL_POSTURE)num;
-      this->set_parameters({rclcpp::Parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
+    //  this->set_parameters({rclcpp::Parameter("P_data_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
     break;
     case P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD:
       e2proomdata.P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)num;
-      this->set_parameters({rclcpp::Parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
+    //  this->set_parameters({rclcpp::Parameter("P_data_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
     break;
     default:
     break;
@@ -1120,6 +1152,10 @@ void Modbus::_modbus(int port)
                                                               e2proomdata.matrix_plane2robot,
                                                               err,errgroup))
                             {
+                              std::vector<double> matrix_camera2plane=convertMat2Vector<double>(e2proomdata.matrix_camera2plane);
+                              std::vector<double> matrix_plane2robot=convertMat2Vector<double>(e2proomdata.matrix_plane2robot);
+                              _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_camera2plane", matrix_camera2plane)});
+                              _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_plane2robot", matrix_plane2robot)});
                               RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
                             }
                             else
@@ -1167,9 +1203,32 @@ void Modbus::_modbus(int port)
                                   robotsing[2]=e2proomdata.P_data[pIDnum_calibration].pos[n].z;
                                   robotpoint.push_back(robotsing);
                               }
-                              Calibration::hand_out_yes_point2RT(cloudpoint,robotpoint,e2proomdata.demdlg_R,e2proomdata.demdlg_T,err,errgroup);
-                              e2proomdata.write_demdlg_para();
-                              RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
+                              if(true==Calibration::hand_out_yes_point2RT(cloudpoint,robotpoint,e2proomdata.demdlg_R,e2proomdata.demdlg_T,err,errgroup))
+                              {
+                                std::vector<double> pData_demdlg_R(9);
+                                int n=0;
+                                for(int j=0;j<3;j++)
+                                {
+                                  for(int i=0;i<3;i++)
+                                  {
+                                      pData_demdlg_R[n++]=e2proomdata.demdlg_R(j,i);
+                                  }
+                                }
+                                _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_R", pData_demdlg_R)});
+                                std::vector<double> pData_demdlg_T(3);
+                                n=0;
+                                for(int i=0;i<3;i++)
+                                {
+                                    pData_demdlg_T[n++]=e2proomdata.demdlg_T(i);
+                                }
+                                _param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)});
+                                RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
+                              }
+                              else
+                              {
+                                RCLCPP_INFO(this->get_logger(),"标定计算出现问题,请检查数据");
+                              }
+                              e2proomdata.write_demdlg_para(); 
                             }
                             else
                             {
