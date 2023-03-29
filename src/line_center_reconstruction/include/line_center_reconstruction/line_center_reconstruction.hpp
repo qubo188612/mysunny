@@ -25,6 +25,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+#include "std_msgs/msg/string.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 
@@ -157,6 +158,9 @@ private:
   void _push_back_future(std::future<PointCloud2::UniquePtr> fut);
 
   void _push_back_future_task100_199(std::future<IfAlgorhmitcloud::UniquePtr> fut);
+
+
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr _pub_config;
 
 private:
   /**

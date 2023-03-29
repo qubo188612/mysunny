@@ -495,6 +495,7 @@ private:
 
   void _ftp(int);//服务器数据ftp转发
 
+public:
   /**
    * @brief Parameter client for camera.
    *
@@ -517,6 +518,8 @@ private:
 
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
+
+private:
 
   rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr _param_event_sub;
   void on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event);

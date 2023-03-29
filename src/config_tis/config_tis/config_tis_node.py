@@ -81,7 +81,6 @@ class ConfigTis(Node):
         with open(self._file, 'w') as fp:
             fp.write(msg.data)
 
-
 def main(args=None):
     """Spin the node."""
     rclpy.init(args=args)

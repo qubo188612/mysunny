@@ -560,7 +560,7 @@ void Modbus::callbackCenterParam(std::shared_future<std::vector<rclcpp::Paramete
       RCLCPP_INFO(this->get_logger(), "reverse_y param: %d", reverse_y);
       RCLCPP_INFO(this->get_logger(), "reverse_z param: %d", reverse_z);
       RCLCPP_INFO(this->get_logger(), "homography_matrix[%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f]",
-      d_data[0],d_data[1],d_data[2],d_data[3],d_data[4],d_data[5],d_data[6],d_data[7]);
+      d_data[0],d_data[1],d_data[2],d_data[3],d_data[4],d_data[5],d_data[6],d_data[7],d_data[8]);
 
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_X]=(u_int16_t)((int16_t)compensation_dx);
       robot_mapping->tab_registers[ALSROBOTCAM_COMPENSATION_Y]=(u_int16_t)((int16_t)compensation_dy);  
@@ -2380,8 +2380,186 @@ void* ftpreceived(void *m)
                                 } 
                                 data["pData_matrix_plane2robot"]=newIterm; 
                             }
-                            sent_root["cat"]=data;
+                            else if(root[*it][t].asString()=="pData_point")
+                            {
+                                Json::Value newIterm; 
+                                for(int i=0;i<_p->e2proomdata.P_data.size();i++)
+                                {
+                                    std::string id=to_string(_p->e2proomdata.P_data[i].pID);
+                                    Json::Value minarry;
+                                    for(int j=0;j<_p->e2proomdata.P_data[i].pos.size();j++)
+                                    {
+                                      Json::Value jpos;
+                                      jpos["x"]=_p->e2proomdata.P_data[i].pos[j].x;
+                                      jpos["y"]=_p->e2proomdata.P_data[i].pos[j].y;
+                                      jpos["z"]=_p->e2proomdata.P_data[i].pos[j].z;
+                                      jpos["rx"]=_p->e2proomdata.P_data[i].pos[j].rx;
+                                      jpos["ry"]=_p->e2proomdata.P_data[i].pos[j].ry;
+                                      jpos["rz"]=_p->e2proomdata.P_data[i].pos[j].rz;
+                                      jpos["out1"]=_p->e2proomdata.P_data[i].pos[j].out1;
+                                      jpos["out2"]=_p->e2proomdata.P_data[i].pos[j].out2;
+                                      jpos["out3"]=_p->e2proomdata.P_data[i].pos[j].out3;
+                                      jpos["tool"]=_p->e2proomdata.P_data[i].pos[j].tool;
+                                      jpos["tcp"]=_p->e2proomdata.P_data[i].pos[j].tcp;
+                                      jpos["usertcp"]=_p->e2proomdata.P_data[i].pos[j].usertcp;
+                                      jpos["uy"]=_p->e2proomdata.P_data[i].pos[j].uy;
+                                      jpos["vz"]=_p->e2proomdata.P_data[i].pos[j].vz;
+                                      minarry.append(jpos);
+                                    }
+                                    newIterm[id.c_str()]=minarry;
+                                }
+                                data["pData_point"]=newIterm;
+                            }
                           }
+                          sent_root["cat"]=data;
+                        }
+                        else if(*it=="echo")
+                        {
+                            bool b_temp=true;
+                            Json::Value::Members objmem = root[*it].getMemberNames();
+                            Json::Value::Members::iterator objit = objmem.begin(), objend = objmem.end();
+                            for(; objit != objend; objit ++)
+                            {
+                                if(*objit=="homography_matrix")   
+                                {
+                                    if(root[*it][*objit].size()==9)
+                                    {
+                                        _p->homography_matrix.resize(9);
+                                        for(int i=0;i<root[*it][*objit].size();i++)
+                                        {
+                                          _p->homography_matrix[i]=root[*it][*objit][i].asDouble();  
+                                        }
+                                        _p->_param_linecenter_set->set_parameters({rclcpp::Parameter("homography_matrix",_p->homography_matrix)});
+                                    }
+                                    else
+                                    {
+                                      b_temp=false;
+                                    }
+                                }
+                                else if(*objit=="pData_demdlg_R")
+                                {
+                                    if(root[*it][*objit].size()==9)
+                                    {
+                                        std::vector<double> pData_demdlg_R(9);
+                                        for(int i=0;i<root[*it][*objit].size();i++)
+                                        {
+                                          pData_demdlg_R[i]=root[*it][*objit][i].asDouble();  
+                                        }
+                                        int n=0;
+                                        for(int j=0;j<3;j++)
+                                        {
+                                            for(int i=0;i<3;i++)
+                                            {
+                                              _p->e2proomdata.demdlg_R(j,i)=pData_demdlg_R[n++];
+                                            }
+                                        }
+                                        _p->_param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_R", pData_demdlg_R)}); 
+                                    }
+                                    else
+                                    {
+                                      b_temp=false;
+                                    }
+                                }
+                                else if(*objit=="pData_demdlg_T")
+                                {
+                                    if(root[*it][*objit].size()==3)
+                                    {
+                                        std::vector<double> pData_demdlg_T(3);
+                                        for(int i=0;i<root[*it][*objit].size();i++)
+                                        {
+                                          pData_demdlg_T[i]=root[*it][*objit][i].asDouble();  
+                                        }
+                                        int n=0;
+                                        for(int i=0;i<3;i++)
+                                        {
+                                          _p->e2proomdata.demdlg_T(i)=pData_demdlg_T[n++];
+                                        }
+                                        _p->_param_linecenter_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)}); 
+                                    }
+                                    else
+                                    {
+                                      b_temp=false;
+                                    }
+                                }
+                                else if(*objit=="pData_matrix_camera2plane")
+                                {
+                                    if(root[*it][*objit].size()==9)
+                                    {
+                                        std::vector<double> pData_matrix_camera2plane(9);
+                                        for(int i=0;i<9;i++)
+                                        {
+                                            pData_matrix_camera2plane[i]=root[*it][*objit][i].asDouble();  
+                                        }
+                                        _p->e2proomdata.matrix_camera2plane=cv::Mat(pData_matrix_camera2plane, true).reshape(1, 3);
+                                        _p->_param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_camera2plane", pData_matrix_camera2plane)});
+                                    }
+                                    else
+                                    {
+                                      b_temp=false;
+                                    }
+                                }
+                                else if(*objit=="pData_matrix_plane2robot")
+                                {
+                                    if(root[*it][*objit].size()==9)
+                                    {
+                                        std::vector<double> pData_matrix_plane2robot(9);
+                                        for(int i=0;i<9;i++)
+                                        {
+                                            pData_matrix_plane2robot[i]=root[*it][*objit][i].asDouble();  
+                                        }
+                                        _p->e2proomdata.matrix_plane2robot=cv::Mat(pData_matrix_plane2robot, true).reshape(1, 3);
+                                        _p->_param_linecenter_set->set_parameters({rclcpp::Parameter("pData_matrix_plane2robot", pData_matrix_plane2robot)});
+                                    }
+                                    else
+                                    {
+                                      b_temp=false;
+                                    }
+                                }
+                                else if(*objit=="pData_point")
+                                {
+                                    _p->e2proomdata.P_data.clear();
+                                    Json::Value::Members objmem2 = root[*it][*objit].getMemberNames();
+                                    Json::Value::Members::iterator objit2 = objmem2.begin(), objend2 = objmem2.end();
+                                    for(; objit2 != objend2; objit2 ++)
+                                    {
+                                        std::string s_id=*objit2;
+                                        int id=atoi(s_id.c_str());
+                                        rob_group singl;
+                                        singl.pID=id;
+                                        for(int i=0;i<root[*it][*objit][*objit2].size();i++)
+                                        {
+                                          rob_pinfo pos;
+                                          Json::Value jp=root[*it][*objit][*objit2][i];
+                                          pos.x=jp["x"].asDouble();
+                                          pos.y=jp["y"].asDouble();
+                                          pos.z=jp["z"].asDouble();
+                                          pos.rx=jp["rx"].asDouble();
+                                          pos.ry=jp["ry"].asDouble();
+                                          pos.rz=jp["rz"].asDouble();
+                                          pos.out1=jp["out1"].asInt();
+                                          pos.out2=jp["out2"].asInt();
+                                          pos.out3=jp["out3"].asInt();
+                                          pos.tool=jp["tool"].asInt();
+                                          pos.tcp=jp["tcp"].asInt();
+                                          pos.usertcp=jp["usertcp"].asInt();
+                                          pos.uy=jp["uy"].asInt();
+                                          pos.vz=jp["vz"].asInt();
+                                          singl.pos.push_back(pos);
+                                        }
+                                        _p->e2proomdata.P_data.push_back(singl);
+                                    }
+                                }
+                            }
+                            if(b_temp==true)
+                            {
+                                sent_root["echo"]="ok";
+                            }
+                            else
+                            {
+                                sent_root["echo"]="ng";
+                            }
+                            _p->e2proomdata.write_demdlg_para();
+                            _p->e2proomdata.write_P_data_para();
                         }
                     }
                 }

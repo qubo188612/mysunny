@@ -488,6 +488,8 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 
   _pub_task100_199 = this->create_publisher<IfAlgorhmitcloud>(_pub_task100_199_name, rclcpp::SensorDataQoS());
 
+  _pub_config=this->create_publisher<std_msgs::msg::String>("config_tis_node/config", 10);
+
   _declare_parameters();
 
   _workers = workers(options);
@@ -546,6 +548,23 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
           centerData.reverse_z=(Int16)p.as_bool();
           centerData.write_center_para();
         }
+        else if (p.get_name() == "homography_matrix")
+        {
+          std::vector<double> homography_matrix = p.as_double_array();
+          std_msgs::msg::String::UniquePtr config_msg(new std_msgs::msg::String());
+          std::string msg="line_center_reconstruction_node:\n  homography_matrix: ["+
+          std::to_string(homography_matrix[0])+","+
+          std::to_string(homography_matrix[1])+","+
+          std::to_string(homography_matrix[2])+","+
+          std::to_string(homography_matrix[3])+","+
+          std::to_string(homography_matrix[4])+","+
+          std::to_string(homography_matrix[5])+","+
+          std::to_string(homography_matrix[6])+","+
+          std::to_string(homography_matrix[7])+","+
+          std::to_string(homography_matrix[8])+"]\n";
+          config_msg->data=msg;
+          _pub_config->publish(std::move(config_msg));
+        }
       }
       return result;
     }
@@ -562,6 +581,7 @@ LineCenterReconstruction::~LineCenterReconstruction()
     _sub.reset();
     _param_camera_get.reset();
     _sub_task100_199.reset();
+    _pub_config.reset();
     _points_con.notify_all();
     _task100_199_con.notify_all();
     _futures_con.notify_one();
@@ -658,7 +678,6 @@ Params LineCenterReconstruction::_update_parameters()
          transform.convertTo(transform,CV_64FC1);
          pm.homography_matrix=convertMat2Vector<double>(transform);
       }
-      
     }
     else if(p.get_name()=="pData_En")
     {
