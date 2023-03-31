@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(image_tcpip)
+project(my_pclout)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -21,15 +21,18 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(PCL REQUIRED)
+find_package(tutorial_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
-                                   src/TCPClient.cpp 
-                                   src/TCPServer.cpp )
+                                   src/MyPlcFunction.cpp )
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
   sensor_msgs
+  PCL
+  tutorial_interfaces
 )
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
@@ -41,7 +44,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "${PROJECT_NAME}::Image_Tcpip"
+  PLUGIN "${PROJECT_NAME}::My_Pclout"
   EXECUTABLE ${PROJECT_NAME}_node
 )
 

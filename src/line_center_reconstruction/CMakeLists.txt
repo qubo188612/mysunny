@@ -26,7 +26,7 @@ find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET libmodbus eigen3)
 
-add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp src/E2centerData.cpp src/FileOut.cpp src/TimeFunction.cpp src/MyPlcFunction.cpp)
+add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp src/E2centerData.cpp src/FileOut.cpp src/TimeFunction.cpp)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -37,7 +37,6 @@ target_include_directories(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
-  OpenCV
   PCL
   sensor_msgs
   tutorial_interfaces

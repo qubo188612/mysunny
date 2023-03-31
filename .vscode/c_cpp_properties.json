@@ -17,7 +17,8 @@
                 "/usr/local/include/vtk-7.1",
                 "/usr/include/boost",
                 "/usr/local/include/pcl-1.12",
-                "${workspaceFolder}/src/image_tcpip/include"
+                "${workspaceFolder}/src/image_tcpip/include",
+                "${workspaceFolder}/src/my_pclout/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

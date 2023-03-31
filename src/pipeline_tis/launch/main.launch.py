@@ -108,8 +108,8 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container_mt',
         composable_node_descriptions=[
-            camera_tis_node,
-        #   camera_test_node,
+        #   camera_tis_node,
+            camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
         #   laser_line_center_node,
@@ -130,6 +130,11 @@ def generate_launch_description():
          package='cloud_result_tcpip',             
          executable='cloud_result_tcpip_node',
          remappings=[('~/cloudresult', '/line_center_reconstruction_node/cloud_task100_199')])
+    
+    my_pclout  = Node(                                 
+         package='my_pclout',             
+         executable='my_pclout_node',
+         remappings=[('~/pclresult', '/pcl_cloud_node/result')])
 
 
     seam_tracking_node = Node(
@@ -158,7 +163,8 @@ def generate_launch_description():
     #   image_tcpip,
         image_result_tcpip,
         cloud_result_tcpip,
+        my_pclout,
     #   seam_tracking_node,
         modbus_node,
-        gpio_raspberry_node,
+    #   gpio_raspberry_node,
         config_tis_node])

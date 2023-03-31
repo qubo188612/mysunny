@@ -31,7 +31,6 @@ add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
-  OpenCV
   tutorial_interfaces
 )
 

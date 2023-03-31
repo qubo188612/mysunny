@@ -48,7 +48,6 @@ ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
   sensor_msgs
-  OpenCV
   tutorial_interfaces
 )
 
