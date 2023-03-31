@@ -31,6 +31,7 @@ FROM ros:galactic AS runtime
 
 COPY --from=tiscamera /tiscamera.deb /tiscamera.deb
 COPY --from=opencv /setup/opt/opencv /opt/opencv
+
 COPY ./tools/ros2_numpy /usr/lib/python3/dist-packages/ros2_numpy
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -67,6 +68,10 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libgirepository1.0-dev \
     libxml2-dev \
     libeigen3-dev \
+    libboost-all-dev \
+    libflann-dev \
+    libvtk7-dev \
+    libpcl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 FROM dev AS build
