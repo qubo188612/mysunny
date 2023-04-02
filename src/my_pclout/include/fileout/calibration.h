@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
+#include <fileout/tistdtypes.h>
 
 #define  CAL_RADIAN			(CV_PI/180.0)
 #define  CAL_ANGLE          (180.0/CV_PI)

@@ -21,16 +21,19 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(VTK REQUIRED)
 find_package(PCL REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
-                                   src/MyPlcFunction.cpp )
+                                   src/MyPlcFunction.cpp
+                                   src/calibration.cpp )
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
   sensor_msgs
+  VTK
   PCL
   tutorial_interfaces
 )

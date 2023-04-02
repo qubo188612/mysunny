@@ -2,6 +2,7 @@
 #define MY_PCLOUT_HPP_
 
 #include "rclcpp/rclcpp.hpp"
+#include "fileout/calibration.h"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 
 namespace my_pclout
@@ -9,6 +10,14 @@ namespace my_pclout
 using rcl_interfaces::msg::SetParametersResult;
 using std::placeholders::_1;
 using tutorial_interfaces::msg::IfAlgorhmitcloud;
+
+const std::vector<std::string> KEYS = {"pData_En",
+                                       "pData_demdlg_R",
+                                       "pData_demdlg_T",
+                                       "pData_matrix_camera2plane",
+                                       "pData_matrix_plane2robot",
+                                       "PData_cal_posture",
+                                       "PData_eye_hand_calibrationmode"};
 
 class My_Pclout : public rclcpp::Node
 {
@@ -39,9 +48,29 @@ public:
 
     OnSetParametersCallbackHandle::SharedPtr _handle;
 
+    Int8 pData_En;
+    Eigen::Matrix3d pData_demdlg_R;
+    Eigen::Vector3d pData_demdlg_T;
+    cv::Mat pData_matrix_camera2plane;
+    cv::Mat pData_matrix_plane2robot;
+    CAL_POSTURE PData_cal_posture; //P变量姿态内外旋
+    Eye_Hand_calibrationmode PData_eye_hand_calibrationmode;//P寄存器激光器安装方式
+
 private:
 
-    const char * _sub_pclresult_name = "~/pclresult";
+    void _declare_parameters();
+
+    const char * _sub_cloudresult_name = "~/cloudresult";
+
+    const char * _pub_pclresult_name = "~/pclresult";
+
+    std::thread _cloudresulttcpthread;
+
+    rclcpp::Subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>::SharedPtr subscription_cloud_result;
+
+    void cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)  const;
+
+    void _cloudresult();  
     
 };
 

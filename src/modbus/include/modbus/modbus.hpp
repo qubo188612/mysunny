@@ -519,6 +519,8 @@ public:
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_set;
   std::shared_ptr<rclcpp::AsyncParametersClient> _param_linecenter_get;
 
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_pclout_set;
+
 private:
 
   rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr _param_event_sub;

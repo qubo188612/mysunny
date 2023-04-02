@@ -21,7 +21,6 @@
 #include <modbus.h>
 #include <unistd.h>
 #include "fileout/E2centerData.h"
-#include "fileout/calibration.h"
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -43,14 +42,7 @@ using tutorial_interfaces::msg::IfAlgorhmitcloud;
  * @brief List of parameter names.
  *
  */
-const std::vector<std::string> KEYS = {"homography_matrix",
-                                       "pData_En",
-                                       "pData_demdlg_R",
-                                       "pData_demdlg_T",
-                                       "pData_matrix_camera2plane",
-                                       "pData_matrix_plane2robot",
-                                       "PData_cal_posture",
-                                       "PData_eye_hand_calibrationmode"};
+const std::vector<std::string> KEYS = {"homography_matrix"};
 // const std::vector<std::string> KEYS = {"camera_matrix", "distort_coeffs", "homography_matrix"};
 
 /**
@@ -63,13 +55,6 @@ struct Params
   // std::vector<double> distort_coeffs;
   std::vector<double> homography_matrix;
 
-  Int8 pData_En;
-  Eigen::Matrix3d pData_demdlg_R;
-  Eigen::Vector3d pData_demdlg_T;
-  cv::Mat pData_matrix_camera2plane;
-  cv::Mat pData_matrix_plane2robot;
-  CAL_POSTURE PData_cal_posture; //P变量姿态内外旋
-  Eye_Hand_calibrationmode PData_eye_hand_calibrationmode;//P寄存器激光器安装方式
 };
 
 /**

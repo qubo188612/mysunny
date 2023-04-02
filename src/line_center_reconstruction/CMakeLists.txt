@@ -21,7 +21,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(PCL REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET libmodbus eigen3)
@@ -37,7 +36,6 @@ target_include_directories(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
-  PCL
   sensor_msgs
   tutorial_interfaces
 )
