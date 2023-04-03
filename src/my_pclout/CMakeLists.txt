@@ -24,6 +24,8 @@ find_package(OpenCV REQUIRED)
 find_package(VTK REQUIRED)
 find_package(PCL REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET eigen3)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
                                    src/MyPlcFunction.cpp
@@ -39,6 +41,7 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} PkgConfig::PROJECT)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

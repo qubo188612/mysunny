@@ -4,12 +4,15 @@
 #include "rclcpp/rclcpp.hpp"
 #include "fileout/calibration.h"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
+#include "unistd.h"
 
 namespace my_pclout
 {
 using rcl_interfaces::msg::SetParametersResult;
 using std::placeholders::_1;
 using tutorial_interfaces::msg::IfAlgorhmitcloud;
+using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 
 const std::vector<std::string> KEYS = {"pData_En",
                                        "pData_demdlg_R",
@@ -56,11 +59,16 @@ public:
     CAL_POSTURE PData_cal_posture; //P变量姿态内外旋
     Eye_Hand_calibrationmode PData_eye_hand_calibrationmode;//P寄存器激光器安装方式
 
+    RobPos rob;
+    leaser_pos leaserpos;//激光器坐标
+
 private:
 
     void _declare_parameters();
 
     const char * _sub_cloudresult_name = "~/cloudresult";
+
+    const char * _sub_robposresult_name = "~/input_robpos";
 
     const char * _pub_pclresult_name = "~/pclresult";
 
@@ -68,7 +76,11 @@ private:
 
     rclcpp::Subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>::SharedPtr subscription_cloud_result;
 
-    void cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)  const;
+    rclcpp::Subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>::SharedPtr subcription_pos_result;
+
+    void cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg);
+
+    void robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg);
 
     void _cloudresult();  
     

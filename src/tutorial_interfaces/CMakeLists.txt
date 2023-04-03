@@ -19,8 +19,12 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/IfAlgorhmittargetpoint4f.msg"
   "msg/IfAlgorhmitmsg.msg"
   "msg/IfAlgorhmitcloud.msg"
+  "msg/IfAlgorhmitrobpoint3f.msg"
+  "msg/IfAlgorhmittargetrobpoint3f.msg"
+  "msg/IfAlgorhmitroblinecloud.msg"
+  "msg/IfAlgorhmitrobcloud.msg"
   "srv/IfAlgorhmit.srv"
-
+  
   DEPENDENCIES std_msgs
   DEPENDENCIES sensor_msgs
 )

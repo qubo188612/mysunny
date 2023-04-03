@@ -31,6 +31,7 @@ Image_Result_Tcpip::Image_Result_Tcpip(const rclcpp::NodeOptions & options)
 
 Image_Result_Tcpip::~Image_Result_Tcpip()
 {
+  _imageresulttcpthread.join();
     try {
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {

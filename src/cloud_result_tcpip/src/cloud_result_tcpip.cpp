@@ -87,6 +87,7 @@ cerr << "message: " << json_file << endl;
 
 Cloud_Result_Tcpip::~Cloud_Result_Tcpip()
 {
+  _cloudresulttcpthread.join();  
     try {
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {

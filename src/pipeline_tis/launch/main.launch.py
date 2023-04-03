@@ -134,7 +134,7 @@ def generate_launch_description():
     my_pclout  = Node(                                 
          package='my_pclout',             
          executable='my_pclout_node',
-         remappings=[('~/pclresult', '/pcl_cloud_node/result')])
+         remappings=[('~/pclresult', '/pcl_cloud_node/result'),('~/cloudresult','/line_center_reconstruction_node/cloud_task100_199'),('~/input_robpos','/modbus_node/input_robpos')])
 
 
     seam_tracking_node = Node(

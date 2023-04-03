@@ -1,6 +1,8 @@
 #include "my_pclout/my_pclout.hpp"
 #include <cstdio>
 
+tutorial_interfaces::msg::IfAlgorhmitcloud rcvmsg;    
+
 template<typename _Tp>
 std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 {
@@ -10,13 +12,23 @@ std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 namespace my_pclout
 {
 
+volatile int b_fuzhi;
+volatile int b_updatafinish;
+
+
 My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 : Node("my_pclout_node", options)
 {
+  b_fuzhi=0;
+  b_updatafinish=0;
+
   _declare_parameters();
 
   subscription_cloud_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>(
         _sub_cloudresult_name, rclcpp::SensorDataQoS(), std::bind(&My_Pclout::cloud_result_callback, this, _1));
+
+  subcription_pos_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>(
+        _sub_robposresult_name, rclcpp::SensorDataQoS(), std::bind(&My_Pclout::robpos_result_callback, this, _1));
 
   _cloudresulttcpthread = std::thread(&My_Pclout::_cloudresult, this);
 
@@ -76,6 +88,7 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 
 My_Pclout::~My_Pclout()
 {
+  _cloudresulttcpthread.join();
     try {
     RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
   } catch (const std::exception & e) {
@@ -85,9 +98,20 @@ My_Pclout::~My_Pclout()
   }
 }
 
-void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)  const
+void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)
 {
+    rcvmsg=msg;
+}
 
+void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
+{
+    rob.X=msg.posx;
+    rob.Y=msg.posy;
+    rob.Z=msg.posz;
+    rob.RX=msg.posrx;
+    rob.RY=msg.posry;
+    rob.RZ=msg.posrz;
+    rob.nEn=1;
 }
 
 void My_Pclout::_declare_parameters()
@@ -126,7 +150,8 @@ void My_Pclout::_cloudresult()
 {
     while(rclcpp::ok())
     {
-        
+       
+		   sleep(0); 
     }
 }
 

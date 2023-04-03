@@ -23,7 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET libmodbus eigen3)
+pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET libmodbus)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp src/E2centerData.cpp src/FileOut.cpp src/TimeFunction.cpp)
 
