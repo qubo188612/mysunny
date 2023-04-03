@@ -29,7 +29,8 @@ pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET eigen3)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
                                    src/MyPlcFunction.cpp
-                                   src/calibration.cpp )
+                                   src/calibration.cpp 
+                                   src/TimeFunction.cpp)
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp

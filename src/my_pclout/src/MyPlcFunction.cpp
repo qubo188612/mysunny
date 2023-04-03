@@ -466,3 +466,17 @@ void MyPlcFunction::addpoint_image(cv::Mat *f8_deepimg,int coldis,int rowdis)
   }
   cv::rotate(*f8_deepimg, *f8_deepimg, cv::ROTATE_90_COUNTERCLOCKWISE);
 }
+
+void MyPlcFunction::save_pcldata_pclclould(pcl::PointCloud<pcl::PointXYZRGB>::Ptr pclclould)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr saveclould(new pcl::PointCloud<pcl::PointXYZ>);
+    std::string dir="./DATA/";
+    std::string time;
+    TimeFunction to;
+    to.get_time_ms(&time);
+    std::string format=".pcd";
+    dir=dir+time+format;
+    pcl::copyPointCloud(*pclclould,*saveclould);//点云转换
+    pcl::io::savePCDFile(dir,*saveclould);
+    return;
+}

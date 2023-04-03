@@ -19,6 +19,12 @@ volatile int b_updatafinish;
 My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 : Node("my_pclout_node", options)
 {
+
+  ptr_pcl_lineclould.reset(new pcl::PointCloud<pcl::PointXYZRGB>);
+  ptr_pcl_deepclould.reset(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+  b_pclpush=false;
+
   b_fuzhi=0;
   b_updatafinish=0;
 
@@ -29,6 +35,8 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 
   subcription_pos_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>(
         _sub_robposresult_name, rclcpp::SensorDataQoS(), std::bind(&My_Pclout::robpos_result_callback, this, _1));
+
+  _pub_robline = this->create_publisher<IfAlgorhmitroblinecloud>(_pub_pcllineresult_name, rclcpp::SensorDataQoS());
 
   _cloudresulttcpthread = std::thread(&My_Pclout::_cloudresult, this);
 
@@ -80,6 +88,25 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
         {
           PData_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)p.as_int();
         }
+        else if(p.get_name()=="b_pclpush")
+        {
+          b_pclpush=p.as_bool();
+        }
+        else if(p.get_name()=="clear_pcl")
+        {
+          if(p.as_bool()==true)
+          {
+            ptr_pcl_deepclould->clear();
+          }
+        }
+        else if(p.get_name()=="save_pcl")
+        {
+          if(p.as_bool()==true)
+          {
+            MyPlcFunction pcl_f;
+            pcl_f.save_pcldata_pclclould(ptr_pcl_deepclould);
+          }
+        }
       }
       return result;
     }
@@ -100,7 +127,110 @@ My_Pclout::~My_Pclout()
 
 void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)
 {
-    rcvmsg=msg;
+    auto ptr = std::make_unique<IfAlgorhmitroblinecloud>();
+    ptr->header=msg.header;
+    ptr->solderjoints=msg.solderjoints;
+    ptr->lasertrackoutcloud.resize(msg.lasertrackoutcloud.size());
+
+    RobPos robotpos=rob;
+    switch(PData_eye_hand_calibrationmode)
+    {
+      case HAND_IN_EYE:   //眼在手上
+      {
+        for(int i=0;i<ptr->lasertrackoutcloud.size();i++)
+        {
+          Eigen::Vector3d p_hand;
+          TCP_Leaserpos data_group;
+          data_group.leaserpos.nEn=1;
+          data_group.leaserpos.Y=msg.lasertrackoutcloud[i].x;
+          data_group.leaserpos.Z=msg.lasertrackoutcloud[i].y;
+          data_group.robotpos=rob;
+          ptr->lasertrackoutcloud[i].u=msg.lasertrackoutcloud[i].u;
+          ptr->lasertrackoutcloud[i].v=msg.lasertrackoutcloud[i].v;
+          Calibration::hand_on_yes_eyetohand(PData_cal_posture,data_group,pData_matrix_camera2plane,pData_matrix_plane2robot,p_hand);
+          ptr->lasertrackoutcloud[i].x=p_hand.x();
+          ptr->lasertrackoutcloud[i].y=p_hand.y();
+          ptr->lasertrackoutcloud[i].z=p_hand.z();
+        }
+      }
+      break;
+      case HAND_OUT_EYE:     //眼在手外
+      {
+        for(int i=0;i<ptr->lasertrackoutcloud.size();i++)
+        {
+          Eigen::Vector3d eye,hand;
+          eye.x()=0;
+          eye.y()=msg.lasertrackoutcloud[i].x;
+          eye.z()=msg.lasertrackoutcloud[i].y;
+          ptr->lasertrackoutcloud[i].u=msg.lasertrackoutcloud[i].u;
+          ptr->lasertrackoutcloud[i].v=msg.lasertrackoutcloud[i].v;
+          Calibration::hand_out_yes_eyetohand(eye,pData_demdlg_R,pData_demdlg_T,hand);
+          ptr->lasertrackoutcloud[i].x=hand.x();
+          ptr->lasertrackoutcloud[i].y=hand.y();
+          ptr->lasertrackoutcloud[i].z=hand.z();
+        }
+      }
+      break;
+    }
+    ptr->targetpointoutcloud.resize(msg.targetpointoutcloud.size());
+    switch(PData_eye_hand_calibrationmode)
+    {
+      case HAND_IN_EYE:   //眼在手上
+      {
+        for(int i=0;i<ptr->targetpointoutcloud.size();i++)
+        {
+          Eigen::Vector3d p_hand;
+          TCP_Leaserpos data_group;
+          data_group.leaserpos.nEn=1;
+          data_group.leaserpos.Y=msg.targetpointoutcloud[i].x;
+          data_group.leaserpos.Z=msg.targetpointoutcloud[i].y;
+          data_group.robotpos=rob;
+          ptr->targetpointoutcloud[i].u=msg.targetpointoutcloud[i].u;
+          ptr->targetpointoutcloud[i].v=msg.targetpointoutcloud[i].v;
+          Calibration::hand_on_yes_eyetohand(PData_cal_posture,data_group,pData_matrix_camera2plane,pData_matrix_plane2robot,p_hand);
+          ptr->targetpointoutcloud[i].x=p_hand.x();
+          ptr->targetpointoutcloud[i].y=p_hand.y();
+          ptr->targetpointoutcloud[i].z=p_hand.z();
+          ptr->targetpointoutcloud[i].name=msg.targetpointoutcloud[i].name;
+        }
+      }
+      break;
+      case HAND_OUT_EYE:     //眼在手外
+      {
+        for(int i=0;i<ptr->targetpointoutcloud.size();i++)
+        {
+          Eigen::Vector3d eye,hand;
+          eye.x()=0;
+          eye.y()=msg.targetpointoutcloud[i].x;
+          eye.z()=msg.targetpointoutcloud[i].y;
+          ptr->targetpointoutcloud[i].u=msg.targetpointoutcloud[i].u;
+          ptr->targetpointoutcloud[i].v=msg.targetpointoutcloud[i].v;
+          Calibration::hand_out_yes_eyetohand(eye,pData_demdlg_R,pData_demdlg_T,hand);
+          ptr->targetpointoutcloud[i].x=hand.x();
+          ptr->targetpointoutcloud[i].y=hand.y();
+          ptr->targetpointoutcloud[i].z=hand.z();
+          ptr->targetpointoutcloud[i].name=msg.targetpointoutcloud[i].name;
+        }
+      }
+      break;
+    }
+
+    _pub_robline->publish(std::move(ptr));
+
+    if(b_pclpush==true)
+    {
+      ptr_pcl_lineclould->resize(ptr->lasertrackoutcloud.size());
+      for(int i=0;i<ptr->lasertrackoutcloud.size();i++)
+      {
+        pcl::PointXYZRGB point;
+        point.rgb = 255;
+        point.x=ptr->lasertrackoutcloud[i].x;
+        point.y=ptr->lasertrackoutcloud[i].y;
+        point.z=ptr->lasertrackoutcloud[i].z;
+        (*ptr_pcl_lineclould)[i]=point;
+      }
+      (*ptr_pcl_deepclould)=(*ptr_pcl_deepclould)+(*ptr_pcl_lineclould);
+    }
 }
 
 void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 

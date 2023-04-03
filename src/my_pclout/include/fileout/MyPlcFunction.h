@@ -12,6 +12,7 @@
 #include <pcl/io/png_io.h>
 #include <opencv2/opencv.hpp>
 #include <pcl/visualization/range_image_visualizer.h> //深度图像可视化
+#include <fileout/TimeFunction.h>
 
 #define ROWS_PROPORTION              1.0     //相机图像高度比例   实际距离(mm)/相机像素距离
 #define COLS_PROPORTION              1.0     //相机图像宽度比例   实际距离(mm)/相机像素距离
@@ -42,6 +43,8 @@ public:
     int32_t Myfixfdata(float *dataIn_Out,u_int8_t *mask,int32_t num);
 
     void addpoint_image(cv::Mat *f8_deepimg,int coldis,int rowdis);//插补
+
+    void save_pcldata_pclclould(pcl::PointCloud<pcl::PointXYZRGB>::Ptr pclclould);                //保存点云
 };
 
 #endif // MYPLCFUNCTION_H

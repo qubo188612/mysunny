@@ -3,8 +3,10 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "fileout/calibration.h"
+#include "fileout/MyPlcFunction.h"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitrobcloud.hpp"
 #include "unistd.h"
 
 namespace my_pclout
@@ -13,6 +15,8 @@ using rcl_interfaces::msg::SetParametersResult;
 using std::placeholders::_1;
 using tutorial_interfaces::msg::IfAlgorhmitcloud;
 using tutorial_interfaces::msg::IfAlgorhmitrobpos;
+using tutorial_interfaces::msg::IfAlgorhmitroblinecloud;
+using tutorial_interfaces::msg::IfAlgorhmitrobcloud;
 
 const std::vector<std::string> KEYS = {"pData_En",
                                        "pData_demdlg_R",
@@ -20,7 +24,10 @@ const std::vector<std::string> KEYS = {"pData_En",
                                        "pData_matrix_camera2plane",
                                        "pData_matrix_plane2robot",
                                        "PData_cal_posture",
-                                       "PData_eye_hand_calibrationmode"};
+                                       "PData_eye_hand_calibrationmode",
+                                       "b_pclpush",        //开始导入点集
+                                       "save_pcl"          //保存点集
+                                       "clear_pcl"};       //清空点集  
 
 class My_Pclout : public rclcpp::Node
 {
@@ -62,6 +69,11 @@ public:
     RobPos rob;
     leaser_pos leaserpos;//激光器坐标
 
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr ptr_pcl_lineclould;       //轮廓检测结果
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr ptr_pcl_deepclould;       //深度检测结果点云
+
+    bool b_pclpush;//点云存入开关
+
 private:
 
     void _declare_parameters();
@@ -70,13 +82,15 @@ private:
 
     const char * _sub_robposresult_name = "~/input_robpos";
 
-    const char * _pub_pclresult_name = "~/pclresult";
+    const char * _pub_pcllineresult_name = "~/pcllineresult";
 
     std::thread _cloudresulttcpthread;
 
     rclcpp::Subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>::SharedPtr subscription_cloud_result;
 
     rclcpp::Subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>::SharedPtr subcription_pos_result;
+
+    rclcpp::Publisher<IfAlgorhmitroblinecloud>::SharedPtr _pub_robline;
 
     void cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg);
 
