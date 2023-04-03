@@ -76,5 +76,4 @@
         "hash_set": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/src/camera_test",
-    "C_Cpp.errorSquiggles": "disabled"
 }
