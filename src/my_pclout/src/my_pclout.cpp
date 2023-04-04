@@ -19,7 +19,6 @@ volatile int b_updatafinish;
 My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 : Node("my_pclout_node", options)
 {
-
   ptr_pcl_lineclould.reset(new pcl::PointCloud<pcl::PointXYZ>);
   ptr_pcl_deepclould.reset(new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -229,6 +228,9 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
         point.z=ptr->lasertrackoutcloud[i].z;
         (*ptr_pcl_lineclould).push_back(point);
       }
+      (*ptr_pcl_lineclould).width = (int) (*ptr_pcl_lineclould).points.size ();
+      (*ptr_pcl_lineclould).height = 1;
+
       (*ptr_pcl_deepclould)=(*ptr_pcl_deepclould)+(*ptr_pcl_lineclould);
     }
 

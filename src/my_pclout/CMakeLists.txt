@@ -21,12 +21,11 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
-#find_package(Boost REQUIRED)
 find_package(VTK REQUIRED)
 find_package(PCL REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET eigen3)  #flann
+pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET eigen3)
 
 add_library(${PROJECT_NAME} SHARED src/${PROJECT_NAME}.cpp
                                    src/MyPlcFunction.cpp
@@ -37,14 +36,17 @@ ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
   sensor_msgs
-# Boost
   VTK
-  PCL
   tutorial_interfaces
 )
 
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} PkgConfig::PROJECT)
+target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
