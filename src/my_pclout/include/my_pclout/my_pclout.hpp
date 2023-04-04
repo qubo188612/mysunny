@@ -69,8 +69,8 @@ public:
     RobPos rob;
     leaser_pos leaserpos;//激光器坐标
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr ptr_pcl_lineclould;       //轮廓检测结果
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr ptr_pcl_deepclould;       //深度检测结果点云
+    pcl::PointCloud<pcl::PointXYZ>::Ptr ptr_pcl_lineclould;       //轮廓检测结果
+    pcl::PointCloud<pcl::PointXYZ>::Ptr ptr_pcl_deepclould;       //深度检测结果点云
 
     bool b_pclpush;//点云存入开关
 

@@ -12,6 +12,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
+<!--<depend>Boost</depend>-->
   <depend>PCL</depend>
   <depend>VTK</depend>
   <depend>tutorial_interfaces</depend>

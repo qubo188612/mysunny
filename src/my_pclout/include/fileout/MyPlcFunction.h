@@ -44,7 +44,7 @@ public:
 
     void addpoint_image(cv::Mat *f8_deepimg,int coldis,int rowdis);//插补
 
-    void save_pcldata_pclclould(pcl::PointCloud<pcl::PointXYZRGB>::Ptr pclclould);                //保存点云
+    void save_pcldata_pclclould(pcl::PointCloud<pcl::PointXYZ>::Ptr pclclould);                //保存点云
 };
 
 #endif // MYPLCFUNCTION_H

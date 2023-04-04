@@ -20,8 +20,8 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 : Node("my_pclout_node", options)
 {
 
-  ptr_pcl_lineclould.reset(new pcl::PointCloud<pcl::PointXYZRGB>);
-  ptr_pcl_deepclould.reset(new pcl::PointCloud<pcl::PointXYZRGB>);
+  ptr_pcl_lineclould.reset(new pcl::PointCloud<pcl::PointXYZ>);
+  ptr_pcl_deepclould.reset(new pcl::PointCloud<pcl::PointXYZ>);
 
   b_pclpush=false;
 
@@ -105,6 +105,8 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
           {
             MyPlcFunction pcl_f;
             pcl_f.save_pcldata_pclclould(ptr_pcl_deepclould);
+          //pcl::visualization::CloudViewer viewer ("test");
+          //viewer.showCloud(ptr_pcl_deepclould);
           }
         }
       }
@@ -215,22 +217,22 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
       break;
     }
 
-    _pub_robline->publish(std::move(ptr));
-
     if(b_pclpush==true)
     {
-      ptr_pcl_lineclould->resize(ptr->lasertrackoutcloud.size());
+      (*ptr_pcl_lineclould).clear();
+      (*ptr_pcl_lineclould).reserve(ptr->lasertrackoutcloud.size());
       for(int i=0;i<ptr->lasertrackoutcloud.size();i++)
       {
-        pcl::PointXYZRGB point;
-        point.rgb = 255;
+        pcl::PointXYZ point;
         point.x=ptr->lasertrackoutcloud[i].x;
         point.y=ptr->lasertrackoutcloud[i].y;
         point.z=ptr->lasertrackoutcloud[i].z;
-        (*ptr_pcl_lineclould)[i]=point;
+        (*ptr_pcl_lineclould).push_back(point);
       }
       (*ptr_pcl_deepclould)=(*ptr_pcl_deepclould)+(*ptr_pcl_lineclould);
     }
+
+    _pub_robline->publish(std::move(ptr));
 }
 
 void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
@@ -274,6 +276,9 @@ void My_Pclout::_declare_parameters()
   this->declare_parameter("pData_matrix_plane2robot", temp_matrix_plane2robot);
   this->declare_parameter("PData_cal_posture", (u_int16_t)PData_cal_posture);
   this->declare_parameter("PData_eye_hand_calibrationmode", (u_int16_t)PData_eye_hand_calibrationmode);
+  this->declare_parameter("b_pclpush",b_pclpush);
+  this->declare_parameter("clear_pcl",false);
+  this->declare_parameter("save_pcl",false);
 }
 
 void My_Pclout::_cloudresult()
