@@ -163,7 +163,7 @@ def generate_launch_description():
     #   image_tcpip,
         image_result_tcpip,
         cloud_result_tcpip,
-        my_pclout,
+    #   my_pclout,
     #   seam_tracking_node,
         modbus_node,
         gpio_raspberry_node,
