@@ -21,6 +21,13 @@
 #define PIC_IMAGE_HEIGHT 1536
 #define PIC_IMAGE_WIDTH  1024
 
+class Targetpoint
+{
+public:
+  cv::Point2f pointf;
+  std::string name;
+};
+
 namespace laser_imagepos
 {
 
@@ -707,7 +714,7 @@ private:
   //返回值1检测失败，0检测成功
   int RunImage(cv::Mat &imageIn,
                std::vector <cv::Point2f> &pointcloud,
-               std::vector <cv::Point2f> &namepoint,
+               std::vector <Targetpoint> &namepoint,
                bool &solderjoints,//是否焊点
                int step);   //输出结果点信息
 
@@ -737,39 +744,39 @@ private:
   Myhalcv2::L_Point32 fuzhufindST,fuzhufindED;//结果线2拟合区域,(上方)
 
   int alg100_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg101_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg102_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg103_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg104_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg105_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg106_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg107_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
   int alg108_runimage(cv::Mat &cvimgIn,std::vector <cv::Point2f> &pointcloud,
-                      std::vector <cv::Point2f> &namepoint,
+                      std::vector <Targetpoint> &namepoint,
                       bool &solderjoints,//是否焊点
                       int step);
 };

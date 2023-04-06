@@ -300,7 +300,7 @@ void LaserImagePos::InitRunImage()
 
 int LaserImagePos::RunImage(cv::Mat &imageIn,                        //输入图像
                             std::vector <cv::Point2f> &pointcloud,   //输出激光轮廓
-                            std::vector <cv::Point2f> &namepoint,
+                            std::vector <Targetpoint> &namepoint,
                             bool &solderjoints,//是否焊点
                             int step)    //输出结果点信息
 {
@@ -429,7 +429,8 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
   }
   auto result = std::make_unique<IfAlgorhmitmsg>();
   cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-  std::vector <cv::Point2f> pointcloud,resultpoint;
+  std::vector <cv::Point2f> pointcloud;
+  std::vector <Targetpoint> resultpoint;
   bool solderjoints;
   if(0!=RunImage(img,pointcloud,resultpoint,solderjoints,pm.show_step))
   {
@@ -457,11 +458,11 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
   for(int n=0;n<resultpoint.size();n++)
   {
     tutorial_interfaces::msg::IfAlgorhmittargetpoint2f pointtarget;
-    char str[20];
-    sprintf(str,"point_%d",n);
-    pointtarget.name=str;
-    pointtarget.x=resultpoint[n].x;
-    pointtarget.y=resultpoint[n].y;
+//  char str[20];
+//  sprintf(str,"point_%d",n);
+    pointtarget.name=resultpoint[n].name;
+    pointtarget.x=resultpoint[n].pointf.x;
+    pointtarget.y=resultpoint[n].pointf.y;
     result->targetpointout.push_back(pointtarget);
   }
   result->solderjoints=solderjoints;

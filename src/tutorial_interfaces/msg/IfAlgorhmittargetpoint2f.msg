@@ -1,3 +1,10 @@
 float32 x       #目标点x坐标
 float32 y       #目标点y坐标
-string name     #目标点名称(属性)
+string name     #目标点名称(属性)      
+#                               point_0                 #焊缝0点
+#                               normal                  #焊缝法线向量
+#                               point_1                 #焊缝1点
+#                               uplinest                #焊缝上半侧激光线起点
+#                               uplineed                #焊缝上半侧激光线终点
+#                               downlinest              #焊缝下半侧激光线起点
+#                               downlineed              #焊缝下半侧激光线终点

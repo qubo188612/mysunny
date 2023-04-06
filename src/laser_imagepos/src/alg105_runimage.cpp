@@ -289,7 +289,7 @@ int LaserImagePos::alg105_getcallbackParameter(const rclcpp::Parameter &p)
 
 int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
                                     std::vector <cv::Point2f> &pointcloud,
-                                    std::vector <cv::Point2f> &namepoint,
+                                    std::vector <Targetpoint> &namepoint,
                                     bool &solderjoints,
                                     int step)    //输出结果点信息
 {
@@ -324,6 +324,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     Int32 nstarti,nendi,nstartj,nendj;
 
     Myhalcv2::L_Point32F faxian,faxian1,faxian2,faxian3;
+    Targetpoint targetpoint;
 
     /*********************/
     //算法参数
@@ -1547,19 +1548,29 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point); 
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_0";
+    namepoint.push_back(targetpoint); 
     cv_point.x=faxian.x*1000+resultfocal.x;
     cv_point.y=faxian.y*1000+resultfocal.y;
-    namepoint.push_back(cv_point); 
+    targetpoint.pointf=cv_point;
+    targetpoint.name="normal";
+    namepoint.push_back(targetpoint); 
     cv_point.x=resultfocal1.x;
     cv_point.y=resultfocal1.y;
-    namepoint.push_back(cv_point);  
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_1";
+    namepoint.push_back(targetpoint); 
     cv_point.x=resultfocal2.x;
     cv_point.y=resultfocal2.y;
-    namepoint.push_back(cv_point);  
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_2";
+    namepoint.push_back(targetpoint);  
     cv_point.x=resultfocal3.x;
     cv_point.y=resultfocal3.y;
-    namepoint.push_back(cv_point);  
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_3";
+    namepoint.push_back(targetpoint);  
     
     return 0;
 }

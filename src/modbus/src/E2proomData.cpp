@@ -31,6 +31,12 @@ E2proomData::E2proomData()
       mkdir("./SAVE",S_IRWXU);
     }
 
+    dir = "./SAVE/DATA";
+    if (access(dir.c_str(), 0) == -1)
+    {
+      mkdir("./SAVE/DATA",S_IRWXU);
+    }
+
     matrix_camera2plane=cv::Mat::zeros(3,3,CV_64F);
     matrix_plane2robot=cv::Mat::zeros(3,3,CV_64F);
 

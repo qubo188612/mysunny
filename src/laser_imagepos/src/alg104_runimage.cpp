@@ -193,7 +193,7 @@ int LaserImagePos::alg104_getcallbackParameter(const rclcpp::Parameter &p)
 
 int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
                                     std::vector <cv::Point2f> &pointcloud,
-                                    std::vector <cv::Point2f> &namepoint,
+                                    std::vector <Targetpoint> &namepoint,
                                     bool &solderjoints,
                                     int step)    //输出结果点信息
 {
@@ -236,6 +236,7 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     cv::Point2f cv_point;
     Int32 b_duanxianmoshi=0;//断线模式：1,下方线“压”上方线。0,上方线“压”下方
     Myhalcv2::L_Point32F faxian;
+    Targetpoint targetpoint;
 
     /*********************/
     //算法参数
@@ -954,10 +955,14 @@ int LaserImagePos::alg104_runimage( cv::Mat &cvimgIn,
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point);
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_0";
+    namepoint.push_back(targetpoint);
     cv_point.x=faxian.x*1000+resultfocal.x;
     cv_point.y=faxian.y*1000+resultfocal.y;
-    namepoint.push_back(cv_point);
+    targetpoint.pointf=cv_point;
+    targetpoint.name="normal";
+    namepoint.push_back(targetpoint);
 
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "finish alg104");

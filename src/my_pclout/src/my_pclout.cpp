@@ -104,8 +104,6 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
           {
             MyPlcFunction pcl_f;
             pcl_f.save_pcldata_pclclould(ptr_pcl_deepclould);
-          //pcl::visualization::CloudViewer viewer ("test");
-          //viewer.showCloud(ptr_pcl_deepclould);
           }
         }
       }
@@ -128,6 +126,8 @@ My_Pclout::~My_Pclout()
 
 void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmitcloud msg)
 {
+  if(pData_En==true)
+  {
     auto ptr = std::make_unique<IfAlgorhmitroblinecloud>();
     ptr->header=msg.header;
     ptr->solderjoints=msg.solderjoints;
@@ -230,11 +230,11 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
       }
       (*ptr_pcl_lineclould).width = (int) (*ptr_pcl_lineclould).points.size ();
       (*ptr_pcl_lineclould).height = 1;
-
       (*ptr_pcl_deepclould)=(*ptr_pcl_deepclould)+(*ptr_pcl_lineclould);
     }
-
+    
     _pub_robline->publish(std::move(ptr));
+  }
 }
 
 void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 

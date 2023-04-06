@@ -132,30 +132,6 @@ void MyPlcFunction::updata_color_pclclould(pcl::PointCloud<pcl::PointXYZRGB>::Pt
     }
 }
 
-void MyPlcFunction::pclclould_to_rangeImage(pcl::PointCloud<pcl::PointXYZRGB>::Ptr *point_cloud_ptr_In,pcl::RangeImage *rangeImage)
-{
-    // We now want to create a range image from the above point cloud, with a 1deg angular resolution
-    //angular_resolution为模拟的深度传感器的角度分辨率，即深度图像中一个像素对应的角度大小
-    float angularResolution = (float) (  0.1f * (M_PI/180.0f));  //   1.0 degree in radians
-     //max_angle_width为模拟的深度传感器的水平最大采样角度，
-    float maxAngleWidth     = (float) (360.0f * (M_PI/180.0f));  // 360.0 degree in radians
-    //max_angle_height为模拟传感器的垂直方向最大采样角度  都转为弧度
-    float maxAngleHeight    = (float) (180.0f * (M_PI/180.0f));  // 180.0 degree in radians
-     //传感器的采集位置
-    Eigen::Affine3f sensorPose = (Eigen::Affine3f)Eigen::Translation3f(0.0f, 0.0f, 0.0f);
-     //深度图像遵循坐标系统
-    pcl::RangeImage::CoordinateFrame coordinate_frame = pcl::RangeImage::CAMERA_FRAME;
-    float noiseLevel=0.00;    //noise_level获取深度图像深度时，近邻点对查询点距离值的影响水平
-    float minRange = 0.0f;     //min_range设置最小的获取距离，小于最小获取距离的位置为传感器的盲区
-    int borderSize = 1;        //border_size获得深度图像的边缘的宽度
-
-    (*rangeImage).createFromPointCloud(*(*point_cloud_ptr_In), angularResolution, maxAngleWidth, maxAngleHeight,
-                                    sensorPose, coordinate_frame, noiseLevel, minRange, borderSize);
-    float* ranges = (*rangeImage).getRangesArray();
-    unsigned char* rgb_image = pcl::visualization::FloatImageUtils::getVisualImage(ranges, (*rangeImage).width, (*rangeImage).height);
-    pcl::io::saveRgbPNGFile("ha.png", rgb_image, (*rangeImage).width, (*rangeImage).height);
-}
-
 void MyPlcFunction::cv_f32deepimg_to_show8deepimg(cv::Mat f32_deepimg,cv::Mat *f8_deepimg)
 {
     int i,j;
@@ -469,7 +445,7 @@ void MyPlcFunction::addpoint_image(cv::Mat *f8_deepimg,int coldis,int rowdis)
 
 void MyPlcFunction::save_pcldata_pclclould(pcl::PointCloud<pcl::PointXYZ>::Ptr pclclould)
 {
-    std::string dir="./SAVE/";
+    std::string dir="./SAVE/DATA/";
     std::string time;
     TimeFunction to;
     to.get_time_ms(&time);

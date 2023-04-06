@@ -21,8 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(VTK REQUIRED)
-find_package(PCL REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io)
 find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PROJECT REQUIRED IMPORTED_TARGET eigen3)
@@ -36,7 +35,6 @@ ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
   sensor_msgs
-  VTK
   tutorial_interfaces
 )
 
@@ -46,7 +44,7 @@ add_definitions(${PCL_DEFINITIONS})
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} PkgConfig::PROJECT)
-target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

@@ -233,7 +233,7 @@ int LaserImagePos::alg107_getcallbackParameter(const rclcpp::Parameter &p)
 
 int LaserImagePos::alg107_runimage( cv::Mat &cvimgIn,
                                     std::vector <cv::Point2f> &pointcloud,
-                                    std::vector <cv::Point2f> &namepoint,
+                                    std::vector <Targetpoint> &namepoint,
                                     bool &solderjoints,
                                     int step)    //输出结果点信息
 {
@@ -271,6 +271,7 @@ int LaserImagePos::alg107_runimage( cv::Mat &cvimgIn,
     cv::Point2f cv_point;
     Myhalcv2::L_Point32F faxian,faxian3;
     Int32 nstarti,nendi,nstartj,nendj;
+    Targetpoint targetpoint;
 
     /*********************/
     //算法参数
@@ -972,10 +973,14 @@ int LaserImagePos::alg107_runimage( cv::Mat &cvimgIn,
     solderjoints=false;
     cv_point.x=resultfocal.x;
     cv_point.y=resultfocal.y;
-    namepoint.push_back(cv_point);  
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_0";
+    namepoint.push_back(targetpoint);   
     cv_point.x=faxian.x*1000+resultfocal.x;
     cv_point.y=faxian.y*1000+resultfocal.y;
-    namepoint.push_back(cv_point); 
+    targetpoint.pointf=cv_point;
+    targetpoint.name="normal";
+    namepoint.push_back(targetpoint);  
     return 0;
 }
 

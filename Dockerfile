@@ -68,7 +68,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libgirepository1.0-dev \
     libxml2-dev \
     libeigen3-dev \
-    libvtk7-dev \
     libpcl-dev \
     && rm -rf /var/lib/apt/lists/*
 
