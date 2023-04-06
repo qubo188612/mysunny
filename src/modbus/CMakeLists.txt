@@ -31,6 +31,7 @@ add_library(modbus SHARED src/modbus.cpp
                           src/TCPServer.cpp 
                           src/TCPServer2.cpp
                           src/FileOut.cpp 
+                          src/calibration.cpp
                           src/E2proomData.cpp
                           src/E2proomData_als100.cpp
                           src/E2proomData_als101.cpp

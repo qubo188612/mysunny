@@ -39,6 +39,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     nano \
     gpiod \
     libmodbus5 \
+    libpcl-dev \
     /tiscamera.deb \
     && rm -rf /var/lib/apt/lists/* /tiscamera.deb
 
@@ -68,7 +69,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libgirepository1.0-dev \
     libxml2-dev \
     libeigen3-dev \
-    libpcl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 FROM dev AS build

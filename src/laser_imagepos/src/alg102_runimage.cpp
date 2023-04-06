@@ -404,7 +404,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     Myhalcv2::MyConect ImageConect,ImageConectlong,ImageConectlongPX;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed;
-    cv::Point2f cv_point;
+    cv::Point2f cv_point,cv_uplinest,cv_uplineed,cv_downlinest,cv_downlineed;
     Myhalcv2::L_Point32F faxian,faxian3;
     Int32 nstarti,nendi,nstartj,nendj;
     Targetpoint targetpoint;
@@ -956,6 +956,11 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
 
     m_matMask=Myhalcv2::MatCreatClone(m_brygujia,cv8uc1_Imagebuff1);
 
+    cv_downlinest.x=midfindST.x;
+    cv_downlinest.y=midfindST.y;
+    cv_downlineed.x=midfindED.x;
+    cv_downlineed.y=midfindED.y;
+
     if(step==17)
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
@@ -1039,6 +1044,11 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     {
         goto fuzhu;
     }
+
+    cv_uplinest.x=stepfindST.x;
+    cv_uplinest.y=stepfindST.y;
+    cv_uplineed.x=stepfindED.x;
+    cv_uplineed.y=stepfindED.y;
 
     if(step==19)
     {
@@ -1373,7 +1383,12 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     targetpoint.pointf=cv_point;
     targetpoint.name="point_1";
     namepoint.push_back(targetpoint); 
-
+    targetpoint.pointf=cv_uplinest;
+    targetpoint.name="uplinest";
+    namepoint.push_back(targetpoint); 
+    targetpoint.pointf=cv_downlinest;
+    targetpoint.name="downlinest";
+    namepoint.push_back(targetpoint); 
     return 0;   //C这里return
 
 fuzhu:
@@ -1574,6 +1589,9 @@ fuzhu:
     targetpoint.pointf=cv_point;
     targetpoint.name="point_1";
     namepoint.push_back(targetpoint);    
+    targetpoint.pointf=cv_downlinest;
+    targetpoint.name="downlinest";
+    namepoint.push_back(targetpoint); 
     
     return 0;
 }

@@ -106,6 +106,10 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
             pcl_f.save_pcldata_pclclould(ptr_pcl_deepclould);
           }
         }
+        else if(p.get_name()=="alg_pcl")//(工艺包号)
+        {
+          alg_pcl=p.as_int();
+        }
       }
       return result;
     }
@@ -281,6 +285,7 @@ void My_Pclout::_declare_parameters()
   this->declare_parameter("b_pclpush",b_pclpush);
   this->declare_parameter("clear_pcl",false);
   this->declare_parameter("save_pcl",false);
+  this->declare_parameter("alg_pcl",0);
 }
 
 void My_Pclout::_cloudresult()

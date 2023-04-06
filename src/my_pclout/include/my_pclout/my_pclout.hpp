@@ -25,9 +25,10 @@ const std::vector<std::string> KEYS = {"pData_En",
                                        "pData_matrix_plane2robot",
                                        "PData_cal_posture",
                                        "PData_eye_hand_calibrationmode",
+                                       "alg_pcl",          //点云算法模式
                                        "b_pclpush",        //开始导入点集
-                                       "save_pcl"          //保存点集
-                                       "clear_pcl"};       //清空点集  
+                                       "save_pcl",         //保存点集
+                                       "clear_pcl",};      //清空点集  
 
 class My_Pclout : public rclcpp::Node
 {
@@ -73,6 +74,8 @@ public:
     pcl::PointCloud<pcl::PointXYZ>::Ptr ptr_pcl_deepclould;       //深度检测结果点云
 
     bool b_pclpush;//点云存入开关
+
+    int alg_pcl;//点云算法(工艺包号)
 
 private:
 
