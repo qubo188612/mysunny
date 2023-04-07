@@ -1,7 +1,7 @@
 version: "3.9"  # optional since v1.27.0
 services:
   ros:
-    image: qubo188612/sunny-tis:deploy
+    image: qubo188612/sunny-tis:deploy2
     command: ros2 launch pipeline_tis main.launch.py
 #   command: ros2 param load modbus_node /workspace/sunny/install/modbus/share/modbus/config/params.yaml
     container_name: ros
