@@ -51,6 +51,10 @@
 //P变量标定矩阵设置
 #define E2POOM_DEMDLG_SYSPATH_MOTO          "./SAVE/E2P_DEMDLG.bsd"
 
+//工艺参数
+#define E2POOM_CRAFT_SAVEBUFF               25
+#define E2POOM_CRAFT_SYSPATH_MOTO           "./SAVE/E2P_CRAFT_DLG.bsd"
+
 #define E2POOM_ROBOT_MOD_NULL               0        //无机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
 #define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI  2        //智昌川崎机器人
@@ -964,6 +968,22 @@ public:
 
     void read_demdlg_para();
     void write_demdlg_para();
+/****************************/
+    //工艺参数
+    Int16 craft_Id;             //工艺号
+    Int16 craft_als1;           //工艺参数1
+    Int16 craft_als2;           //工艺参数2
+    Int16 craft_als3;           //工艺参数3
+    Int16 craft_als4;           //工艺参数4
+    Int16 craft_als5;           //工艺参数5
+    Int16 craft_als6;           //工艺参数6
+    Int16 craft_als7;           //工艺参数7
+    Int16 craft_als8;           //工艺参数8
+    Int16 craft_als9;           //工艺参数9
+    Int16 craft_als10;          //工艺参数10
+
+    void write_craftdlg_para();
+    void init_craftdlg_para();
 /****************************/
   
     //任务100参数

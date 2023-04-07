@@ -25,10 +25,20 @@ const std::vector<std::string> KEYS = {"pData_En",
                                        "pData_matrix_plane2robot",
                                        "PData_cal_posture",
                                        "PData_eye_hand_calibrationmode",
-                                       "alg_pcl",          //点云算法模式
+                                       "craft_Id",          //点云算法模式
+                                       "craft_als1",   
+                                       "craft_als2",
+                                       "craft_als3",
+                                       "craft_als4",
+                                       "craft_als5",
+                                       "craft_als6",
+                                       "craft_als7",
+                                       "craft_als8",
+                                       "craft_als9",
+                                       "craft_als10", 
                                        "b_pclpush",        //开始导入点集
                                        "save_pcl",         //保存点集
-                                       "clear_pcl",};      //清空点集  
+                                       "clear_pcl"};      //清空点集  
 
 class My_Pclout : public rclcpp::Node
 {
@@ -75,7 +85,17 @@ public:
 
     bool b_pclpush;//点云存入开关
 
-    int alg_pcl;//点云算法(工艺包号)
+    int craft_Id;//点云算法(工艺包号)
+    int craft_als1;//工艺参数1
+    int craft_als2;//工艺参数2
+    int craft_als3;//工艺参数3
+    int craft_als4;//工艺参数4
+    int craft_als5;//工艺参数5
+    int craft_als6;//工艺参数6
+    int craft_als7;//工艺参数7
+    int craft_als8;//工艺参数8
+    int craft_als9;//工艺参数9
+    int craft_als10;//工艺参数10
 
 private:
 

@@ -73,6 +73,7 @@ E2proomData::E2proomData()
     write_P_data_set_para();
     write_P_data_para();
     write_demdlg_para();
+    write_craftdlg_para();
     write();
 
     taskfilename.clear();
@@ -232,6 +233,52 @@ void E2proomData::read_para()
       i8_p++;
       P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)*i8_p;
       i8_p++;
+    }
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
+
+    buff=new Uint8[E2POOM_CRAFT_SAVEBUFF];
+    if(buff==NULL)
+        return;
+    if(0 > fo.ReadFile(E2POOM_CRAFT_SYSPATH_MOTO,buff,E2POOM_CRAFT_SAVEBUFF))
+    {
+        init_craftdlg_para();
+        if(buff!=NULL)
+        {
+          delete []buff;
+          buff=NULL;
+        }
+    }
+    else
+    {
+      Int16 *i16_p;
+      
+      i16_p = (Int16*)buff;
+      craft_Id=*i16_p;
+      i16_p++;
+      craft_als1=*i16_p;
+      i16_p++;
+      craft_als2=*i16_p;
+      i16_p++;
+      craft_als3=*i16_p;
+      i16_p++;
+      craft_als4=*i16_p;
+      i16_p++;
+      craft_als5=*i16_p;
+      i16_p++;
+      craft_als6=*i16_p;
+      i16_p++;
+      craft_als7=*i16_p;
+      i16_p++;
+      craft_als8=*i16_p;
+      i16_p++;
+      craft_als9=*i16_p;
+      i16_p++;
+      craft_als10=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -684,6 +731,66 @@ void E2proomData::write_demdlg_para()
   root["matrix_plane2robot"]=arrData4;
 
   jsonf.writeJsonFile(E2POOM_DEMDLG_SYSPATH_MOTO,root);
+}
+
+void E2proomData::init_craftdlg_para()
+{
+    craft_Id=0;
+    craft_als1=0;
+    craft_als2=0;
+    craft_als3=0;
+    craft_als4=0;
+    craft_als5=0;
+    craft_als6=0;
+    craft_als7=0;
+    craft_als8=0;
+    craft_als9=0;
+    craft_als10=0;
+}
+
+void E2proomData::write_craftdlg_para()
+{
+    Uint8 *buff=NULL;
+    CFileOut fo;
+
+    check_para();
+    buff=new Uint8[E2POOM_CRAFT_SAVEBUFF];
+    if(buff==NULL)
+      return;
+
+    Int16 *i16_p;
+
+    i16_p = (Int16*)buff;
+    *i16_p=craft_Id;
+    i16_p++;
+    *i16_p=craft_als1;
+    i16_p++;
+    *i16_p=craft_als2;
+    i16_p++;
+    *i16_p=craft_als3;
+    i16_p++;
+    *i16_p=craft_als4;
+    i16_p++;
+    *i16_p=craft_als5;
+    i16_p++;
+    *i16_p=craft_als6;
+    i16_p++;
+    *i16_p=craft_als7;
+    i16_p++;
+    *i16_p=craft_als8;
+    i16_p++;
+    *i16_p=craft_als9;
+    i16_p++;
+    *i16_p=craft_als10;
+    i16_p++;
+
+    fo.WriteFile(E2POOM_CRAFT_SYSPATH_MOTO,buff,E2POOM_CRAFT_SAVEBUFF);
+
+    if(buff!=NULL)
+    {
+      delete []buff;
+      buff=NULL;
+    }
 }
 
 void E2proomData::write()

@@ -42,6 +42,7 @@
 
 static int oldparameter[PARAMETER_REGEDIST_NUM]={INT_MAX};
 static int oldrobot[ROBOT_SET_REGEDIST_NUM]={INT_MAX};
+static int oldcraft[SERVER_REGEDIST_NUM]={INT_MAX};
 
 long ZEGEstarttimems=0;
 
@@ -133,6 +134,17 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   _param_pclout_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)});
   _param_pclout_set->set_parameters({rclcpp::Parameter("PData_cal_posture", (u_int16_t)e2proomdata.P_data_cal_posture)});
   _param_pclout_set->set_parameters({rclcpp::Parameter("PData_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_Id", e2proomdata.craft_Id)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als1", e2proomdata.craft_als1)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als2", e2proomdata.craft_als2)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als3", e2proomdata.craft_als3)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als4", e2proomdata.craft_als4)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als5", e2proomdata.craft_als5)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als6", e2proomdata.craft_als6)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als7", e2proomdata.craft_als7)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als8", e2proomdata.craft_als8)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als9", e2proomdata.craft_als9)});
+  _param_pclout_set->set_parameters({rclcpp::Parameter("craft_als10", e2proomdata.craft_als10)});
 /*************************************/
 
   robot_mapping->tab_registers[P_DATA_EN_REG_ADD]=(u_int16_t)e2proomdata.P_data_En;
@@ -248,6 +260,12 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   mb_mapping->tab_registers[0x12a] = 1000;//跟踪p变量
   _task_numberset(e2proomdata.task_num);
   RCLCPP_INFO(this->get_logger(), "task=%d",e2proomdata.task_num);
+
+  init_craft_parameter();
+  for(int i=CRAFT_ID_REG_ADD;i<=CRAFT_ALS10_REG_ADD;i++)
+  {
+    oldcraft[i]=INT_MAX;
+  }
 
   mb_forwardmapping = modbus_mapping_new(0, 0, SERVER_REGEDIST_NUM, 0);
   if (!mb_forwardmapping) {
@@ -979,6 +997,21 @@ void Modbus::_modbus(int port)
           {
             oldtasknum=mb_mapping->tab_registers[0x102];
             _task_numberset(oldtasknum);
+          }
+
+          u_int8_t u8_temp=0;
+          for(int i=CRAFT_ID_REG_ADD;i<=CRAFT_ALS10_REG_ADD;i++)
+          {
+            if(oldcraft[i]!=mb_mapping->tab_registers[i])
+            {
+              oldcraft[i]=mb_mapping->tab_registers[i];
+              u8_temp=1;
+              craft_task_parameter(i,oldcraft[i]);
+            }
+          }
+          if(u8_temp==1)
+          {
+            e2proomdata.write_craftdlg_para();
           }
 
           switch(e2proomdata.robot_mod)

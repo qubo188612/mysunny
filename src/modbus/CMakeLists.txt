@@ -42,6 +42,7 @@ add_library(modbus SHARED src/modbus.cpp
                           src/E2proomData_als106.cpp
                           src/E2proomData_als107.cpp
                           src/E2proomData_als108.cpp
+                          src/modbus_craft.cpp
                           src/modbus_als100.cpp
                           src/modbus_als101.cpp
                           src/modbus_als102.cpp

@@ -106,9 +106,49 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
             pcl_f.save_pcldata_pclclould(ptr_pcl_deepclould);
           }
         }
-        else if(p.get_name()=="alg_pcl")//(工艺包号)
+        else if(p.get_name()=="craft_Id")//(工艺包号)
         {
-          alg_pcl=p.as_int();
+          craft_Id=p.as_int();
+        }
+        else if(p.get_name()=="craft_als1")
+        {
+          craft_als1=p.as_int();
+        }
+        else if(p.get_name()=="craft_als2")
+        {
+          craft_als2=p.as_int();
+        }
+        else if(p.get_name()=="craft_als3")
+        {
+          craft_als3=p.as_int();
+        }
+        else if(p.get_name()=="craft_als4")
+        {
+          craft_als4=p.as_int();
+        }
+        else if(p.get_name()=="craft_als5")
+        {
+          craft_als5=p.as_int();
+        }
+        else if(p.get_name()=="craft_als6")
+        {
+          craft_als6=p.as_int();
+        }
+        else if(p.get_name()=="craft_als7")
+        {
+          craft_als7=p.as_int();
+        }
+        else if(p.get_name()=="craft_als8")
+        {
+          craft_als8=p.as_int();
+        }
+        else if(p.get_name()=="craft_als9")
+        {
+          craft_als9=p.as_int();
+        }
+        else if(p.get_name()=="craft_als10")
+        {
+          craft_als10=p.as_int();
         }
       }
       return result;
@@ -285,7 +325,17 @@ void My_Pclout::_declare_parameters()
   this->declare_parameter("b_pclpush",b_pclpush);
   this->declare_parameter("clear_pcl",false);
   this->declare_parameter("save_pcl",false);
-  this->declare_parameter("alg_pcl",0);
+  this->declare_parameter("craft_Id",0);
+  this->declare_parameter("craft_als1",0);
+  this->declare_parameter("craft_als2",0);
+  this->declare_parameter("craft_als3",0);
+  this->declare_parameter("craft_als4",0);
+  this->declare_parameter("craft_als5",0);
+  this->declare_parameter("craft_als6",0);
+  this->declare_parameter("craft_als7",0);
+  this->declare_parameter("craft_als8",0);
+  this->declare_parameter("craft_als9",0);
+  this->declare_parameter("craft_als10",0);
 }
 
 void My_Pclout::_cloudresult()

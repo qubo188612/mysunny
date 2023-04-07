@@ -59,6 +59,19 @@ using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 #define P_DATA_CAL_POSTURE_REG_ADD                  0x000d
 #define P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD     0x000e      
 
+
+#define CRAFT_ID_REG_ADD                       0x144
+#define CRAFT_ALS1_REG_ADD                     0x145
+#define CRAFT_ALS2_REG_ADD                     0x146
+#define CRAFT_ALS3_REG_ADD                     0x147
+#define CRAFT_ALS4_REG_ADD                     0x148
+#define CRAFT_ALS5_REG_ADD                     0x149
+#define CRAFT_ALS6_REG_ADD                     0x14a
+#define CRAFT_ALS7_REG_ADD                     0x14b
+#define CRAFT_ALS8_REG_ADD                     0x14c
+#define CRAFT_ALS9_REG_ADD                     0x14d
+#define CRAFT_ALS10_REG_ADD                    0x14e
+
 #define PARAMETER_REGEDIST_NUM                 400
 
 #define ALS100_EXPOSURE_TIME_REG_ADD           0x0000
@@ -442,6 +455,9 @@ public:
   void _task_numberset(u_int16_t num);
 
   void _task_parameter(int ddr,u_int16_t num);
+
+  int craft_task_parameter(int ddr,u_int16_t num);
+  void init_craft_parameter();
 
   int als100_task_parameter(int ddr,u_int16_t num);
   int als101_task_parameter(int ddr,u_int16_t num);
