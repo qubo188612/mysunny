@@ -39,7 +39,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     nano \
     gpiod \
     libmodbus5 \
-    libpcl-dev \
     /tiscamera.deb \
     && rm -rf /var/lib/apt/lists/* /tiscamera.deb
 

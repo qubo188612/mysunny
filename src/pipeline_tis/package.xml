@@ -20,7 +20,6 @@
   <depend>image_tcpip</depend>
   <depend>image_result_tcpip</depend>
   <depend>cloud_result_tcpip</depend>
-  <depend>my_pclout</depend>  
   <depend>seam_tracking</depend>
   <depend>modbus</depend>
   <depend>gpio_raspberry</depend>

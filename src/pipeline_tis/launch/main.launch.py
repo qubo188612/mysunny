@@ -130,12 +130,6 @@ def generate_launch_description():
          package='cloud_result_tcpip',             
          executable='cloud_result_tcpip_node',
          remappings=[('~/cloudresult', '/line_center_reconstruction_node/cloud_task100_199')])
-    
-    my_pclout  = Node(                                 
-         package='my_pclout',             
-         executable='my_pclout_node',
-         remappings=[('~/pcllineresult', '/pcl_cloud_node/lineresult'),('~/cloudresult','/line_center_reconstruction_node/cloud_task100_199'),('~/input_robpos','/modbus_node/input_robpos')])
-
 
     seam_tracking_node = Node(
         package='seam_tracking',
@@ -163,7 +157,6 @@ def generate_launch_description():
     #   image_tcpip,
         image_result_tcpip,
         cloud_result_tcpip,
-        my_pclout,
     #   seam_tracking_node,
         modbus_node,
         gpio_raspberry_node,
