@@ -2632,10 +2632,12 @@ void* received(void *m)
                 {
                   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:
                   {
+                    Json::Value root;
+                    jsonfuction js;
+                    Json::Value sent_root;
                     std::vector<char> vec=_p->desc[i]->message;
                     vec.push_back('\0');
                     std::string str(vec.begin(), vec.end());
-
                     if(_p->b_tcpsockershow==true)
                     {
                     cerr << "id:      " << _p->desc[i]->id      << endl
@@ -2644,16 +2646,12 @@ void* received(void *m)
                         << "socket:  " << _p->desc[i]->socket  << endl
                         << "enable:  " << _p->desc[i]->enable_message_runtime << endl;
                     }
-                  
-                    Json::Value root;
-                    jsonfuction js;
-                    Json::Value sent_root;
                   #ifdef USE_PARENTHESES_INSTEAD_QUOTATION
-                    for(unsigned int n=0;n<_p->desc[i]->message.size();n++)
+                    for(unsigned int n=0;n<str.size();n++)
                     {
-                        if(_p->desc[i]->message[n]==0x28||_p->desc[i]->message[n]==0x29)   //"
+                        if(str[n]==0x28||str[n]==0x29)   //"
                         {
-                           _p->desc[i]->message[n]=0x22; 
+                           str[n]=0x22; 
                         }
                     }
                   #endif
