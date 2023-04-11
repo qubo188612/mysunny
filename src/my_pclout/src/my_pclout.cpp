@@ -276,7 +276,7 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
       (*ptr_pcl_lineclould).height = 1;
       (*ptr_pcl_deepclould)=(*ptr_pcl_deepclould)+(*ptr_pcl_lineclould);
     }
-    
+
     _pub_robline->publish(std::move(ptr));
   }
 }
