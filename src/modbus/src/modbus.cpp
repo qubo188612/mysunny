@@ -2682,11 +2682,11 @@ void* received(void *m)
                     jsonfuction js;
                     Json::Value sent_root;
                   #ifdef USE_PARENTHESES_INSTEAD_QUOTATION
-                    for(unsigned int n=0;n<_p->desc[i]->message.size();n++)
+                    for(unsigned int n=0;n<str.size();n++)
                     {
-                        if(_p->desc[i]->message[n]==0x28||_p->desc[i]->message[n]==0x29)   //"
+                        if(str[n]==0x28||str[n]==0x29)   //"
                         {
-                           _p->desc[i]->message[n]=0x22; 
+                           str[n]=0x22; 
                         }
                     }
                   #endif
