@@ -51,6 +51,150 @@ std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 	return (std::vector<_Tp>)(mat.reshape(1, 1));//通道数不变，按行转为一行
 }
 
+long long pow1(int x,int y)
+{
+	long long num = 1;
+	int i;
+ 
+	for(i = 0; i < y; i++)
+	{
+		num = num*x;
+	}
+ 
+	return num;
+}
+
+int CM_Atof(char* source,double* doubleing)
+{
+	int offset1,offset2,n;
+	double num;
+	int signedflag;//+为1 -为0
+ 
+	if(source == NULL || *source == 0 || doubleing == NULL)
+	{
+		return 0;
+	}
+ 
+	offset1 = 0;
+	offset2 = 0;
+	num = 0.0;
+ 
+	while(*source > 0 && *source <= 32)//去除首部空格 \r \n \t \r 等异常字符
+	{
+		source++;
+		offset1++;
+	}
+ 
+	signedflag = 1;//默认为+
+	if(*source == '+')
+	{
+		signedflag = 1;
+		source++;
+		offset1++;
+	}
+	else if(*source == '-')
+	{
+		signedflag = 0;
+		source++;
+		offset1++;
+	}
+ 
+ 
+	//整数部分
+	while(*source != '\0' && *source >= '0' && *source <= '9')
+	{
+		num = *source- '0' + num*10.0;
+		source++;
+		offset2++;
+	}
+ 
+	if(offset2 != 0 && *source == '.')
+	{
+		source++;
+		offset2++;
+ 
+		//小数部分
+		n = 0;
+		while(*source != '\0' && *source >= '0' && *source <= '9')
+		{
+			num = (*source- '0')*(1.0/pow1(10,++n)) + num;
+			source++;
+			offset2++;
+		}
+	}
+ 
+	if(signedflag == 0)
+	{
+		num = -num;
+	}
+ 
+	if(offset2)
+	{
+		*doubleing = num;
+		return offset1+offset2;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int CM_Atoi(char* source,int* integer)
+{
+	int offset1,offset2,num;
+	int signedflag;//+为1 -为0
+ 
+	if(source == NULL || *source == 0 ||integer == NULL)
+	{
+		return 0;
+	}
+ 
+	offset1 = 0;
+	offset2 = 0;
+	num = 0;
+ 
+	while(*source > 0 && *source <= 32)//去除首部空格 \r \n \t \r 等异常字符
+	{
+		source++;
+		offset1++;
+	}
+ 
+	signedflag = 1;//默认为+
+	if(*source == '+')
+	{
+		signedflag = 1;
+		source++;
+		offset1++;
+	}
+	else if(*source == '-')
+	{
+		signedflag = 0;
+		source++;
+		offset1++;
+	}
+ 
+	while(*source != '\0' && *source >= '0' && *source <= '9')
+	{
+		num = *source- '0' + num*10;
+		source++;
+		offset2++;
+	}
+ 
+	if(signedflag == 0)
+	{
+		num = -num;
+	}
+ 
+	if(offset2)
+	{
+		*integer = num;
+		return offset1+offset2;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 namespace modbus
 {
@@ -105,7 +249,10 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   }
   robot_mapping->tab_registers[ROBOT_MOD_REG_ADD]=(u_int16_t)e2proomdata.robot_mod;
   robot_mapping->tab_registers[ROBOT_PORT_REG_ADD]=(u_int16_t)e2proomdata.robot_port;
-  
+  robot_mapping->tab_registers[ROBOT_IPADDRESS_1_REG_ADD]=(u_int16_t)e2proomdata.robot_ip1;
+  robot_mapping->tab_registers[ROBOT_IPADDRESS_2_REG_ADD]=(u_int16_t)e2proomdata.robot_ip2;
+  robot_mapping->tab_registers[ROBOT_IPADDRESS_3_REG_ADD]=(u_int16_t)e2proomdata.robot_ip3;
+  robot_mapping->tab_registers[ROBOT_IPADDRESS_4_REG_ADD]=(u_int16_t)e2proomdata.robot_ip4;
 
 /**********************************/
 //P变量ROS2节点
@@ -270,6 +417,10 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
 
   b_threadforward=false;
   b_jsontcpthread=false;
+  b_clienttcpthread=false;
+  b_sendentrecv=false;
+  b_sendent=false;
+  b_client=false;
   switch(e2proomdata.robot_mod)
   {
   case E2POOM_ROBOT_MOD_NULL:
@@ -288,7 +439,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       _threadforward = std::thread(&Modbus::_modbusforward, this, robot_port);
       b_threadforward = true;
       break;
-  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:    //TCP
+  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:    //TCP服务器
   case E2POOM_ROBOT_MOD_GANGSHANG:    
   case E2POOM_ROBOT_MOD_EFORT:    
   case E2POOM_ROBOT_MOD_STEP: 
@@ -296,6 +447,10 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       _jsontcpthread = std::thread(&Modbus::_json, this, robot_port);
       b_jsontcpthread = true;
       break;
+  case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS: //TCP客户端
+      _clienttcpthread = std::thread(&Modbus::_client, this);
+      b_clienttcpthread=true;
+  break;
   default:
       break;
   }
@@ -478,6 +633,8 @@ Modbus::~Modbus()
       _jsontcpthread.join();
     if(b_threadforward==true)
       _threadforward.join();
+    if(b_clienttcpthread==true)
+      _clienttcpthread.join();
     _param_gpio.reset();
     _param_camera.reset();
     _param_camera_get.reset();
@@ -806,6 +963,18 @@ void Modbus::_task_robot(int ddr,u_int16_t num)
       e2proomdata.P_data_eye_hand_calibrationmode=(Eye_Hand_calibrationmode)num;
       _param_pclout_set->set_parameters({rclcpp::Parameter("PData_eye_hand_calibrationmode", (u_int16_t)e2proomdata.P_data_eye_hand_calibrationmode)});
     break;
+    case ROBOT_IPADDRESS_1_REG_ADD:
+      e2proomdata.robot_ip1=num;
+    break;
+    case ROBOT_IPADDRESS_2_REG_ADD:
+      e2proomdata.robot_ip2=num;
+    break;  
+    case ROBOT_IPADDRESS_3_REG_ADD:
+      e2proomdata.robot_ip3=num;
+    break;
+    case ROBOT_IPADDRESS_4_REG_ADD:
+      e2proomdata.robot_ip4=num;
+    break;
     default:
     break;
   }
@@ -1015,36 +1184,36 @@ void Modbus::_modbus(int port)
 
                   ptr->header.stamp = this->now();
                   ptr->header.frame_id = std::to_string(frame++);
-                  u16_data[0]=mb_mapping->tab_registers[0x111];
-                  u16_data[1]=mb_mapping->tab_registers[0x112];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
                   ptr->posx=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x113];
-                  u16_data[1]=mb_mapping->tab_registers[0x114];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD+1];
                   ptr->posy=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x115];
-                  u16_data[1]=mb_mapping->tab_registers[0x116];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
                   ptr->posz=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x117];
-                  u16_data[1]=mb_mapping->tab_registers[0x118];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD+1];
                   ptr->posrx=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x119];
-                  u16_data[1]=mb_mapping->tab_registers[0x11a];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD+1];
                   ptr->posry=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x11b];
-                  u16_data[1]=mb_mapping->tab_registers[0x11c];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD+1];
                   ptr->posrz=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x11d];
-                  u16_data[1]=mb_mapping->tab_registers[0x11e];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD+1];
                   ptr->posout1=*i32_data;
-                  u16_data[0]=mb_mapping->tab_registers[0x11f];
-                  u16_data[1]=mb_mapping->tab_registers[0x120];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD+1];
                   ptr->posout2=*i32_data;
-                  u16_data[0]=mb_mapping->tab_registers[0x121];
-                  u16_data[1]=mb_mapping->tab_registers[0x122];
+                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD];
+                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD+1];
                   ptr->posout3=*i32_data;
-                  ptr->toolid=mb_mapping->tab_registers[0x123];
-                  ptr->tcpid=mb_mapping->tab_registers[0x124];
-                  ptr->usertcpid=mb_mapping->tab_registers[0x125];
+                  ptr->toolid=mb_mapping->tab_registers[ALS_REALTIME_TOOL_REG_ADD];
+                  ptr->tcpid=mb_mapping->tab_registers[ALS_REALTIME_TCP_REG_ADD];
+                  ptr->usertcpid=mb_mapping->tab_registers[ALS_REALTIME_USERTCP_REG_ADD];
                   _pub_robpos->publish(std::move(ptr));
               }
               /******************************/
@@ -2588,6 +2757,288 @@ void* ftpreceived(void *m)
         sleep(0);
     }
     return 0;
+}
+
+void Modbus::_sentrecv()
+{
+  while(rclcpp::ok())
+  {
+    Uint16 robot_mod=e2proomdata.robot_mod;
+    switch (robot_mod)
+    {
+      case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
+      { 
+      //RCLCPP_INFO(this->get_logger(), "sent laser_signal");
+        usleep(200000);
+        std::string str="list/R laser_signal\r\n"; 
+        m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询photo的值  
+      }
+      break;
+    }
+    usleep(0);
+  }
+}
+
+void Modbus::_client()
+{
+    while(rclcpp::ok())
+    {
+        Uint16 robot_mod=e2proomdata.robot_mod;
+        sleep(5);//每隔5秒查看一次机器人
+        char rodb_ip[50];
+        u_int16_t ip[4];
+        ip[0]=192;
+        ip[1]=168;
+        ip[2]=1;
+        ip[3]=23;
+        sprintf(rodb_ip,"%d.%d.%d.%d",ip[0],ip[1],ip[2],ip[3]);
+
+        RCLCPP_INFO(this->get_logger(), "connecting robot...");
+        switch (robot_mod)
+        {
+          case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
+          {
+            m_client.CreateSocket();
+            if(false==m_client.Connect(rodb_ip,ROBOT_KAWASAKI_SEND_PORT))
+            {
+                RCLCPP_ERROR(this->get_logger(), "connecting error...");
+                continue;
+            }
+            m_client.SetBlock(0);
+            if(0!=m_client.SetRcvBufferlong(ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2))
+            {
+                RCLCPP_ERROR(this->get_logger(), "connecting setrcvbuffer error...");
+                continue;
+            }
+
+            b_client=true;
+            rcv_buf=new uint8_t[ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2+1];
+
+            m_sendent.CreateSocket();
+            if(false==m_sendent.Connect(rodb_ip,ROBOT_KAWASAKI_SEND_PORT))
+            {
+                RCLCPP_ERROR(this->get_logger(), "connecting m_sendent error...");
+                continue;
+            }
+            m_sendent.SetBlock(0);
+            b_sendent=true;
+
+            m_sendentrecv.CreateSocket();
+            if(false==m_sendentrecv.Connect(rodb_ip,ROBOT_KAWASAKI_SEND_PORT))
+            {
+                RCLCPP_ERROR(this->get_logger(), "connecting m_sendentrecv error...");
+                continue;
+            }
+            m_sendentrecv.SetBlock(0);
+            
+
+            rcv_buf2=new uint8_t[ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2+1];
+
+            sleep(1);
+            std::string str="as\r\n";
+            m_client.Send(str.c_str(),str.size());
+            m_sendent.Send(str.c_str(),str.size());
+            m_sendentrecv.Send(str.c_str(),str.size());
+            usleep(200000);
+
+            b_sendentrecv=true;
+            _sentrecvtcpthread = std::thread(&Modbus::_sentrecv, this);
+
+            str="where 2\r\n";
+            m_client.Send(str.c_str(),str.size());
+          }
+          break;
+        }
+        if(b_client==true&&b_sendent==true&&b_sendentrecv==true)
+        {
+          RCLCPP_INFO(this->get_logger(), "robot connected");
+          while(rclcpp::ok())
+          {
+            switch (robot_mod)
+            {
+              case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
+              {  
+                  static int total_rcvnum=0;
+                  static std::string s_rcvmsg;
+                  int rcvnum=m_client.Recv((char*)rcv_buf,ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2);
+                  if(rcvnum>0)
+                  {
+                      rcv_buf[rcvnum]='\0';
+                      if(b_tcpsockershow==true)
+                      { 
+                        RCLCPP_INFO(this->get_logger(), (const char*)rcv_buf);
+                      }
+                      total_rcvnum=total_rcvnum+rcvnum;
+                      std::string rcvmsg=(char*)rcv_buf;
+                      s_rcvmsg=s_rcvmsg+rcvmsg;
+                      if(rcvmsg[rcvmsg.size()-1]=='\n')//结尾
+                      {
+                          if(s_rcvmsg.size()>=2&&s_rcvmsg[s_rcvmsg.size()-2]=='\r')
+                          {
+                              bool b_succeed=true;
+                              std::vector<float> pos;
+                              std::string msg=s_rcvmsg.substr(0,s_rcvmsg.size()-2);
+                              istringstream in(msg);
+                              vector<string> strList;
+                              std::string t;
+                              while (getline(in, t, ' ')) {	//这里单引号要注意
+                                strList.push_back(t);
+                              }
+                              for(int i=0;i<strList.size();i++)
+                              {
+                                  std::string s_data=strList[i];
+                                  if(s_data.size()>0)
+                                  {
+                                      int temp;
+                                      double f_data;
+                                      temp=CM_Atof((char*)(s_data.c_str()),&f_data);
+                                      if(temp==0)
+                                      {
+                                          b_succeed=false;
+                                          break;
+                                      }
+                                      pos.push_back(f_data);
+                                  }
+                              }
+                              if(pos.size()>=6&&b_succeed==true)//解码成功
+                              {
+                                  int f_data;
+                                  f_data=pos[0]*1000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                                  f_data=pos[1]*1000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                                  f_data=pos[2]*1000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                                  f_data=pos[3]*10000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                                  f_data=pos[4]*10000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                                  f_data=pos[5]*10000;
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD]=((uint16_t*)(&f_data))[0];
+                                  mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD+1]=((uint16_t*)(&f_data))[1];
+                              }
+                              //有外部轴
+                              if(pos.size()>6&&pos.size()<=9)
+                              {
+                                  int st=0;
+                                  for(int i=6;i<pos.size();i++)
+                                  {
+                                      int i_data;
+                                      i_data=pos[i]*1000;//川崎第六轴放大1000倍
+                                      mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD+st]=((uint16_t*)(&i_data))[0];
+                                      mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD+st+1]=((uint16_t*)(&i_data))[1];
+                                      st=st+2;
+                                  }
+                              }
+                          }
+                          s_rcvmsg.clear();
+                          total_rcvnum=0;
+                      }
+                  }
+                  int rcvnum2=m_sendentrecv.Recv((char*)rcv_buf2,ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2);
+                  if(rcvnum2>0)
+                  {
+                    rcv_buf2[rcvnum2]='\0';
+                    if(b_tcpsockershow==true)
+                    { 
+                      RCLCPP_INFO(this->get_logger(), (const char*)rcv_buf2);
+                    }
+                    static int total_rcvnum=0;
+                    static std::string s_rcvmsg;
+                    total_rcvnum=total_rcvnum+rcvnum2;
+                    std::string rcvmsg=(char*)rcv_buf2;
+                    s_rcvmsg=s_rcvmsg+rcvmsg;
+                    if(rcvmsg[rcvmsg.size()-1]=='\n')//结尾
+                    {
+                      if(s_rcvmsg.size()>=2&&s_rcvmsg[s_rcvmsg.size()-2]=='\r')
+                      {
+                        int s;
+                        bool b_succeed=true;
+                        string strTemp;
+                        bool b_find=false;
+                        if(b_find==false)
+                        { 
+                          strTemp = "laser_signal = "; 
+                          s=s_rcvmsg.find(strTemp,0);
+
+                          
+                          if(s!=0xfffffff)
+                          {
+                            string s_data;
+                            for(int i=s+strTemp.size();i<s_rcvmsg.size();i++)
+                            {
+                              if(s_rcvmsg[i]=='\r')
+                              {
+                                break;
+                              }
+                              else
+                              {
+                                s_data.push_back(s_rcvmsg[i]);
+                              }
+                            }
+                            
+                            int temp;
+                            int i_data;
+                            temp=CM_Atoi((char*)(s_data.c_str()),&i_data);
+                            if(temp!=0)
+                            {
+                                if(i_data==1)//打开激光
+                                {
+                                //    RCLCPP_INFO(this->get_logger(), "打开激光");
+                                    _gpio_laser(true);
+                                    _camera_power(true);
+                                    mb_mapping->tab_registers[0x101]=0xff; 
+                                }
+                                else if(i_data==0)//关闭激光
+                                {
+                                //    RCLCPP_INFO(this->get_logger(), "关闭激光");
+                                    _gpio_laser(false);
+                                    _camera_power(false);
+                                    mb_mapping->tab_registers[0x101]=0x00; 
+                                }
+                                else
+                                {
+                                //    RCLCPP_INFO(this->get_logger(), "%d",i_data);
+                                }
+                            }
+                            else
+                            {
+                            //  RCLCPP_INFO(this->get_logger(), s_data.c_str());
+                            }
+                            b_find=true;
+                          }
+                        }
+                      }
+                      s_rcvmsg.clear();
+                      total_rcvnum=0;
+                    }
+                  }
+              }
+              break;
+            }  
+            usleep(0);
+          }
+        }
+        else if(b_client==true)
+        {
+          delete[] rcv_buf;
+          m_client.Close();
+        }
+        else if(b_sendent==true)
+        {
+          m_sendent.Close();
+        }
+        else if(b_sendentrecv==true)
+        {
+          delete[] rcv_buf2;
+          m_sendentrecv.Close();
+        }
+    }
 }
 
 void Modbus::_json(int port)

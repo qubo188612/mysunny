@@ -28,7 +28,7 @@
 #define E2POOM_TASK_NUM_MAX                65535 
 
 //机器人设置
-#define E2POOM_ROBOT_SAVEBUFF              20
+#define E2POOM_ROBOT_SAVEBUFF              24
 #define E2POOM_ROBOT_SYSPATH_MOTO			"./SAVE/E2P_ROBOT_DLG.bsd"
 
 //零点设置
@@ -51,16 +51,17 @@
 //P变量标定矩阵设置
 #define E2POOM_DEMDLG_SYSPATH_MOTO          "./SAVE/E2P_DEMDLG.bsd"
 
-#define E2POOM_ROBOT_MOD_NULL               0        //无机器人
-#define E2POOM_ROBOT_MOD_ZHICHANG           1        //智昌机器人
-#define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI  2        //智昌川崎机器人
-#define E2POOM_ROBOT_MOD_MOKA_NABOTE        3        //摩卡纳博特机器人
-#define E2POOM_ROBOT_MOD_GANGSHANG          4        //岗上机器人
-#define E2POOM_ROBOT_MOD_EFORT              5        //埃夫特机器人
-#define E2POOM_ROBOT_MOD_MOKA               6        //藦卡机器人
-#define E2POOM_ROBOT_MOD_ZEGE_2             7        //智哥机器人通信协议2
-#define E2POOM_ROBOT_MOD_HUACHENG           8        //华成工控创想
-#define E2POOM_ROBOT_MOD_STEP               9        //新时达
+#define E2POOM_ROBOT_MOD_NULL                   0        //无机器人
+#define E2POOM_ROBOT_MOD_ZHICHANG               1        //智昌机器人
+#define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI      2        //智昌川崎机器人
+#define E2POOM_ROBOT_MOD_MOKA_NABOTE            3        //摩卡纳博特机器人
+#define E2POOM_ROBOT_MOD_GANGSHANG              4        //岗上机器人
+#define E2POOM_ROBOT_MOD_EFORT                  5        //埃夫特机器人
+#define E2POOM_ROBOT_MOD_MOKA                   6        //藦卡机器人
+#define E2POOM_ROBOT_MOD_ZEGE_2                 7        //智哥机器人通信协议2
+#define E2POOM_ROBOT_MOD_HUACHENG               8        //华成工控创想
+#define E2POOM_ROBOT_MOD_STEP                   9        //新时达
+#define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS   10       //智昌川崎机器人AS
 
 #define E2POOM_ROBOT_PORT_MIN               1503     //机器人通信最小端口
 #define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口
@@ -914,7 +915,12 @@ public:
 /****************************/
     //机器人参数
     Uint16 robot_mod;           //机器人型号
-    Uint16 robot_port;          //机器人端口
+    Uint16 robot_port;          //机器人端口,激光器为服务器时使用
+
+    Uint8 robot_ip1;            //机器人IP1,机器人为服务器时使用
+    Uint8 robot_ip2;            //机器人IP2,机器人为服务器时使用
+    Uint8 robot_ip3;            //机器人IP3,机器人为服务器时使用
+    Uint8 robot_ip4;            //机器人IP4,机器人为服务器时使用
     
     void write_robot_para();	//保存机器人参数
     void init_robot_para();		//初始化机器人参数

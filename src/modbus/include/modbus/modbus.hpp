@@ -30,9 +30,13 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include "fileout/calibration.h"
+#include <TCP/XTcp.h>
 
 #define PIC_IMAGE_HEIGHT 1536
 #define PIC_IMAGE_WIDTH  1024
+
+#define ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX    1440
+#define ROBOT_KAWASAKI_SEND_PORT              23
 
 namespace modbus
 {
@@ -42,7 +46,7 @@ using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 #define SERVER_REGEDIST_NUM               400
 
 
-#define ROBOT_SET_REGEDIST_NUM                      0x10
+#define ROBOT_SET_REGEDIST_NUM                      0x20
 #define ROBOT_MOD_REG_ADD                           0x0000
 #define ROBOT_PORT_REG_ADD                          0x0001
 #define ALSROBOTCAM_COMPENSATION_X                  0x0002  //标定补偿X
@@ -57,7 +61,24 @@ using tutorial_interfaces::msg::IfAlgorhmitrobpos;
 #define ALSROBOTCAM_REVERSE_Z_REG_ADD               0x000b
 #define P_DATA_EN_REG_ADD                           0x000c
 #define P_DATA_CAL_POSTURE_REG_ADD                  0x000d
-#define P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD     0x000e      
+#define P_DATA_EYE_HAND_CALIBRATIONMODE_REG_ADD     0x000e     
+#define ROBOT_IPADDRESS_1_REG_ADD                   0x000f
+#define ROBOT_IPADDRESS_2_REG_ADD                   0x0010
+#define ROBOT_IPADDRESS_3_REG_ADD                   0x0011
+#define ROBOT_IPADDRESS_4_REG_ADD                   0x0012
+
+#define ALS_REALTIME_POSX_REG_ADD               0x0111  //写入实时坐标，机器人X，(0x111-0x112)单位微米
+#define ALS_REALTIME_POSY_REG_ADD               0x0113  //写入实时坐标，机器人Y，(0x113-0x114)单位微米
+#define ALS_REALTIME_POSZ_REG_ADD               0x0115  //写入实时坐标，机器人Z，(0x115-0x116)单位微米
+#define ALS_REALTIME_POSRX_REG_ADD              0x0117  //写入实时坐标，机器人RX，(0x117-0x118)单位0.0001deg
+#define ALS_REALTIME_POSRY_REG_ADD              0x0119  //写入实时坐标，机器人RY，(0x119-0x11a)单位0.0001deg
+#define ALS_REALTIME_POSRZ_REG_ADD              0x011b  //写入实时坐标，机器人RY，(0x11b-0x11c)单位0.0001deg
+#define ALS_REALTIME_POSOUT1_REG_ADD            0x011d  //写入实时坐标，机器人外部轴1，(0x11d-0x11e)
+#define ALS_REALTIME_POSOUT2_REG_ADD            0x011f  //写入实时坐标，机器人外部轴2，(0x11f-0x120)
+#define ALS_REALTIME_POSOUT3_REG_ADD            0x0121  //写入实时坐标，机器人外部轴3，(0x121-0x122)
+#define ALS_REALTIME_TOOL_REG_ADD               0x0123  //写入实时坐标，机器人工具号
+#define ALS_REALTIME_TCP_REG_ADD                0x0124  //写入实时坐标，机器人坐标系号
+#define ALS_REALTIME_USERTCP_REG_ADD            0x0125  //写入实时坐标，机器人用户坐标系号
 
 #define PARAMETER_REGEDIST_NUM                 400
 
@@ -410,6 +431,14 @@ public:
 
   vector<descript_socket2*> ftpdesc;
 
+  XTcp m_client;      //机器人信息数据sock
+  XTcp m_sendent;
+  XTcp m_sendentrecv;
+  bool b_client;
+  bool b_sendent;
+  bool b_sendentrecv;
+
+
   /**
    * @brief Control laser on of off.
    *
@@ -495,6 +524,10 @@ private:
 
   void _ftp(int);//服务器数据ftp转发
 
+  void _client();//客户端数据json转发
+
+  void _sentrecv();//客户端数据发送回复
+
 public:
   /**
    * @brief Parameter client for camera.
@@ -553,9 +586,16 @@ private:
 
   std::thread _ftpthread;
 
+  std::thread _clienttcpthread;
+  std::thread _sentrecvtcpthread;
+
+  uint8_t *rcv_buf;
+  uint8_t *rcv_buf2;
+
 
   bool b_jsontcpthread;
   bool b_threadforward;
+  bool b_clienttcpthread;
 };
 
 void close_app(int s);

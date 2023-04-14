@@ -98,7 +98,8 @@ void E2proomData::check_para()
        robot_mod!=E2POOM_ROBOT_MOD_MOKA&&
        robot_mod!=E2POOM_ROBOT_MOD_ZEGE_2&&
        robot_mod!=E2POOM_ROBOT_MOD_HUACHENG&&
-       robot_mod!=E2POOM_ROBOT_MOD_STEP
+       robot_mod!=E2POOM_ROBOT_MOD_STEP&&
+       robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS
       )
       robot_mod=E2POOM_ROBOT_MOD_NULL;
 
@@ -166,12 +167,22 @@ void E2proomData::read_para()
     else
     {
       Uint16 *u16_p;
+      Uint8 *u8_p;
       
       u16_p = (Uint16*)buff;
       robot_mod=*u16_p;
       u16_p++;
       robot_port=*u16_p;
       u16_p++;
+      u8_p = (Uint8*)u16_p;
+      robot_ip1=*u8_p;
+      u8_p++;
+      robot_ip2=*u8_p;
+      u8_p++;
+      robot_ip3=*u8_p;
+      u8_p++;
+      robot_ip4=*u8_p;
+      u8_p++;
     }
     if(buff!=NULL)
     {
@@ -297,12 +308,22 @@ void E2proomData::write_robot_para()
       return;
 
     Uint16 *u16_p;
+    Uint8 *u8_p;
 
     u16_p = (Uint16*)buff;
     *u16_p=robot_mod;
     u16_p++;
     *u16_p=robot_port;
     u16_p++;
+    u8_p = (Uint8*)u16_p;
+    *u8_p=robot_ip1;
+    u8_p++;
+    *u8_p=robot_ip2;
+    u8_p++;
+    *u8_p=robot_ip3;
+    u8_p++;
+    *u8_p=robot_ip4;
+    u8_p++;
 
     fo.WriteFile(E2POOM_ROBOT_SYSPATH_MOTO,buff,E2POOM_ROBOT_SAVEBUFF);
 
