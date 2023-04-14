@@ -1030,6 +1030,48 @@ void Modbus::getProb_pinfo(rob_pinfo *pos)
   (*pos).vz=((int16_t)mb_mapping->tab_registers[0x04])/100.0;
 }
 
+void Modbus::push_robotpos()
+{
+    auto ptr = std::make_unique<IfAlgorhmitrobpos>();
+    static int frame = 0;
+    uint16_t u16_data[2];
+    int32_t *i32_data=(int32_t*)u16_data;
+
+    ptr->header.stamp = this->now();
+    ptr->header.frame_id = std::to_string(frame++);
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
+    ptr->posx=*i32_data/1000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD+1];
+    ptr->posy=*i32_data/1000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
+    ptr->posz=*i32_data/1000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD+1];
+    ptr->posrx=*i32_data/10000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD+1];
+    ptr->posry=*i32_data/10000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD+1];
+    ptr->posrz=*i32_data/10000.0;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD+1];
+    ptr->posout1=*i32_data;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD+1];
+    ptr->posout2=*i32_data;
+    u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD+1];
+    ptr->posout3=*i32_data;
+    ptr->toolid=mb_mapping->tab_registers[ALS_REALTIME_TOOL_REG_ADD];
+    ptr->tcpid=mb_mapping->tab_registers[ALS_REALTIME_TCP_REG_ADD];
+    ptr->usertcpid=mb_mapping->tab_registers[ALS_REALTIME_USERTCP_REG_ADD];
+    _pub_robpos->publish(std::move(ptr));
+}
+
 /**
  * @brief Construct a new impl object.
  *
@@ -1177,44 +1219,7 @@ void Modbus::_modbus(int port)
               }
               if (query[7] == 0x06||query[7] == 0x10||query[7] == 0x17)//写了状态寄存器
               {
-                  auto ptr = std::make_unique<IfAlgorhmitrobpos>();
-                  static int frame = 0;
-                  uint16_t u16_data[2];
-                  int32_t *i32_data=(int32_t*)u16_data;
-
-                  ptr->header.stamp = this->now();
-                  ptr->header.frame_id = std::to_string(frame++);
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
-                  ptr->posx=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD+1];
-                  ptr->posy=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
-                  ptr->posz=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD+1];
-                  ptr->posrx=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRY_REG_ADD+1];
-                  ptr->posry=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRZ_REG_ADD+1];
-                  ptr->posrz=*i32_data/10000.0;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT1_REG_ADD+1];
-                  ptr->posout1=*i32_data;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT2_REG_ADD+1];
-                  ptr->posout2=*i32_data;
-                  u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD];
-                  u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSOUT3_REG_ADD+1];
-                  ptr->posout3=*i32_data;
-                  ptr->toolid=mb_mapping->tab_registers[ALS_REALTIME_TOOL_REG_ADD];
-                  ptr->tcpid=mb_mapping->tab_registers[ALS_REALTIME_TCP_REG_ADD];
-                  ptr->usertcpid=mb_mapping->tab_registers[ALS_REALTIME_USERTCP_REG_ADD];
-                  _pub_robpos->publish(std::move(ptr));
+                  push_robotpos();
               }
               /******************************/
               if(e2proomdata.P_data_En==true)//P寄存器有效
@@ -1684,6 +1689,45 @@ void Modbus::_modbus(int port)
                 else
                   mb_forwardmapping->tab_registers[0x005]=0xff;
                 mb_forwardmapping->tab_registers[0x006]=mb_mapping->tab_registers[0x102];
+            }
+            break;
+            case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
+            {
+                if(b_sendent==true)
+                {
+                  float x,y,z;
+                  u_int16_t u16_data[2];
+                  int32_t *i32_data=(int32_t*)u16_data;
+                  u16_data[0]=mb_mapping->tab_registers[0x80];
+                  u16_data[1]=mb_mapping->tab_registers[0x81];
+                  x=*i32_data/1000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x82];
+                  u16_data[1]=mb_mapping->tab_registers[0x83];
+                  y=*i32_data/1000.0;
+                  u16_data[0]=mb_mapping->tab_registers[0x84];
+                  u16_data[1]=mb_mapping->tab_registers[0x85];
+                  z=*i32_data/1000.0;
+                  std::string str;
+                  std::string s_datax=to_string(x);
+                  std::string s_datay=to_string(y);
+                  std::string s_dataz=to_string(z);
+                  str="weld_x = "+s_datax+"\r\n";
+                  m_sendent.Send(str.c_str(),str.size());
+                  str="weld_y = "+s_datay+"\r\n";
+                  m_sendent.Send(str.c_str(),str.size());
+                  str="weld_z = "+s_dataz+"\r\n";
+                  m_sendent.Send(str.c_str(),str.size());
+                  if(mb_mapping->tab_registers[0x02]==0xff)
+                  {
+                    std::string str="read_ready=1\r\n";
+                    m_sendent.Send(str.c_str(),str.size());
+                  }
+                  else if(mb_mapping->tab_registers[0x02]==0)
+                  {
+                    std::string str="read_ready=0\r\n";
+                    m_sendent.Send(str.c_str(),str.size());
+                  }
+                }
             }
             break;
             default:
@@ -2769,9 +2813,13 @@ void Modbus::_sentrecv()
       case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
       { 
       //RCLCPP_INFO(this->get_logger(), "sent laser_signal");
-        usleep(200000);
-        std::string str="list/R laser_signal\r\n"; 
-        m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询photo的值  
+        usleep(100000);
+        std::string str;
+        str="list/R laser_signal\r\n"; 
+        m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询开关激光的值 
+        usleep(20000);
+        str="list/R sytask\r\n"; 
+        m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询任务号的值 
       }
       break;
     }
@@ -2787,10 +2835,10 @@ void Modbus::_client()
         sleep(5);//每隔5秒查看一次机器人
         char rodb_ip[50];
         u_int16_t ip[4];
-        ip[0]=192;
-        ip[1]=168;
-        ip[2]=1;
-        ip[3]=23;
+        ip[0]=e2proomdata.robot_ip1;
+        ip[1]=e2proomdata.robot_ip2;
+        ip[2]=e2proomdata.robot_ip3;
+        ip[3]=e2proomdata.robot_ip4;
         sprintf(rodb_ip,"%d.%d.%d.%d",ip[0],ip[1],ip[2],ip[3]);
 
         RCLCPP_INFO(this->get_logger(), "connecting robot...");
@@ -2935,6 +2983,7 @@ void Modbus::_client()
                                       st=st+2;
                                   }
                               }
+                              push_robotpos();
                           }
                           s_rcvmsg.clear();
                           total_rcvnum=0;
@@ -3004,6 +3053,47 @@ void Modbus::_client()
                                 else
                                 {
                                 //    RCLCPP_INFO(this->get_logger(), "%d",i_data);
+                                }
+                            }
+                            else
+                            {
+                            //  RCLCPP_INFO(this->get_logger(), s_data.c_str());
+                            }
+                            b_find=true;
+                          }
+                        }
+                        if(b_find==false)
+                        { 
+                          strTemp = "sytask = "; 
+                          s=s_rcvmsg.find(strTemp,0);
+
+                          if(s!=0xfffffff)
+                          {
+                            string s_data;
+                            for(int i=s+strTemp.size();i<s_rcvmsg.size();i++)
+                            {
+                              if(s_rcvmsg[i]=='\r')
+                              {
+                                break;
+                              }
+                              else
+                              {
+                                s_data.push_back(s_rcvmsg[i]);
+                              }
+                            }
+                            
+                            int temp;
+                            int i_data;
+                            temp=CM_Atoi((char*)(s_data.c_str()),&i_data);
+                            if(temp!=0)
+                            {
+                                //任务号
+                                mb_mapping->tab_registers[0x102]=temp;
+                                static int oldtasknum=INT_MAX;
+                                if(oldtasknum!=mb_mapping->tab_registers[0x102])
+                                {
+                                  oldtasknum=mb_mapping->tab_registers[0x102];
+                                  _task_numberset(oldtasknum);
                                 }
                             }
                             else

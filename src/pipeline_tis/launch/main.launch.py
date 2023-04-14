@@ -108,8 +108,8 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container_mt',
         composable_node_descriptions=[
-            camera_tis_node,
-        #   camera_test_node,
+        #   camera_tis_node,
+            camera_test_node,
             rotate_image_node,
             laser_imagepos_node,
         #   laser_line_center_node,
@@ -159,5 +159,5 @@ def generate_launch_description():
         cloud_result_tcpip,
     #   seam_tracking_node,
         modbus_node,
-        gpio_raspberry_node,
+    #   gpio_raspberry_node,
         config_tis_node])

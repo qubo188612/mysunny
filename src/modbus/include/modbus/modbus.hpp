@@ -528,6 +528,8 @@ private:
 
   void _sentrecv();//客户端数据发送回复
 
+  void push_robotpos();//发布机器人坐标
+
 public:
   /**
    * @brief Parameter client for camera.
