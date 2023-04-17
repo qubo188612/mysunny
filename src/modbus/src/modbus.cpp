@@ -199,6 +199,7 @@ int CM_Atoi(char* source,int* integer)
 namespace modbus
 {
 using rcl_interfaces::msg::SetParametersResult;
+
 //tcp sock
 TCPServer jsontcp;
 TCPServer2 ftptcp;
@@ -1698,14 +1699,14 @@ void Modbus::_modbus(int port)
                   float x,y,z;
                   u_int16_t u16_data[2];
                   int32_t *i32_data=(int32_t*)u16_data;
-                  u16_data[0]=mb_mapping->tab_registers[0x80];
-                  u16_data[1]=mb_mapping->tab_registers[0x81];
+                  u16_data[0]=mb_mapping->tab_registers[0x12];
+                  u16_data[1]=mb_mapping->tab_registers[0x13];
                   x=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x82];
-                  u16_data[1]=mb_mapping->tab_registers[0x83];
+                  u16_data[0]=mb_mapping->tab_registers[0x14];
+                  u16_data[1]=mb_mapping->tab_registers[0x15];
                   y=*i32_data/1000.0;
-                  u16_data[0]=mb_mapping->tab_registers[0x84];
-                  u16_data[1]=mb_mapping->tab_registers[0x85];
+                  u16_data[0]=mb_mapping->tab_registers[0x16];
+                  u16_data[1]=mb_mapping->tab_registers[0x17];
                   z=*i32_data/1000.0;
                   std::string str;
                   std::string s_datax=to_string(x);
@@ -1720,11 +1721,6 @@ void Modbus::_modbus(int port)
                   if(mb_mapping->tab_registers[0x02]==0xff)
                   {
                     std::string str="read_ready=1\r\n";
-                    m_sendent.Send(str.c_str(),str.size());
-                  }
-                  else if(mb_mapping->tab_registers[0x02]==0)
-                  {
-                    std::string str="read_ready=0\r\n";
                     m_sendent.Send(str.c_str(),str.size());
                   }
                 }

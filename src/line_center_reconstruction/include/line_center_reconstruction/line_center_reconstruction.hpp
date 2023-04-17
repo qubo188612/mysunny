@@ -180,6 +180,17 @@ private:
 
   rclcpp::Subscription<IfAlgorhmitmsg>::SharedPtr _sub_task100_199;
 
+
+  std::shared_ptr<rclcpp::AsyncParametersClient> _param_pclout_get;
+
+  void callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future);
+
+  rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr _param_event_sub;
+  void on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event);
+  static std::mutex mt;
+  
+  Int8 pData_En;
+
   /**
    * @brief Number of co-workers.
    *

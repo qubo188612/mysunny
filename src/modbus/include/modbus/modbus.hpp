@@ -27,6 +27,7 @@
 #include <modbus.h>
 #include "fileout/E2proomData.h"
 #include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
+#include "tutorial_interfaces/msg/if_algorhmitroblinecloud.hpp"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include "fileout/calibration.h"
@@ -42,6 +43,7 @@ namespace modbus
 {
 
 using tutorial_interfaces::msg::IfAlgorhmitrobpos;
+using tutorial_interfaces::msg::IfAlgorhmitroblinecloud;
 
 #define SERVER_REGEDIST_NUM               400
 
@@ -561,10 +563,9 @@ private:
   rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr _param_event_sub;
   void on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event);
   static std::mutex mt;
-  
 
   const char * _pub_robpos_name = "~/input_robpos";
-  rclcpp::Publisher<IfAlgorhmitrobpos>::SharedPtr _pub_robpos;
+  rclcpp::Publisher<tutorial_interfaces::msg::IfAlgorhmitrobpos>::SharedPtr _pub_robpos;
 
   OnSetParametersCallbackHandle::SharedPtr _handle;
 

@@ -29,6 +29,7 @@ std::vector<_Tp> convertMat2Vector(cv::Mat &mat)
 
 namespace line_center_reconstruction
 {
+  std::mutex LineCenterReconstruction::mt;
   using rcl_interfaces::msg::SetParametersResult;
 /**
  * @brief Construct a vector of points from ROS point cloud message.
@@ -151,7 +152,7 @@ PointCloud2::UniquePtr LineCenterReconstruction::execute(PointCloud2::UniquePtr 
 IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlgorhmitmsg::UniquePtr ptr, const Params & pm)
 {
   u_int16_t Y,m,d,H,M,S,ms;
-  if(b_modbusconnect==true)
+  if(b_modbusconnect==true&&pData_En==false)
   {
       TimeFunction time;
       time.get_time_ms(Y,m,d,H,M,S,ms);
@@ -169,7 +170,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
       auto msg = std::make_unique<IfAlgorhmitcloud>();
       msg->header = ptr->imageout.header;
 
-      if(ptr->imageout.header.frame_id != "-1")
+      if(ptr->imageout.header.frame_id != "-1"&&b_modbusconnect==true&&pData_En==false)
       {
         u_int16_t tab_reg[4];
         auto stamp = msg->header.stamp;
@@ -199,12 +200,12 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
           oldtime=(double)timerun.tv_sec+(double)timerun.tv_nsec/1000000000.0;
           tab_reg[4]=0;
         }
-        int rc=modbus_write_registers(ctx,0x07,5,tab_reg);
+        int rc;
+        rc=modbus_write_registers(ctx,0x07,5,tab_reg);
         if(rc!=5)
         {
           RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x05=%d",rc);
         }
-
         long nowmstime=(long)ms+(long)S*1000+(long)M*60*1000+(long)H*60*60*1000;
         long fpsmstime=(long)msec+(long)p->tm_sec*1000+(long)p->tm_min*60*1000+(long)((p->tm_hour+8)%24)*60*60*1000;
         if(nowmstime<fpsmstime)
@@ -218,7 +219,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
           RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x01=%d",rc);
         }
       }
-      if(b_modbusconnect==true)
+      if(b_modbusconnect==true&&pData_En==false)
       {
         int rc;
         u_int16_t tab_reg[1];
@@ -310,8 +311,34 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   msg->solderjoints = ptr->solderjoints;
   msg->header = ptr->imageout.header;
 
-
   if(b_modbusconnect==true)
+  {
+    int rc;
+    u_int16_t tab_reg[10];
+    tab_reg[0]=(u_int16_t)centerData.compensation_dx;
+    tab_reg[1]=(u_int16_t)0;
+    rc=modbus_write_registers(ctx,0x70,2,tab_reg);
+    if(rc!=2)
+    {
+      RCLCPP_ERROR(this->get_logger(), "modbus send compensation error 0x70=%d",rc);
+    }
+  }
+
+  //如果图像法向量为0则输出法向量0
+  if(msg->targetpointoutcloud[1].u==0&&msg->targetpointoutcloud[1].v==0)
+  {
+      msg->targetpointoutcloud[1].x=0;
+      msg->targetpointoutcloud[1].y=0;
+  }
+  else
+  {
+    double dis=sqrt((msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)*(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)+
+                    (msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)*(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y));
+      msg->targetpointoutcloud[1].x=(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)/dis;
+      msg->targetpointoutcloud[1].y=(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)/dis;
+  }
+
+  if(b_modbusconnect==true&&pData_En==false)
   {
     u_int16_t tab_reg[10];
 
@@ -322,30 +349,7 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
     t=stamp.sec;
     p=gmtime(&t);  
 
-    //如果图像法向量为0则输出法向量0
-    if(msg->targetpointoutcloud[1].u==0&&msg->targetpointoutcloud[1].v==0)
-    {
-        msg->targetpointoutcloud[1].x=0;
-        msg->targetpointoutcloud[1].y=0;
-    }
-    else
-    {
-      double dis=sqrt((msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)*(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)+
-                      (msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)*(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y));
-        msg->targetpointoutcloud[1].x=(msg->targetpointoutcloud[1].x-msg->targetpointoutcloud[0].x)/dis;
-        msg->targetpointoutcloud[1].y=(msg->targetpointoutcloud[1].y-msg->targetpointoutcloud[0].y)/dis;
-    }
-
     int rc;
-
-    tab_reg[0]=(u_int16_t)centerData.compensation_dx;
-    tab_reg[1]=(u_int16_t)0;
-    rc=modbus_write_registers(ctx,0x70,2,tab_reg);
-    if(rc!=2)
-    {
-      RCLCPP_ERROR(this->get_logger(), "modbus send compensation error 0x70=%d",rc);
-    }
-
     if(msg->targetpointoutcloud.size()>2)
     {
       int num=msg->targetpointoutcloud.size();
@@ -457,7 +461,10 @@ int workers(const rclcpp::NodeOptions & options)
 LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & options)
 : Node("line_center_reconstruction_node", options)
 {
+  
+
   b_modbusconnect=false;
+  pData_En=false;
   
   this->declare_parameter("compensation_dx", centerData.compensation_dx);
   this->declare_parameter("compensation_dy", centerData.compensation_dy);
@@ -489,6 +496,8 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
 
   _pub_config=this->create_publisher<std_msgs::msg::String>("config_tis_node/config", 10);
 
+  _param_pclout_get = std::make_shared<rclcpp::AsyncParametersClient>(this, "my_pclout_node");
+
   _declare_parameters();
 
   _workers = workers(options);
@@ -502,7 +511,6 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
     _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_worker, this));
   }
   _task100_199_threads.push_back(std::thread(&LineCenterReconstruction::_task100_199_manager, this));
-
 
   _sub = this->create_subscription<PointCloud2>(
     _sub_name,
@@ -521,6 +529,13 @@ LineCenterReconstruction::LineCenterReconstruction(const rclcpp::NodeOptions & o
       _push_back_point_task100_199(std::move(ptr));
     }
   );
+
+  _param_pclout_get->wait_for_service();
+  auto linecenter_future = _param_pclout_get->get_parameters(
+                {"pData_En"},
+                std::bind(&LineCenterReconstruction::callbackCenterParam, this, std::placeholders::_1));
+
+  _param_event_sub = _param_pclout_get->on_parameter_event(std::bind(&LineCenterReconstruction::on_parameter_event_callback, this, std::placeholders::_1));              
 
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
@@ -669,6 +684,33 @@ Params LineCenterReconstruction::_update_parameters()
   //     _homo = cv::Mat(p.as_double_array(), true).reshape(1, 3);
   //   }
   // }
+}
+
+void LineCenterReconstruction::callbackCenterParam(std::shared_future<std::vector<rclcpp::Parameter>> future)
+{
+    auto result = future.get();
+    if(result.size()>=1)
+    {
+      pData_En = result.at(0).as_int();
+      RCLCPP_INFO(this->get_logger(), "LineCenter pData_En=%d" ,pData_En);
+    }
+}
+
+void LineCenterReconstruction::on_parameter_event_callback(const rcl_interfaces::msg::ParameterEvent::SharedPtr event)
+{
+  std::lock_guard<std::mutex> l(mt);
+  
+  for (auto & changed_parameter : event->changed_parameters) {
+    const auto & type = changed_parameter.value.type;
+    const auto & name = changed_parameter.name;
+    const auto & value = changed_parameter.value;
+
+    if(name=="pData_En")
+    {
+      pData_En=value.integer_value;
+      RCLCPP_INFO(this->get_logger(), "LineCenter pData_En=%d" ,pData_En);
+    }
+  }
 }
 
 void LineCenterReconstruction::_modbus(int port)
