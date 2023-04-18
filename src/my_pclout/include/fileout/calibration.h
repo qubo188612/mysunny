@@ -37,12 +37,12 @@ class RobPos        //机器人坐标
 public:
     RobPos();
 
-    float X;
-    float Y;
-    float Z;
-    float RX;
-    float RY;
-    float RZ;
+    volatile float X;
+    volatile float Y;
+    volatile float Z;
+    volatile float RX;
+    volatile float RY;
+    volatile float RZ;
     bool nEn;
 };
 

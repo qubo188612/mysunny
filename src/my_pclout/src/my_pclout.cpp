@@ -183,7 +183,6 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
     ptr->solderjoints=msg.solderjoints;
     ptr->lasertrackoutcloud.resize(msg.lasertrackoutcloud.size());
 
-    RobPos robotpos=rob;
     switch(PData_eye_hand_calibrationmode)
     {
       case HAND_IN_EYE:   //眼在手上
@@ -195,7 +194,13 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
           data_group.leaserpos.nEn=1;
           data_group.leaserpos.Y=msg.lasertrackoutcloud[i].x;
           data_group.leaserpos.Z=msg.lasertrackoutcloud[i].y;
-          data_group.robotpos=rob;
+          data_group.robotpos.X=robposmsg.posx;
+          data_group.robotpos.Y=robposmsg.posy;
+          data_group.robotpos.Z=robposmsg.posz;
+          data_group.robotpos.RX=robposmsg.posrx;
+          data_group.robotpos.RY=robposmsg.posry;
+          data_group.robotpos.RZ=robposmsg.posrz;
+          data_group.robotpos.nEn=1;
           ptr->lasertrackoutcloud[i].u=msg.lasertrackoutcloud[i].u;
           ptr->lasertrackoutcloud[i].v=msg.lasertrackoutcloud[i].v;
           ptr->lasertrackoutcloud[i].uy=msg.lasertrackoutcloud[i].x;
@@ -239,7 +244,13 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
           data_group.leaserpos.nEn=1;
           data_group.leaserpos.Y=msg.targetpointoutcloud[i].x;
           data_group.leaserpos.Z=msg.targetpointoutcloud[i].y;
-          data_group.robotpos=rob;
+          data_group.robotpos.X=robposmsg.posx;
+          data_group.robotpos.Y=robposmsg.posy;
+          data_group.robotpos.Z=robposmsg.posz;
+          data_group.robotpos.RX=robposmsg.posrx;
+          data_group.robotpos.RY=robposmsg.posry;
+          data_group.robotpos.RZ=robposmsg.posrz;
+          data_group.robotpos.nEn=1;
           ptr->targetpointoutcloud[i].u=msg.targetpointoutcloud[i].u;
           ptr->targetpointoutcloud[i].v=msg.targetpointoutcloud[i].v;
           ptr->targetpointoutcloud[i].uy=msg.targetpointoutcloud[i].x;
@@ -494,6 +505,7 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
 void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
 {
     robposmsg=msg;
+    /*
     rob.X=msg.posx;
     rob.Y=msg.posy;
     rob.Z=msg.posz;
@@ -501,6 +513,7 @@ void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhm
     rob.RY=msg.posry;
     rob.RZ=msg.posrz;
     rob.nEn=1;
+    */
 }
 
 void My_Pclout::_declare_parameters()
@@ -553,22 +566,22 @@ void My_Pclout::_cloudresult()
 {
     while(rclcpp::ok())
     {
-      /*
+/*
       Eigen::Vector3d p_hand;
       TCP_Leaserpos data_group;
       data_group.leaserpos.nEn=1;
-      data_group.leaserpos.Y=4;
-      data_group.leaserpos.Z=-1;
+      data_group.leaserpos.Y=51.35;
+      data_group.leaserpos.Z=-4.69;
       data_group.robotpos.nEn=1;
-      data_group.robotpos.X=-930.832;
-      data_group.robotpos.Y=456.504;
-      data_group.robotpos.Z=534.256;
-      data_group.robotpos.RX=8.364;
-      data_group.robotpos.RY=162.194;
-      data_group.robotpos.RZ=108.265;
+      data_group.robotpos.X=-915.588;
+      data_group.robotpos.Y=389.689;
+      data_group.robotpos.Z=495.626;
+      data_group.robotpos.RX=47.541;
+      data_group.robotpos.RY=175.201;
+      data_group.robotpos.RZ=146.622;
       Calibration::hand_on_yes_eyetohand(PData_cal_posture,data_group,pData_matrix_camera2plane,pData_matrix_plane2robot,p_hand);
       RCLCPP_INFO(this->get_logger(), "x=%f,y=%f,z=%f",p_hand.x(),p_hand.y(),p_hand.z());
-      */
+*/
 		   sleep(2); 
     }
 }

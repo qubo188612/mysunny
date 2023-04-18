@@ -15,9 +15,10 @@ void* TCPServer2::Task(void *arg)
 	pthread_detach(pthread_self());
 
         cerr << "open client[ id:"<< desc->id <<" ip:"<< desc->ip <<" socket:"<< desc->socket<<" send:"<< desc->enable_message_runtime <<" ]" << endl;
+	
 	while(rclcpp::ok())
 	{
-		n = recv(desc->socket, msg, MAXPACKETSIZE, 0);
+		n = recv(desc->socket, msg, MAXPACKETSIZE-1, 0);
 		if(n != -1) 
 		{
 			if(n==0)
@@ -36,13 +37,37 @@ void* TCPServer2::Task(void *arg)
 			   if(num_client>0) num_client--;
 			   break;
 			}
-			desc->message.resize(n);
-			for(int i=0;i<n;i++)
+			else
 			{
-				desc->message[i]=msg[i];
+				static int total_rcvnum=0;
+				static std::string s_rcvmsg;
+				if(msg[n-1]!='\0')
+				{
+					msg[n]='\0';
+					total_rcvnum=total_rcvnum+n;
+					std::string rcvmsg=(char*)msg;
+					s_rcvmsg=s_rcvmsg+rcvmsg;
+				}
+				else
+				{
+					msg[n]='\0';
+					total_rcvnum=total_rcvnum+n;
+					std::string rcvmsg=(char*)msg;
+					s_rcvmsg=s_rcvmsg+rcvmsg;
+
+					desc->message.resize(s_rcvmsg.size());
+					for(int i=0;i<n;i++)
+					{
+						desc->message[i]=s_rcvmsg[i];
+					}
+					std::lock_guard<std::mutex> guard(mt);
+					Message.push_back( desc );
+
+					s_rcvmsg.clear();
+					total_rcvnum=0;
+				}
 			}
-	        std::lock_guard<std::mutex> guard(mt);
-			Message.push_back( desc );
+			
 		}
 	//	usleep(600);
 		sleep(0);

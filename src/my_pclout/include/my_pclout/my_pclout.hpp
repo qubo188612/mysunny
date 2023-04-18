@@ -84,7 +84,7 @@ public:
     CAL_POSTURE PData_cal_posture; //P变量姿态内外旋
     Eye_Hand_calibrationmode PData_eye_hand_calibrationmode;//P寄存器激光器安装方式
 
-    RobPos rob;
+   // RobPos rob;
     leaser_pos leaserpos;//激光器坐标
 
     bool b_pclpush;//点云存入开关
