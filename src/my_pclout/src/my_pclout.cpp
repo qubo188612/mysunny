@@ -553,8 +553,23 @@ void My_Pclout::_cloudresult()
 {
     while(rclcpp::ok())
     {
-       
-		   sleep(0); 
+      /*
+      Eigen::Vector3d p_hand;
+      TCP_Leaserpos data_group;
+      data_group.leaserpos.nEn=1;
+      data_group.leaserpos.Y=4;
+      data_group.leaserpos.Z=-1;
+      data_group.robotpos.nEn=1;
+      data_group.robotpos.X=-930.832;
+      data_group.robotpos.Y=456.504;
+      data_group.robotpos.Z=534.256;
+      data_group.robotpos.RX=8.364;
+      data_group.robotpos.RY=162.194;
+      data_group.robotpos.RZ=108.265;
+      Calibration::hand_on_yes_eyetohand(PData_cal_posture,data_group,pData_matrix_camera2plane,pData_matrix_plane2robot,p_hand);
+      RCLCPP_INFO(this->get_logger(), "x=%f,y=%f,z=%f",p_hand.x(),p_hand.y(),p_hand.z());
+      */
+		   sleep(2); 
     }
 }
 

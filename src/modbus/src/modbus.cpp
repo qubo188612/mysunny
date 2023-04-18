@@ -1047,7 +1047,7 @@ void Modbus::push_robotpos()
     u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSY_REG_ADD+1];
     ptr->posy=*i32_data/1000.0;
     u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD];
-    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSX_REG_ADD+1];
+    u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSZ_REG_ADD+1];
     ptr->posz=*i32_data/1000.0;
     u16_data[0]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD];
     u16_data[1]=mb_mapping->tab_registers[ALS_REALTIME_POSRX_REG_ADD+1];
