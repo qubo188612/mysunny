@@ -2805,11 +2805,22 @@ void Modbus::_sentrecv()
         usleep(100000);
         std::string str;
         str="list/R laser_signal\r\n"; 
+        if(b_tcpsockershow==true)
+        {
+      //  RCLCPP_INFO(this->get_logger(), "%s",str.c_str());
+        }
         m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询开关激光的值 
         usleep(100000);
         str="list/R sytask\r\n"; 
+
+        if(b_tcpsockershow==true)
+        {
+      //  RCLCPP_INFO(this->get_logger(), "%s",str.c_str());
+        }
+
         m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询任务号的值 
 
+        usleep(100000);
         bool disconnect=true;
         int rc;
         std::string s_datax=to_string(weld_x);
@@ -2820,11 +2831,10 @@ void Modbus::_sentrecv()
             +"weld_y = "+s_datay+"\r\n"
             +"weld_z = "+s_dataz+"\r\n"
             +"read_ready = "+s_read_ready+"\r\n";
-
-        usleep(100000);
+   
         if(b_tcpsockershow==true)
         {
-          RCLCPP_INFO(this->get_logger(), "%s",str.c_str());
+      //  RCLCPP_INFO(this->get_logger(), "%s",str.c_str());
         }
         rc=m_sendent.Send(str.c_str(),str.size());
         if(rc==0)//对端socket调用close()关闭
@@ -3160,7 +3170,7 @@ void Modbus::_client()
                       {
                         if(b_tcpsockershow==true)
                         {
-                          RCLCPP_INFO(this->get_logger(), "%s",s_rcvmsg.c_str());
+                        //  RCLCPP_INFO(this->get_logger(), "%s",s_rcvmsg.c_str());
                         }
                       }
                     }
