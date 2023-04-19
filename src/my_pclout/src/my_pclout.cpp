@@ -505,14 +505,13 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
 void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
 {
     robposmsg=msg;
-    /*
-    rob.X=msg.posx;
-    rob.Y=msg.posy;
-    rob.Z=msg.posz;
-    rob.RX=msg.posrx;
-    rob.RY=msg.posry;
-    rob.RZ=msg.posrz;
-    rob.nEn=1;
+/*
+    robposmsg.posx=-907.281;
+    robposmsg.posy=407.105;
+    robposmsg.posz=509.190;
+    robposmsg.posrx=47.57;
+    robposmsg.posry=175.219;
+    robposmsg.posrz=146.632;
     */
 }
 

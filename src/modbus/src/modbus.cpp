@@ -2908,10 +2908,12 @@ void Modbus::_client()
                   if(rcvnum>0)
                   {
                       rcv_buf[rcvnum]='\0';
+                      /*
                       if(b_tcpsockershow==true)
                       { 
                         RCLCPP_INFO(this->get_logger(), (const char*)rcv_buf);
                       }
+                      */
                       total_rcvnum=total_rcvnum+rcvnum;
                       std::string rcvmsg=(char*)rcv_buf;
                       s_rcvmsg=s_rcvmsg+rcvmsg;
@@ -2989,10 +2991,12 @@ void Modbus::_client()
                   if(rcvnum2>0)
                   {
                     rcv_buf2[rcvnum2]='\0';
+                    /*
                     if(b_tcpsockershow==true)
                     { 
                       RCLCPP_INFO(this->get_logger(), (const char*)rcv_buf2);
                     }
+                    */
                     static int total_rcvnum=0;
                     static std::string s_rcvmsg;
                     total_rcvnum=total_rcvnum+rcvnum2;

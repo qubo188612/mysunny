@@ -73,7 +73,8 @@
         "*.ipp": "cpp",
         "*.txx": "cpp",
         "hash_map": "cpp",
-        "hash_set": "cpp"
+        "hash_set": "cpp",
+        "core": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/src/camera_test",
 }
