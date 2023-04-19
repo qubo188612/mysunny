@@ -440,6 +440,8 @@ public:
   bool b_sendent;
   bool b_sendentrecv;
 
+  bool re_connect;//断线重连
+
 
   /**
    * @brief Control laser on of off.
@@ -591,6 +593,9 @@ private:
 
   std::thread _clienttcpthread;
   std::thread _sentrecvtcpthread;
+
+  volatile float weld_x,weld_y,weld_z;
+  volatile int read_ready;
 
   uint8_t *rcv_buf;
   uint8_t *rcv_buf2;

@@ -355,7 +355,11 @@ int XTcp::Send(const char *buf, int size)					     //发送数据
     while (sendedSize != size)   //若没发送完成，则从断点开始继续发送 直到完成
     {
         int len = send(tsock, buf + sendedSize, size - sendedSize, 0);
-        if (len <= 0)break;
+        if (len <= 0)
+        {
+            sendedSize=len;
+            break;
+        }
         sendedSize += len;
     }
     return sendedSize;

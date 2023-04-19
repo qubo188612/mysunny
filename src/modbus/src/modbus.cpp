@@ -419,9 +419,13 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   b_threadforward=false;
   b_jsontcpthread=false;
   b_clienttcpthread=false;
+
   b_sendentrecv=false;
   b_sendent=false;
   b_client=false;
+  re_connect=false;
+  read_ready=0;
+  weld_x=0,weld_y=0,weld_z=0;
   switch(e2proomdata.robot_mod)
   {
   case E2POOM_ROBOT_MOD_NULL:
@@ -1694,35 +1698,24 @@ void Modbus::_modbus(int port)
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS:
             {
-                if(b_sendent==true)
+                if(mb_mapping->tab_registers[0x02]==0xff)
                 {
-                  float x,y,z;
                   u_int16_t u16_data[2];
                   int32_t *i32_data=(int32_t*)u16_data;
                   u16_data[0]=mb_mapping->tab_registers[0x12];
                   u16_data[1]=mb_mapping->tab_registers[0x13];
-                  x=*i32_data/1000.0;
+                  weld_x=*i32_data/1000.0;
                   u16_data[0]=mb_mapping->tab_registers[0x14];
                   u16_data[1]=mb_mapping->tab_registers[0x15];
-                  y=*i32_data/1000.0;
+                  weld_y=*i32_data/1000.0;
                   u16_data[0]=mb_mapping->tab_registers[0x16];
                   u16_data[1]=mb_mapping->tab_registers[0x17];
-                  z=*i32_data/1000.0;
-                  std::string str;
-                  std::string s_datax=to_string(x);
-                  std::string s_datay=to_string(y);
-                  std::string s_dataz=to_string(z);
-                  str="weld_x = "+s_datax+"\r\n";
-                  m_sendent.Send(str.c_str(),str.size());
-                  str="weld_y = "+s_datay+"\r\n";
-                  m_sendent.Send(str.c_str(),str.size());
-                  str="weld_z = "+s_dataz+"\r\n";
-                  m_sendent.Send(str.c_str(),str.size());
-                  if(mb_mapping->tab_registers[0x02]==0xff)
-                  {
-                    std::string str="read_ready=1\r\n";
-                    m_sendent.Send(str.c_str(),str.size());
-                  }
+                  weld_z=*i32_data/1000.0;
+                  read_ready=1;
+                }
+                else
+                {
+                  read_ready=0;
                 }
             }
             break;
@@ -2801,7 +2794,7 @@ void* ftpreceived(void *m)
 
 void Modbus::_sentrecv()
 {
-  while(rclcpp::ok())
+  while(rclcpp::ok()&&re_connect==false)
   {
     Uint16 robot_mod=e2proomdata.robot_mod;
     switch (robot_mod)
@@ -2813,9 +2806,42 @@ void Modbus::_sentrecv()
         std::string str;
         str="list/R laser_signal\r\n"; 
         m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询开关激光的值 
-        usleep(20000);
+        usleep(100000);
         str="list/R sytask\r\n"; 
         m_sendentrecv.Send(str.c_str(),str.size());//向机器人发送as语言的指令，查询任务号的值 
+
+        bool disconnect=true;
+        int rc;
+        std::string s_datax=to_string(weld_x);
+        std::string s_datay=to_string(weld_y);
+        std::string s_dataz=to_string(weld_z);
+        std::string s_read_ready=to_string(read_ready);
+        str="weld_x = "+s_datax+"\r\n"
+            +"weld_y = "+s_datay+"\r\n"
+            +"weld_z = "+s_dataz+"\r\n"
+            +"read_ready = "+s_read_ready+"\r\n";
+
+        usleep(100000);
+        if(b_tcpsockershow==true)
+        {
+          RCLCPP_INFO(this->get_logger(), "%s",str.c_str());
+        }
+        rc=m_sendent.Send(str.c_str(),str.size());
+        if(rc==0)//对端socket调用close()关闭
+        {
+          disconnect=false;
+        }
+        else if(rc<0)
+        {
+          if(rc != EINTR &&rc != EAGAIN &&rc != EWOULDBLOCK)//排除阻塞等候
+          {
+            disconnect=false;
+          }
+        }
+        if(disconnect==false)//断线重连
+        {
+          re_connect=true;
+        }
       }
       break;
     }
@@ -2893,6 +2919,8 @@ void Modbus::_client()
 
             str="where 2\r\n";
             m_client.Send(str.c_str(),str.size());
+
+            re_connect=false;
           }
           break;
         }
@@ -3130,7 +3158,10 @@ void Modbus::_client()
                     {
                       if(s_rcvmsg.size()>=2&&s_rcvmsg[s_rcvmsg.size()-2]=='\r')
                       {
-                      //  RCLCPP_INFO(this->get_logger(), "%s",s_rcvmsg.c_str());
+                        if(b_tcpsockershow==true)
+                        {
+                          RCLCPP_INFO(this->get_logger(), "%s",s_rcvmsg.c_str());
+                        }
                       }
                     }
                     s_rcvmsg.clear();
@@ -3139,6 +3170,20 @@ void Modbus::_client()
               }
               break;
             }  
+            if(re_connect==true)
+            {
+              _sentrecvtcpthread.join();
+              m_client.Close();
+              m_sendent.Close();
+              m_sendentrecv.Close();
+              delete[] rcv_buf3;
+              delete[] rcv_buf2;
+              delete[] rcv_buf;
+              b_sendentrecv=false;
+              b_sendent=false;
+              b_client=false;
+              break;
+            }
             usleep(0);
           }
         }
