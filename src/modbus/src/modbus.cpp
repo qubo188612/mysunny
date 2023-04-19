@@ -2859,12 +2859,15 @@ void Modbus::_client()
             rcv_buf=new uint8_t[ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2+1];
 
             m_sendent.CreateSocket();
-            if(false==m_sendent.Connect(rodb_ip,ROBOT_KAWASAKI_SEND_PORT))
+            if(false==m_sendent.Connect(rodb_ip,ROBOT_KAWASAKI_SEND_PORT))//ROBOT_KAWASAKI_SEND_PORT
             {
                 RCLCPP_ERROR(this->get_logger(), "connecting m_sendent error...");
                 continue;
             }
             m_sendent.SetBlock(0);
+
+            rcv_buf3=new uint8_t[ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2+1];
+
             b_sendent=true;
 
             m_sendentrecv.CreateSocket();
@@ -3108,6 +3111,31 @@ void Modbus::_client()
                       total_rcvnum=0;
                     }
                   }
+                  int rcvnum3=m_sendent.Recv((char*)rcv_buf3,ROBOT_KAWASAKI_INFO_RECVBUFFER_MAX*2);
+                  if(rcvnum3>0)
+                  {
+                    rcv_buf3[rcvnum3]='\0';
+                    /*
+                    if(b_tcpsockershow==true)
+                    { 
+                      RCLCPP_INFO(this->get_logger(), (const char*)rcv_buf3);
+                    }
+                    */
+                    static int total_rcvnum=0;
+                    static std::string s_rcvmsg;
+                    total_rcvnum=total_rcvnum+rcvnum3;
+                    std::string rcvmsg=(char*)rcv_buf3;
+                    s_rcvmsg=s_rcvmsg+rcvmsg;
+                    if(rcvmsg[rcvmsg.size()-1]=='\n')//结尾
+                    {
+                      if(s_rcvmsg.size()>=2&&s_rcvmsg[s_rcvmsg.size()-2]=='\r')
+                      {
+                      //  RCLCPP_INFO(this->get_logger(), "%s",s_rcvmsg.c_str());
+                      }
+                    }
+                    s_rcvmsg.clear();
+                    total_rcvnum=0;
+                  }
               }
               break;
             }  
@@ -3121,6 +3149,7 @@ void Modbus::_client()
         }
         else if(b_sendent==true)
         {
+          delete[] rcv_buf3;
           m_sendent.Close();
         }
         else if(b_sendentrecv==true)

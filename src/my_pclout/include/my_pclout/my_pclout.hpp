@@ -76,7 +76,7 @@ public:
     void _modbus(int port);
     modbus_t * ctx;
 
-    Int8 pData_En;
+    int8_t pData_En;
     Eigen::Matrix3d pData_demdlg_R;
     Eigen::Vector3d pData_demdlg_T;
     cv::Mat pData_matrix_camera2plane;

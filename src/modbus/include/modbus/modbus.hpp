@@ -594,6 +594,7 @@ private:
 
   uint8_t *rcv_buf;
   uint8_t *rcv_buf2;
+  uint8_t *rcv_buf3;
 
 
   bool b_jsontcpthread;
