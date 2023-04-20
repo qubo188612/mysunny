@@ -659,7 +659,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
-        for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
+        for(j=X_Linestarty;j<=X_Lineendy;j++)
         {
             imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
             imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
@@ -755,7 +755,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
         {
             Myhalcv2::MatClone(imageGasu,&imageGasupain);
             Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
-            for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
+            for(j=X_Linestarty;j<=X_Lineendy;j++)
             {
                 imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
                 imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
@@ -892,7 +892,7 @@ int LaserImagePos::alg105_runimage( cv::Mat &cvimgIn,
     {
         Myhalcv2::MatClone(imageGasu,&imageGasupain);
         Myhalcv2::MyBRYtoRGB(imageGasupain,&imageGasupain);
-        for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
+        for(j=X_Linestarty;j<=X_Lineendy;j++)
         {
             imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data1=255;
             imageGasupain.ptr_Vec3b[(j>>2)*imageGasupain.nWidth+(X_line[j]>>2)].data2=0;
