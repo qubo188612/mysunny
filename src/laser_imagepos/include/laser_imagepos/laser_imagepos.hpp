@@ -200,7 +200,8 @@ const std::vector<std::string> KEYS_ALS105 = {"als105_exposure_time",
                                               "als105_KalmanRF",
                                               "als105_cutside_Up",
                                               "als105_cutside_Down",
-                                              "als105_b_erjiedao"};
+                                              "als105_b_erjiedao",
+                                              "als105_b_quxian"};
 
 const std::vector<std::string> KEYS_ALS106 = {"als106_exposure_time",
                                               "als106_pingjun",
@@ -463,6 +464,7 @@ struct Params
   int als105_cutside_Up=100;
   int als105_cutside_Down=100;
   int als105_b_erjiedao=1;//是否开启二阶导
+  int als105_b_quxian=1;
 
 /************************************/
 //算法106参数

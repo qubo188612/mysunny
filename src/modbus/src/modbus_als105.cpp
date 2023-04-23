@@ -278,6 +278,14 @@ int Modbus::als105_task_parameter(int ddr,u_int16_t num)
                 return 1;
             }
         break;
+        case ALS105_B_QUXIAN_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als105_b_quxian_min&&(int)((int16_t)num)<=(int)e2proomdata.als105_b_quxian_max)
+            {
+                e2proomdata.als105_b_quxian=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als105_b_quxian", (int16_t)num)});
+                return 1;
+            }
+        break;
 
         case ALS105_INIT_REG_ADD:
             if(num==1)
@@ -328,7 +336,8 @@ void Modbus::init_als105_parameter()
     parameterport_mapping->tab_registers[ALS105_KALMANRF_REG_ADD]=e2proomdata.als105_KalmanRF;  
     parameterport_mapping->tab_registers[ALS105_CUTSIDE_UP_REG_ADD]=e2proomdata.als105_cutside_Up;  
     parameterport_mapping->tab_registers[ALS105_CUTSIDE_DOWN_REG_ADD]=e2proomdata.als105_cutside_Down;  
-    parameterport_mapping->tab_registers[ALS105_B_ERJIEDAO_REG_ADD]=e2proomdata.als105_b_erjiedao;       
+    parameterport_mapping->tab_registers[ALS105_B_ERJIEDAO_REG_ADD]=e2proomdata.als105_b_erjiedao;     
+    parameterport_mapping->tab_registers[ALS105_B_QUXIAN_REG_ADD]=e2proomdata.als105_b_quxian;         
 }
 
 }

@@ -27649,6 +27649,94 @@ namespace Myhalcv2
         return 0;
     }
 
+    Int8 Myfitpolynomialcurve(Int32 *X_In,Int32 *Y_In,Int32 size,fitpoly fitpolymod,int fitpoly_n,cv::Mat *A_out)
+    {
+        int N = size;
+        switch(fitpolymod)
+        {
+            case MHC_FIT_POLY_X:
+            {
+                cv::Mat X = cv::Mat::zeros(fitpoly_n + 1, fitpoly_n + 1, CV_64FC1);
+                for (int i = 0; i < fitpoly_n + 1; i++)
+                {
+                    for (int j = 0; j < fitpoly_n + 1; j++)
+                    {
+                        for (int k = 0; k < N; k++)
+                        {
+                        X.at<double>(i, j) = X.at<double>(i, j) +
+                                std::pow(X_In[k], i + j);
+                        }
+                    }
+                }
+                cv::Mat Y = cv::Mat::zeros(fitpoly_n + 1, 1, CV_64FC1);
+                for (int i = 0; i < fitpoly_n + 1; i++)
+                {
+                    for (int k = 0; k < N; k++)
+                    {
+                        Y.at<double>(i, 0) = Y.at<double>(i, 0) +
+                                std::pow(X_In[k], i) * Y_In[k];
+                    }
+                }
+                *A_out = cv::Mat::zeros(fitpoly_n + 1, 1, CV_64FC1);
+                cv::solve(X, Y, *A_out, cv::DECOMP_LU);
+            }
+            break;
+            case MHC_FIT_POLY_Y:
+            {
+                cv::Mat Y = cv::Mat::zeros(fitpoly_n + 1, fitpoly_n + 1, CV_64FC1);
+                for (int i = 0; i < fitpoly_n + 1; i++)
+                {
+                    for (int j = 0; j < fitpoly_n + 1; j++)
+                    {
+                        for (int k = 0; k < N; k++)
+                        {
+                        Y.at<double>(i, j) = Y.at<double>(i, j) +
+                                std::pow(Y_In[k], i + j);
+                        }
+                    }
+                }
+                cv::Mat X = cv::Mat::zeros(fitpoly_n + 1, 1, CV_64FC1);
+                for (int i = 0; i < fitpoly_n + 1; i++)
+                {
+                    for (int k = 0; k < N; k++)
+                    {
+                        X.at<double>(i, 0) = X.at<double>(i, 0) +
+                                std::pow(Y_In[k], i) * X_In[k];
+                    }
+                }
+                *A_out = cv::Mat::zeros(fitpoly_n + 1, 1, CV_64FC1);
+                cv::solve(Y, X, *A_out, cv::DECOMP_LU);
+            }
+            break;
+        }
+        return 0;
+    }
+
+    Int8 Myfitpolynomialcurve_polyX(Int32 X_In,Int32 *Y_Out,cv::Mat A)
+    {
+        int n=A.rows;
+        double y = 0;
+        for(int i=0;i<n;i++)
+        {
+            y=y+A.at<double>(i, 0) * std::pow(X_In, i);
+        }
+        *Y_Out=y+0.5;
+        return 0;
+    }
+
+    Int8 Myfitpolynomialcurve_polyY(Int32 Y_In,Int32 *X_Out,cv::Mat A)
+    {
+        int n=A.rows;
+        double x = 0;
+        for(int i=0;i<n;i++)
+        {
+            x=x+A.at<double>(i, 0) * std::pow(Y_In, i);
+        }
+        *X_Out=x+0.5;
+        return 0;
+    }
+
+
     Int8 Myresizefixdata_4fSize(Int32 *data, Uint8 *mask,float *dataOut,Int num)
     {
         Int32 n;

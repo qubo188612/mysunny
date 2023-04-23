@@ -495,7 +495,7 @@
 
 
 //算法105参数
-#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              76
+#define E2POOM_ALG105_LASERIMAGEPOS_SAVEBUFF              78
 #define E2POOM_ALG105_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_105.bsd"
 
 #define E2POOM_ALG105_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -597,6 +597,9 @@
 #define E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_MIN                  0
 #define E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_USE                  1
 #define E2POOM_ALG105_LASERIMAGEPOS_B_ERJIEDAO_MAX                  1
+#define E2POOM_ALG105_LASERIMAGEPOS_B_QUXIAN_MIN                    0
+#define E2POOM_ALG105_LASERIMAGEPOS_B_QUXIAN_USE                    1
+#define E2POOM_ALG105_LASERIMAGEPOS_B_QUXIAN_MAX                    1
 
 //算法106参数
 #define E2POOM_ALG106_LASERIMAGEPOS_SAVEBUFF              100
@@ -1631,6 +1634,7 @@ public:
     Int16 als105_cutside_Up;
     Int16 als105_cutside_Down;
     Int16 als105_b_erjiedao;
+    Int16 als105_b_quxian;
 
     void write_als105_para(char *filename);				//保存任务105参数
     void init_als105_para();				//初始化任务105参数
@@ -1734,6 +1738,9 @@ public:
     Int16 als105_b_erjiedao_min;
     Int16 als105_b_erjiedao_max;
     Int16 als105_b_erjiedao_use;
+    Int16 als105_b_quxian_min;
+    Int16 als105_b_quxian_max;
+    Int16 als105_b_quxian_use;
 
 /****************************/
     //任务106参数

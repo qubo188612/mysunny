@@ -142,6 +142,13 @@ namespace Myhalcv2
         MHC_HISTO_Y			//逐列均衡化
     }histoline;
 
+    //曲线拟合方向
+    typedef enum FITPOLY
+    {
+        MHC_FIT_POLY_X,      //X方向(每个横坐标X对应一个纵坐标Y)
+        MHC_FIT_POLY_Y       //Y方向(每个纵坐标Y对应一个横坐标X)
+    }fitpoly;
+
     //图像翻转模式
     typedef enum FLIPTYPE
     {
@@ -2046,6 +2053,24 @@ namespace Myhalcv2
     Int8 MychangeI32toF32data(Int32 *dataIn,		//输入整形数组
                               float *dataOut,		//输出浮点型数组,注意内存大小,至少为sizeof(float)*num
                               Int32 num);			//输入数组长度
+
+    //曲线拟合,求拟合矩阵
+    Int8 Myfitpolynomialcurve(Int32 *X_In,          //输入横坐标
+                              Int32 *Y_In,          //输入纵坐标
+                              Int32 size,           //输入坐标点个数
+                              fitpoly fitpolymod,   //拟合方向
+                              int fitpoly_n,        //输出的拟合线性方程维数
+                              cv::Mat *A_out);      //输出的拟合方程矩阵     
+
+    //曲线拟合,用拟合矩阵和输入点求输出点,X方向(每个横坐标X对应一个纵坐标Y)
+    Int8 Myfitpolynomialcurve_polyX(Int32 X_In,      //输入横坐标
+                                    Int32 *Y_Out,    //输出纵坐标
+                                    cv::Mat A);      //输入拟合方程矩阵 
+
+    //曲线拟合,用拟合矩阵和输入点求输出点,Y方向(每个纵坐标Y对应一个横坐标X)
+    Int8 Myfitpolynomialcurve_polyY(Int32 Y_In,      //输入横坐标
+                                    Int32 *X_Out,    //输出纵坐标
+                                    cv::Mat A);      //输入拟合方程矩阵 
 
     /*******************以下函数为创建缓存Ver类,返回值为Ver*************************/
     //创建Verb缓存,用来存储0和非0数据,默认初始值为非0
