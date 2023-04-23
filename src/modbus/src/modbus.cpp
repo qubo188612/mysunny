@@ -3129,7 +3129,7 @@ void Modbus::_client()
                             if(temp!=0)
                             {
                                 //任务号
-                                mb_mapping->tab_registers[0x102]=temp;
+                                mb_mapping->tab_registers[0x102]=i_data;
                                 static int oldtasknum=INT_MAX;
                                 if(oldtasknum!=mb_mapping->tab_registers[0x102])
                                 {
