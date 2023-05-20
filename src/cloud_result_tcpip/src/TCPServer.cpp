@@ -115,7 +115,7 @@ vector<descript_socket*> TCPServer::getMessage()
 
 void TCPServer::Send(string msg, int id)
 {
-	if(send(newsockfd[id]->socket,msg.c_str(),msg.length(),MSG_NOSIGNAL)==-1)
+	if(send(newsockfd[id]->socket,msg.c_str(),msg.length()+1,MSG_NOSIGNAL)==-1)
 	{
 		clean(newsockfd[id]->socket);
 		close(newsockfd[id]->socket);

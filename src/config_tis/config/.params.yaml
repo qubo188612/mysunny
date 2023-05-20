@@ -22,7 +22,7 @@ laser_line_filter_node:
     length: 30                  # int pixel
 
 line_center_reconstruction_node:
-    homography_matrix: [-0.058342, 0.050039, 0.91993, 0.325252, 0.000293, -51.763942, -0.000179, 4.0e-06, 1.0]
+    homography_matrix: [0.136,0.125,-62.688,-0.478,0.001,277.247,0.003,-0.000,1.000]
 
 seam_tracking_node:
     codes:

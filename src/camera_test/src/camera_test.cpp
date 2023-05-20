@@ -126,7 +126,7 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
 #ifdef TEST_VIDEO
   capture.open("/home/qubo/mysunny/src/camera_test/bmp/test108.avi");//导入视频
 #else
-  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test105_4.bmp");
+  cv_image = cv::imread("/home/qubo/mysunny/src/camera_test/bmp/test105_5.bmp");
   cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2GRAY);
 #endif
 

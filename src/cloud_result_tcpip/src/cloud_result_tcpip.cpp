@@ -124,7 +124,7 @@ void Cloud_Result_Tcpip::_cloudresult(int port)
         {
             while(rclcpp::ok()) {
                 clouldresulttcp.accepted();
-                cerr << "close_cloudresulttcp Accepted" << endl;
+                cerr << "cloudresulttcp Accepted" << endl;
             }
         }
         else
