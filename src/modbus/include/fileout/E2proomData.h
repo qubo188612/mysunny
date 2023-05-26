@@ -408,7 +408,9 @@
 #define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_MIN              0
 #define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_USE              5
 #define E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_MAX              255
-
+#define E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_MIN                     0
+#define E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_USE                     5
+#define E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_MAX                     3
 
 //算法104参数
 #define E2POOM_ALG104_LASERIMAGEPOS_SAVEBUFF              60
@@ -1395,6 +1397,7 @@ public:
     Int16 als103_jiguanglong;//激光长度
     Int16 als103_jiguangkuandu;//激光宽度
     Int16 als103_jiguangduibidu;
+    Int16 als103_lvbomod;
 
     void write_als103_para(char *filename);				//保存任务103参数
     void init_als103_para();				//初始化任务103参数
@@ -1423,6 +1426,9 @@ public:
     Int16 als103_jiguangduibidu_min;
     Int16 als103_jiguangduibidu_use;
     Int16 als103_jiguangduibidu_max;
+    Int16 als103_lvbomod_min;
+    Int16 als103_lvbomod_use;
+    Int16 als103_lvbomod_max;
 
 /****************************/
     //任务104参数

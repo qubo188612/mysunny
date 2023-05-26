@@ -144,7 +144,8 @@ const std::vector<std::string> KEYS_ALS103 = {"als103_exposure_time",
                                               "als103_highliantongdis",
                                               "als103_jiguanglong",
                                               "als103_jiguangkuandu",
-                                              "als103_jiguangduibidu"};
+                                              "als103_jiguangduibidu",
+                                              "als103_lvbomod"};
 
 const std::vector<std::string> KEYS_ALS104 = {"als104_exposure_time",
                                               "als104_pingjun",
@@ -406,6 +407,7 @@ struct Params
   int als103_jiguanglong=5;//激光长度
   int als103_jiguangkuandu=10;//激光宽度
   int als103_jiguangduibidu=5;//
+  int als103_lvbomod=0;
 /************************************/
 //算法104参数
   int als104_exposure_time = 10000;//曝光值

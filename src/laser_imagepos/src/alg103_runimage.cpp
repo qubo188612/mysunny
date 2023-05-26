@@ -16,6 +16,7 @@ void LaserImagePos::alg103_declare_parameters()
     this->declare_parameter("als103_jiguanglong", pm.als103_jiguanglong);
     this->declare_parameter("als103_jiguangkuandu", pm.als103_jiguangkuandu);
     this->declare_parameter("als103_jiguangduibidu", pm.als103_jiguangduibidu);
+    this->declare_parameter("als103_lvbomod", pm.als103_lvbomod);
 }
 
 void LaserImagePos::alg103_update_parameters()
@@ -45,6 +46,9 @@ void LaserImagePos::alg103_update_parameters()
     }
     else if (p.get_name() == "als103_jiguangduibidu") {
       pm.als103_jiguangduibidu = p.as_int();
+    }
+    else if (p.get_name() == "als103_lvbomod") {
+      pm.als103_lvbomod = p.as_int();
     }
   }
 }
@@ -84,6 +88,10 @@ int LaserImagePos::alg103_getcallbackParameter(const rclcpp::Parameter &p)
     else if(p.get_name() == "als103_jiguangduibidu") {
         auto k = p.as_int();
         pm.als103_jiguangduibidu=p.as_int();
+            return 1;}
+    else if(p.get_name() == "als103_lvbomod") {
+        auto k = p.as_int();
+        pm.als103_lvbomod=p.as_int();
             return 1;}
 
     return 0;
@@ -132,6 +140,7 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     Int32 jiguanglong=pm.als103_jiguanglong;//5;//激光长度
     Int32 jiguangkuandu=pm.als103_jiguangkuandu;//10;//激光宽度
     Int32 jiguangduibidu=pm.als103_jiguangduibidu;//5;
+    Int32 lvbomod=pm.als103_lvbomod;
 
     if(step==2)
     {
@@ -210,6 +219,25 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
     nendi=MIN(jiguangRight*4+30,nWidth-1);
 
     Myhalcv2::MyCutRoi(imageIn,&m_tempmatIn,Myhalcv2::MHC_CUT_NOTCOPY,nstarti,nstartj,nendi-nstarti+1,nendj-nstartj+1);
+    if(lvbomod==0)
+    {
+
+    }
+    else if(lvbomod==1)
+    {
+        Myhalcv2::Mygaussia(m_tempmatIn,&m_brygujia,Myhalcv2::GAUSS_WIN_3x3);
+        m_tempmatIn=m_brygujia;
+    }
+    else if(lvbomod==2)
+    {
+        Myhalcv2::Mygaussia(m_tempmatIn,&m_brygujia,Myhalcv2::GAUSS_WIN_5x5);
+        m_tempmatIn=m_brygujia;
+    }
+    else if(lvbomod==3)
+    {
+        Myhalcv2::Mygaussia(m_tempmatIn,&m_brygujia,Myhalcv2::GAUSS_WIN_7x7);
+        m_tempmatIn=m_brygujia;
+    }
 
     for(j=m_tempmatIn.starty;j<m_tempmatIn.starty+m_tempmatIn.height;j++)
     {
@@ -222,8 +250,8 @@ int LaserImagePos::alg103_runimage( cv::Mat &cvimgIn,
             Int32 dj=j>>2;
             if(imageBry.data[dj*imageBry.nWidth+di]!=0)
             {
-                sum_valuecoor=sum_valuecoor+(Int32)imageIn.data[j*imageIn.nWidth+i]*i;
-                sum_value=sum_value+imageIn.data[j*imageIn.nWidth+i];
+                sum_valuecoor=sum_valuecoor+(Int32)m_tempmatIn.data[j*m_tempmatIn.nWidth+i]*i;
+                sum_value=sum_value+m_tempmatIn.data[j*m_tempmatIn.nWidth+i];
             }
         }
         if(sum_value!=0)

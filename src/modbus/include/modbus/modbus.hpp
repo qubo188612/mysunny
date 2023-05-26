@@ -199,6 +199,7 @@ using tutorial_interfaces::msg::IfAlgorhmitroblinecloud;
 #define ALS103_JIGUANGLONG_REG_ADD             0x0075
 #define ALS103_JIGUANGKUANDU_REG_ADD           0x0076
 #define ALS103_JIGUANGDUIBIDU_REG_ADD          0x0077
+#define ALS103_LVBOMOD_REG_ADD                 0x0078
 
 #define ALS103_INIT_REG_ADD                    0x007f
 

@@ -30,6 +30,9 @@ void E2proomData::Init_als103_E2proomData()
     als103_jiguangduibidu_min=E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_MIN;
     als103_jiguangduibidu_max=E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_MAX;
     als103_jiguangduibidu_use=E2POOM_ALG103_LASERIMAGEPOS_JIGUANGDUIBIDU_USE;
+    als103_lvbomod_min=E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_MIN;
+    als103_lvbomod_max=E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_MAX;
+    als103_lvbomod_use=E2POOM_ALG103_LASERIMAGEPOS_LVBOMOD_USE;
 }
 
 void E2proomData::als103_check_para()
@@ -50,6 +53,8 @@ void E2proomData::als103_check_para()
         als103_jiguangkuandu=als103_jiguangkuandu_use;
     if(als103_jiguangduibidu<als103_jiguangduibidu_min||als103_jiguangduibidu>als103_jiguangduibidu_max)
         als103_jiguangduibidu=als103_jiguangduibidu_use;
+    if(als103_lvbomod<als103_lvbomod_min||als103_lvbomod>als103_lvbomod_max)
+        als103_lvbomod=als103_lvbomod_use;
 }
 
 void E2proomData::als103_read_para(char *filename)
@@ -92,6 +97,8 @@ void E2proomData::als103_read_para(char *filename)
       i16_p++;
       als103_jiguangduibidu=*i16_p;
       i16_p++;
+      als103_lvbomod=*i16_p;
+      i16_p++;
     }
     if(buff!=NULL)
     {
@@ -132,6 +139,8 @@ void E2proomData::write_als103_para(char *filename)
     i16_p++;
     *i16_p=als103_jiguangduibidu;
     i16_p++;
+    *i16_p=als103_lvbomod;
+    i16_p++;
 
 
     fo.WriteFile(filename,buff,E2POOM_ALG103_LASERIMAGEPOS_SAVEBUFF);
@@ -155,4 +164,5 @@ void E2proomData::init_als103_para()
     als103_jiguanglong=als103_jiguanglong_use;
     als103_jiguangkuandu=als103_jiguangkuandu_use;
     als103_jiguangduibidu=als103_jiguangduibidu_use;
+    als103_lvbomod=als103_lvbomod_use;
 }

@@ -78,6 +78,14 @@ int Modbus::als103_task_parameter(int ddr,u_int16_t num)
                 return 1;
             }
         break;
+        case ALS103_LVBOMOD_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als103_lvbomod_min&&(int)((int16_t)num)<=(int)e2proomdata.als103_lvbomod_max)
+            {
+                e2proomdata.als103_lvbomod=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als103_lvbomod", (int16_t)num)});
+                return 1;
+            }
+        break;
 
         case ALS103_INIT_REG_ADD:
             if(num==1)
@@ -104,6 +112,7 @@ void Modbus::init_als103_parameter()
     parameterport_mapping->tab_registers[ALS103_JIGUANGLONG_REG_ADD]=e2proomdata.als103_jiguanglong;
     parameterport_mapping->tab_registers[ALS103_JIGUANGKUANDU_REG_ADD]=e2proomdata.als103_jiguangkuandu;
     parameterport_mapping->tab_registers[ALS103_JIGUANGDUIBIDU_REG_ADD]=e2proomdata.als103_jiguangduibidu;
+    parameterport_mapping->tab_registers[ALS103_LVBOMOD_REG_ADD]=e2proomdata.als103_lvbomod;
 }
 
 }
