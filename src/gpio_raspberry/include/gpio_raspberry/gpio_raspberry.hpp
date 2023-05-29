@@ -19,6 +19,12 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#define RASPBERRY_PI      0
+#define RK3588S           1
+
+
+#define MOTHERBOARD_TYPE  RK3588S
+
 struct gpiod_chip;
 struct gpiod_line;
 
