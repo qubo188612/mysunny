@@ -13,8 +13,8 @@
 
 #define TEST_VIDEO        //输入视频测试
 
-#define PIC_IMAGE_HEIGHT 3072
-#define PIC_IMAGE_WIDTH  2048
+#define PIC_IMAGE_HEIGHT 2064
+#define PIC_IMAGE_WIDTH  1544
 
 namespace camera_test
 {

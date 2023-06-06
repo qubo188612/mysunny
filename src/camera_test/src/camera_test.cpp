@@ -112,7 +112,7 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   _threadmodbus = std::thread(&CameraTest::_modbus, this, 1502);
 #endif
 
-  int WIDTH=3072,HEIGHT=2048,FPS=40,exposure_time=1000,VIEW_WIDTH=3072,VIEW_HEIGHT=2048;
+  int WIDTH=2064,HEIGHT=1544,FPS=40,exposure_time=1000,VIEW_WIDTH=2064,VIEW_HEIGHT=1544;
   this->declare_parameter("width", WIDTH);
   this->declare_parameter("height", HEIGHT);
   this->declare_parameter("fps", FPS);

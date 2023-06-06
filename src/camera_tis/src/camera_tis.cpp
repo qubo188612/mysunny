@@ -38,7 +38,7 @@ using rcl_interfaces::msg::SetParametersResult;
  */
 constexpr char PIPELINE_STR[] =
   "tcambin name=source"
-  " ! video/x-raw,format=GRAY8,width=3072,height=2048,framerate=30/1"
+  " ! video/x-raw,format=GRAY8,width=2064,height=1544,framerate=30/1"
   " ! videoscale"
   " ! video/x-raw,width=1536,height=1024"
   " ! appsink name=sink emit-signals=true sync=false drop=true max-buffers=4";

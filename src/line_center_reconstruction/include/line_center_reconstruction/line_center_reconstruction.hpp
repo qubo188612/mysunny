@@ -27,8 +27,8 @@
 #include "tutorial_interfaces/msg/if_algorhmitmsg.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitcloud.hpp"
 
-#define PIC_IMAGE_HEIGHT 3072
-#define PIC_IMAGE_WIDTH  2048
+#define PIC_IMAGE_HEIGHT 2064
+#define PIC_IMAGE_WIDTH  1544
 
 namespace line_center_reconstruction
 {

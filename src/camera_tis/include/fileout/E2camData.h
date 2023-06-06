@@ -5,8 +5,8 @@
 #include "fileout/FileOut.h"
 #include "float.h"
 
-#define PIC_IMAGE_HEIGHT 3072
-#define PIC_IMAGE_WIDTH  2048
+#define PIC_IMAGE_HEIGHT 2064
+#define PIC_IMAGE_WIDTH  1544
 
 //分辨率设置
 #define E2POOM_CAMER_SAVEBUFF              20
@@ -23,11 +23,11 @@
 #define E2POOM_CAMER_FPS_USE                30       //相机最大帧率
 #define E2POOM_CAMER_FPS_MAX                250      //相机最大帧率
 #define E2POOM_CAMER_SIZE_VIEW_WIDTH_MIN    640      //相机最小横向视野分辨率
-#define E2POOM_CAMER_SIZE_VIEW_WIDTH_USE    3072     //相机默认横向视野分辨率
-#define E2POOM_CAMER_SIZE_VIEW_WIDTH_MAX    3072     //相机最大横向视野分辨率
+#define E2POOM_CAMER_SIZE_VIEW_WIDTH_USE    2064     //相机默认横向视野分辨率
+#define E2POOM_CAMER_SIZE_VIEW_WIDTH_MAX    2064     //相机最大横向视野分辨率
 #define E2POOM_CAMER_SIZE_VIEW_HEIGHT_MIN   480      //相机最小纵向视野分辨率
-#define E2POOM_CAMER_SIZE_VIEW_HEIGHT_USE   2048     //相机默认纵向视野分辨率
-#define E2POOM_CAMER_SIZE_VIEW_HEIGHT_MAX   2048     //相机最大纵向视野分辨率  
+#define E2POOM_CAMER_SIZE_VIEW_HEIGHT_USE   1544     //相机默认纵向视野分辨率
+#define E2POOM_CAMER_SIZE_VIEW_HEIGHT_MAX   1544     //相机最大纵向视野分辨率  
 
 class E2proomData
 {

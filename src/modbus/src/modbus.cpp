@@ -83,8 +83,8 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
   camer_width=PIC_IMAGE_HEIGHT; //这里用相机翻转前的尺寸
   camer_height=PIC_IMAGE_WIDTH; //这里用相机翻转前的尺寸
   camer_fps=30;
-  camer_view_width=3072;
-  camer_view_height=2048;
+  camer_view_width=2064;
+  camer_view_height=1544;
 
   _param_camera_get->wait_for_service();
   auto parameters_future = _param_camera_get->get_parameters(

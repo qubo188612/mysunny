@@ -87,8 +87,8 @@ jobs:
           target: deploy
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: qubo188612/sunny-tis:deploy3072
-          cache-from: type=registry,ref=qubo188612/sunny-tis:deploy3072
+          tags: qubo188612/sunny-tis:deploy2064
+          cache-from: type=registry,ref=qubo188612/sunny-tis:deploy2064
           cache-to: type=inline
   desktop:
     name: Desktop
