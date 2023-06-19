@@ -26,21 +26,16 @@ using rcl_interfaces::msg::SetParametersResult;
 
 GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions & options)
 : Node("gpio_raspberry_node", options),
-#if MOTHERBOARD_TYPE==RASPBERRY_PI
-  _chip(gpiod_chip_open_by_name("gpiochip0"), gpiod_chip_close),
-  _line_26(gpiod_chip_get_line(_chip.get(), 26), gpiod_line_release),
-  _line_22(gpiod_chip_get_line(_chip.get(), 22), gpiod_line_release)
-#elif MOTHERBOARD_TYPE==RK3588S
-  _chip(gpiod_chip_open_by_name("gpiochip1"), gpiod_chip_close),
-  _line_26(gpiod_chip_get_line(_chip.get(), 4), gpiod_line_release),
-  _line_22(gpiod_chip_get_line(_chip.get(), 8), gpiod_line_release)
-#endif
+  _chip(gpiod_chip_open_by_name(GPIO_CHIP_NAME), gpiod_chip_close),
+  _line_leaser(gpiod_chip_get_line(_chip.get(), GPIO_LEASER_LIGHT), gpiod_line_release),   //激光器
+  _line_power(gpiod_chip_get_line(_chip.get(), GPIO_POWER_LIGHT), gpiod_line_release)    //指示灯
+
 {
   // To enforce start with laser off
   this->declare_parameter("laser", false, ParameterDescriptor(), true);
 
-  gpiod_line_request_output(_line_26.get(), "ros", 0);
-  gpiod_line_request_output(_line_22.get(), "ros", 1);
+  gpiod_line_request_output(_line_leaser.get(), "ros", 0);
+  gpiod_line_request_output(_line_power.get(), "ros", 1);
 
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
@@ -76,9 +71,9 @@ GpioRaspberry::~GpioRaspberry()
 int GpioRaspberry::_laser(bool f)
 {
   if (f) {
-    return gpiod_line_set_value(_line_26.get(), 1);
+    return gpiod_line_set_value(_line_leaser.get(), 1);
   } else {
-    return gpiod_line_set_value(_line_26.get(), 0);
+    return gpiod_line_set_value(_line_leaser.get(), 0);
   }
 }
 
