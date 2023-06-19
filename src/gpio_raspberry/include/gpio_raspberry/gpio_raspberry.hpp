@@ -30,12 +30,14 @@
 #define GPIO_CHIP_NAME       "gpiochip0"
 #define GPIO_LEASER_LIGHT     26   //激光器
 #define GPIO_POWER_LIGHT      22   //指示灯
+#define GPIO_ROBDISABLE       13   //机器人下使能
 
 #elif MOTHERBOARD_TYPE == RASPBERRY_PI
 
 #define GPIO_CHIP_NAME       "gpiochip1"
 #define GPIO_LEASER_LIGHT     4   //激光器
 #define GPIO_POWER_LIGHT      8   //指示灯
+#define GPIO_ROBDISABLE       13  //机器人下使能
 
 #endif
 
@@ -81,6 +83,8 @@ private:
    */
   int _laser(bool f);
 
+  int _robdisable(bool f);
+
   /**
    * @brief The handle to gpio chip.
    *
@@ -98,6 +102,8 @@ private:
    *
    */
   std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_power;
+
+  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_robdisable;
 
   /**
    * @brief ROS parameter callback handle.

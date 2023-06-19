@@ -28,14 +28,17 @@ GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions & options)
 : Node("gpio_raspberry_node", options),
   _chip(gpiod_chip_open_by_name(GPIO_CHIP_NAME), gpiod_chip_close),
   _line_leaser(gpiod_chip_get_line(_chip.get(), GPIO_LEASER_LIGHT), gpiod_line_release),   //激光器
-  _line_power(gpiod_chip_get_line(_chip.get(), GPIO_POWER_LIGHT), gpiod_line_release)    //指示灯
+  _line_power(gpiod_chip_get_line(_chip.get(), GPIO_POWER_LIGHT), gpiod_line_release),     //指示灯
+  _line_robdisable(gpiod_chip_get_line(_chip.get(), GPIO_ROBDISABLE), gpiod_line_release)    //机器人使能
 
 {
   // To enforce start with laser off
   this->declare_parameter("laser", false, ParameterDescriptor(), true);
+  this->declare_parameter("robdisable", false, ParameterDescriptor(), true);
 
   gpiod_line_request_output(_line_leaser.get(), "ros", 0);
   gpiod_line_request_output(_line_power.get(), "ros", 1);
+  gpiod_line_request_output(_line_robdisable.get(), "ros", 0);
 
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
@@ -47,6 +50,14 @@ GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions & options)
           if (ret) {
             result.successful = false;
             result.reason = "Failed to set laser";
+            return result;
+          }
+        }
+        else if(p.get_name() == "robdisable") {
+          auto ret = this->_robdisable(p.as_bool());
+          if (ret) {
+            result.successful = false;
+            result.reason = "Failed to set robdisable";
             return result;
           }
         }
@@ -76,6 +87,16 @@ int GpioRaspberry::_laser(bool f)
     return gpiod_line_set_value(_line_leaser.get(), 0);
   }
 }
+
+int GpioRaspberry::_robdisable(bool f)
+{
+  if (f) {
+    return gpiod_line_set_value(_line_robdisable.get(), 1);
+  } else {
+    return gpiod_line_set_value(_line_robdisable.get(), 0);
+  }
+}
+
 
 }  // namespace gpio_raspberry
 
