@@ -1,0 +1,4 @@
+source;share/config_tis/hook/pythonpath.dsv
+source;share/config_tis/hook/pythonpath.sh
+source;share/config_tis/hook/ament_prefix_path.dsv
+source;share/config_tis/hook/ament_prefix_path.sh

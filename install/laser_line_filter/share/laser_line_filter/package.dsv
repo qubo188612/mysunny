@@ -1,0 +1,6 @@
+source;share/laser_line_filter/hook/cmake_prefix_path.dsv
+source;share/laser_line_filter/hook/cmake_prefix_path.sh
+source;share/laser_line_filter/hook/ld_library_path_lib.dsv
+source;share/laser_line_filter/hook/ld_library_path_lib.sh
+source;share/laser_line_filter/local_setup.dsv
+source;share/laser_line_filter/local_setup.sh

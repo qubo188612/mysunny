@@ -1,0 +1,4 @@
+source;share/rotate_image/local_setup.bash
+source;share/rotate_image/local_setup.dsv
+source;share/rotate_image/local_setup.sh
+source;share/rotate_image/local_setup.zsh

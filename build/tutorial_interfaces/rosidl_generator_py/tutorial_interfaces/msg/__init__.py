@@ -1,0 +1,12 @@
+from tutorial_interfaces.msg._if_algorhmitcloud import IfAlgorhmitcloud  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitimage import IfAlgorhmitimage  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitmsg import IfAlgorhmitmsg  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitpoint2f import IfAlgorhmitpoint2f  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitpoint4f import IfAlgorhmitpoint4f  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitrobcloud import IfAlgorhmitrobcloud  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitroblinecloud import IfAlgorhmitroblinecloud  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitrobpoint3f import IfAlgorhmitrobpoint3f  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmitrobpos import IfAlgorhmitrobpos  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmittargetpoint2f import IfAlgorhmittargetpoint2f  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmittargetpoint4f import IfAlgorhmittargetpoint4f  # noqa: F401
+from tutorial_interfaces.msg._if_algorhmittargetrobpoint3f import IfAlgorhmittargetrobpoint3f  # noqa: F401

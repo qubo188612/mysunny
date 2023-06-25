@@ -13,7 +13,6 @@ namespace my_pclout
 
 volatile int b_fuzhi;
 volatile int b_updatafinish;
-tutorial_interfaces::msg::IfAlgorhmitrobpos robposmsg;
 
 My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 : Node("my_pclout_node", options)
@@ -28,9 +27,6 @@ My_Pclout::My_Pclout(const rclcpp::NodeOptions & options)
 
   subscription_cloud_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitcloud>(
         _sub_cloudresult_name, rclcpp::SensorDataQoS(), std::bind(&My_Pclout::cloud_result_callback, this, _1));
-
-  subcription_pos_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>(
-        _sub_robposresult_name, rclcpp::SensorDataQoS(), std::bind(&My_Pclout::robpos_result_callback, this, _1));
 
   _pub_robline = this->create_publisher<IfAlgorhmitroblinecloud>(_pub_pcllineresult_name, rclcpp::SensorDataQoS());
 
@@ -194,12 +190,12 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
           data_group.leaserpos.nEn=1;
           data_group.leaserpos.Y=msg.lasertrackoutcloud[i].x;
           data_group.leaserpos.Z=msg.lasertrackoutcloud[i].y;
-          data_group.robotpos.X=robposmsg.posx;
-          data_group.robotpos.Y=robposmsg.posy;
-          data_group.robotpos.Z=robposmsg.posz;
-          data_group.robotpos.RX=robposmsg.posrx;
-          data_group.robotpos.RY=robposmsg.posry;
-          data_group.robotpos.RZ=robposmsg.posrz;
+          data_group.robotpos.X=msg.robpos.posx;
+          data_group.robotpos.Y=msg.robpos.posy;
+          data_group.robotpos.Z=msg.robpos.posz;
+          data_group.robotpos.RX=msg.robpos.posrx;
+          data_group.robotpos.RY=msg.robpos.posry;
+          data_group.robotpos.RZ=msg.robpos.posrz;
           data_group.robotpos.nEn=1;
           ptr->lasertrackoutcloud[i].u=msg.lasertrackoutcloud[i].u;
           ptr->lasertrackoutcloud[i].v=msg.lasertrackoutcloud[i].v;
@@ -244,12 +240,12 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
           data_group.leaserpos.nEn=1;
           data_group.leaserpos.Y=msg.targetpointoutcloud[i].x;
           data_group.leaserpos.Z=msg.targetpointoutcloud[i].y;
-          data_group.robotpos.X=robposmsg.posx;
-          data_group.robotpos.Y=robposmsg.posy;
-          data_group.robotpos.Z=robposmsg.posz;
-          data_group.robotpos.RX=robposmsg.posrx;
-          data_group.robotpos.RY=robposmsg.posry;
-          data_group.robotpos.RZ=robposmsg.posrz;
+          data_group.robotpos.X=msg.robpos.posx;
+          data_group.robotpos.Y=msg.robpos.posy;
+          data_group.robotpos.Z=msg.robpos.posz;
+          data_group.robotpos.RX=msg.robpos.posrx;
+          data_group.robotpos.RY=msg.robpos.posry;
+          data_group.robotpos.RZ=msg.robpos.posrz;
           data_group.robotpos.nEn=1;
           ptr->targetpointoutcloud[i].u=msg.targetpointoutcloud[i].u;
           ptr->targetpointoutcloud[i].v=msg.targetpointoutcloud[i].v;
@@ -426,34 +422,34 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
         i_data=ptr->targetpointoutcloud[0].z*1000;
         tab_reg[4]=((uint16_t*)(&i_data))[0];
         tab_reg[5]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posrx*10000;
+        i_data=msg.robpos.posrx*10000;
         tab_reg[6]=((uint16_t*)(&i_data))[0];
         tab_reg[7]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posry*10000;
+        i_data=msg.robpos.posry*10000;
         tab_reg[8]=((uint16_t*)(&i_data))[0];
         tab_reg[9]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posrz*10000;
+        i_data=msg.robpos.posrz*10000;
         tab_reg[10]=((uint16_t*)(&i_data))[0];
         tab_reg[11]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posout1;
+        i_data=msg.robpos.posout1;
         tab_reg[12]=((uint16_t*)(&i_data))[0];
         tab_reg[13]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posout2;
+        i_data=msg.robpos.posout2;
         tab_reg[14]=((uint16_t*)(&i_data))[0];
         tab_reg[15]=((uint16_t*)(&i_data))[1];
-        i_data=robposmsg.posout3;
+        i_data=msg.robpos.posout3;
         tab_reg[16]=((uint16_t*)(&i_data))[0];
         tab_reg[17]=((uint16_t*)(&i_data))[1];
-        tab_reg[18]=(uint16_t)robposmsg.toolid;
-        tab_reg[19]=(uint16_t)robposmsg.tcpid;
-        tab_reg[20]=(uint16_t)robposmsg.usertcpid;
+        tab_reg[18]=(uint16_t)msg.robpos.toolid;
+        tab_reg[19]=(uint16_t)msg.robpos.tcpid;
+        tab_reg[20]=(uint16_t)msg.robpos.usertcpid;
 
         rc=modbus_write_registers(ctx,0x12,21,tab_reg);
         if(rc!=21)
         {
           RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x21=%d",rc);
         }
-        
+ 
         tab_reg[0]=0xff;
         tab_reg[1]=(uint16_t)((int32_t)(msg.targetpointoutcloud[0].x*100+0.5));
         tab_reg[2]=(uint16_t)((int32_t)(msg.targetpointoutcloud[0].y*100+0.5));
@@ -500,19 +496,8 @@ void My_Pclout::cloud_result_callback(const tutorial_interfaces::msg::IfAlgorhmi
 
     _pub_robline->publish(std::move(ptr));
   }
-}
+  
 
-void My_Pclout::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
-{
-    robposmsg=msg;
-/*
-    robposmsg.posx=-923.618;
-    robposmsg.posy=87.828;
-    robposmsg.posz=291.972;
-    robposmsg.posrx=-107.061;
-    robposmsg.posry=148.910;
-    robposmsg.posrz=-19.502;
-*/    
 }
 
 void My_Pclout::_declare_parameters()

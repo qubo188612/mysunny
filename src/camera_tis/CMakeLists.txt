@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tutorial_interfaces REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TIS REQUIRED IMPORTED_TARGET gstreamer-1.0 gstreamer-video-1.0 gobject-introspection-1.0 tcam libmodbus)
 
@@ -29,6 +30,7 @@ ament_target_dependencies(camera_tis
   rclcpp
   rclcpp_components
   sensor_msgs
+  tutorial_interfaces
 )
 
 target_include_directories(camera_tis

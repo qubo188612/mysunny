@@ -1,0 +1,11 @@
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/install/strip.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/install/local.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/install.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/list_install_components.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/rebuild_cache.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/edit_cache.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/test.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/rotate_image_node.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/rotate_image.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/rotate_image_uninstall.dir
+/home/qubo/mysunny/build/rotate_image/CMakeFiles/uninstall.dir

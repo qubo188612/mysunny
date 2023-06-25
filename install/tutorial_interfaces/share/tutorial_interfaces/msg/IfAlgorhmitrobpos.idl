@@ -1,0 +1,61 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from tutorial_interfaces/msg/IfAlgorhmitrobpos.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module tutorial_interfaces {
+  module msg {
+    struct IfAlgorhmitrobpos {
+      std_msgs::msg::Header header;
+
+      @verbatim (language="comment", text=
+        " 表示X坐标")
+      float posx;
+
+      @verbatim (language="comment", text=
+        " 表示Y坐标")
+      float posy;
+
+      @verbatim (language="comment", text=
+        " 表示Z坐标")
+      float posz;
+
+      @verbatim (language="comment", text=
+        " 表示RX坐标")
+      float posrx;
+
+      @verbatim (language="comment", text=
+        " 表示RY坐标")
+      float posry;
+
+      @verbatim (language="comment", text=
+        " 表示RZ坐标")
+      float posrz;
+
+      @verbatim (language="comment", text=
+        " 表示外部轴1坐标")
+      float posout1;
+
+      @verbatim (language="comment", text=
+        " 表示外部轴2坐标")
+      float posout2;
+
+      @verbatim (language="comment", text=
+        " 表示外部轴3坐标")
+      float posout3;
+
+      @verbatim (language="comment", text=
+        " 表示工具号")
+      int32 toolid;
+
+      @verbatim (language="comment", text=
+        " 表示坐标系号")
+      int32 tcpid;
+
+      @verbatim (language="comment", text=
+        " 表示用户坐标系号")
+      int32 usertcpid;
+    };
+  };
+};

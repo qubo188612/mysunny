@@ -1,0 +1,11 @@
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/install/strip.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/install/local.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/install.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/list_install_components.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/rebuild_cache.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/edit_cache.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/test.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/gpio_raspberry_node.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/gpio_raspberry.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/gpio_raspberry_uninstall.dir
+/home/qubo/mysunny/build/gpio_raspberry/CMakeFiles/uninstall.dir

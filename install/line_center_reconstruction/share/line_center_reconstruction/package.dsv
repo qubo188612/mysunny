@@ -1,0 +1,6 @@
+source;share/line_center_reconstruction/hook/cmake_prefix_path.dsv
+source;share/line_center_reconstruction/hook/cmake_prefix_path.sh
+source;share/line_center_reconstruction/hook/ld_library_path_lib.dsv
+source;share/line_center_reconstruction/hook/ld_library_path_lib.sh
+source;share/line_center_reconstruction/local_setup.dsv
+source;share/line_center_reconstruction/local_setup.sh

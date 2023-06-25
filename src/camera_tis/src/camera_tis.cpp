@@ -29,6 +29,8 @@ namespace camera_tis
 using rcl_interfaces::msg::ParameterDescriptor;
 using rcl_interfaces::msg::SetParametersResult;
 
+tutorial_interfaces::msg::IfAlgorhmitrobpos robposmsg;
+
 /**
  * @brief Gstreamer pipeline.
  *
@@ -115,7 +117,11 @@ CameraTis::CameraTis(const rclcpp::NodeOptions & options)
   VIEW_HEIGHT = camdata.camer_size_view_height;
 
 //_param_imagepos = std::make_shared<rclcpp::AsyncParametersClient>(this, "laser_imagepos_node");
-  _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
+  _pub = this->create_publisher<IfAlgorhmitimage>(_pub_name, rclcpp::SensorDataQoS());
+
+  subcription_pos_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>(
+        _sub_robposresult_name, rclcpp::SensorDataQoS(), std::bind(&CameraTis::robpos_result_callback, this, _1));
+
   _initialize_camera();
 
   RCLCPP_INFO(this->get_logger(), "Initialized successfully");
@@ -309,31 +315,32 @@ void CameraTis::_spin()
     // Construct a ROS image to publish.
     GstMapInfo info;
     if (gst_buffer_map(buffer, &info, GST_MAP_READ)) {
-      auto ptr = std::make_unique<Image>();
-      ptr->header.stamp = this->now();
-      ptr->header.frame_id = std::to_string(frame++);
-      ptr->height = HEIGHT;
-      ptr->width = WIDTH;
-      ptr->encoding = "mono8";
-      ptr->is_bigendian = false;
-      ptr->step = WIDTH;
-      ptr->data.resize(SIZE);
-      memcpy(ptr->data.data(), info.data, SIZE);
+      auto ptr = std::make_unique<IfAlgorhmitimage>();
+      ptr->image.header.stamp = this->now();
+      ptr->image.header.frame_id = std::to_string(frame++);
+      ptr->image.height = HEIGHT;
+      ptr->image.width = WIDTH;
+      ptr->image.encoding = "mono8";
+      ptr->image.is_bigendian = false;
+      ptr->image.step = WIDTH;
+      ptr->image.data.resize(SIZE);
+      memcpy(ptr->image.data.data(), info.data, SIZE);
+      ptr->robpos=robposmsg;
 
     #ifdef SHOW_OUTPUT_FPS
       if(b_modbusconnect==true)
       {
           static bool b_timest=0;
-          static auto timest_fps=ptr->header.stamp;
-          auto timeed_fps=ptr->header.stamp;
+          static auto timest_fps=ptr->image.header.stamp;
+          auto timeed_fps=ptr->image.header.stamp;
           if(b_timest==0)
           {
             b_timest=1;
-            timest_fps=ptr->header.stamp;
+            timest_fps=ptr->image.header.stamp;
           }
           else
           {
-            timeed_fps=ptr->header.stamp;
+            timeed_fps=ptr->image.header.stamp;
             double timest=(double)timest_fps.sec+(double)timest_fps.nanosec/1000000000;
             double timeed=(double)timeed_fps.sec+(double)timeed_fps.nanosec/1000000000;
             double time=timeed-timest;
@@ -480,6 +487,11 @@ int CameraTis::_set_fps(int fps)
     camdata.write_camer_para();
   }
   return 0;
+}
+
+void CameraTis::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
+{
+    robposmsg=msg;  
 }
 
 }  // namespace camera_tis

@@ -1,0 +1,11 @@
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/install/strip.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/install/local.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/install.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/list_install_components.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/rebuild_cache.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/edit_cache.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/test.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/cloud_result_tcpip_node.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/cloud_result_tcpip.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/cloud_result_tcpip_uninstall.dir
+/home/qubo/mysunny/build/cloud_result_tcpip/CMakeFiles/uninstall.dir

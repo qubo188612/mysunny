@@ -1,0 +1,8 @@
+modbus_node:
+  ros__parameters: 
+    parameterport: 1500
+    robotsetport: 1501
+    port: 1502                  # int
+    robot_port: 1503
+    robot_mod: 0
+

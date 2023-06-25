@@ -156,12 +156,54 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
   {
       TimeFunction time;
       time.get_time_ms(Y,m,d,H,M,S,ms);
-      u_int16_t tab_reg[4];
+      u_int16_t tab_reg[21];
       tab_reg[0]=H;
       tab_reg[1]=M;
       tab_reg[2]=S;
       tab_reg[3]=ms;
       int rc=modbus_write_registers(ctx,0x0d,4,tab_reg);
+      if(rc!=4)
+      {
+        RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x0d=%d",rc);
+      }
+
+      int i_data;
+      i_data=ptr->robpos.posx*1000;
+      tab_reg[0]=((uint16_t*)(&i_data))[0];
+      tab_reg[1]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posy*1000;
+      tab_reg[2]=((uint16_t*)(&i_data))[0];
+      tab_reg[3]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posz*1000;
+      tab_reg[4]=((uint16_t*)(&i_data))[0];
+      tab_reg[5]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posrx*10000;
+      tab_reg[6]=((uint16_t*)(&i_data))[0];
+      tab_reg[7]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posry*10000;
+      tab_reg[8]=((uint16_t*)(&i_data))[0];
+      tab_reg[9]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posrz*10000;
+      tab_reg[10]=((uint16_t*)(&i_data))[0];
+      tab_reg[11]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posout1;
+      tab_reg[12]=((uint16_t*)(&i_data))[0];
+      tab_reg[13]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posout2;
+      tab_reg[14]=((uint16_t*)(&i_data))[0];
+      tab_reg[15]=((uint16_t*)(&i_data))[1];
+      i_data=ptr->robpos.posout3;
+      tab_reg[16]=((uint16_t*)(&i_data))[0];
+      tab_reg[17]=((uint16_t*)(&i_data))[1];
+      tab_reg[18]=(uint16_t)ptr->robpos.toolid;
+      tab_reg[19]=(uint16_t)ptr->robpos.tcpid;
+      tab_reg[20]=(uint16_t)ptr->robpos.usertcpid;
+
+      rc=modbus_write_registers(ctx,0x30,21,tab_reg);
+      if(rc!=21)
+      {
+        RCLCPP_ERROR(this->get_logger(), "modbus send result error 0x30=%d",rc);
+      }
   }
   if (ptr->imageout.header.frame_id == "-1" 
    || ptr->targetpointout.size()==0

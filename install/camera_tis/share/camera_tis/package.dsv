@@ -1,0 +1,6 @@
+source;share/camera_tis/hook/cmake_prefix_path.dsv
+source;share/camera_tis/hook/cmake_prefix_path.sh
+source;share/camera_tis/hook/ld_library_path_lib.dsv
+source;share/camera_tis/hook/ld_library_path_lib.sh
+source;share/camera_tis/local_setup.dsv
+source;share/camera_tis/local_setup.sh

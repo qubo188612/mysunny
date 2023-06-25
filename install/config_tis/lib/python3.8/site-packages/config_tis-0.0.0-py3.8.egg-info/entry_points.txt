@@ -1,0 +1,3 @@
+[console_scripts]
+config_tis_node = config_tis.config_tis_node:main
+

@@ -1,0 +1,3 @@
+source;share/laser_line_center/environment/ament_prefix_path.sh
+source;share/laser_line_center/environment/library_path.sh
+source;share/laser_line_center/environment/path.sh

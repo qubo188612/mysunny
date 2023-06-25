@@ -9,6 +9,8 @@ using namespace std::chrono_literals;
 using rcl_interfaces::msg::ParameterDescriptor;
 using rcl_interfaces::msg::SetParametersResult;
 
+tutorial_interfaces::msg::IfAlgorhmitrobpos robposmsg;
+
 void timer_callback()
 { 
 #ifdef TEST_VIDEO
@@ -27,31 +29,32 @@ void timer_callback()
 #endif
   if(!pThis->cv_image.empty())
   {
-    sensor_msgs::msg::Image::UniquePtr image_msg(new sensor_msgs::msg::Image());
+    IfAlgorhmitimage::UniquePtr image_msg(new IfAlgorhmitimage());
     auto stamp = pThis->now();
-    image_msg->header.stamp = stamp;
-    image_msg->header.frame_id = "my_eyesId";
-    image_msg->height = pThis->cv_image.rows;
-    image_msg->width = pThis->cv_image.cols;
-    image_msg->encoding = pThis->mat_type2encoding(pThis->cv_image.type());
-    image_msg->is_bigendian = false;
-    image_msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(pThis->cv_image.step);
-    image_msg->data.assign(pThis->cv_image.datastart, pThis->cv_image.dataend);
+    image_msg->image.header.stamp = stamp;
+    image_msg->image.header.frame_id = "my_eyesId";
+    image_msg->image.height = pThis->cv_image.rows;
+    image_msg->image.width = pThis->cv_image.cols;
+    image_msg->image.encoding = pThis->mat_type2encoding(pThis->cv_image.type());
+    image_msg->image.is_bigendian = false;
+    image_msg->image.step = static_cast<sensor_msgs::msg::Image::_step_type>(pThis->cv_image.step);
+    image_msg->image.data.assign(pThis->cv_image.datastart, pThis->cv_image.dataend);
+    image_msg->robpos=robposmsg;
 
 #ifdef SHOW_OUTPUT_FPS
     if(pThis->b_modbusconnect==true)
     {
         static bool b_timest=0;
-        static auto timest_fps=image_msg->header.stamp;
-        auto timeed_fps=image_msg->header.stamp;
+        static auto timest_fps=image_msg->image.header.stamp;
+        auto timeed_fps=image_msg->image.header.stamp;
         if(b_timest==0)
         {
           b_timest=1;
-          timest_fps=image_msg->header.stamp;
+          timest_fps=image_msg->image.header.stamp;
         }
         else
         {
-          timeed_fps=image_msg->header.stamp;
+          timeed_fps=image_msg->image.header.stamp;
           double timest=(double)timest_fps.sec+(double)timest_fps.nanosec/1000000000;
           double timeed=(double)timeed_fps.sec+(double)timeed_fps.nanosec/1000000000;
           double time=timeed-timest;
@@ -83,9 +86,9 @@ void timer_callback()
 
     if(pThis->b_modbusconnect==true)
     {
-        auto stamp = image_msg->header.stamp;
+        auto stamp = image_msg->image.header.stamp;
         time_t t;
-        u_int16_t msec = image_msg->header.stamp.nanosec/1000000;
+        u_int16_t msec = image_msg->image.header.stamp.nanosec/1000000;
         struct tm *p;
         t=stamp.sec;
         p=gmtime(&t);  
@@ -121,7 +124,12 @@ CameraTest::CameraTest(const rclcpp::NodeOptions & options)
   this->declare_parameter("view_height", VIEW_HEIGHT);
 
   pThis=this;
-  _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
+  _pub = this->create_publisher<IfAlgorhmitimage>(_pub_name, rclcpp::SensorDataQoS());
+
+  subcription_pos_result = this->create_subscription<tutorial_interfaces::msg::IfAlgorhmitrobpos>(
+        _sub_robposresult_name, rclcpp::SensorDataQoS(), std::bind(&CameraTest::robpos_result_callback, this, _1));
+
+
   timer_ = this->create_wall_timer(25ms, std::bind(&camera_test::timer_callback));
 #ifdef TEST_VIDEO
   capture.open("/home/qubo/mysunny/src/camera_test/bmp/test108.avi");//导入视频
@@ -188,6 +196,11 @@ std::string CameraTest::mat_type2encoding(int mat_type)
     default:
       throw std::runtime_error("unsupported encoding type");
   }
+}
+
+void CameraTest::robpos_result_callback(const tutorial_interfaces::msg::IfAlgorhmitrobpos msg) 
+{
+    robposmsg=msg;  
 }
 
 }

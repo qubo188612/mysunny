@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tutorial_interfaces REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIB REQUIRED IMPORTED_TARGET libmodbus)
@@ -30,6 +31,7 @@ ament_target_dependencies(camera_test
   rclcpp
   rclcpp_components
   sensor_msgs
+  tutorial_interfaces
   OpenCV
 )
 

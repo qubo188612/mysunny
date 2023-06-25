@@ -42,10 +42,10 @@ LaserImagePos::LaserImagePos(const rclcpp::NodeOptions & options)
   }
   _threads.push_back(std::thread(&LaserImagePos::_manager, this));
 
-  _sub = this->create_subscription<Image>(
+  _sub = this->create_subscription<IfAlgorhmitimage>(
     _sub_name,
     rclcpp::SensorDataQoS(),
-    [this](Image::UniquePtr ptr)
+    [this](IfAlgorhmitimage::UniquePtr ptr)
     {
       _push_back_image(std::move(ptr));
     }
@@ -419,16 +419,16 @@ std::string LaserImagePos::mat_type2encoding(int mat_type)
   }
 }
 
-IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat & buf, const Params & pm)
+IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(IfAlgorhmitimage::UniquePtr ptr, cv::Mat & buf, const Params & pm)
 {
-  if (ptr->header.frame_id == "-1" || ptr->data.empty()) {
+  if (ptr->image.header.frame_id == "-1" || ptr->image.data.empty()) {
     auto result = std::make_unique<IfAlgorhmitmsg>();
-    result->imageout.header = ptr->header;
+    result->imageout.header = ptr->image.header;
     result->result=false;
     return result;
   }
   auto result = std::make_unique<IfAlgorhmitmsg>();
-  cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
+  cv::Mat img(ptr->image.height, ptr->image.width, CV_8UC1, ptr->image.data.data());
   std::vector <cv::Point2f> pointcloud;
   std::vector <Targetpoint> resultpoint;
   bool solderjoints;
@@ -441,7 +441,7 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     result->result=true;
   }
 
-  result->imageout.header = ptr->header;
+  result->imageout.header = ptr->image.header;
   result->imageout.height = img.rows;
   result->imageout.width = img.cols;
   result->imageout.encoding = mat_type2encoding(img.type());
@@ -466,6 +466,7 @@ IfAlgorhmitmsg::UniquePtr LaserImagePos::execute(Image::UniquePtr ptr, cv::Mat &
     result->targetpointout.push_back(pointtarget);
   }
   result->solderjoints=solderjoints;
+  result->robpos=ptr->robpos;
   
   return result;
 }
@@ -523,7 +524,7 @@ void LaserImagePos::_manager()
   }
 }
 
-void LaserImagePos::_push_back_image(Image::UniquePtr ptr)
+void LaserImagePos::_push_back_image(IfAlgorhmitimage::UniquePtr ptr)
 {
   std::unique_lock<std::mutex> lk(_images_mut);
   _images.emplace_back(std::move(ptr));

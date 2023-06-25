@@ -40,7 +40,7 @@ int workers(const rclcpp::NodeOptions & options)
 RotateImage::RotateImage(const rclcpp::NodeOptions & options)
 : Node("rotate_image_node", options)
 {
-  _pub = this->create_publisher<Image>(_pub_name, rclcpp::SensorDataQoS());
+  _pub = this->create_publisher<IfAlgorhmitimage>(_pub_name, rclcpp::SensorDataQoS());
 
   this->declare_parameter("mode", 0);
   _mode = this->get_parameter("mode").as_int();
@@ -50,10 +50,10 @@ RotateImage::RotateImage(const rclcpp::NodeOptions & options)
   }
   _threads.push_back(std::thread(&RotateImage::_manager, this));
 
-  _sub = this->create_subscription<Image>(
+  _sub = this->create_subscription<IfAlgorhmitimage>(
     _sub_name,
     rclcpp::SensorDataQoS(),
-    [this](Image::UniquePtr ptr)
+    [this](IfAlgorhmitimage::UniquePtr ptr)
     {
       _push_back_image(std::move(ptr));
     }
@@ -89,20 +89,20 @@ void RotateImage::_worker()
     if (_images.empty() == false) {
       auto ptr = std::move(_images.front());
       _images.pop_front();
-      std::promise<Image::UniquePtr> prom;
+      std::promise<IfAlgorhmitimage::UniquePtr> prom;
       _push_back_future(prom.get_future());
       lk.unlock();
-      if (ptr->header.frame_id == "-1" || ptr->data.empty()) {
+      if (ptr->image.header.frame_id == "-1" || ptr->image.data.empty()) {
         prom.set_value(std::move(ptr));
       } else {
-        buf.resize(ptr->data.size());
-        cv::Mat src(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-        cv::Mat dst(ptr->width, ptr->height, CV_8UC1, buf.data());
+        buf.resize(ptr->image.data.size());
+        cv::Mat src(ptr->image.height, ptr->image.width, CV_8UC1, ptr->image.data.data());
+        cv::Mat dst(ptr->image.width, ptr->image.height, CV_8UC1, buf.data());
         // cv::rotate(src, dst, cv::ROTATE_90_CLOCKWISE);
         cv::rotate(src, dst, _mode);
-        std::swap(ptr->data, buf);
-        std::swap(ptr->width, ptr->height);
-        ptr->step = ptr->width;
+        std::swap(ptr->image.data, buf);
+        std::swap(ptr->image.width, ptr->image.height);
+        ptr->image.step = ptr->image.width;
         prom.set_value(std::move(ptr));
       }
     } else {
@@ -127,7 +127,7 @@ void RotateImage::_manager()
   }
 }
 
-void RotateImage::_push_back_image(Image::UniquePtr ptr)
+void RotateImage::_push_back_image(IfAlgorhmitimage::UniquePtr ptr)
 {
   std::unique_lock<std::mutex> lk(_images_mut);
   _images.emplace_back(std::move(ptr));
@@ -139,7 +139,7 @@ void RotateImage::_push_back_image(Image::UniquePtr ptr)
   _images_con.notify_all();
 }
 
-void RotateImage::_push_back_future(std::future<Image::UniquePtr> f)
+void RotateImage::_push_back_future(std::future<IfAlgorhmitimage::UniquePtr> f)
 {
   std::unique_lock<std::mutex> lk(_futures_mut);
   _futures.emplace_back(std::move(f));

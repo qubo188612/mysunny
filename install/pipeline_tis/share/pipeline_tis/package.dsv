@@ -1,0 +1,4 @@
+source;share/pipeline_tis/hook/cmake_prefix_path.dsv
+source;share/pipeline_tis/hook/cmake_prefix_path.sh
+source;share/pipeline_tis/local_setup.dsv
+source;share/pipeline_tis/local_setup.sh

@@ -1,0 +1,11 @@
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/install/strip.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/install/local.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/install.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/list_install_components.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/rebuild_cache.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/edit_cache.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/test.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/camera_tis_node.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/camera_tis.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/camera_tis_uninstall.dir
+/home/qubo/mysunny/build/camera_tis/CMakeFiles/uninstall.dir

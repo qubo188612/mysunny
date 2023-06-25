@@ -1,0 +1,4 @@
+source;share/seam_tracking/hook/pythonpath.dsv
+source;share/seam_tracking/hook/pythonpath.sh
+source;share/seam_tracking/hook/ament_prefix_path.dsv
+source;share/seam_tracking/hook/ament_prefix_path.sh

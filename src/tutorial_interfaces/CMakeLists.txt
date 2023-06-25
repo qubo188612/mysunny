@@ -13,6 +13,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/IfAlgorhmitrobpos.msg"
+  "msg/IfAlgorhmitimage.msg"
   "msg/IfAlgorhmitpoint2f.msg"
   "msg/IfAlgorhmitpoint4f.msg"
   "msg/IfAlgorhmittargetpoint2f.msg"

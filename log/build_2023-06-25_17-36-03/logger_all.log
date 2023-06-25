@@ -1,0 +1,610 @@
+[0.154s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.155s] DEBUG:colcon:Parsed command line arguments: Namespace(ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='sequential', install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7fde3e9200a0>>, merge_install=False, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7fde3e9200a0>, verb_name='build', verb_parser=CustomArgumentParser(prog='colcon build', usage=None, description='Build a set of packages.', formatter_class=<class 'colcon_core.command.CustomFormatter'>, conflict_handler='error', add_help=True))
+[0.173s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.173s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.173s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.173s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/qubo/mysunny'
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extensions ['ignore', 'ignore_ament_install']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'ignore'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'ignore_ament_install'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extensions ['ros']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'ros'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extensions ['cmake', 'python']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'cmake'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'python'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extensions ['python_setup_py']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE) by extension 'python_setup_py'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extensions ['ignore', 'ignore_ament_install']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'ignore'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'ignore_ament_install'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extensions ['ros']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'ros'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extensions ['cmake', 'python']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'cmake'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'python'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extensions ['python_setup_py']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(SAVE/DATA) by extension 'python_setup_py'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_test) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_test) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_test) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_test) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_test) by extension 'ros'
+[0.184s] DEBUG:colcon.colcon_core.package_identification:Package 'src/camera_test' with type 'ros.ament_cmake' and name 'camera_test'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_tis) by extensions ['ignore', 'ignore_ament_install']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_tis) by extension 'ignore'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_tis) by extension 'ignore_ament_install'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_tis) by extensions ['ros']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/camera_tis) by extension 'ros'
+[0.185s] DEBUG:colcon.colcon_core.package_identification:Package 'src/camera_tis' with type 'ros.ament_cmake' and name 'camera_tis'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/cloud_result_tcpip) by extensions ['ignore', 'ignore_ament_install']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/cloud_result_tcpip) by extension 'ignore'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/cloud_result_tcpip) by extension 'ignore_ament_install'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/cloud_result_tcpip) by extensions ['ros']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/cloud_result_tcpip) by extension 'ros'
+[0.185s] DEBUG:colcon.colcon_core.package_identification:Package 'src/cloud_result_tcpip' with type 'ros.ament_cmake' and name 'cloud_result_tcpip'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/config_tis) by extensions ['ignore', 'ignore_ament_install']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/config_tis) by extension 'ignore'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/config_tis) by extension 'ignore_ament_install'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/config_tis) by extensions ['ros']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/config_tis) by extension 'ros'
+[0.186s] DEBUG:colcon.colcon_core.package_identification:Package 'src/config_tis' with type 'ros.ament_python' and name 'config_tis'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/gpio_raspberry) by extensions ['ignore', 'ignore_ament_install']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/gpio_raspberry) by extension 'ignore'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/gpio_raspberry) by extension 'ignore_ament_install'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/gpio_raspberry) by extensions ['ros']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/gpio_raspberry) by extension 'ros'
+[0.186s] DEBUG:colcon.colcon_core.package_identification:Package 'src/gpio_raspberry' with type 'ros.ament_cmake' and name 'gpio_raspberry'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_result_tcpip) by extensions ['ignore', 'ignore_ament_install']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_result_tcpip) by extension 'ignore'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_result_tcpip) by extension 'ignore_ament_install'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_result_tcpip) by extensions ['ros']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_result_tcpip) by extension 'ros'
+[0.187s] DEBUG:colcon.colcon_core.package_identification:Package 'src/image_result_tcpip' with type 'ros.ament_cmake' and name 'image_result_tcpip'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_tcpip) by extensions ['ignore', 'ignore_ament_install']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_tcpip) by extension 'ignore'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_tcpip) by extension 'ignore_ament_install'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_tcpip) by extensions ['ros']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(src/image_tcpip) by extension 'ros'
+[0.188s] DEBUG:colcon.colcon_core.package_identification:Package 'src/image_tcpip' with type 'ros.ament_cmake' and name 'image_tcpip'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_imagepos) by extensions ['ignore', 'ignore_ament_install']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_imagepos) by extension 'ignore'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_imagepos) by extension 'ignore_ament_install'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_imagepos) by extensions ['ros']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_imagepos) by extension 'ros'
+[0.188s] DEBUG:colcon.colcon_core.package_identification:Package 'src/laser_imagepos' with type 'ros.ament_cmake' and name 'laser_imagepos'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_center) by extensions ['ignore', 'ignore_ament_install']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_center) by extension 'ignore'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_center) by extension 'ignore_ament_install'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_center) by extensions ['ros']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_center) by extension 'ros'
+[0.189s] DEBUG:colcon.colcon_core.package_identification:Package 'src/laser_line_center' with type 'ros.ament_cmake' and name 'laser_line_center'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_filter) by extensions ['ignore', 'ignore_ament_install']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_filter) by extension 'ignore'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_filter) by extension 'ignore_ament_install'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_filter) by extensions ['ros']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(src/laser_line_filter) by extension 'ros'
+[0.190s] DEBUG:colcon.colcon_core.package_identification:Package 'src/laser_line_filter' with type 'ros.ament_cmake' and name 'laser_line_filter'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/line_center_reconstruction) by extensions ['ignore', 'ignore_ament_install']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/line_center_reconstruction) by extension 'ignore'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/line_center_reconstruction) by extension 'ignore_ament_install'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/line_center_reconstruction) by extensions ['ros']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/line_center_reconstruction) by extension 'ros'
+[0.190s] DEBUG:colcon.colcon_core.package_identification:Package 'src/line_center_reconstruction' with type 'ros.ament_cmake' and name 'line_center_reconstruction'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/modbus) by extensions ['ignore', 'ignore_ament_install']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/modbus) by extension 'ignore'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/modbus) by extension 'ignore_ament_install'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/modbus) by extensions ['ros']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(src/modbus) by extension 'ros'
+[0.191s] DEBUG:colcon.colcon_core.package_identification:Package 'src/modbus' with type 'ros.ament_cmake' and name 'modbus'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(src/my_pclout) by extensions ['ignore', 'ignore_ament_install']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(src/my_pclout) by extension 'ignore'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(src/my_pclout) by extension 'ignore_ament_install'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(src/my_pclout) by extensions ['ros']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(src/my_pclout) by extension 'ros'
+[0.191s] DEBUG:colcon.colcon_core.package_identification:Package 'src/my_pclout' with type 'ros.ament_cmake' and name 'my_pclout'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(src/pipeline_tis) by extensions ['ignore', 'ignore_ament_install']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(src/pipeline_tis) by extension 'ignore'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(src/pipeline_tis) by extension 'ignore_ament_install'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(src/pipeline_tis) by extensions ['ros']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(src/pipeline_tis) by extension 'ros'
+[0.193s] DEBUG:colcon.colcon_core.package_identification:Package 'src/pipeline_tis' with type 'ros.ament_cmake' and name 'pipeline_tis'
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/rotate_image) by extensions ['ignore', 'ignore_ament_install']
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/rotate_image) by extension 'ignore'
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/rotate_image) by extension 'ignore_ament_install'
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/rotate_image) by extensions ['ros']
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/rotate_image) by extension 'ros'
+[0.193s] DEBUG:colcon.colcon_core.package_identification:Package 'src/rotate_image' with type 'ros.ament_cmake' and name 'rotate_image'
+[0.193s] Level 1:colcon.colcon_core.package_identification:_identify(src/seam_tracking) by extensions ['ignore', 'ignore_ament_install']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/seam_tracking) by extension 'ignore'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/seam_tracking) by extension 'ignore_ament_install'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/seam_tracking) by extensions ['ros']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/seam_tracking) by extension 'ros'
+[0.194s] DEBUG:colcon.colcon_core.package_identification:Package 'src/seam_tracking' with type 'ros.ament_python' and name 'seam_tracking'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/tutorial_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/tutorial_interfaces) by extension 'ignore'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/tutorial_interfaces) by extension 'ignore_ament_install'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/tutorial_interfaces) by extensions ['ros']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(src/tutorial_interfaces) by extension 'ros'
+[0.195s] DEBUG:colcon.colcon_core.package_identification:Package 'src/tutorial_interfaces' with type 'ros.ament_cmake' and name 'tutorial_interfaces'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extensions ['ignore', 'ignore_ament_install']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'ignore'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'ignore_ament_install'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extensions ['ros']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'ros'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extensions ['cmake', 'python']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'cmake'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'python'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extensions ['python_setup_py']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools) by extension 'python_setup_py'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extensions ['ignore', 'ignore_ament_install']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'ignore'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'ignore_ament_install'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extensions ['ros']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'ros'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extensions ['cmake', 'python']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'cmake'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'python'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extensions ['python_setup_py']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/ros2_numpy) by extension 'python_setup_py'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extensions ['ignore', 'ignore_ament_install']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'ignore'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'ignore_ament_install'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extensions ['ros']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'ros'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extensions ['cmake', 'python']
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'cmake'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'python'
+[0.195s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extensions ['python_setup_py']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui) by extension 'python_setup_py'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extensions ['ignore', 'ignore_ament_install']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'ignore'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'ignore_ament_install'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extensions ['ros']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'ros'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extensions ['cmake', 'python']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'cmake'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'python'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extensions ['python_setup_py']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/seam_tracking_gui/test) by extension 'python_setup_py'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extensions ['ignore', 'ignore_ament_install']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'ignore'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'ignore_ament_install'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extensions ['ros']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'ros'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extensions ['cmake', 'python']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'cmake'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'python'
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extensions ['python_setup_py']
+[0.196s] Level 1:colcon.colcon_core.package_identification:_identify(tools/template) by extension 'python_setup_py'
+[0.196s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.196s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.196s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_args' from command line to 'None'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_target' from command line to 'None'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_clean_cache' from command line to 'False'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_clean_first' from command line to 'False'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'cmake_force_configure' from command line to 'False'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'ament_cmake_args' from command line to 'None'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'catkin_cmake_args' from command line to 'None'
+[0.212s] Level 5:colcon.colcon_core.verb:set package 'config_tis' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.213s] DEBUG:colcon.colcon_core.verb:Building package 'config_tis' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/config_tis', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/config_tis', 'merge_install': False, 'path': '/home/qubo/mysunny/src/config_tis', 'symlink_install': False, 'test_result_base': None}
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_args' from command line to 'None'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_target' from command line to 'None'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_clean_cache' from command line to 'False'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_clean_first' from command line to 'False'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'cmake_force_configure' from command line to 'False'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'ament_cmake_args' from command line to 'None'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'catkin_cmake_args' from command line to 'None'
+[0.213s] Level 5:colcon.colcon_core.verb:set package 'gpio_raspberry' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.213s] DEBUG:colcon.colcon_core.verb:Building package 'gpio_raspberry' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/gpio_raspberry', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/gpio_raspberry', 'merge_install': False, 'path': '/home/qubo/mysunny/src/gpio_raspberry', 'symlink_install': False, 'test_result_base': None}
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_args' from command line to 'None'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_target' from command line to 'None'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_clean_cache' from command line to 'False'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_clean_first' from command line to 'False'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'cmake_force_configure' from command line to 'False'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'ament_cmake_args' from command line to 'None'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'catkin_cmake_args' from command line to 'None'
+[0.214s] Level 5:colcon.colcon_core.verb:set package 'image_tcpip' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.214s] DEBUG:colcon.colcon_core.verb:Building package 'image_tcpip' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/image_tcpip', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/image_tcpip', 'merge_install': False, 'path': '/home/qubo/mysunny/src/image_tcpip', 'symlink_install': False, 'test_result_base': None}
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_args' from command line to 'None'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_target' from command line to 'None'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_clean_cache' from command line to 'False'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_clean_first' from command line to 'False'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'cmake_force_configure' from command line to 'False'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'ament_cmake_args' from command line to 'None'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'catkin_cmake_args' from command line to 'None'
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_center' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.216s] DEBUG:colcon.colcon_core.verb:Building package 'laser_line_center' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/laser_line_center', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/laser_line_center', 'merge_install': False, 'path': '/home/qubo/mysunny/src/laser_line_center', 'symlink_install': False, 'test_result_base': None}
+[0.216s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_target' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_clean_cache' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_clean_first' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'cmake_force_configure' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'ament_cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'catkin_cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'laser_line_filter' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.217s] DEBUG:colcon.colcon_core.verb:Building package 'laser_line_filter' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/laser_line_filter', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/laser_line_filter', 'merge_install': False, 'path': '/home/qubo/mysunny/src/laser_line_filter', 'symlink_install': False, 'test_result_base': None}
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_target' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_clean_cache' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_clean_first' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'cmake_force_configure' from command line to 'False'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'ament_cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'catkin_cmake_args' from command line to 'None'
+[0.217s] Level 5:colcon.colcon_core.verb:set package 'rotate_image' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.217s] DEBUG:colcon.colcon_core.verb:Building package 'rotate_image' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/rotate_image', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/rotate_image', 'merge_install': False, 'path': '/home/qubo/mysunny/src/rotate_image', 'symlink_install': False, 'test_result_base': None}
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_args' from command line to 'None'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_target' from command line to 'None'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_clean_cache' from command line to 'False'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_clean_first' from command line to 'False'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'cmake_force_configure' from command line to 'False'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'ament_cmake_args' from command line to 'None'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'catkin_cmake_args' from command line to 'None'
+[0.218s] Level 5:colcon.colcon_core.verb:set package 'seam_tracking' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.218s] DEBUG:colcon.colcon_core.verb:Building package 'seam_tracking' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/seam_tracking', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/seam_tracking', 'merge_install': False, 'path': '/home/qubo/mysunny/src/seam_tracking', 'symlink_install': False, 'test_result_base': None}
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_args' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_target' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'tutorial_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.219s] DEBUG:colcon.colcon_core.verb:Building package 'tutorial_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/tutorial_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/tutorial_interfaces', 'merge_install': False, 'path': '/home/qubo/mysunny/src/tutorial_interfaces', 'symlink_install': False, 'test_result_base': None}
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_args' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_target' from command line to 'None'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_clean_cache' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_clean_first' from command line to 'False'
+[0.219s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'cmake_force_configure' from command line to 'False'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'ament_cmake_args' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'catkin_cmake_args' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_test' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.220s] DEBUG:colcon.colcon_core.verb:Building package 'camera_test' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/camera_test', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/camera_test', 'merge_install': False, 'path': '/home/qubo/mysunny/src/camera_test', 'symlink_install': False, 'test_result_base': None}
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_args' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_target' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_clean_cache' from command line to 'False'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_clean_first' from command line to 'False'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'cmake_force_configure' from command line to 'False'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'ament_cmake_args' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'catkin_cmake_args' from command line to 'None'
+[0.220s] Level 5:colcon.colcon_core.verb:set package 'camera_tis' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.220s] DEBUG:colcon.colcon_core.verb:Building package 'camera_tis' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/camera_tis', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/camera_tis', 'merge_install': False, 'path': '/home/qubo/mysunny/src/camera_tis', 'symlink_install': False, 'test_result_base': None}
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_args' from command line to 'None'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_target' from command line to 'None'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_clean_cache' from command line to 'False'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_clean_first' from command line to 'False'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'cmake_force_configure' from command line to 'False'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'ament_cmake_args' from command line to 'None'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'catkin_cmake_args' from command line to 'None'
+[0.221s] Level 5:colcon.colcon_core.verb:set package 'cloud_result_tcpip' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.221s] DEBUG:colcon.colcon_core.verb:Building package 'cloud_result_tcpip' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/cloud_result_tcpip', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/cloud_result_tcpip', 'merge_install': False, 'path': '/home/qubo/mysunny/src/cloud_result_tcpip', 'symlink_install': False, 'test_result_base': None}
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_args' from command line to 'None'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_target' from command line to 'None'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_clean_cache' from command line to 'False'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_clean_first' from command line to 'False'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'cmake_force_configure' from command line to 'False'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'ament_cmake_args' from command line to 'None'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'catkin_cmake_args' from command line to 'None'
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'image_result_tcpip' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.222s] DEBUG:colcon.colcon_core.verb:Building package 'image_result_tcpip' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/image_result_tcpip', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/image_result_tcpip', 'merge_install': False, 'path': '/home/qubo/mysunny/src/image_result_tcpip', 'symlink_install': False, 'test_result_base': None}
+[0.222s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_target' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_clean_cache' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_clean_first' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'cmake_force_configure' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'ament_cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'catkin_cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'laser_imagepos' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.223s] DEBUG:colcon.colcon_core.verb:Building package 'laser_imagepos' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/laser_imagepos', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/laser_imagepos', 'merge_install': False, 'path': '/home/qubo/mysunny/src/laser_imagepos', 'symlink_install': False, 'test_result_base': None}
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_target' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_clean_cache' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_clean_first' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'cmake_force_configure' from command line to 'False'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'ament_cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'catkin_cmake_args' from command line to 'None'
+[0.223s] Level 5:colcon.colcon_core.verb:set package 'line_center_reconstruction' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.223s] DEBUG:colcon.colcon_core.verb:Building package 'line_center_reconstruction' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/line_center_reconstruction', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/line_center_reconstruction', 'merge_install': False, 'path': '/home/qubo/mysunny/src/line_center_reconstruction', 'symlink_install': False, 'test_result_base': None}
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_args' from command line to 'None'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_target' from command line to 'None'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_clean_cache' from command line to 'False'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_clean_first' from command line to 'False'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'cmake_force_configure' from command line to 'False'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'ament_cmake_args' from command line to 'None'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'catkin_cmake_args' from command line to 'None'
+[0.224s] Level 5:colcon.colcon_core.verb:set package 'modbus' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.224s] DEBUG:colcon.colcon_core.verb:Building package 'modbus' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/modbus', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/modbus', 'merge_install': False, 'path': '/home/qubo/mysunny/src/modbus', 'symlink_install': False, 'test_result_base': None}
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_args' from command line to 'None'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_target' from command line to 'None'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_clean_cache' from command line to 'False'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_clean_first' from command line to 'False'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'cmake_force_configure' from command line to 'False'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'ament_cmake_args' from command line to 'None'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'catkin_cmake_args' from command line to 'None'
+[0.225s] Level 5:colcon.colcon_core.verb:set package 'my_pclout' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.225s] DEBUG:colcon.colcon_core.verb:Building package 'my_pclout' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/my_pclout', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/my_pclout', 'merge_install': False, 'path': '/home/qubo/mysunny/src/my_pclout', 'symlink_install': False, 'test_result_base': None}
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_args' from command line to 'None'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_target' from command line to 'None'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_clean_cache' from command line to 'False'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_clean_first' from command line to 'False'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'cmake_force_configure' from command line to 'False'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'ament_cmake_args' from command line to 'None'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'catkin_cmake_args' from command line to 'None'
+[0.226s] Level 5:colcon.colcon_core.verb:set package 'pipeline_tis' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.226s] DEBUG:colcon.colcon_core.verb:Building package 'pipeline_tis' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qubo/mysunny/build/pipeline_tis', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qubo/mysunny/install/pipeline_tis', 'merge_install': False, 'path': '/home/qubo/mysunny/src/pipeline_tis', 'symlink_install': False, 'test_result_base': None}
+[0.226s] INFO:colcon.colcon_core.executor:Executing jobs using 'sequential' executor
+[0.228s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'config_tis'
+[0.228s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/qubo/mysunny/src/config_tis' with build type 'ament_python'
+[0.228s] Level 1:colcon.colcon_core.shell:create_environment_hook('config_tis', 'ament_prefix_path')
+[0.229s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.229s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/config_tis/share/config_tis/hook/ament_prefix_path.dsv'
+[0.230s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/config_tis/share/config_tis/hook/ament_prefix_path.sh'
+[0.231s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.407s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/qubo/mysunny/src/config_tis'
+[0.408s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.757s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/src/config_tis': PYTHONPATH=/home/qubo/mysunny/build/config_tis/prefix_override:/home/qubo/mysunny/install/config_tis/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/config_tis build --build-base /home/qubo/mysunny/build/config_tis/build install --record /home/qubo/mysunny/build/config_tis/install.log --single-version-externally-managed
+[1.042s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/src/config_tis' returned '0': PYTHONPATH=/home/qubo/mysunny/build/config_tis/prefix_override:/home/qubo/mysunny/install/config_tis/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/config_tis build --build-base /home/qubo/mysunny/build/config_tis/build install --record /home/qubo/mysunny/build/config_tis/install.log --single-version-externally-managed
+[1.046s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis' for CMake module files
+[1.046s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis' for CMake config files
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis/lib'
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis/bin'
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis/lib/pkgconfig/config_tis.pc'
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis/lib/python3.8/site-packages'
+[1.047s] Level 1:colcon.colcon_core.shell:create_environment_hook('config_tis', 'pythonpath')
+[1.048s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/config_tis/share/config_tis/hook/pythonpath.dsv'
+[1.048s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/config_tis/share/config_tis/hook/pythonpath.sh'
+[1.049s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/config_tis/bin'
+[1.049s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(config_tis)
+[1.050s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/config_tis/share/config_tis/package.dsv'
+[1.051s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/config_tis/share/config_tis/package.sh'
+[1.051s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/config_tis/share/colcon-core/packages/config_tis)
+[1.051s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'config_tis' finished with '0'
+[1.052s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'gpio_raspberry'
+[1.052s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qubo/mysunny/src/gpio_raspberry' with build type 'ament_cmake'
+[1.052s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qubo/mysunny/src/gpio_raspberry'
+[1.052s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.064s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/gpio_raspberry': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/gpio_raspberry -- -j4 -l4
+[1.129s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/gpio_raspberry' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/gpio_raspberry -- -j4 -l4
+[1.168s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/gpio_raspberry': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/gpio_raspberry
+[1.179s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(gpio_raspberry)
+[1.179s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/gpio_raspberry' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/gpio_raspberry
+[1.180s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry' for CMake module files
+[1.181s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry' for CMake config files
+[1.181s] Level 1:colcon.colcon_core.shell:create_environment_hook('gpio_raspberry', 'cmake_prefix_path')
+[1.182s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/cmake_prefix_path.dsv'
+[1.182s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/cmake_prefix_path.sh'
+[1.183s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib'
+[1.183s] Level 1:colcon.colcon_core.shell:create_environment_hook('gpio_raspberry', 'ld_library_path_lib')
+[1.183s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/ld_library_path_lib.dsv'
+[1.183s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/ld_library_path_lib.sh'
+[1.184s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/bin'
+[1.184s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib/pkgconfig/gpio_raspberry.pc'
+[1.184s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib/python3.8/site-packages'
+[1.184s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/bin'
+[1.185s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/package.dsv'
+[1.185s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/package.sh'
+[1.185s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/gpio_raspberry/share/colcon-core/packages/gpio_raspberry)
+[1.210s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(gpio_raspberry)
+[1.211s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry' for CMake module files
+[1.212s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry' for CMake config files
+[1.212s] Level 1:colcon.colcon_core.shell:create_environment_hook('gpio_raspberry', 'cmake_prefix_path')
+[1.212s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/cmake_prefix_path.dsv'
+[1.213s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/cmake_prefix_path.sh'
+[1.213s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib'
+[1.213s] Level 1:colcon.colcon_core.shell:create_environment_hook('gpio_raspberry', 'ld_library_path_lib')
+[1.214s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/ld_library_path_lib.dsv'
+[1.214s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/hook/ld_library_path_lib.sh'
+[1.214s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/bin'
+[1.214s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib/pkgconfig/gpio_raspberry.pc'
+[1.215s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/lib/python3.8/site-packages'
+[1.215s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/gpio_raspberry/bin'
+[1.216s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/package.dsv'
+[1.217s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/gpio_raspberry/share/gpio_raspberry/package.sh'
+[1.217s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/gpio_raspberry/share/colcon-core/packages/gpio_raspberry)
+[1.217s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'gpio_raspberry' finished with '0'
+[1.217s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'image_tcpip'
+[1.217s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qubo/mysunny/src/image_tcpip' with build type 'ament_cmake'
+[1.218s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qubo/mysunny/src/image_tcpip'
+[1.218s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.228s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/image_tcpip': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/image_tcpip -- -j4 -l4
+[1.291s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/image_tcpip' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/image_tcpip -- -j4 -l4
+[1.321s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/image_tcpip': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/image_tcpip
+[1.332s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(image_tcpip)
+[1.332s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/image_tcpip' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/image_tcpip
+[1.334s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip' for CMake module files
+[1.334s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip' for CMake config files
+[1.335s] Level 1:colcon.colcon_core.shell:create_environment_hook('image_tcpip', 'cmake_prefix_path')
+[1.335s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/cmake_prefix_path.dsv'
+[1.336s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/cmake_prefix_path.sh'
+[1.336s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib'
+[1.336s] Level 1:colcon.colcon_core.shell:create_environment_hook('image_tcpip', 'ld_library_path_lib')
+[1.337s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/ld_library_path_lib.dsv'
+[1.337s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/ld_library_path_lib.sh'
+[1.337s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/bin'
+[1.337s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib/pkgconfig/image_tcpip.pc'
+[1.338s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib/python3.8/site-packages'
+[1.338s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/bin'
+[1.338s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/package.dsv'
+[1.339s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/package.sh'
+[1.339s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/image_tcpip/share/colcon-core/packages/image_tcpip)
+[1.368s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(image_tcpip)
+[1.370s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip' for CMake module files
+[1.370s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip' for CMake config files
+[1.370s] Level 1:colcon.colcon_core.shell:create_environment_hook('image_tcpip', 'cmake_prefix_path')
+[1.371s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/cmake_prefix_path.dsv'
+[1.371s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/cmake_prefix_path.sh'
+[1.372s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib'
+[1.372s] Level 1:colcon.colcon_core.shell:create_environment_hook('image_tcpip', 'ld_library_path_lib')
+[1.372s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/ld_library_path_lib.dsv'
+[1.373s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/hook/ld_library_path_lib.sh'
+[1.373s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/bin'
+[1.373s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib/pkgconfig/image_tcpip.pc'
+[1.373s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/lib/python3.8/site-packages'
+[1.373s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/image_tcpip/bin'
+[1.374s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/package.dsv'
+[1.374s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/image_tcpip/share/image_tcpip/package.sh'
+[1.374s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/image_tcpip/share/colcon-core/packages/image_tcpip)
+[1.375s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'image_tcpip' finished with '0'
+[1.375s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'laser_line_center'
+[1.375s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qubo/mysunny/src/laser_line_center' with build type 'ament_cmake'
+[1.375s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qubo/mysunny/src/laser_line_center'
+[1.375s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.386s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/laser_line_center': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/laser_line_center -- -j4 -l4
+[1.505s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/laser_line_center' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/laser_line_center -- -j4 -l4
+[1.538s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/laser_line_center': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/laser_line_center
+[1.549s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(laser_line_center)
+[1.551s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center' for CMake module files
+[1.551s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/laser_line_center' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/laser_line_center
+[1.551s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center' for CMake config files
+[1.551s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_center', 'cmake_prefix_path')
+[1.552s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/cmake_prefix_path.dsv'
+[1.552s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/cmake_prefix_path.sh'
+[1.553s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib'
+[1.553s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_center', 'ld_library_path_lib')
+[1.553s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/ld_library_path_lib.dsv'
+[1.554s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/ld_library_path_lib.sh'
+[1.554s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/bin'
+[1.554s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib/pkgconfig/laser_line_center.pc'
+[1.554s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib/python3.8/site-packages'
+[1.554s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/bin'
+[1.555s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/package.dsv'
+[1.555s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/package.sh'
+[1.555s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/laser_line_center/share/colcon-core/packages/laser_line_center)
+[1.586s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(laser_line_center)
+[1.587s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center' for CMake module files
+[1.588s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center' for CMake config files
+[1.588s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_center', 'cmake_prefix_path')
+[1.589s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/cmake_prefix_path.dsv'
+[1.589s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/cmake_prefix_path.sh'
+[1.589s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib'
+[1.590s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_center', 'ld_library_path_lib')
+[1.590s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/ld_library_path_lib.dsv'
+[1.590s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/hook/ld_library_path_lib.sh'
+[1.591s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/bin'
+[1.591s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib/pkgconfig/laser_line_center.pc'
+[1.591s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/lib/python3.8/site-packages'
+[1.591s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_center/bin'
+[1.592s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/package.dsv'
+[1.592s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/laser_line_center/share/laser_line_center/package.sh'
+[1.592s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/laser_line_center/share/colcon-core/packages/laser_line_center)
+[1.592s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'laser_line_center' finished with '0'
+[1.593s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'laser_line_filter'
+[1.593s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qubo/mysunny/src/laser_line_filter' with build type 'ament_cmake'
+[1.593s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qubo/mysunny/src/laser_line_filter'
+[1.593s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.603s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/laser_line_filter': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/laser_line_filter -- -j4 -l4
+[1.688s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/laser_line_filter' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/laser_line_filter -- -j4 -l4
+[1.717s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/laser_line_filter': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/laser_line_filter
+[1.734s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(laser_line_filter)
+[1.735s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter' for CMake module files
+[1.736s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/laser_line_filter' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --install /home/qubo/mysunny/build/laser_line_filter
+[1.736s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter' for CMake config files
+[1.736s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_filter', 'cmake_prefix_path')
+[1.737s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/cmake_prefix_path.dsv'
+[1.737s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/cmake_prefix_path.sh'
+[1.738s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib'
+[1.738s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_filter', 'ld_library_path_lib')
+[1.738s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/ld_library_path_lib.dsv'
+[1.739s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/ld_library_path_lib.sh'
+[1.739s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/bin'
+[1.739s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib/pkgconfig/laser_line_filter.pc'
+[1.740s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib/python3.8/site-packages'
+[1.740s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/bin'
+[1.740s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/package.dsv'
+[1.741s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/package.sh'
+[1.741s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/laser_line_filter/share/colcon-core/packages/laser_line_filter)
+[1.774s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(laser_line_filter)
+[1.775s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter' for CMake module files
+[1.775s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter' for CMake config files
+[1.776s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_filter', 'cmake_prefix_path')
+[1.776s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/cmake_prefix_path.dsv'
+[1.777s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/cmake_prefix_path.sh'
+[1.777s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib'
+[1.777s] Level 1:colcon.colcon_core.shell:create_environment_hook('laser_line_filter', 'ld_library_path_lib')
+[1.778s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/ld_library_path_lib.dsv'
+[1.778s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/hook/ld_library_path_lib.sh'
+[1.778s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/bin'
+[1.778s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib/pkgconfig/laser_line_filter.pc'
+[1.778s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/lib/python3.8/site-packages'
+[1.779s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/laser_line_filter/bin'
+[1.779s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/package.dsv'
+[1.779s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/laser_line_filter/share/laser_line_filter/package.sh'
+[1.780s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/laser_line_filter/share/colcon-core/packages/laser_line_filter)
+[1.780s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'laser_line_filter' finished with '0'
+[1.780s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'rotate_image'
+[1.780s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qubo/mysunny/src/rotate_image' with build type 'ament_cmake'
+[1.780s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qubo/mysunny/src/rotate_image'
+[1.781s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.794s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qubo/mysunny/build/rotate_image': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/rotate_image -- -j4 -l4
+[1.938s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qubo/mysunny/build/rotate_image' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/qubo/mysunny/install/seam_tracking:/home/qubo/mysunny/install/config_tis:/home/qubo/myRos2test/install/learning_urdf:/home/qubo/myRos2test/install/learning_topic:/home/qubo/myRos2test/install/learning_tf:/home/qubo/myRos2test/install/learning_service:/home/qubo/myRos2test/install/learning_qos:/home/qubo/myRos2test/install/learning_pkg_python:/home/qubo/myRos2test/install/learning_parameter:/home/qubo/myRos2test/install/learning_node:/home/qubo/myRos2test/install/learning_launch:/home/qubo/myRos2test/install/learning_action:/home/qubo/myRos2test/install/learning_gazebo:/opt/ros/galactic /usr/bin/cmake --build /home/qubo/mysunny/build/rotate_image -- -j4 -l4
+[1.975s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(rotate_image)
+[1.977s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image' for CMake module files
+[1.977s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image' for CMake config files
+[1.977s] Level 1:colcon.colcon_core.shell:create_environment_hook('rotate_image', 'cmake_prefix_path')
+[1.978s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/rotate_image/share/rotate_image/hook/cmake_prefix_path.dsv'
+[1.978s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/rotate_image/share/rotate_image/hook/cmake_prefix_path.sh'
+[1.979s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image/lib'
+[1.979s] Level 1:colcon.colcon_core.shell:create_environment_hook('rotate_image', 'ld_library_path_lib')
+[1.980s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/qubo/mysunny/install/rotate_image/share/rotate_image/hook/ld_library_path_lib.dsv'
+[1.980s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/qubo/mysunny/install/rotate_image/share/rotate_image/hook/ld_library_path_lib.sh'
+[1.981s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image/bin'
+[1.981s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image/lib/pkgconfig/rotate_image.pc'
+[1.981s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image/lib/python3.8/site-packages'
+[1.981s] Level 1:colcon.colcon_core.environment:checking '/home/qubo/mysunny/install/rotate_image/bin'
+[1.982s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qubo/mysunny/install/rotate_image/share/rotate_image/package.dsv'
+[1.982s] INFO:colcon.colcon_core.shell:Creating package script '/home/qubo/mysunny/install/rotate_image/share/rotate_image/package.sh'
+[1.982s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qubo/mysunny/install/rotate_image/share/colcon-core/packages/rotate_image)
+[1.983s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'rotate_image' finished with '2'
+[1.983s] DEBUG:colcon.colcon_core.executor.sequential:closing loop
+[1.983s] DEBUG:colcon.colcon_core.executor.sequential:loop closed
+[1.983s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[1.985s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[1.986s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/qubo/mysunny/install/local_setup.sh'
+[1.986s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/qubo/mysunny/install/_local_setup_util_sh.py'
+[1.987s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/qubo/mysunny/install/setup.sh'
