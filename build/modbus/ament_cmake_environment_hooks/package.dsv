@@ -1,4 +1,0 @@
-source;share/modbus/local_setup.bash
-source;share/modbus/local_setup.dsv
-source;share/modbus/local_setup.sh
-source;share/modbus/local_setup.zsh

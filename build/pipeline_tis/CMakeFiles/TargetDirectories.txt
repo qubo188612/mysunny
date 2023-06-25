@@ -1,9 +1,0 @@
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/install/strip.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/install/local.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/install.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/list_install_components.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/rebuild_cache.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/edit_cache.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/test.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/pipeline_tis_uninstall.dir
-/home/qubo/mysunny/build/pipeline_tis/CMakeFiles/uninstall.dir

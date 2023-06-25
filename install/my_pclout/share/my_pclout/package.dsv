@@ -1,6 +1,0 @@
-source;share/my_pclout/hook/cmake_prefix_path.dsv
-source;share/my_pclout/hook/cmake_prefix_path.sh
-source;share/my_pclout/hook/ld_library_path_lib.dsv
-source;share/my_pclout/hook/ld_library_path_lib.sh
-source;share/my_pclout/local_setup.dsv
-source;share/my_pclout/local_setup.sh

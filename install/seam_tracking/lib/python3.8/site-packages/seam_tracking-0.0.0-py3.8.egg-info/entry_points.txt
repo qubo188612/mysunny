@@ -1,3 +1,0 @@
-[console_scripts]
-seam_tracking_node = seam_tracking.seam_tracking_node:main
-

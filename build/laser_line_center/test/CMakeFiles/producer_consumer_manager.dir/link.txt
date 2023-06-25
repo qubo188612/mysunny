@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/producer_consumer_manager.dir/producer_consumer_manager.cpp.o  -o producer_consumer_manager  -lpthread 

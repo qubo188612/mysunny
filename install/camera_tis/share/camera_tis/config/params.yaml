@@ -1,3 +1,0 @@
-camera_tis_node:
-  ros__parameters:
-    exposure_time: 1000         # int, exposure time in microseconds

@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/average.dir/average.cpp.o  -o average 

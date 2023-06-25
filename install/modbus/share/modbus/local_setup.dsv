@@ -1,3 +1,0 @@
-source;share/modbus/environment/ament_prefix_path.sh
-source;share/modbus/environment/library_path.sh
-source;share/modbus/environment/path.sh

@@ -1,6 +1,0 @@
-source;share/image_result_tcpip/hook/cmake_prefix_path.dsv
-source;share/image_result_tcpip/hook/cmake_prefix_path.sh
-source;share/image_result_tcpip/hook/ld_library_path_lib.dsv
-source;share/image_result_tcpip/hook/ld_library_path_lib.sh
-source;share/image_result_tcpip/local_setup.dsv
-source;share/image_result_tcpip/local_setup.sh
