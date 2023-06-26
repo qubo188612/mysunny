@@ -270,10 +270,12 @@ IfAlgorhmitcloud::UniquePtr LineCenterReconstruction::_task100_199_execute(IfAlg
         tab_reg[0]=-1;
         rc=modbus_write_registers(ctx,0x11,1,tab_reg);
       }
+      msg->robpos=ptr->robpos;
       return msg;
    }
 
   auto msg = std::make_unique<IfAlgorhmitcloud>();
+  msg->robpos=ptr->robpos;
 
   auto _homo = cv::Mat(pm.homography_matrix, true).reshape(1, 3);
   std::vector<cv::Point2f> dst;
