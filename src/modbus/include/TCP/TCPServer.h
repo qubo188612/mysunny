@@ -56,7 +56,7 @@ class TCPServer
 	pthread_t serverThread[ MAX_CLIENT ];
 
 	static vector<descript_socket*> newsockfd;
-	static char msg[ MAXPACKETSIZE ];
+	static char msg[MAXPACKETSIZE];
 	static vector<descript_socket*> Message;//[CODA_MSG];
 
 	static bool isonline;

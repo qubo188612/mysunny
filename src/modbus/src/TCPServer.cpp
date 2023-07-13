@@ -17,7 +17,7 @@ void* TCPServer::Task(void *arg)
         cerr << "open client[ id:"<< desc->id <<" ip:"<< desc->ip <<" socket:"<< desc->socket<<" send:"<< desc->enable_message_runtime <<" ]" << endl;
 	while(rclcpp::ok())
 	{
-		n = recv(desc->socket, msg, MAXPACKETSIZE, 0);
+		n = recv(desc->socket, msg, MAXPACKETSIZE-1, 0);
 		if(n != -1) 
 		{
 			if(n==0)

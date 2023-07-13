@@ -2428,7 +2428,7 @@ void* ftpreceived(void *m)
         _p->ftpdesc = ftptcp.getMessage();
         for(unsigned int i = 0; i < _p->ftpdesc.size(); i++) 
         {
-            if( _p->ftpdesc[i] )
+            if( _p->ftpdesc[i])
             {
                 std::vector<char> vec=_p->ftpdesc[i]->message;
                 vec.push_back('\0');
@@ -2442,6 +2442,7 @@ void* ftpreceived(void *m)
                     << "socket:  " << _p->ftpdesc[i]->socket  << endl
                     << "enable:  " << _p->ftpdesc[i]->enable_message_runtime << endl;
                 }
+
                 Json::Value root;
                 jsonfuction js;
                 Json::Value sent_root;

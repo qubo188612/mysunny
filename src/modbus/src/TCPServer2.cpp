@@ -18,7 +18,7 @@ void* TCPServer2::Task(void *arg)
 	
 	while(rclcpp::ok())
 	{
-		n = recv(desc->socket, msg, MAXPACKETSIZE, 0);
+		n = recv(desc->socket, msg, MAXPACKETSIZE-1, 0);
 		cerr << "id:      " << msg      << endl;
 		if(n != -1) 
 		{
@@ -40,41 +40,29 @@ void* TCPServer2::Task(void *arg)
 			}
 			else if(n>=1)
 			{
-				static int total_rcvnum=0;
 				static std::string s_rcvmsg;
 				if(msg[n-1]!='\0')
 				{
 					msg[n]='\0';
-					total_rcvnum=total_rcvnum+n;
 					std::string rcvmsg=(char*)msg;
 					s_rcvmsg=s_rcvmsg+rcvmsg;
-
 					cerr << "id:      " << s_rcvmsg.c_str()      << endl;
 				}
 				else
 				{
-					msg[n]='\0';
-					total_rcvnum=total_rcvnum+n;
+					std::lock_guard<std::mutex> guard(mt);
 					std::string rcvmsg=(char*)msg;
 					s_rcvmsg=s_rcvmsg+rcvmsg;
-
 					cerr << "id:      " << s_rcvmsg.c_str()      << endl;
-
 					desc->message.resize(s_rcvmsg.size());
-					for(int i=0;i<n;i++)
+					for(int i=0;i<s_rcvmsg.size();i++)
 					{
 						desc->message[i]=s_rcvmsg[i];
 					}
 					s_rcvmsg.clear();
-					total_rcvnum=0;
-
-					std::lock_guard<std::mutex> guard(mt);
-					Message.push_back( desc );
-
-					
+					Message.push_back( desc );	
 				}
 			}
-			
 		}
 	//	usleep(600);
 		sleep(0);

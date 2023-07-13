@@ -841,6 +841,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     m32_filterIma=Myhalcv2::MatCreatzero(1,nHeight,Myhalcv2::CCV_32SC1,X_linedif32);
     Myhalcv2::Myfilter(i32_mXline,m_filter2,&m32_filterIma,Myhalcv2::CCV_32SC1,0,f_center);//卷积得到
 
+/*
     if(St_Down+Ed_Down+St_Up+Ed_Up>X_Lineendy-X_Linestarty+1)
     {
     #ifdef QUICK_TRANSMIT
@@ -848,7 +849,7 @@ int LaserImagePos::alg102_runimage( cv::Mat &cvimgIn,
     #endif
         return 1;
     }
-
+*/
     //找下半段
     m_brygujia=Myhalcv2::MatCreatzero(3,nHeight,Myhalcv2::CCV_8UC1,cv8uc1_Imagebuff7);  //创建下半截连通图
 
