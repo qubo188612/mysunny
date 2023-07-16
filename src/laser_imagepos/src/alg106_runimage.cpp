@@ -387,13 +387,13 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     Myhalcv2::L_line tileline;	//结果线2以及原图的线,(短的)
     Myhalcv2::L_line headline;	//结果线1以及原图的线,(短的)
     Myhalcv2::L_line upline,downline;
-    Myhalcv2::L_Point32 resultfocal1,resultfocal2,resultfocal;//交点
+    Myhalcv2::L_Point32 resultfocal1,resultfocal2,resultfocal3,resultfocal;//交点
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Myhalcv2::MyConect ImageConect,ImageConectlong;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
     cv::Point cv_point_st,cv_point_ed;
     cv::Point2f cv_point;
-    Myhalcv2::L_Point32F faxian,faxian1,faxian2;
+    Myhalcv2::L_Point32F faxian,faxian1,faxian2,faxian3;
     Targetpoint targetpoint;
 
     /*********************/
@@ -1623,6 +1623,10 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
         #endif
             return 1;
         }
+
+        resultfocal3.x=((resultfocal1.x+resultfocal2.x)>>1);
+        resultfocal3.y=((resultfocal1.y+resultfocal2.y)>>1);
+
         if(b_pokouyaobian==1)
         {
             Int32 upx1,upx2,downx1,downx2;
@@ -1783,6 +1787,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
         }
         faxian1=faxian;
         faxian2=faxian;
+        faxian3=faxian;
 
         if(answerpoint==2)
         {
@@ -1805,6 +1810,17 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             p_temp=resultfocal;
             resultfocal=resultfocal2;
             resultfocal2=p_temp;
+        }
+        else if(answerpoint==4)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian3;
+            faxian3=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal3;
+            resultfocal3=p_temp;
         }
         if(b_KalmanFilter==1)
         {
@@ -1833,6 +1849,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point_ed.x=(resultfocal2.x>>2);
             cv_point_ed.y=(resultfocal2.y>>2);
             cv::circle(cvimgIn,cv_point_ed,5,cv::Scalar(0,255,0),1);
+            cv_point.x=(resultfocal3.x>>2);
+            cv_point.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,255,0),1);
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
@@ -1886,6 +1905,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
 
         faxian1=faxian;
         faxian2=faxian;
+        faxian3=faxian;
 
         if(answerpoint==2)
         {
@@ -1908,6 +1928,17 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             p_temp=resultfocal;
             resultfocal=resultfocal2;
             resultfocal2=p_temp;
+        }
+        else if(answerpoint==4)
+        {
+            Myhalcv2::L_Point32F f_temp;
+            Myhalcv2::L_Point32 p_temp;
+            f_temp=faxian;
+            faxian=faxian3;
+            faxian3=f_temp;
+            p_temp=resultfocal;
+            resultfocal=resultfocal3;
+            resultfocal3=p_temp;
         }
         if(b_KalmanFilter==1)
         {
@@ -1936,6 +1967,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point_ed.x=(resultfocal2.x>>2);
             cv_point_ed.y=(resultfocal2.y>>2);
             cv::circle(cvimgIn,cv_point_ed,5,cv::Scalar(0,255,0),1);
+            cv_point.x=(resultfocal3.x>>2);
+            cv_point.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,255,0),1);
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
@@ -1988,6 +2022,11 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     cv_point.y=resultfocal2.y;
     targetpoint.pointf=cv_point;
     targetpoint.name="point_2";
+    namepoint.push_back(targetpoint);   
+    cv_point.x=resultfocal3.x;
+    cv_point.y=resultfocal3.y;
+    targetpoint.pointf=cv_point;
+    targetpoint.name="point_3";
     namepoint.push_back(targetpoint);   
     
     return 0;
