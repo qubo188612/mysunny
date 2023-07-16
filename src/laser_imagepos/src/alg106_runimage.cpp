@@ -391,7 +391,7 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
     Int32 jiguangTop,jiguangDeep,jiguangLeft,jiguangRight;
     Myhalcv2::MyConect ImageConect,ImageConectlong;
     Myhalcv2::houghlineinfo headlinehough,tilelinehough;
-    cv::Point cv_point_st,cv_point_ed;
+    cv::Point cv_point_st,cv_point_ed,cv_point_cc;
     cv::Point2f cv_point;
     Myhalcv2::L_Point32F faxian,faxian1,faxian2,faxian3;
     Targetpoint targetpoint;
@@ -1849,9 +1849,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point_ed.x=(resultfocal2.x>>2);
             cv_point_ed.y=(resultfocal2.y>>2);
             cv::circle(cvimgIn,cv_point_ed,5,cv::Scalar(0,255,0),1);
-            cv_point.x=(resultfocal3.x>>2);
-            cv_point.y=(resultfocal3.y>>2);
-            cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,255,0),1);
+            cv_point_cc.x=(resultfocal3.x>>2);
+            cv_point_cc.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point_cc,5,cv::Scalar(255,255,0),1);
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
@@ -1906,6 +1906,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
         faxian1=faxian;
         faxian2=faxian;
         faxian3=faxian;
+
+        resultfocal3.x=((resultfocal1.x+resultfocal2.x)>>1);
+        resultfocal3.y=((resultfocal1.y+resultfocal2.y)>>1);
 
         if(answerpoint==2)
         {
@@ -1967,9 +1970,9 @@ int LaserImagePos::alg106_runimage( cv::Mat &cvimgIn,
             cv_point_ed.x=(resultfocal2.x>>2);
             cv_point_ed.y=(resultfocal2.y>>2);
             cv::circle(cvimgIn,cv_point_ed,5,cv::Scalar(0,255,0),1);
-            cv_point.x=(resultfocal3.x>>2);
-            cv_point.y=(resultfocal3.y>>2);
-            cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,255,0),1);
+            cv_point_cc.x=(resultfocal3.x>>2);
+            cv_point_cc.y=(resultfocal3.y>>2);
+            cv::circle(cvimgIn,cv_point_cc,5,cv::Scalar(255,255,0),1);
             cv_point.x=(resultfocal.x>>2);
             cv_point.y=(resultfocal.y>>2);
             cv::circle(cvimgIn,cv_point,5,cv::Scalar(255,0,0),1);
