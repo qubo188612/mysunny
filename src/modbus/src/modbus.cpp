@@ -1196,352 +1196,354 @@ void Modbus::_modbus(int port)
             oldtasknum=mb_mapping->tab_registers[0x102];
             _task_numberset(oldtasknum);
           }
+          
+          if(b_resultreset==true)
+          {
+            if (query[7] == 0x03)
+            {
+              uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+              uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+              if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
+              {
+                mb_mapping->tab_registers[0x02]=0;
+              }
+            }
+          }
+          if (query[7] == 0x03)
+          {
+            uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+            uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+            if(stadd<=0x11&&stadd+num>0x11)//读了状态寄存器
+            {
+              mb_mapping->tab_registers[0x11]=0;
+            }
+          }
+          if (query[7] == 0x06||query[7] == 0x10||query[7] == 0x17)//写了状态寄存器
+          {
+              push_robotpos();
+          }
+          /******************************/
+          if(e2proomdata.P_data_En==true)//P寄存器有效
+          {
+            //P变量
+            bool b_Pchange=false;//是否写了P变量
+            if (query[7] == 0x06)//写了状态寄存器
+            {
+              uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+              if(stadd==0x12a)//写了状态寄存器
+              {
+                b_Pchange=true;
+              }
+            }
+            else if(query[7] == 0x10)//写了状态寄存器
+            {
+              uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+              uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+              if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
+              {
+                b_Pchange=true;
+              }
+            }
+            else if(query[7] == 0x17)//写了状态寄存器
+            {
+              uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
+              uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
+              if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
+              {
+                b_Pchange=true;
+              }
+            }
+            if(b_Pchange==true)//写了P变量
+            {
+              if(mb_mapping->tab_registers[0x12a]==0)//开启标定
+              {
+                close_pstate();
+                b_calibration=true;
+
+                for(int i=0;i<e2proomdata.P_data.size();i++)
+                {
+                  if(e2proomdata.P_data[i].pID==0)//找到P0点
+                  {
+                    pIDnum_calibration=i;
+                    e2proomdata.P_data[pIDnum_calibration].pos.clear();
+                  }
+                }
+              }
+              else if(mb_mapping->tab_registers[0x12a]==1)//工具坐标矩阵
+              {
+                close_pstate();
+                b_toolcalibration=true;
+              }
+              else if(mb_mapping->tab_registers[0x12a]==2)//偏移量
+              {
+                close_pstate();
+                b_movedif=true;
+              }
+              else if(mb_mapping->tab_registers[0x12a]==3)//姿态值
+              {
+                close_pstate();
+                b_posevalue=true;
+              }
+              else if(mb_mapping->tab_registers[0x12a]==11)//圆孔跟踪
+              {
+                close_pstate();
+                b_circleweld=true;
+              }
+              else if(mb_mapping->tab_registers[0x12a]==1000)//跟踪p变量
+              {
+                close_pstate();
+              }
+              else if(mb_mapping->tab_registers[0x12a]==1001)//直线走点
+              {
+                close_pstate();
+                b_linemove=true;
+              }
+              else if(mb_mapping->tab_registers[0x12a]==1002)//单点寻位
+              {
+                close_pstate();
+                b_searchpoint=true;
+              }
+              else//切换了其他p变量
+              {
+                close_pstate();
+              }
+            }
+            else
+            {
+              /******************************/
+              //P变量点位内容
+              bool b_Pinfochange=false;//是否写了P变量点位内容
+              if (query[7] == 0x06)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                if(stadd>=0x12b&&stadd<=0x13f)//写了状态寄存器
+                {
+                  b_Pinfochange=true;
+                }
+              }
+              else if(query[7] == 0x10)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
+                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
+                if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
+                {
+                  b_Pinfochange=true;
+                }
+              }
+              else if(query[7] == 0x17)//写了状态寄存器
+              {
+                uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
+                uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
+                if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
+                {
+                  b_Pinfochange=true;
+                }
+              }
+              if(b_Pinfochange==true)//写了P变量点位内容
+              {
+                if(b_calibration==true)
+                {
+                  rob_pinfo pos;
+                  getProb_pinfo(&pos);
+                  e2proomdata.P_data[pIDnum_calibration].pos.push_back(pos);
+                  e2proomdata.write_P_data_para();
+                  switch(e2proomdata.P_data_cal_posture)
+                  {
+                    case HAND_IN_EYE://眼在手上
+                    {
+                      if(e2proomdata.P_data[pIDnum_calibration].pos.size()>=5)//大于等于5个点后做手眼标定
+                      {
+                        std::vector<double> errgroup;
+                        double err;
+                        
+                        RobPos robotpos;
+                        std::vector<TCP_Leaserpos> data_group(e2proomdata.P_data[pIDnum_calibration].pos.size()-1);
+
+                        robotpos.X=e2proomdata.P_data[pIDnum_calibration].pos[0].x;
+                        robotpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[0].y;
+                        robotpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[0].z;
+                        robotpos.RX=e2proomdata.P_data[pIDnum_calibration].pos[0].rx;
+                        robotpos.RY=e2proomdata.P_data[pIDnum_calibration].pos[0].ry;
+                        robotpos.RZ=e2proomdata.P_data[pIDnum_calibration].pos[0].rz;
+                        robotpos.nEn=1;
+                        
+                        for(int i=0;i<data_group.size();i++)
+                        {
+                          data_group[i].robotpos.X=e2proomdata.P_data[pIDnum_calibration].pos[i+1].x;
+                          data_group[i].robotpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[i+1].y;
+                          data_group[i].robotpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[i+1].z;
+                          data_group[i].robotpos.RX=e2proomdata.P_data[pIDnum_calibration].pos[i+1].rx;
+                          data_group[i].robotpos.RY=e2proomdata.P_data[pIDnum_calibration].pos[i+1].ry;
+                          data_group[i].robotpos.RZ=e2proomdata.P_data[pIDnum_calibration].pos[i+1].rz;
+                          data_group[i].robotpos.nEn=1;
+                          data_group[i].leaserpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[i+1].uy;
+                          data_group[i].leaserpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[i+1].vz;
+                          data_group[i].leaserpos.nEn=1;
+                        }
+
+                        if(true==Calibration::hand_on_yes_point2RT(e2proomdata.P_data_cal_posture,
+                                                          robotpos,data_group,
+                                                          e2proomdata.matrix_camera2plane,
+                                                          e2proomdata.matrix_plane2robot,
+                                                          err,errgroup))
+                        {
+                          std::vector<double> matrix_camera2plane=convertMat2Vector<double>(e2proomdata.matrix_camera2plane);
+                          std::vector<double> matrix_plane2robot=convertMat2Vector<double>(e2proomdata.matrix_plane2robot);
+                          _param_pclout_set->set_parameters({rclcpp::Parameter("pData_matrix_camera2plane", matrix_camera2plane)});
+                          _param_pclout_set->set_parameters({rclcpp::Parameter("pData_matrix_plane2robot", matrix_plane2robot)});
+                          RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
+                        }
+                        else
+                        {
+                          RCLCPP_INFO(this->get_logger(),"标定计算出现问题,请检查数据");
+                        }
+                        e2proomdata.write_demdlg_para();
+                      }
+                      else
+                      {
+                        if(e2proomdata.P_data[pIDnum_calibration].pos.size()==1)
+                        {
+                          RCLCPP_INFO(this->get_logger(),"写入测量点P");
+                        }
+                        else
+                        { 
+                          RCLCPP_INFO(this->get_logger(),"写入激光标定点P");
+                        }
+                      }
+                    }
+                    break;
+                    case HAND_OUT_EYE://眼在手外
+                    {
+                      if(e2proomdata.P_data[pIDnum_calibration].pos.size()>=8)//大于等于8个点后做手眼标定
+                      {
+                        std::vector<double> errgroup;
+                        double err;
+                        int data=e2proomdata.P_data[pIDnum_calibration].pos.size();
+                        if((data%2)==0)//偶数
+                        {
+                          int posnum=data/2;
+                          int leasernum=posnum;
+                          std::vector<Eigen::Vector3d> cloudpoint;
+                          std::vector<Eigen::Vector3d> robotpoint;
+                          for(int n=0;n<posnum;n++)
+                          {
+                              Eigen::Vector3d cloudsing;
+                              Eigen::Vector3d robotsing;
+                              cloudsing[0]=0;
+                              cloudsing[1]=e2proomdata.P_data[pIDnum_calibration].pos[n+posnum].uy;
+                              cloudsing[2]=e2proomdata.P_data[pIDnum_calibration].pos[n+posnum].vz;
+                              cloudpoint.push_back(cloudsing);
+                              robotsing[0]=e2proomdata.P_data[pIDnum_calibration].pos[n].x;
+                              robotsing[1]=e2proomdata.P_data[pIDnum_calibration].pos[n].y;
+                              robotsing[2]=e2proomdata.P_data[pIDnum_calibration].pos[n].z;
+                              robotpoint.push_back(robotsing);
+                          }
+                          if(true==Calibration::hand_out_yes_point2RT(cloudpoint,robotpoint,e2proomdata.demdlg_R,e2proomdata.demdlg_T,err,errgroup))
+                          {
+                            std::vector<double> pData_demdlg_R(9);
+                            int n=0;
+                            for(int j=0;j<3;j++)
+                            {
+                              for(int i=0;i<3;i++)
+                              {
+                                  pData_demdlg_R[n++]=e2proomdata.demdlg_R(j,i);
+                              }
+                            }
+                            _param_pclout_set->set_parameters({rclcpp::Parameter("pData_demdlg_R", pData_demdlg_R)});
+                            std::vector<double> pData_demdlg_T(3);
+                            n=0;
+                            for(int i=0;i<3;i++)
+                            {
+                                pData_demdlg_T[n++]=e2proomdata.demdlg_T(i);
+                            }
+                            _param_pclout_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)});
+                            RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
+                          }
+                          else
+                          {
+                            RCLCPP_INFO(this->get_logger(),"标定计算出现问题,请检查数据");
+                          }
+                          e2proomdata.write_demdlg_para(); 
+                        }
+                        else
+                        {
+                          RCLCPP_INFO(this->get_logger(),"等待下一个输入点P");
+                        }
+                      }
+                      else
+                      {
+                        RCLCPP_INFO(this->get_logger(),"输入的P点数量最小为8个");
+                      }
+                    }
+                    break;
+                  }
+                }
+                else if(b_toolcalibration==true)
+                {
+
+                }
+                else if(b_movedif==true)
+                {
+
+                }
+                else if(b_posevalue==true)
+                {
+
+                }
+                else if(b_circleweld==true)
+                {
+
+                }
+                else if(b_linemove==true)
+                {
+
+                }
+                else if(b_searchpoint==true)
+                {
+
+                }
+                else
+                {
+                  uint16_t p=mb_mapping->tab_registers[0x12a];
+                  if(p!=1000)//非跟踪p变量,添加其他P变量点
+                  {
+                    bool b_find=false;
+                    int pID;
+                    for(int i=0;i<e2proomdata.P_data.size();i++)
+                    {
+                      if(e2proomdata.P_data[i].pID==(int)p)
+                      {
+                        pID=i;
+                        b_find=true;
+                        break;
+                      }
+                    }
+                    if(b_find==true)
+                    {
+                      e2proomdata.P_data[pID].pos.resize(1);
+                      getProb_pinfo(&e2proomdata.P_data[pID].pos[0]);
+                    }
+                    else
+                    {
+                      rob_group singl;
+                      singl.pID=p;
+                      singl.pos.resize(1);
+                      getProb_pinfo(&singl.pos[0]);
+                      e2proomdata.P_data.push_back(singl);
+                      e2proomdata.write_P_data_para();
+                    }
+                  }
+                }
+              }
+              /********************************/
+            }
+          }
 
           switch(e2proomdata.robot_mod)
           {
             case E2POOM_ROBOT_MOD_NULL:
             {
-              if(b_resultreset==true)
-              {
-                if (query[7] == 0x03)
-                {
-                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
-                  if(stadd<=0x02&&stadd+num>0x02)//读了状态寄存器
-                  {
-                    mb_mapping->tab_registers[0x02]=0;
-                  }
-                }
-              }
-              if (query[7] == 0x03)
-              {
-                uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
-                if(stadd<=0x11&&stadd+num>0x11)//读了状态寄存器
-                {
-                  mb_mapping->tab_registers[0x11]=0;
-                }
-              }
-              if (query[7] == 0x06||query[7] == 0x10||query[7] == 0x17)//写了状态寄存器
-              {
-                  push_robotpos();
-              }
-              /******************************/
-              if(e2proomdata.P_data_En==true)//P寄存器有效
-              {
-                //P变量
-                bool b_Pchange=false;//是否写了P变量
-                if (query[7] == 0x06)//写了状态寄存器
-                {
-                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                  if(stadd==0x12a)//写了状态寄存器
-                  {
-                    b_Pchange=true;
-                  }
-                }
-                else if(query[7] == 0x10)//写了状态寄存器
-                {
-                  uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                  uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
-                  if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
-                  {
-                    b_Pchange=true;
-                  }
-                }
-                else if(query[7] == 0x17)//写了状态寄存器
-                {
-                  uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
-                  uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
-                  if(stadd<=0x12a&&stadd+num>0x12a)//写了状态寄存器
-                  {
-                    b_Pchange=true;
-                  }
-                }
-                if(b_Pchange==true)//写了P变量
-                {
-                  if(mb_mapping->tab_registers[0x12a]==0)//开启标定
-                  {
-                    close_pstate();
-                    b_calibration=true;
-
-                    for(int i=0;i<e2proomdata.P_data.size();i++)
-                    {
-                      if(e2proomdata.P_data[i].pID==0)//找到P0点
-                      {
-                        pIDnum_calibration=i;
-                        e2proomdata.P_data[pIDnum_calibration].pos.clear();
-                      }
-                    }
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==1)//工具坐标矩阵
-                  {
-                    close_pstate();
-                    b_toolcalibration=true;
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==2)//偏移量
-                  {
-                    close_pstate();
-                    b_movedif=true;
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==3)//姿态值
-                  {
-                    close_pstate();
-                    b_posevalue=true;
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==11)//圆孔跟踪
-                  {
-                    close_pstate();
-                    b_circleweld=true;
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==1000)//跟踪p变量
-                  {
-                    close_pstate();
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==1001)//直线走点
-                  {
-                    close_pstate();
-                    b_linemove=true;
-                  }
-                  else if(mb_mapping->tab_registers[0x12a]==1002)//单点寻位
-                  {
-                    close_pstate();
-                    b_searchpoint=true;
-                  }
-                  else//切换了其他p变量
-                  {
-                    close_pstate();
-                  }
-                }
-                else
-                {
-                  /******************************/
-                  //P变量点位内容
-                  bool b_Pinfochange=false;//是否写了P变量点位内容
-                  if (query[7] == 0x06)//写了状态寄存器
-                  {
-                    uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                    if(stadd>=0x12b&&stadd<=0x13f)//写了状态寄存器
-                    {
-                      b_Pinfochange=true;
-                    }
-                  }
-                  else if(query[7] == 0x10)//写了状态寄存器
-                  {
-                    uint16_t stadd=(((uint16_t)query[8])<<8)+(uint16_t)query[9];
-                    uint16_t num=(((uint16_t)query[10])<<8)+(uint16_t)query[11];
-                    if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
-                    {
-                      b_Pinfochange=true;
-                    }
-                  }
-                  else if(query[7] == 0x17)//写了状态寄存器
-                  {
-                    uint16_t stadd=(((uint16_t)query[12])<<8)+(uint16_t)query[13];
-                    uint16_t num=(((uint16_t)query[14])<<8)+(uint16_t)query[15];
-                    if(stadd>=0x12b&&stadd<=0x13f&&stadd+num>0x12b)//写了状态寄存器
-                    {
-                      b_Pinfochange=true;
-                    }
-                  }
-                  if(b_Pinfochange==true)//写了P变量点位内容
-                  {
-                    if(b_calibration==true)
-                    {
-                      rob_pinfo pos;
-                      getProb_pinfo(&pos);
-                      e2proomdata.P_data[pIDnum_calibration].pos.push_back(pos);
-                      e2proomdata.write_P_data_para();
-                      switch(e2proomdata.P_data_cal_posture)
-                      {
-                        case HAND_IN_EYE://眼在手上
-                        {
-                          if(e2proomdata.P_data[pIDnum_calibration].pos.size()>=5)//大于等于5个点后做手眼标定
-                          {
-                            std::vector<double> errgroup;
-                            double err;
-                            
-                            RobPos robotpos;
-                            std::vector<TCP_Leaserpos> data_group(e2proomdata.P_data[pIDnum_calibration].pos.size()-1);
-
-                            robotpos.X=e2proomdata.P_data[pIDnum_calibration].pos[0].x;
-                            robotpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[0].y;
-                            robotpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[0].z;
-                            robotpos.RX=e2proomdata.P_data[pIDnum_calibration].pos[0].rx;
-                            robotpos.RY=e2proomdata.P_data[pIDnum_calibration].pos[0].ry;
-                            robotpos.RZ=e2proomdata.P_data[pIDnum_calibration].pos[0].rz;
-                            robotpos.nEn=1;
-                            
-                            for(int i=0;i<data_group.size();i++)
-                            {
-                              data_group[i].robotpos.X=e2proomdata.P_data[pIDnum_calibration].pos[i+1].x;
-                              data_group[i].robotpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[i+1].y;
-                              data_group[i].robotpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[i+1].z;
-                              data_group[i].robotpos.RX=e2proomdata.P_data[pIDnum_calibration].pos[i+1].rx;
-                              data_group[i].robotpos.RY=e2proomdata.P_data[pIDnum_calibration].pos[i+1].ry;
-                              data_group[i].robotpos.RZ=e2proomdata.P_data[pIDnum_calibration].pos[i+1].rz;
-                              data_group[i].robotpos.nEn=1;
-                              data_group[i].leaserpos.Y=e2proomdata.P_data[pIDnum_calibration].pos[i+1].uy;
-                              data_group[i].leaserpos.Z=e2proomdata.P_data[pIDnum_calibration].pos[i+1].vz;
-                              data_group[i].leaserpos.nEn=1;
-                            }
-
-                            if(true==Calibration::hand_on_yes_point2RT(e2proomdata.P_data_cal_posture,
-                                                              robotpos,data_group,
-                                                              e2proomdata.matrix_camera2plane,
-                                                              e2proomdata.matrix_plane2robot,
-                                                              err,errgroup))
-                            {
-                              std::vector<double> matrix_camera2plane=convertMat2Vector<double>(e2proomdata.matrix_camera2plane);
-                              std::vector<double> matrix_plane2robot=convertMat2Vector<double>(e2proomdata.matrix_plane2robot);
-                              _param_pclout_set->set_parameters({rclcpp::Parameter("pData_matrix_camera2plane", matrix_camera2plane)});
-                              _param_pclout_set->set_parameters({rclcpp::Parameter("pData_matrix_plane2robot", matrix_plane2robot)});
-                              RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
-                            }
-                            else
-                            {
-                              RCLCPP_INFO(this->get_logger(),"标定计算出现问题,请检查数据");
-                            }
-                            e2proomdata.write_demdlg_para();
-                          }
-                          else
-                          {
-                            if(e2proomdata.P_data[pIDnum_calibration].pos.size()==1)
-                            {
-                              RCLCPP_INFO(this->get_logger(),"写入测量点P");
-                            }
-                            else
-                            { 
-                              RCLCPP_INFO(this->get_logger(),"写入激光标定点P");
-                            }
-                          }
-                        }
-                        break;
-                        case HAND_OUT_EYE://眼在手外
-                        {
-                          if(e2proomdata.P_data[pIDnum_calibration].pos.size()>=8)//大于等于8个点后做手眼标定
-                          {
-                            std::vector<double> errgroup;
-                            double err;
-                            int data=e2proomdata.P_data[pIDnum_calibration].pos.size();
-                            if((data%2)==0)//偶数
-                            {
-                              int posnum=data/2;
-                              int leasernum=posnum;
-                              std::vector<Eigen::Vector3d> cloudpoint;
-                              std::vector<Eigen::Vector3d> robotpoint;
-                              for(int n=0;n<posnum;n++)
-                              {
-                                  Eigen::Vector3d cloudsing;
-                                  Eigen::Vector3d robotsing;
-                                  cloudsing[0]=0;
-                                  cloudsing[1]=e2proomdata.P_data[pIDnum_calibration].pos[n+posnum].uy;
-                                  cloudsing[2]=e2proomdata.P_data[pIDnum_calibration].pos[n+posnum].vz;
-                                  cloudpoint.push_back(cloudsing);
-                                  robotsing[0]=e2proomdata.P_data[pIDnum_calibration].pos[n].x;
-                                  robotsing[1]=e2proomdata.P_data[pIDnum_calibration].pos[n].y;
-                                  robotsing[2]=e2proomdata.P_data[pIDnum_calibration].pos[n].z;
-                                  robotpoint.push_back(robotsing);
-                              }
-                              if(true==Calibration::hand_out_yes_point2RT(cloudpoint,robotpoint,e2proomdata.demdlg_R,e2proomdata.demdlg_T,err,errgroup))
-                              {
-                                std::vector<double> pData_demdlg_R(9);
-                                int n=0;
-                                for(int j=0;j<3;j++)
-                                {
-                                  for(int i=0;i<3;i++)
-                                  {
-                                      pData_demdlg_R[n++]=e2proomdata.demdlg_R(j,i);
-                                  }
-                                }
-                                _param_pclout_set->set_parameters({rclcpp::Parameter("pData_demdlg_R", pData_demdlg_R)});
-                                std::vector<double> pData_demdlg_T(3);
-                                n=0;
-                                for(int i=0;i<3;i++)
-                                {
-                                    pData_demdlg_T[n++]=e2proomdata.demdlg_T(i);
-                                }
-                                _param_pclout_set->set_parameters({rclcpp::Parameter("pData_demdlg_T", pData_demdlg_T)});
-                                RCLCPP_INFO(this->get_logger(),"标定矩阵生成成功,误差:%f",err);
-                              }
-                              else
-                              {
-                                RCLCPP_INFO(this->get_logger(),"标定计算出现问题,请检查数据");
-                              }
-                              e2proomdata.write_demdlg_para(); 
-                            }
-                            else
-                            {
-                              RCLCPP_INFO(this->get_logger(),"等待下一个输入点P");
-                            }
-                          }
-                          else
-                          {
-                            RCLCPP_INFO(this->get_logger(),"输入的P点数量最小为8个");
-                          }
-                        }
-                        break;
-                      }
-                    }
-                    else if(b_toolcalibration==true)
-                    {
-
-                    }
-                    else if(b_movedif==true)
-                    {
-
-                    }
-                    else if(b_posevalue==true)
-                    {
-
-                    }
-                    else if(b_circleweld==true)
-                    {
-
-                    }
-                    else if(b_linemove==true)
-                    {
-
-                    }
-                    else if(b_searchpoint==true)
-                    {
-
-                    }
-                    else
-                    {
-                      uint16_t p=mb_mapping->tab_registers[0x12a];
-                      if(p!=1000)//非跟踪p变量,添加其他P变量点
-                      {
-                        bool b_find=false;
-                        int pID;
-                        for(int i=0;i<e2proomdata.P_data.size();i++)
-                        {
-                          if(e2proomdata.P_data[i].pID==(int)p)
-                          {
-                            pID=i;
-                            b_find=true;
-                            break;
-                          }
-                        }
-                        if(b_find==true)
-                        {
-                          e2proomdata.P_data[pID].pos.resize(1);
-                          getProb_pinfo(&e2proomdata.P_data[pID].pos[0]);
-                        }
-                        else
-                        {
-                          rob_group singl;
-                          singl.pID=p;
-                          singl.pos.resize(1);
-                          getProb_pinfo(&singl.pos[0]);
-                          e2proomdata.P_data.push_back(singl);
-                          e2proomdata.write_P_data_para();
-                        }
-                      }
-                    }
-                  }
-                  /********************************/
-                }
-              }
+              
             }
             break;
             case E2POOM_ROBOT_MOD_ZHICHANG:
