@@ -2456,8 +2456,11 @@ void* ftpreceived(void *m)
                     {
                         if(*it=="ls")   
                         {
-                            if(root[*it].asString()=="task")
+                            Json::Value data;
+                            for(int t=0;t<root[*it].size();t++)
                             {
+                              if(root[*it][t].asString()=="task")
+                              { 
                                 for(int n=0;n<_p->e2proomdata.taskfilename.size();n++)
                                 {
                                   Json::Value newIterm; 
@@ -2465,6 +2468,7 @@ void* ftpreceived(void *m)
                                   newIterm["alsnum"]=_p->e2proomdata.taskfilename[n].alsnum;
                                   sent_root["ls"].append(newIterm);
                                 }
+                              }
                             }
                         }
                         else if(*it=="touch")

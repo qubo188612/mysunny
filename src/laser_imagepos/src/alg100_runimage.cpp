@@ -35,6 +35,11 @@ void LaserImagePos::alg100_declare_parameters()
     this->declare_parameter("als100_b_KalmanFilter", pm.als100_b_KalmanFilter); 
     this->declare_parameter("als100_KalmanQF", pm.als100_KalmanQF);
     this->declare_parameter("als100_KalmanRF", pm.als100_KalmanRF);
+    this->declare_parameter("als100_b_cut", pm.als100_b_cut);
+    this->declare_parameter("als100_cutleft", pm.als100_cutleft);
+    this->declare_parameter("als100_cutright", pm.als100_cutright);
+    this->declare_parameter("als100_cuttop", pm.als100_cuttop);
+    this->declare_parameter("als100_cutdeep", pm.als100_cutdeep);
 }
 
 void LaserImagePos::alg100_update_parameters()
@@ -120,6 +125,21 @@ void LaserImagePos::alg100_update_parameters()
     }
     else if (p.get_name() == "als100_KalmanRF") {
       pm.als100_KalmanRF = p.as_int();
+    }
+    else if (p.get_name() == "als100_b_cut") {
+      pm.als100_b_cut = p.as_int();
+    }
+    else if (p.get_name() == "als100_cutleft") {
+      pm.als100_cutleft = p.as_int();
+    }
+    else if (p.get_name() == "als100_cutright") {
+      pm.als100_cutright = p.as_int();
+    }
+    else if (p.get_name() == "als100_cuttop") {
+      pm.als100_cuttop = p.as_int();
+    }
+    else if (p.get_name() == "als100_cutdeep") {
+      pm.als100_cutdeep = p.as_int();
     }
   }
 }
@@ -236,6 +256,26 @@ int LaserImagePos::alg100_getcallbackParameter(const rclcpp::Parameter &p)
         auto k = p.as_int();
         pm.als100_KalmanRF=p.as_int();
             return 1;}  
+    else if(p.get_name() == "als100_b_cut") {
+        auto k = p.as_int();
+        pm.als100_b_cut=p.as_int();
+            return 1;}
+    else if(p.get_name() == "als100_cutleft") {
+        auto k = p.as_int();
+        pm.als100_cutleft=p.as_int();
+            return 1;} 
+    else if(p.get_name() == "als100_cutright") {
+        auto k = p.as_int();
+        pm.als100_cutright=p.as_int();
+            return 1;} 
+    else if(p.get_name() == "als100_cuttop") {
+        auto k = p.as_int();
+        pm.als100_cuttop=p.as_int();
+            return 1;} 
+    else if(p.get_name() == "als100_cutdeep") {
+        auto k = p.as_int();
+        pm.als100_cutdeep=p.as_int();
+            return 1;} 
     return 0;
 }
 
@@ -314,6 +354,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     Int32 b_KalmanFilter=pm.als100_b_KalmanFilter;//是否使用卡尔曼滤波
     float KalmanQF=pm.als100_KalmanQF/1000.0;//系统噪声方差矩阵Q 
     float KalmanRF=pm.als100_KalmanRF/1000.0;//系统噪声方差矩阵R 
+    Int32 b_cut=pm.als100_b_cut;                  //是否使用搜索区域
+    Int32 cutleft=pm.als100_cutleft;                //搜索区域
+    Int32 cutright=pm.als100_cutright;        //搜索区域
+    Int32 cuttop=pm.als100_cuttop;                 //搜索区域
+    Int32 cutdeep=pm.als100_cutdeep;        //搜索区域
 
 #ifdef DEBUG_ALG
     int debug_alg=1;
@@ -410,6 +455,11 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
 #ifdef DEBUG_ALG;
     RCLCPP_INFO(this->get_logger(), "start alg100=%d",debug_alg++);
 #endif 
+    if(b_cut==1)
+    {
+        Myhalcv2::MyCutselfRoi(&imageBry,cutleft>>2,cuttop>>2,(cutright>>2)-(cutleft>>2)+1,(cutdeep>>2)-(cuttop>>2)+1);
+        Myhalcv2::MyCutRoiSetZero(&imageBry);
+    }
     if(step==8)
     {
       Myhalcv2::Mymat_to_binself(&imageBry,255);
@@ -425,6 +475,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::Myselect_obj(&ImageConectlong,&ImageConectlongPX,0);
@@ -511,6 +567,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::MyGetthinNoHough(&ImageConectlong,Myhalcv2::THIN_X,jiguangkuandu,&imageBry);
@@ -609,6 +671,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::Myfixdata(X_line,X_lineMark,nHeight);//修复空的线
@@ -681,6 +749,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     stepfindST.y=ImageConectlong.AllMarkPoint[0].left;
@@ -737,6 +811,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     if(step==17)
@@ -778,6 +858,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&headline,&headlinehough);
@@ -815,6 +901,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     midfindST.y=ImageConectlong.AllMarkPoint[0].left;
@@ -870,6 +962,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     /**************************************/
@@ -911,6 +1009,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::MyData_sqare_line(niheX,niheY,nihenum,nWidth,nHeight,Myhalcv2::MHC_MIXDIS_SQARE,&tileline,&tilelinehough);
@@ -955,6 +1059,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     //下面开始求缝宽
@@ -972,7 +1082,13 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     {
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
-    #endif
+    #endif 
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     if(nstarti<1)
@@ -1023,6 +1139,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
     #ifdef QUICK_TRANSMIT
         Myhalcv2::MatToCvMat(imageGasu,&cvimgIn);
     #endif
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
         return 1;
     }
     Myhalcv2::Myregion_to_bin(&ImageConectlong,&m_brygujia,255);
@@ -1321,6 +1443,12 @@ int LaserImagePos::alg100_runimage( cv::Mat &cvimgIn,
         cv_point_ed.x=(f_temp.x/4);
         cv_point_ed.y=(f_temp.y/4);
         cv::line(cvimgIn,cv_point_st,cv_point_ed,cv::Scalar(255,255,0),1);
+        if(b_cut==1)
+        {
+            cv::Point p1(cutleft>>2,cuttop>>2);
+            cv::Point p2(cutright>>2,cutdeep>>2);
+            cv::rectangle(cvimgIn,p1,p2,cv::Scalar(255,255,255));
+        }
     }
     
     cv_point.x=resultfocal.x;

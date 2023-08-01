@@ -72,7 +72,7 @@
 #define E2POOM_ALG_LASERIMAGEPOS_SYSPATH_MOTOF          "./SAVE/E2P_MEASUREMENT_"
 
 //算法100参数
-#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              64
+#define E2POOM_ALG100_LASERIMAGEPOS_SAVEBUFF              74
 #define E2POOM_ALG100_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_100.bsd"
 
 #define E2POOM_ALG100_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -156,10 +156,25 @@
 #define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_MIN                    0
 #define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_USE                    50
 #define E2POOM_ALG100_LASERIMAGEPOS_KALMANRF_MAX                    10000
+#define E2POOM_ALG100_LASERIMAGEPOS_B_CUT_MIN                       0
+#define E2POOM_ALG100_LASERIMAGEPOS_B_CUT_USE                       0
+#define E2POOM_ALG100_LASERIMAGEPOS_B_CUT_MAX                       1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTLEFT_MIN                     0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTLEFT_USE                     0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTLEFT_MAX                     PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTRIGHT_MIN                    0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTRIGHT_USE                    PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTRIGHT_MAX                    PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTTOP_MIN                      0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTTOP_USE                      0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTTOP_MAX                      PIC_IMAGE_HEIGHT-1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTDEEP_MIN                     0
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTDEEP_USE                     PIC_IMAGE_HEIGHT-1
+#define E2POOM_ALG100_LASERIMAGEPOS_CUTDEEP_MAX                     PIC_IMAGE_HEIGHT-1
 
 
 //算法101参数
-#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              64
+#define E2POOM_ALG101_LASERIMAGEPOS_SAVEBUFF              74
 #define E2POOM_ALG101_LASERIMAGEPOS_SYSPATH_MOTO			"./SAVE/E2P_MEASUREMENT_101.bsd"
 
 #define E2POOM_ALG101_LASERIMAGEPOS_EXPOSURE_TIME_MIN				20         //曝光最小值
@@ -243,6 +258,22 @@
 #define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_MIN                    0
 #define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_USE                    50
 #define E2POOM_ALG101_LASERIMAGEPOS_KALMANRF_MAX                    10000
+#define E2POOM_ALG101_LASERIMAGEPOS_B_CUT_MIN                       0
+#define E2POOM_ALG101_LASERIMAGEPOS_B_CUT_USE                       0
+#define E2POOM_ALG101_LASERIMAGEPOS_B_CUT_MAX                       1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTLEFT_MIN                     0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTLEFT_USE                     0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTLEFT_MAX                     PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTRIGHT_MIN                    0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTRIGHT_USE                    PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTRIGHT_MAX                    PIC_IMAGE_WIDTH-1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTTOP_MIN                      0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTTOP_USE                      0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTTOP_MAX                      PIC_IMAGE_HEIGHT-1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTDEEP_MIN                     0
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTDEEP_USE                     PIC_IMAGE_HEIGHT-1
+#define E2POOM_ALG101_LASERIMAGEPOS_CUTDEEP_MAX                     PIC_IMAGE_HEIGHT-1
+
 
 
 //算法102参数
@@ -1005,6 +1036,11 @@ public:
     Int16 als100_b_KalmanFilter;//是否使用卡尔曼滤波
     Int16 als100_KalmanQF;
     Int16 als100_KalmanRF;
+    Int16 als100_b_cut;                  //是否使用搜索区域
+    Int16 als100_cutleft;                //搜索区域
+    Int16 als100_cutright;           //搜索区域
+    Int16 als100_cuttop;                 //搜索区域
+    Int16 als100_cutdeep;           //搜索区域
       
 
     void write_als100_para(char *filename);				//保存任务100参数
@@ -1091,6 +1127,21 @@ public:
     Int16 als100_KalmanRF_min;
     Int16 als100_KalmanRF_max;
     Int16 als100_KalmanRF_use;
+    Int16 als100_b_cut_min;
+    Int16 als100_b_cut_use;
+    Int16 als100_b_cut_max;
+    Int16 als100_cutleft_min;
+    Int16 als100_cutleft_use;
+    Int16 als100_cutleft_max;
+    Int16 als100_cutright_min;
+    Int16 als100_cutright_use;
+    Int16 als100_cutright_max;
+    Int16 als100_cuttop_min;
+    Int16 als100_cuttop_use;
+    Int16 als100_cuttop_max;
+    Int16 als100_cutdeep_min;
+    Int16 als100_cutdeep_use;
+    Int16 als100_cutdeep_max;
 
 /****************************/
     //任务101参数
@@ -1121,6 +1172,11 @@ public:
     Int16 als101_b_KalmanFilter;//是否使用卡尔曼滤波
     Int16 als101_KalmanQF;
     Int16 als101_KalmanRF;
+    Int16 als101_b_cut;                  //是否使用搜索区域
+    Int16 als101_cutleft;                //搜索区域
+    Int16 als101_cutright;           //搜索区域
+    Int16 als101_cuttop;                 //搜索区域
+    Int16 als101_cutdeep;           //搜索区域
       
 
     void write_als101_para(char *filename);				//保存任务101参数
@@ -1207,6 +1263,21 @@ public:
     Int16 als101_KalmanRF_min;
     Int16 als101_KalmanRF_max;
     Int16 als101_KalmanRF_use;
+    Int16 als101_b_cut_min;
+    Int16 als101_b_cut_use;
+    Int16 als101_b_cut_max;
+    Int16 als101_cutleft_min;
+    Int16 als101_cutleft_use;
+    Int16 als101_cutleft_max;
+    Int16 als101_cutright_min;
+    Int16 als101_cutright_use;
+    Int16 als101_cutright_max;
+    Int16 als101_cuttop_min;
+    Int16 als101_cuttop_use;
+    Int16 als101_cuttop_max;
+    Int16 als101_cutdeep_min;
+    Int16 als101_cutdeep_use;
+    Int16 als101_cutdeep_max;
 
 /****************************/
     //任务102参数

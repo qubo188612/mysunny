@@ -230,6 +230,46 @@ int Modbus::als101_task_parameter(int ddr,u_int16_t num)
                 return 1;
             }
         break;
+        case ALS101_B_CUT_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_b_cut_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_b_cut_max)
+            {
+                e2proomdata.als101_b_cut=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_b_cut", (int16_t)num)});
+                return 1;
+            }
+        break;
+        case ALS101_CUTLEFT_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_cutleft_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_cutleft_max)
+            {
+                e2proomdata.als101_cutleft=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_cutleft", (int16_t)num)});
+                return 1;
+            }
+        break;
+        case ALS101_CUTRIGHT_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_cutright_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_cutright_max)
+            {
+                e2proomdata.als101_cutright=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_cutright", (int16_t)num)});
+                return 1;
+            }
+        break;
+        case ALS101_CUTTOP_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_cuttop_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_cuttop_max)
+            {
+                e2proomdata.als101_cuttop=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_cuttop", (int16_t)num)});
+                return 1;
+            }
+        break;
+        case ALS101_CUTDEEP_REG_ADD:
+            if((int)((int16_t)num)>=(int)e2proomdata.als101_cutdeep_min&&(int)((int16_t)num)<=(int)e2proomdata.als101_cutdeep_max)
+            {
+                e2proomdata.als101_cutdeep=(int16_t)num;
+                _param_laserimagepos->set_parameters({rclcpp::Parameter("als101_cutdeep", (int16_t)num)});
+                return 1;
+            }
+        break;
         
         case ALS101_INIT_REG_ADD:
             if(num==1)
@@ -275,6 +315,11 @@ void Modbus::init_als101_parameter()
     parameterport_mapping->tab_registers[ALS101_B_KALMANFILTER_REG_ADD]=e2proomdata.als101_b_KalmanFilter;   
     parameterport_mapping->tab_registers[ALS101_KALMANQF_REG_ADD]=e2proomdata.als101_KalmanQF;  
     parameterport_mapping->tab_registers[ALS101_KALMANRF_REG_ADD]=e2proomdata.als101_KalmanRF;  
+    parameterport_mapping->tab_registers[ALS101_B_CUT_REG_ADD]=e2proomdata.als101_b_cut;
+    parameterport_mapping->tab_registers[ALS101_CUTLEFT_REG_ADD]=e2proomdata.als101_cutleft;
+    parameterport_mapping->tab_registers[ALS101_CUTRIGHT_REG_ADD]=e2proomdata.als101_cutright;
+    parameterport_mapping->tab_registers[ALS101_CUTTOP_REG_ADD]=e2proomdata.als101_cuttop;
+    parameterport_mapping->tab_registers[ALS101_CUTDEEP_REG_ADD]=e2proomdata.als101_cutdeep;
 }
 
 }

@@ -66,7 +66,12 @@ const std::vector<std::string> KEYS_ALS100 = {"als100_exposure_time",
                                               "als100_answerpoint",
                                               "als100_b_KalmanFilter",
                                               "als100_KalmanQF",
-                                              "als100_KalmanRF"};
+                                              "als100_KalmanRF",
+                                              "als100_b_cut",
+                                              "als100_cutleft",
+                                              "als100_cutright",
+                                              "als100_cuttop",
+                                              "als100_cutdeep"};
 
 const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_pingjun",
@@ -94,7 +99,12 @@ const std::vector<std::string> KEYS_ALS101 = {"als101_exposure_time",
                                               "als101_answerpoint",
                                               "als101_b_KalmanFilter",
                                               "als101_KalmanQF",
-                                              "als101_KalmanRF"};
+                                              "als101_KalmanRF",
+                                              "als101_b_cut",
+                                              "als101_cutleft",
+                                              "als101_cutright",
+                                              "als101_cuttop",
+                                              "als101_cutdeep"};
 
 const std::vector<std::string> KEYS_ALS102 = {"als102_exposure_time",
                                               "als102_pingjun",
@@ -326,6 +336,11 @@ struct Params
   int als100_b_KalmanFilter=1;//是否使用卡尔曼滤波
   int als100_KalmanQF=10;
   int als100_KalmanRF=50;
+  int als100_b_cut=0;                  //是否使用搜索区域
+  int als100_cutleft=0;                //搜索区域
+  int als100_cutright=PIC_IMAGE_WIDTH-1;           //搜索区域
+  int als100_cuttop=0;                 //搜索区域
+  int als100_cutdeep=PIC_IMAGE_HEIGHT-1;           //搜索区域
 /************************************/
 //算法101参数
   int als101_exposure_time = 10000;//曝光值
@@ -355,6 +370,11 @@ struct Params
   int als101_b_KalmanFilter=1;//是否使用卡尔曼滤波
   int als101_KalmanQF=10;
   int als101_KalmanRF=50;
+  int als101_b_cut=0;                  //是否使用搜索区域
+  int als101_cutleft=0;                //搜索区域
+  int als101_cutright=PIC_IMAGE_WIDTH-1;           //搜索区域
+  int als101_cuttop=0;                 //搜索区域
+  int als101_cutdeep=PIC_IMAGE_HEIGHT-1;           //搜索区域
 /************************************/
 //算法102参数
   int als102_exposure_time=10000;//曝光值
