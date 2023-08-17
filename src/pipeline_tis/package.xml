@@ -22,7 +22,7 @@
   <depend>cloud_result_tcpip</depend>
   <depend>my_pclout</depend>
   <depend>seam_tracking</depend>
-  <depend>modbus</depend>
+  <depend>sunnymodbus</depend>
   <depend>gpio_raspberry</depend>
   <depend>config_tis</depend>
   

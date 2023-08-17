@@ -23,7 +23,7 @@ from launch_ros.actions import ComposableNodeContainer
 def generate_launch_description():
     """Generate launch description with a component."""
     configFile = os.path.join(
-        get_package_share_directory('modbus'),
+        get_package_share_directory('sunnymodbus'),
         'config',
         'params.yaml')
 
@@ -31,7 +31,7 @@ def generate_launch_description():
         configParams = yaml.safe_load(file)['modbus_node']['ros__parameters']
 
     node = ComposableNode(
-        package='modbus',
+        package='sunnymodbus',
         plugin='modbus::Modbus',
         parameters=[configParams])
 

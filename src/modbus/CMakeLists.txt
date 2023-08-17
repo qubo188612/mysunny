@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(modbus)
+project(sunnymodbus)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -24,42 +24,42 @@ find_package(tutorial_interfaces REQUIRED)
 find_package(OpenCV REQUIRED)
 pkg_check_modules(MODBUS REQUIRED IMPORTED_TARGET libmodbus libxml-2.0 eigen3)
 
-add_library(modbus SHARED src/modbus.cpp 
-                          src/jsoncpp.cpp 
-                          src/jsonfuction.cpp 
-                          src/TCPClient.cpp 
-                          src/TCPServer.cpp 
-                          src/TCPServer2.cpp
-                          src/XTcp.cpp
-                          src/FileOut.cpp 
-                          src/calibration.cpp
-                          src/E2proomData.cpp
-                          src/E2proomData_als100.cpp
-                          src/E2proomData_als101.cpp
-                          src/E2proomData_als102.cpp
-                          src/E2proomData_als103.cpp
-                          src/E2proomData_als104.cpp
-                          src/E2proomData_als105.cpp
-                          src/E2proomData_als106.cpp
-                          src/E2proomData_als107.cpp
-                          src/E2proomData_als108.cpp
-                          src/modbus_als100.cpp
-                          src/modbus_als101.cpp
-                          src/modbus_als102.cpp
-                          src/modbus_als103.cpp
-                          src/modbus_als104.cpp
-                          src/modbus_als105.cpp
-                          src/modbus_als106.cpp
-                          src/modbus_als107.cpp
-                          src/modbus_als108.cpp)
+add_library(sunnymodbus SHARED  src/modbus.cpp 
+                                src/jsoncpp.cpp 
+                                src/jsonfuction.cpp 
+                                src/TCPClient.cpp 
+                                src/TCPServer.cpp 
+                                src/TCPServer2.cpp
+                                src/XTcp.cpp
+                                src/FileOut.cpp 
+                                src/calibration.cpp
+                                src/E2proomData.cpp
+                                src/E2proomData_als100.cpp
+                                src/E2proomData_als101.cpp
+                                src/E2proomData_als102.cpp
+                                src/E2proomData_als103.cpp
+                                src/E2proomData_als104.cpp
+                                src/E2proomData_als105.cpp
+                                src/E2proomData_als106.cpp
+                                src/E2proomData_als107.cpp
+                                src/E2proomData_als108.cpp
+                                src/modbus_als100.cpp
+                                src/modbus_als101.cpp
+                                src/modbus_als102.cpp
+                                src/modbus_als103.cpp
+                                src/modbus_als104.cpp
+                                src/modbus_als105.cpp
+                                src/modbus_als106.cpp
+                                src/modbus_als107.cpp
+                                src/modbus_als108.cpp)
 
-target_include_directories(modbus PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(sunnymodbus PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(modbus rclcpp rclcpp_components tutorial_interfaces OpenCV)
+ament_target_dependencies(sunnymodbus rclcpp rclcpp_components tutorial_interfaces OpenCV)
 
-target_link_libraries(modbus PkgConfig::MODBUS)
+target_link_libraries(sunnymodbus PkgConfig::MODBUS)
 
-rclcpp_components_register_node(modbus PLUGIN "modbus::Modbus" EXECUTABLE modbus_node)
+rclcpp_components_register_node(sunnymodbus PLUGIN "modbus::Modbus" EXECUTABLE modbus_node)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -73,11 +73,11 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-install(TARGETS modbus EXPORT export_modbus DESTINATION lib)
+install(TARGETS sunnymodbus EXPORT export_sunnymodbus DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 
-ament_export_targets(export_modbus HAS_LIBRARY_TARGET)
+ament_export_targets(export_sunnymodbus HAS_LIBRARY_TARGET)
 
 ament_package()
