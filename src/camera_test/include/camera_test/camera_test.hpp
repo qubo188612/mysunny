@@ -6,7 +6,9 @@
 #include "opencv2/opencv.hpp"
 #include <modbus.h>
 #include <unistd.h>
+#ifdef TEST_VIDEO
 #include <opencv2/videoio/videoio.hpp>
+#endif
 #include "tutorial_interfaces/msg/if_algorhmitimage.hpp"
 #include "tutorial_interfaces/msg/if_algorhmitrobpos.hpp"
 
