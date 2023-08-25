@@ -52,8 +52,9 @@ public:
   rclcpp::Publisher<IfAlgorhmitimage>::SharedPtr _pub;
 
   cv::Mat cv_image;
-
+#ifdef TEST_VIDEO
   cv::VideoCapture capture;
+#endif
 
   std::string mat_type2encoding(int mat_type);
 
