@@ -81,7 +81,7 @@ RUN /ros_entrypoint.sh colcon build \
     --packages-up-to pipeline_tis \
     && rm -rf build log
 
-FROM runtime AS deploy
+FROM runtime AS ard64deploy
 
 COPY --from=build /workspace/sunny/install /workspace/sunny/install
 
