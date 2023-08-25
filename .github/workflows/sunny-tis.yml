@@ -84,11 +84,11 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         with:
-          target: amd64deploy
+          target: deploy
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: qubo188612/sunny-tis:amd64deploy
-          cache-from: type=registry,ref=qubo188612/sunny-tis:amd64deploy
+          tags: qubo188612/sunny-tis:deploy
+          cache-from: type=registry,ref=qubo188612/sunny-tis:deploy
           cache-to: type=inline
   desktop:
     name: Desktop
