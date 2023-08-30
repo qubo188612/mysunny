@@ -87,12 +87,7 @@ COPY --from=build /workspace/sunny/install /workspace/sunny/install
 
 RUN sed -i '$c source /workspace/sunny/install/setup.bash' /root/.bashrc
 
-RUN sed -i '/source/c source /workspace/sunny/install/setup.bash' /ros_entrypoint.sh
-
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends \
-    vim \
-    && rm -rf /var/lib/apt/lists/*    
+RUN sed -i '/source/c source /workspace/sunny/install/setup.bash' /ros_entrypoint.sh 
 
 FROM osrf/ros:galactic-desktop AS desktop
 
