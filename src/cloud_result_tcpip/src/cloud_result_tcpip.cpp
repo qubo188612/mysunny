@@ -179,6 +179,9 @@ void * send_client(void * m) {
                 Json::Value targetpointoutcloud;
                 Json::Value tarpoint;
                 Json::Value solderjoints;
+                Json::Value robpos;
+                Json::Value robposheader;
+                Json::Value robposstamp;
                 stamp["sec"]=rcvmsg.header.stamp.sec;
                 stamp["nanosec"]=rcvmsg.header.stamp.nanosec;
                 header["stamp"]=stamp;
@@ -204,6 +207,25 @@ void * send_client(void * m) {
                 }
                 sent_root["targetpointoutcloud"]=targetpointoutcloud;
                 sent_root["solderjoints"]=rcvmsg.solderjoints;
+                
+                robposstamp["sec"]=rcvmsg.robpos.header.stamp.sec;
+                robposstamp["nanosec"]=rcvmsg.robpos.header.stamp.nanosec;
+                robposheader["stamp"]=robposstamp;
+                robposheader["frame_id"]=rcvmsg.robpos.header.frame_id;
+                robpos["header"]=robposheader;
+                robpos["posx"]=rcvmsg.robpos.posx;
+                robpos["posy"]=rcvmsg.robpos.posy;
+                robpos["posz"]=rcvmsg.robpos.posz;
+                robpos["posrx"]=rcvmsg.robpos.posrx;
+                robpos["posry"]=rcvmsg.robpos.posry;
+                robpos["posrz"]=rcvmsg.robpos.posrz;
+                robpos["posout1"]=rcvmsg.robpos.posout1;
+                robpos["posout2"]=rcvmsg.robpos.posout2;
+                robpos["posout3"]=rcvmsg.robpos.posout3;
+                robpos["toolid"]=rcvmsg.robpos.toolid;
+                robpos["tcpid"]=rcvmsg.robpos.tcpid;
+                robpos["usertcpid"]=rcvmsg.robpos.usertcpid;
+                sent_root["robpos"]=robpos;
                 if(sent_root.size()!=0)
                 {
                     Json::StreamWriterBuilder builder;
