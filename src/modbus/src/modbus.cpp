@@ -446,6 +446,7 @@ Modbus::Modbus(const rclcpp::NodeOptions & options)
       break;
   case E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI:    //TCP服务器
   case E2POOM_ROBOT_MOD_GANGSHANG:    
+  case E2POOM_ROBOT_MOD_QJAR:
   case E2POOM_ROBOT_MOD_EFORT:    
   case E2POOM_ROBOT_MOD_STEP: 
       num_client=0;
@@ -3508,6 +3509,7 @@ void* received(void *m)
                   }
                   break;
                   case E2POOM_ROBOT_MOD_GANGSHANG:          //RTU
+                  case E2POOM_ROBOT_MOD_QJAR:
                   {
                     if(_p->b_tcpsockershow==true)
                     {  

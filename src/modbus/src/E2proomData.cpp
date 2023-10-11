@@ -99,7 +99,8 @@ void E2proomData::check_para()
        robot_mod!=E2POOM_ROBOT_MOD_ZEGE_2&&
        robot_mod!=E2POOM_ROBOT_MOD_HUACHENG&&
        robot_mod!=E2POOM_ROBOT_MOD_STEP&&
-       robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS
+       robot_mod!=E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS&&
+       robot_mod!=E2POOM_ROBOT_MOD_QJAR
       )
       robot_mod=E2POOM_ROBOT_MOD_NULL;
 

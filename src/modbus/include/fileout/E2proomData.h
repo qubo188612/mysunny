@@ -62,6 +62,7 @@
 #define E2POOM_ROBOT_MOD_HUACHENG               8        //华成工控创想
 #define E2POOM_ROBOT_MOD_STEP                   9        //新时达
 #define E2POOM_ROBOT_MOD_ZHICHANG_KAWASAKI_AS   10       //智昌川崎机器人AS
+#define E2POOM_ROBOT_MOD_QJAR                   11       //钱江机器人
 
 #define E2POOM_ROBOT_PORT_MIN               1503     //机器人通信最小端口
 #define E2POOM_ROBOT_PORT_USE               1503     //机器人通信默认端口
