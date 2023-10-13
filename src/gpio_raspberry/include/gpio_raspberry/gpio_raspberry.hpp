@@ -23,7 +23,7 @@
 #define RASPBERRY_PI  0 //树莓派
 #define RK3588S       1 //RK3588S
 
-#define MOTHERBOARD_TYPE    RASPBERRY_PI
+#define MOTHERBOARD_TYPE    RK3588S
 
 #if MOTHERBOARD_TYPE == RASPBERRY_PI
 
@@ -31,7 +31,7 @@
 #define GPIO_LEASER_LIGHT     26   //激光器
 #define GPIO_POWER_LIGHT      22   //指示灯
 
-#elif MOTHERBOARD_TYPE == RASPBERRY_PI
+#elif MOTHERBOARD_TYPE == RK3588S
 
 #define GPIO_CHIP_NAME       "gpiochip1"
 #define GPIO_LEASER_LIGHT     4   //激光器
