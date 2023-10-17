@@ -107,15 +107,10 @@ bool XTcp::Listen(unsigned short num) //监听端口号
 bool XTcp::SetRcvBufferlong(int bufferlong) //设置接收缓冲长度
 {
     int sendBufLen = bufferlong;
-    int tmp;
+    int rc;
     socklen_t optlen = sizeof(int);
     setsockopt(tsock,SOL_SOCKET, SO_RCVBUF,(const char*)&sendBufLen, sizeof(int));
-  #if _MSC_VER
-    getsockopt(tsock,SOL_SOCKET, SO_RCVBUF,(char *)&tmp, &optlen);
-  #else
-    getsockopt(tsock,SOL_SOCKET, SO_RCVBUF,(int *)&tmp, &optlen);
-  #endif
-    if(tmp==sendBufLen)
+    if(rc!=0)
     {
         return true;
     }
@@ -128,15 +123,10 @@ bool XTcp::SetRcvBufferlong(int bufferlong) //设置接收缓冲长度
 bool XTcp::SetSentBufferlong(int bufferlong) //设置发送缓冲长度
 {
     int sendBufLen = bufferlong;
-    int tmp;
+    int rc;
     socklen_t optlen = sizeof(int);
     setsockopt(tsock,SOL_SOCKET, SO_SNDBUF,(const char*)&sendBufLen, sizeof(int));
-#if _MSC_VER
-    getsockopt(tsock,SOL_SOCKET, SO_SNDBUF,(char *)&tmp, &optlen);
-#else
-    getsockopt(tsock,SOL_SOCKET, SO_SNDBUF,(int *)&tmp, &optlen);
-#endif
-    if(tmp==sendBufLen)
+    if(rc!=0)
     {
         return true;
     }
