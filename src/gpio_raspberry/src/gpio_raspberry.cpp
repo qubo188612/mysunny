@@ -26,21 +26,15 @@ using rcl_interfaces::msg::SetParametersResult;
 
 GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions & options)
 : Node("gpio_raspberry_node", options),
-  _chip0(gpiod_chip_open_by_name(GPIO_CHIP_NAME_0), gpiod_chip_close),
-  _line_leaser0(gpiod_chip_get_line(_chip0.get(), GPIO_LEASER_LIGHT_0), gpiod_line_release),   //激光器
-  _line_power0(gpiod_chip_get_line(_chip0.get(), GPIO_POWER_LIGHT_0), gpiod_line_release),     //指示灯
-  _chip1(gpiod_chip_open_by_name(GPIO_CHIP_NAME_1), gpiod_chip_close),
-  _line_leaser1(gpiod_chip_get_line(_chip1.get(), GPIO_LEASER_LIGHT_1), gpiod_line_release),   //激光器
-  _line_power1(gpiod_chip_get_line(_chip1.get(), GPIO_POWER_LIGHT_1), gpiod_line_release)     //指示灯
+  _chip(gpiod_chip_open_by_name(GPIO_CHIP_NAME), gpiod_chip_close),
+  _line_leaser(gpiod_chip_get_line(_chip.get(), GPIO_LEASER_LIGHT), gpiod_line_release),   //激光器
+  _line_power(gpiod_chip_get_line(_chip.get(), GPIO_POWER_LIGHT), gpiod_line_release)     //指示灯
 {
   // To enforce start with laser off
   this->declare_parameter("laser", false, ParameterDescriptor(), true);
 
-  gpiod_line_request_output(_line_leaser0.get(), "ros", 0);  //设置输出，初始0
-  gpiod_line_request_output(_line_power0.get(), "ros", 1);   //设置输出，初始0
-
-  gpiod_line_request_output(_line_leaser1.get(), "ros", 0);  //设置输出，初始0
-  gpiod_line_request_output(_line_power1.get(), "ros", 1);   //设置输出，初始0
+  gpiod_line_request_output(_line_leaser.get(), "ros", 0);  //设置输出，初始0
+  gpiod_line_request_output(_line_power.get(), "ros", 1);   //设置输出，初始0
 
   _handle = this->add_on_set_parameters_callback(
     [this](const std::vector<rclcpp::Parameter> & parameters) {
@@ -75,16 +69,10 @@ GpioRaspberry::~GpioRaspberry()
 
 int GpioRaspberry::_laser(bool f)
 {
-  int rc0;
-  int rc1;
   if (f) { 
-     rc0=gpiod_line_set_value(_line_leaser0.get(), 1);
-     rc1=gpiod_line_set_value(_line_leaser1.get(), 1);
-     return(rc0||rc1);
+     return(gpiod_line_set_value(_line_leaser.get(), 1));
   } else {
-     rc0=gpiod_line_set_value(_line_leaser0.get(), 0);
-     rc1=gpiod_line_set_value(_line_leaser1.get(), 0);
-     return(rc0||rc1);
+     return(gpiod_line_set_value(_line_leaser.get(), 0));
   }
 }
 
