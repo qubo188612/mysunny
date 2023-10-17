@@ -20,24 +20,15 @@
 #include "rclcpp/rclcpp.hpp"
 
 //主板类型
-#define RASPBERRY_PI  0 //树莓派
-#define RK3588S       1 //RK3588S
+//树莓派
+#define GPIO_CHIP_NAME_0       "gpiochip0"
+#define GPIO_LEASER_LIGHT_0     26   //激光器
+#define GPIO_POWER_LIGHT_0      22   //指示灯
 
-#define MOTHERBOARD_TYPE    RK3588S
-
-#if MOTHERBOARD_TYPE == RASPBERRY_PI
-
-#define GPIO_CHIP_NAME       "gpiochip0"
-#define GPIO_LEASER_LIGHT     26   //激光器
-#define GPIO_POWER_LIGHT      22   //指示灯
-
-#elif MOTHERBOARD_TYPE == RK3588S
-
-#define GPIO_CHIP_NAME       "gpiochip1"
-#define GPIO_LEASER_LIGHT     4   //激光器
-#define GPIO_POWER_LIGHT      8   //指示灯
-
-#endif
+//RK3588S
+#define GPIO_CHIP_NAME_1       "gpiochip1"
+#define GPIO_LEASER_LIGHT_1     4   //激光器
+#define GPIO_POWER_LIGHT_1      8   //指示灯
 
 struct gpiod_chip;
 struct gpiod_line;
@@ -85,20 +76,38 @@ private:
    * @brief The handle to gpio chip.
    *
    */
-  std::unique_ptr<gpiod_chip, void (*)(gpiod_chip *)> _chip;
+  std::unique_ptr<gpiod_chip, void (*)(gpiod_chip *)> _chip0;
 
   /**
    * @brief The handle to gpio line 26.
    *
    */
-  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_leaser;
+  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_leaser0;
 
   /**
    * @brief The handle to gpio line 22.
    *
    */
-  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_power;
+  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_power0;
 
+
+/**
+   * @brief The handle to gpio chip.
+   *
+   */
+  std::unique_ptr<gpiod_chip, void (*)(gpiod_chip *)> _chip1;
+
+  /**
+   * @brief The handle to gpio line 26.
+   *
+   */
+  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_leaser1;
+
+  /**
+   * @brief The handle to gpio line 22.
+   *
+   */
+  std::unique_ptr<gpiod_line, void (*)(gpiod_line *)> _line_power1;
 
   /**
    * @brief ROS parameter callback handle.
