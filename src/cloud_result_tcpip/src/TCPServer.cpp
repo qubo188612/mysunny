@@ -1,5 +1,6 @@
 #include "TCP/TCPServer.h" 
 
+/*
 char TCPServer::msg[MAXPACKETSIZE];
 int TCPServer::num_client;
 int TCPServer::num_client_ID;
@@ -10,7 +11,7 @@ vector<descript_socket*> TCPServer::Message;
 vector<descript_socket*> TCPServer::newsockfd;
 std::mutex TCPServer::mt;
 std::mutex TCPServer::fd;
-
+*/
 void* TCPServer::Task(void *arg)
 {
 	int n;

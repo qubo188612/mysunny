@@ -17,6 +17,7 @@
                 "/usr/include/boost",
                 "/usr/local/include/pcl-1.13",
                 "${workspaceFolder}/src/cloud_result_tcpip/include",
+                "${workspaceFolder}/src/image_result_tcpip/include",
                 "${workspaceFolder}/src/image_tcpip/include",
                 "${workspaceFolder}/src/my_pclout/include"
             ],
