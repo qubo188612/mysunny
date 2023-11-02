@@ -47,6 +47,7 @@ class TCPServer
     bool is_online();
 	string get_ip_addr(int id);
 	int get_last_closed_sockets();
+	std::string get_last_closed_ip();
 	void closed();
 
 	private:
@@ -61,8 +62,11 @@ class TCPServer
 
 	static bool isonline;
 	static int last_closed;
+	static std::string last_ip;
 	static int num_client;
+	static int num_client_ID;
 	static std::mutex mt;
+	static std::mutex fd;
 	static void * Task(void * argv);
 };
 

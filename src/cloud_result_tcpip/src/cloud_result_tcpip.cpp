@@ -145,7 +145,8 @@ void * send_client(void * m) {
 
 	while(1) {
 		if(!clouldresulttcp.is_online() && clouldresulttcp.get_last_closed_sockets() == desc->id) {
-			cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->ip << " )"<< endl;
+            std::string ip=clouldresulttcp.get_last_closed_ip();
+            cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << ip << " )"<< endl;
 			break;
 		}
 
@@ -230,10 +231,6 @@ void * send_client(void * m) {
                 {
                     Json::StreamWriterBuilder builder;
                     std::string json_file=Json::writeString(builder, sent_root);
-                    if(!clouldresulttcp.is_online() && clouldresulttcp.get_last_closed_sockets() == desc->id) 
-                    {
-                        cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->id << " )"<< endl;
-                    }
                     clouldresulttcp.Send(json_file, desc->id);
                     if(b_tcpsockershow==true)
                     {  
@@ -260,10 +257,11 @@ void* received_cloudresulttcp(void *m)
         _p->desc_cloudresult = clouldresulttcp.getMessage();
         for(unsigned int i = 0; i < _p->desc_cloudresult.size(); i++) 
         {
-            if( _p->desc_cloudresult[i] )
+            if( _p->desc_cloudresult[i]->message.size()!=0)
             {
                 if(!_p->desc_cloudresult[i]->enable_message_runtime) 
                 {
+                //pthread_t msg1;
                   _p->desc_cloudresult[i]->enable_message_runtime = true;
                               if( pthread_create(&msg1[num_message], NULL, send_client, (void *) _p->desc_cloudresult[i]) == 0) {
                     cerr << "ATTIVA THREAD INVIO MESSAGGI" << endl;

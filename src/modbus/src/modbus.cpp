@@ -2781,10 +2781,13 @@ void* ftpreceived(void *m)
                     std::string json_file=Json::writeString(builder, sent_root);
                     if(!ftptcp.is_online() && ftptcp.get_last_closed_sockets() == _p->ftpdesc[i]->id) 
                     {
-                        cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << _p->ftpdesc[i]->ip << " )"<< endl;
+                        std::string ip=ftptcp.get_last_closed_ip();
+                        cerr << "Connessione chiusa: stop send_clients( id:" << _p->ftpdesc[i]->id << " ip:" << ip << " )"<< endl;
                     }
-                  //ftptcp.Send(json_file, _p->ftpdesc[i]->id);
-                    ftptcp.Send((char*)json_file.c_str(),json_file.size()+1, _p->ftpdesc[i]->id);
+                    else
+                    {
+                        ftptcp.Send((char*)json_file.c_str(),json_file.size()+1, _p->ftpdesc[i]->id);
+                    }
                     if(_p->b_tcpsockershow==true)
                     {  
                       cerr << "message: " << json_file << endl;
@@ -3467,10 +3470,7 @@ void* received(void *m)
                     {
                         Json::StreamWriterBuilder builder;
                         std::string json_file=Json::writeString(builder, sent_root);
-                        if(!jsontcp.is_online() && jsontcp.get_last_closed_sockets() == _p->desc[i]->id) 
-                        {
-                            cerr << "Connessione chiusa: stop send_clients( id:" << _p->desc[i]->id << " ip:" << _p->desc[i]->ip << " )"<< endl;
-                        }
+                        
                     #ifdef USE_PARENTHESES_INSTEAD_QUOTATION 
                         int time_s=0;
                         for(unsigned int n=0;n<json_file.size();n++)
@@ -3501,7 +3501,15 @@ void* received(void *m)
                         }
                         json_file=json_file2;
                     #endif
-                        jsontcp.Send(json_file, _p->desc[i]->id);
+                        if(!jsontcp.is_online() && jsontcp.get_last_closed_sockets() == _p->desc[i]->id) 
+                        {
+                            std::string ip=jsontcp.get_last_closed_ip(); 
+                            cerr << "Connessione chiusa: stop send_clients( id:" << _p->desc[i]->id << " ip:" << ip << " )"<< endl;
+                        }
+                        else
+                        {
+                            jsontcp.Send(json_file, _p->desc[i]->id);
+                        }
                     }
 
 

@@ -129,7 +129,8 @@ void * send_client(void * m) {
 */
 	while(1) {
 		if(!imageresulttcp.is_online() && imageresulttcp.get_last_closed_sockets() == desc->id) {
-			cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << desc->ip << " )"<< endl;
+            std::string ip=imageresulttcp.get_last_closed_ip();
+			cerr << "Connessione chiusa: stop send_clients( id:" << desc->id << " ip:" << ip << " )"<< endl;
 			break;
 		}
         if(b_fuzhi==0)
@@ -247,6 +248,7 @@ void* received_imageresulttcp(void *m)
             {
                 if(!_p->desc_imageresult[i]->enable_message_runtime) 
                 {
+                //  pthread_t msg1;
                   _p->desc_imageresult[i]->enable_message_runtime = true;
                               if( pthread_create(&msg1[num_message], NULL, send_client, (void *) _p->desc_imageresult[i]) == 0) {
                     cerr << "ATTIVA THREAD INVIO MESSAGGI" << endl;
