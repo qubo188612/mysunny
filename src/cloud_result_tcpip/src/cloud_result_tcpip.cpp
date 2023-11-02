@@ -257,7 +257,7 @@ void* received_cloudresulttcp(void *m)
         _p->desc_cloudresult = clouldresulttcp.getMessage();
         for(unsigned int i = 0; i < _p->desc_cloudresult.size(); i++) 
         {
-            if( _p->desc_cloudresult[i]->message.size()!=0)
+            if( _p->desc_cloudresult[i])
             {
                 if(!_p->desc_cloudresult[i]->enable_message_runtime) 
                 {
